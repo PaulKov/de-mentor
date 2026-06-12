@@ -4,13 +4,14 @@ export async function slide15(presentation, ctx) {
   const slide = slideBase(
     presentation,
     ctx,
-    "Plan reading",
-    "EXPLAIN и Motion",
-    "Первый взгляд новичка в Greenplum-плане: где данные едут по сети."
+    "Skew",
+    "Skew через gp_segment_id",
+    "gp_segment_id превращает догадки про распределение в измеримое evidence."
   );
-  card(ctx, slide, 60, 245, 520, 132, "Redistribute Motion", "Данные перекладываются по новому ключу. Часто join key не совпал с distribution key.", C.green);
-  card(ctx, slide, 650, 245, 520, 132, "Broadcast Motion", "Маленькая таблица копируется на все сегменты. Хорошо только если она действительно маленькая.", C.blue);
-  card(ctx, slide, 60, 405, 520, 132, "Gather Motion", "Финальная сборка результата. Нормально, но может стать bottleneck для огромного output.", C.green);
+  card(ctx, slide, 60, 245, 520, 132, "Симптом", "Один segment получил непропорционально много строк.", C.green);
+  card(ctx, slide, 650, 245, 520, 132, "Причина", "Часто низкая cardinality distribution key: status, region, flag.", C.blue);
+  card(ctx, slide, 60, 405, 520, 132, "Фикс", "Распределить большой fact по высококардинальному join key.", C.green);
 
+  codeBlock(ctx, slide, 60, 520, 1090, 130, "SELECT gp_segment_id, count(*) AS rows_count\nFROM lesson01.fact_sales_bad\nGROUP BY gp_segment_id\nORDER BY gp_segment_id;", "SQL / CLI");
   return slide;
 }

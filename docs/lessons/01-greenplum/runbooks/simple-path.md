@@ -10,6 +10,7 @@ Cross-links:
 - workbook: `docs/lessons/01-greenplum/student-workbook.md`
 - homework: `docs/lessons/01-greenplum/homework.md`
 - homework plan: `docs/lessons/01-greenplum/runbooks/homework-plan.md`
+- cluster inspection SQL: `labs/greenplum/examples/cluster-inspection.sql`
 - SQL examples: `labs/greenplum/examples/storage-and-partitioning.sql`
 
 ## Stage 1: 00:00-10:00 - MPP И Роли Компонентов
@@ -53,19 +54,21 @@ Expected answer:
 
 > Теперь посмотрим, как физическая модель хранения влияет на scan, compression и демонстрацию columnstore.
 
-Ссылки: `student-workbook.md`, `homework.md`, `storage-and-partitioning.sql`.
+Ссылки: `student-workbook.md`, `homework.md`, `cluster-inspection.sql`, `storage-and-partitioning.sql`.
 
-## Stage 2: 10:00-22:00 - Heap, AO Row, AOCO И Columnstore Defaults
+## Stage 2: 10:00-24:00 - Execution, Lab Passport, Heap И AOCO
 
-Слайды: 7-12.
+Слайды: 7-13.
 
 Что говорит ментор:
 
-> Heap - row storage по умолчанию. AO row и AOCO подходят для append-heavy аналитики. Columnstore в Greenplum включается как AOCO: `appendoptimized=true`, `orientation=column`, compression и column-level `ENCODING`.
+> Перед первой реальной SQL-демонстрацией фиксируем, какой стенд поднят: один Docker service, один coordinator/master, два primary segments, mirrors нет. CPU/RAM limits не заданы в compose, поэтому контейнер живет внутри лимитов Docker Desktop/Engine. После этого показываем storage: Heap - row storage по умолчанию, AO row и AOCO подходят для append-heavy аналитики.
 
 Что показывает в Greenplum:
 
 ```sql
+\i /mentor-lab/examples/cluster-inspection.sql
+
 \i /mentor-lab/examples/storage-and-partitioning.sql
 \d+ lesson01.storage_heap_demo
 \d+ lesson01.storage_ao_row_demo
@@ -87,6 +90,7 @@ python3 mentor-lab.py psql greenplum
 ```
 
 ```sql
+\i /mentor-lab/examples/cluster-inspection.sql
 \i /mentor-lab/examples/storage-and-partitioning.sql
 SHOW gp_default_storage_options;
 ```
@@ -103,6 +107,14 @@ gpstop -u
 
 Что спрашиваем:
 
+> Сколько segment instances реально участвует в хранении данных на нашем Docker-стенде?
+
+Expected answer:
+
+> Два primary segment instances (`content 0` и `content 1`) на одном segment host `greenplum`; master/coordinator - отдельная строка `content = -1`.
+
+Дополнительный вопрос:
+
 > Почему AOCO не спасает плохой distribution key?
 
 Expected answer:
@@ -115,11 +127,11 @@ Expected answer:
 - Ученик может назвать table-level, column-level, database-level, role-level и instance-level способы задать columnstore defaults.
 - Ученик понимает, что instance-level `gpconfig` - административный пример, а не команда для обычного урока.
 
-Ссылки: `student-workbook.md`, `homework.md`, `storage-and-partitioning.sql`.
+Ссылки: `student-workbook.md`, `homework.md`, `cluster-inspection.sql`, `storage-and-partitioning.sql`.
 
-## Stage 3: 22:00-42:00 - Distribution, Skew, EXPLAIN И Motion
+## Stage 3: 24:00-42:00 - Distribution, Skew, EXPLAIN И Motion
 
-Слайды: 13-18.
+Слайды: 14-19.
 
 Что говорит ментор:
 
@@ -169,11 +181,11 @@ Expected answer:
 - Ученик отличает `Hash Join` как локальный алгоритм от `Redistribute Motion` как сетевой цены.
 - Ученик связывает улучшение `fact_sales_good` с `DISTRIBUTED BY (customer_id)`.
 
-Ссылки: `student-workbook.md`, `homework.md`, `storage-and-partitioning.sql`.
+Ссылки: `student-workbook.md`, `homework.md`, `cluster-inspection.sql`, `storage-and-partitioning.sql`.
 
 ## Stage 4: 42:00-60:00 - Partitioning Intro, Incident И Homework
 
-Слайды: 16, 19-23.
+Слайды: 17, 20-24.
 
 Что говорит ментор:
 
@@ -217,4 +229,4 @@ Expected answer:
 - Ученик называет домашние deliverables из `homework.md`.
 - Ученик понимает, что следующий урок - `Lesson 02: Partitioning, statistics and incremental loads in MPP`.
 
-Ссылки: `student-workbook.md`, `homework.md`, `storage-and-partitioning.sql`.
+Ссылки: `student-workbook.md`, `homework.md`, `cluster-inspection.sql`, `storage-and-partitioning.sql`.

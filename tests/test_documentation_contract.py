@@ -22,6 +22,7 @@ def test_professional_lesson_artifacts_exist():
         "docs/lessons/01-greenplum/runbooks/deep-dive-path.md",
         "docs/lessons/01-greenplum/runbooks/homework-plan.md",
         "docs/lessons/01-greenplum/runbooks/student-prep.md",
+        "labs/greenplum/examples/cluster-inspection.sql",
         "labs/greenplum/examples/storage-and-partitioning.sql",
         "decks/greenplum-theory/README.md",
         "decks/greenplum-theory/facilitator-guide.md",
@@ -140,6 +141,52 @@ def test_storage_and_partitioning_sql_contains_runnable_demo_contracts():
     assert "orientation=column" in sql
     assert "PARTITION BY RANGE (sale_date)" in sql
     assert "gp_default_storage_options" in sql
+
+
+def test_greenplum_lab_cluster_passport_is_documented_and_runnable():
+    readme = (ROOT / "labs/greenplum/README.md").read_text(encoding="utf-8")
+    sql = (ROOT / "labs/greenplum/examples/cluster-inspection.sql").read_text(
+        encoding="utf-8"
+    )
+    workbook = (ROOT / "docs/lessons/01-greenplum/student-workbook.md").read_text(
+        encoding="utf-8"
+    )
+    runbook = (
+        ROOT / "docs/lessons/01-greenplum/runbooks/simple-path.md"
+    ).read_text(encoding="utf-8")
+
+    expected_markers = [
+        "woblerr/greenplum:7.1.0",
+        "1 coordinator/master",
+        "2 primary segments",
+        "0 mirror segments",
+        "1 segment host",
+        "15432:5432",
+        "CPU/RAM limits",
+        "Docker Desktop/Engine",
+        "greenplum-data",
+        "gp_segment_configuration",
+        "gp_toolkit.gp_disk_free",
+        "cluster-inspection.sql",
+    ]
+
+    for marker in expected_markers:
+        assert marker in readme
+
+    for marker in [
+        "gp_segment_configuration",
+        "pg_settings",
+        "gp_toolkit.gp_disk_free",
+        "pg_database_size",
+        "gp_vmem_protect_limit",
+        "statement_mem",
+        "work_mem",
+        "shared_buffers",
+    ]:
+        assert marker in sql
+
+    assert "cluster-inspection.sql" in workbook
+    assert "cluster-inspection.sql" in runbook
 
 
 def test_master_segment_deep_dive_has_diagrams_and_source_anchors():

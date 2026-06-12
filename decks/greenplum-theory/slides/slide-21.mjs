@@ -4,13 +4,13 @@ export async function slide21(presentation, ctx) {
   const slide = slideBase(
     presentation,
     ctx,
-    "Capstone",
-    "Capstone mart design",
-    "Факт проектируется от grain и workload, а не от любимой DDL-опции."
+    "Evidence",
+    "Fix and evidence",
+    "Фикс без проверки - мнение. Фикс с повторным EXPLAIN и skew check - инженерное решение."
   );
-  card(ctx, slide, 60, 245, 520, 132, "Grain", "Одна строка что означает? order, order item, daily customer aggregate?", C.green);
-  card(ctx, slide, 650, 245, 520, 132, "Physical design", "Distribution для joins, partitioning для date pruning/retention, storage для scans.", C.blue);
-  card(ctx, slide, 60, 405, 520, 132, "Risk register", "Skew, late facts, stats after load, hot partitions, huge final gather.", C.green);
+  card(ctx, slide, 60, 245, 520, 132, "До", "DISTRIBUTED BY(status), skew, Redistribute Motion.", C.green);
+  card(ctx, slide, 650, 245, 520, 132, "После", "DISTRIBUTED BY(customer_id), ровнее gp_segment_id, дешевле движение.", C.blue);
+  card(ctx, slide, 60, 405, 520, 132, "Доказываем", "Скрин/вывод SQL, короткая интерпретация, оставшийся риск.", C.green);
 
   return slide;
 }

@@ -4,14 +4,13 @@ export async function slide16(presentation, ctx) {
   const slide = slideBase(
     presentation,
     ctx,
-    "Partitioning intro",
-    "Partitioning intro: pruning/retention != distribution",
-    "Partitioning режет таблицу внутри logical table; distribution размещает строки по сегментам."
+    "Plan reading",
+    "EXPLAIN и Motion",
+    "Первый взгляд новичка в Greenplum-плане: где данные едут по сети."
   );
-  card(ctx, slide, 60, 245, 520, 132, "Pruning", "Фильтр по sale_date может читать только нужные partitions.", C.green);
-  card(ctx, slide, 650, 245, 520, 132, "Retention", "Старые partitions можно удалять/архивировать операционно.", C.blue);
-  card(ctx, slide, 60, 405, 520, 132, "Не distribution", "Partition key не обязан быть distribution key.", C.green);
+  card(ctx, slide, 60, 245, 520, 132, "Redistribute Motion", "Данные перекладываются по новому ключу. Часто join key не совпал с distribution key.", C.green);
+  card(ctx, slide, 650, 245, 520, 132, "Broadcast Motion", "Маленькая таблица копируется на все сегменты. Хорошо только если она действительно маленькая.", C.blue);
+  card(ctx, slide, 60, 405, 520, 132, "Gather Motion", "Финальная сборка результата. Нормально, но может стать bottleneck для огромного output.", C.green);
 
-  codeBlock(ctx, slide, 60, 520, 1090, 130, "CREATE TABLE lesson01.fact_sales_partition_good (...)\nDISTRIBUTED BY (customer_id)\nPARTITION BY RANGE (sale_date)\n(START (DATE '2026-01-01') END (DATE '2026-04-01') EVERY (INTERVAL '1 month'));", "SQL / CLI");
   return slide;
 }

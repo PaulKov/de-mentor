@@ -4,14 +4,13 @@ export async function slide24(presentation, ctx) {
   const slide = slideBase(
     presentation,
     ctx,
-    "APPENDIX",
-    "APPENDIX: как читать EXPLAIN",
-    "Лестница чтения плана: снизу вверх и от локальной работы к сетевой цене."
+    "Summary",
+    "Что ученик должен унести с урока",
+    "Одна страница mental model перед домашкой."
   );
-  card(ctx, slide, 60, 245, 520, 132, "Leaf scans", "Какие таблицы читаем и сколько строк ожидаем.", C.green);
-  card(ctx, slide, 650, 245, 520, 132, "Local work", "Filter, aggregate, Hash Join на QE.", C.blue);
-  card(ctx, slide, 60, 405, 520, 132, "Motion boundary", "Где появляется slice boundary и network movement.", C.green);
-  card(ctx, slide, 650, 405, 520, 132, "Rows out", "Где actual сильно расходится с estimate.", C.blue);
+  card(ctx, slide, 60, 245, 520, 132, "Greenplum = MPP", "Coordinator планирует, segments исполняют, interconnect двигает строки.", C.green);
+  card(ctx, slide, 650, 245, 520, 132, "Физика важна", "Distribution, skew, Motion и storage влияют на тот же SQL сильнее, чем кажется.", C.blue);
+  card(ctx, slide, 60, 405, 520, 132, "Доказательность", "Каждый fix подтверждаем skew check, EXPLAIN и коротким RCA.", C.green);
 
   return slide;
 }
