@@ -107,6 +107,37 @@ def test_workbook_homework_and_mentor_guide_are_cross_linked():
     assert "runbooks/deep-dive-path.md" in mentor
 
 
+def test_workbook_has_end_of_lesson_student_handoff_pack():
+    workbook = (ROOT / "docs/lessons/01-greenplum/student-workbook.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert "## Что Отправить Ученику После Урока" in workbook
+
+    required_links = [
+        "runbooks/student-prep.md",
+        "../../../labs/greenplum/README.md",
+        "student-workbook.md",
+        "homework.md",
+        "runbooks/homework-plan.md",
+        "../../../labs/greenplum/examples/cluster-inspection.sql",
+        "../../../labs/greenplum/examples/storage-and-partitioning.sql",
+    ]
+    required_commands = [
+        "python3 mentor-lab.py doctor",
+        "python3 mentor-lab.py up greenplum",
+        "python3 mentor-lab.py check greenplum",
+        "python3 mentor-lab.py psql greenplum",
+        "py mentor-lab.py doctor",
+        "py mentor-lab.py up greenplum",
+        "py mentor-lab.py check greenplum",
+        "py mentor-lab.py psql greenplum",
+    ]
+
+    for marker in [*required_links, *required_commands]:
+        assert marker in workbook
+
+
 def test_student_prep_runbook_has_cross_platform_environment_contract():
     prep = (ROOT / "docs/lessons/01-greenplum/runbooks/student-prep.md").read_text(
         encoding="utf-8"
