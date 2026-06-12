@@ -11,9 +11,12 @@ Cross-links:
 - homework: `docs/lessons/01-greenplum/homework.md`
 - homework plan: `docs/lessons/01-greenplum/runbooks/homework-plan.md`
 - SQL examples: `labs/greenplum/examples/storage-and-partitioning.sql`
+- partitioning strategy examples: `labs/greenplum/examples/partitioning-strategies.sql`
+- cluster monitoring SQL: `labs/greenplum/examples/cluster-monitoring.sql`
 - QD/QE/slices/gangs explained: `docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md`
 - QD/QE deep dive: `docs/lessons/01-greenplum/deep-dives/master-segment-data-path.md`
 - joins deep dive: `docs/lessons/01-greenplum/deep-dives/physical-joins-in-mpp.md`
+- partitioning deep dive: `docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md`
 - EXPLAIN ladder: `docs/lessons/01-greenplum/deep-dives/explain-plan-reading.md`
 
 ## Stage 1: 00:00-15:00 - QD/QE, Gang, Slices
@@ -55,7 +58,7 @@ Expected answer:
 - Ученик объясняет `QD`, `QE`, `gang`, `slice` сначала простыми словами.
 - Ученик может технически сказать: plan режется на slices, slice исполняется gang-процессами на сегментах, а `QueryDispatchDesc` создается на QD и отправляется на QE.
 
-Ссылки: `student-workbook.md`, `deep-dives/qd-qe-gang-slices-explained.md`, `homework.md`, `storage-and-partitioning.sql`.
+Ссылки: `student-workbook.md`, `deep-dives/qd-qe-gang-slices-explained.md`, `homework.md`, `storage-and-partitioning.sql`, `partitioning-strategies.sql`.
 
 ## Stage 2: 15:00-40:00 - Master/Coordinator Data Path И Bulk I/O
 
@@ -99,9 +102,9 @@ Expected answer:
 - Ученик отличает result gather от parallel external table read.
 - Ученик не говорит, что Redistribute Motion гоняет все строки через master.
 
-Ссылки: `student-workbook.md`, `homework.md`, `storage-and-partitioning.sql`.
+Ссылки: `student-workbook.md`, `homework.md`, `storage-and-partitioning.sql`, `cluster-monitoring.sql`, `partitioning-strategies.sql`.
 
-## Stage 3: 40:00-65:00 - Storage Internals, Defaults И Partitioning Intro
+## Stage 3: 40:00-65:00 - Storage Internals, Defaults И Partitioning Strategies
 
 Слайды: 10-12, 16, 29.
 
@@ -113,6 +116,7 @@ Expected answer:
 
 ```sql
 \i /mentor-lab/examples/storage-and-partitioning.sql
+\i /mentor-lab/examples/partitioning-strategies.sql
 \d+ lesson01.storage_aoco_demo
 
 SELECT n.nspname, c.relname, am.amname AS access_method
@@ -122,6 +126,13 @@ LEFT JOIN pg_am AS am ON am.oid = c.relam
 WHERE n.nspname = 'lesson01'
   AND c.relname LIKE 'storage_%_demo'
 ORDER BY c.relname;
+
+SELECT *
+FROM pg_partition_tree('lesson01.partition_range_demo'::regclass);
+
+SELECT *
+FROM gp_toolkit.gp_partitions
+WHERE schemaname = 'lesson01';
 ```
 
 Команды:
@@ -147,6 +158,10 @@ gpstop -u
 
 > В каком порядке думать: storage, distribution, partitioning или grain?
 
+Дополнительный вопрос:
+
+> Почему partition key не равен distribution key, и когда выбрать `PARTITION BY RANGE`, `PARTITION BY LIST`, `PARTITION BY HASH`?
+
 Expected answer:
 
 > Сначала grain и workload, затем distribution/join locality, затем partitioning для pruning/retention, затем storage/compression под scan pattern.
@@ -156,8 +171,11 @@ Expected answer:
 - Ученик видит `appendoptimized=true`, `orientation=column`, column `ENCODING`.
 - Ученик объясняет precedence: table `WITH/ENCODING` сильнее role/database/cluster defaults.
 - Ученик не путает `PARTITION BY RANGE (sale_date)` с `DISTRIBUTED BY (customer_id)`.
+- Ученик выбирает RANGE / LIST / HASH по workload, понимает `DEFAULT partition`, no default partitioning и out-of-range INSERT.
+- Ученик считает `leaf_partitions` через `pg_partition_tree` и знает compatibility view `gp_toolkit.gp_partitions`.
+- Ученик узнает maintenance snippets: `ATTACH PARTITION`, `DETACH PARTITION`, retention `DROP TABLE`.
 
-Ссылки: `student-workbook.md`, `homework.md`, `storage-and-partitioning.sql`.
+Ссылки: `student-workbook.md`, `homework.md`, `storage-and-partitioning.sql`, `partitioning-strategies.sql`, `deep-dives/partitioning-strategies.md`.
 
 ## Stage 4: 65:00-95:00 - EXPLAIN Ladder И Physical Joins In MPP
 
@@ -204,7 +222,7 @@ Expected answer:
 - Ученик отличает co-located join от Broadcast/Redistribute join.
 - Ученик понимает, почему один distribution key не оптимизирует все joins.
 
-Ссылки: `student-workbook.md`, `homework.md`, `storage-and-partitioning.sql`.
+Ссылки: `student-workbook.md`, `homework.md`, `storage-and-partitioning.sql`, `partitioning-strategies.sql`.
 
 ## Stage 5: 95:00-120:00 - System Taxonomy, Caveats И Next Lesson
 
@@ -245,4 +263,4 @@ Expected answer:
 - Ученик называет caveat: ALTER TABLE storage changes требуют понимания rewrite/maintenance и не являются бесплатной кнопкой.
 - Ученик забирает `homework.md` и `runbooks/homework-plan.md`.
 
-Ссылки: `student-workbook.md`, `homework.md`, `storage-and-partitioning.sql`.
+Ссылки: `student-workbook.md`, `homework.md`, `storage-and-partitioning.sql`, `partitioning-strategies.sql`.

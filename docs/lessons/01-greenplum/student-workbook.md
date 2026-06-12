@@ -8,8 +8,11 @@
 - homework plan: `runbooks/homework-plan.md`
 - homework: `homework.md`
 - QD/QE/slices/gangs deep dive: `deep-dives/qd-qe-gang-slices-explained.md`
+- partitioning deep dive: `deep-dives/partitioning-strategies.md`
 - cluster inspection: `../../../labs/greenplum/examples/cluster-inspection.sql`
+- cluster monitoring: `../../../labs/greenplum/examples/cluster-monitoring.sql`
 - runnable storage/partitioning examples: `../../../labs/greenplum/examples/storage-and-partitioning.sql`
+- runnable partitioning strategies examples: `../../../labs/greenplum/examples/partitioning-strategies.sql`
 
 ## Подготовка
 
@@ -272,7 +275,7 @@ gpstop -u
 
 ## Задание 7: Partitioning Intro
 
-Partitioning в первом уроке - только intro. Глубокая практика будет в `Lesson 02: Partitioning, statistics and incremental loads in MPP`.
+Partitioning в первом уроке - intro + короткий catalog drill. Глубокая практика будет в `Lesson 02: Partitioning, statistics and incremental loads in MPP`.
 
 Сравни bad/good пример из `storage-and-partitioning.sql`:
 
@@ -297,6 +300,87 @@ WHERE sale_date >= DATE '2026-01-01'
 - почему `PARTITION BY RANGE (sale_date)` помогает отчетам по датам;
 - почему partition key не равен distribution key;
 - почему partitioning помогает pruning/retention, а distribution помогает сегментам и joins.
+
+## Задание 7.1: Partitioning Strategies И Catalog Checks
+
+Открой deep dive `deep-dives/partitioning-strategies.md`, затем запусти runnable drill:
+
+```sql
+\i /mentor-lab/examples/partitioning-strategies.sql
+```
+
+Что в нем есть:
+
+- `PARTITION BY RANGE (sale_date)` - date pruning и retention;
+- `PARTITION BY LIST (region)` - конечные бизнес-категории;
+- `PARTITION BY HASH (customer_id)` - bucketization, когда нет естественного range/list;
+- `DEFAULT partition` - safety net для unexpected values;
+- multi-level пример: RANGE по дате, затем LIST по региону.
+
+Defaults, которые нужно проговорить:
+
+- no default partitioning: таблица не становится partitioned автоматически;
+- `DEFAULT partition` не создается автоматически;
+- out-of-range INSERT без matching partition и без `DEFAULT partition` должен упасть;
+- новые будущие partitions не появляются сами: нужен DDL/automation.
+
+Как смотреть партиции и сколько их в GP:
+
+```sql
+SELECT
+    tree.level,
+    tree.isleaf,
+    tree.relid::regclass AS relation_name,
+    tree.parentrelid::regclass AS parent_relation
+FROM pg_partition_tree('lesson01.partition_range_demo'::regclass) AS tree
+ORDER BY tree.level, relation_name::text;
+```
+
+```sql
+WITH roots AS (
+    SELECT n.nspname AS schema_name, c.relname AS table_name, c.oid AS root_oid
+    FROM pg_class AS c
+    JOIN pg_namespace AS n ON n.oid = c.relnamespace
+    WHERE n.nspname = 'lesson01'
+      AND c.relname LIKE 'partition_%_demo'
+)
+SELECT
+    roots.schema_name,
+    roots.table_name,
+    COUNT(*) FILTER (WHERE tree.isleaf) AS leaf_partitions,
+    COUNT(*) FILTER (WHERE NOT tree.isleaf) AS internal_partition_nodes,
+    MAX(tree.level) AS max_partition_level
+FROM roots
+CROSS JOIN LATERAL pg_partition_tree(roots.root_oid) AS tree
+GROUP BY roots.schema_name, roots.table_name
+ORDER BY roots.table_name;
+```
+
+```sql
+SELECT *
+FROM gp_toolkit.gp_partitions
+WHERE schemaname = 'lesson01'
+ORDER BY schemaname, tablename, partitionlevel, partitiontablename;
+```
+
+Maintenance snippets, которые нужно узнать, но не обязательно выполнять на первом уроке:
+
+```sql
+ALTER TABLE lesson01.partition_range_demo
+    ATTACH PARTITION lesson01.partition_range_demo_2026_04
+    FOR VALUES FROM (DATE '2026-04-01') TO (DATE '2026-05-01');
+
+ALTER TABLE lesson01.partition_range_demo
+    DETACH PARTITION lesson01.partition_range_demo_2026_01;
+```
+
+Ответь:
+
+- когда выбрать RANGE / LIST / HASH;
+- зачем нужен `DEFAULT partition` и почему он может быть опасен;
+- сколько `leaf_partitions` у каждой demo table;
+- почему HASH partitioning не заменяет `DISTRIBUTED BY`;
+- чем `ATTACH PARTITION` / `DETACH PARTITION` полезны для retention и incremental load.
 
 ## Задание 8: Мини Design Review
 
@@ -421,7 +505,8 @@ python3 mentor-lab.py hint greenplum mpp-systems
 
 - `homework.md` - что сдать;
 - `runbooks/homework-plan.md` - как разложить домашку на 60-90 минут;
-- `storage-and-partitioning.sql` - SQL-демо, которое можно переиспользовать в домашней модели.
+- `storage-and-partitioning.sql` - SQL-демо, которое можно переиспользовать в домашней модели;
+- `partitioning-strategies.sql` - SQL-дрилл по `PARTITION BY RANGE`, `PARTITION BY LIST`, `PARTITION BY HASH`, `DEFAULT partition`, `pg_partition_tree`, `gp_toolkit.gp_partitions`, `leaf_partitions`, `ATTACH PARTITION`, `DETACH PARTITION` и out-of-range INSERT.
 
 На следующий урок принеси:
 
@@ -443,7 +528,9 @@ python3 mentor-lab.py hint greenplum mpp-systems
 4. `homework.md` - что нужно сдать после урока.
 5. `runbooks/homework-plan.md` - план самостоятельной работы на 60-90 минут.
 6. `../../../labs/greenplum/examples/cluster-inspection.sql` - проверка topology, segments, memory settings и disk free.
-7. `../../../labs/greenplum/examples/storage-and-partitioning.sql` - runnable demo для Heap/AO/AOCO и partitioning intro.
+7. `../../../labs/greenplum/examples/cluster-monitoring.sql` - расширенная проверка `gp_segment_configuration`, `gp_toolkit.gp_disk_free`, `gp_segment_id`, pseudo/system columns и `gpstate -s` snippets.
+8. `../../../labs/greenplum/examples/storage-and-partitioning.sql` - runnable demo для Heap/AO/AOCO и partitioning intro.
+9. `../../../labs/greenplum/examples/partitioning-strategies.sql` - runnable demo для partitioning strategies и catalog checks.
 
 Команды для macOS/Linux:
 
@@ -467,5 +554,7 @@ py mentor-lab.py psql greenplum
 
 - `mentor-lab.py check greenplum` возвращает `PASS`;
 - `\i /mentor-lab/examples/cluster-inspection.sql` показывает 1 coordinator/master и 2 primary segments;
+- `\i /mentor-lab/examples/cluster-monitoring.sql` показывает segment health, disk free, skew helpers и псевдо-поля вроде `gp_segment_id`;
 - `\i /mentor-lab/examples/storage-and-partitioning.sql` создает demo-таблицы для heap, AO row, AOCO и partitioning;
+- `\i /mentor-lab/examples/partitioning-strategies.sql` создает RANGE/LIST/HASH/DEFAULT partition examples и показывает, как считать partitions через `pg_partition_tree` / `gp_toolkit.gp_partitions`;
 - в домашке есть DDL/архитектурные решения, skew check, `EXPLAIN` evidence и вопросы к Lesson 02.

@@ -28,9 +28,11 @@
 3. Distribution key для каждой большой таблицы.
 4. Partition key для фактов.
 5. Storage choice: heap, AO row или AOCO column.
-6. 3 SQL-запроса для проверки качества модели.
-7. 3 риска и как ты их проверишь.
-8. 2-3 вопроса, которые принесешь на следующий урок.
+6. Partitioning strategy: `PARTITION BY RANGE`, `PARTITION BY LIST` или `PARTITION BY HASH`, либо объяснение, почему partitioning пока не нужен.
+7. Catalog evidence: `pg_partition_tree` или `gp_toolkit.gp_partitions`, включая `leaf_partitions`.
+8. 3 SQL-запроса для проверки качества модели.
+9. 3 риска и как ты их проверишь.
+10. 2-3 вопроса, которые принесешь на следующий урок.
 
 ## Шаблон Ответа
 
@@ -96,6 +98,21 @@ WHERE sale_date >= DATE '2026-01-01'
   AND sale_date < DATE '2026-02-01';
 ```
 
+Проверь partitioning strategies и catalog:
+
+```sql
+\i /mentor-lab/examples/partitioning-strategies.sql
+
+SELECT *
+FROM pg_partition_tree('lesson01.partition_range_demo'::regclass);
+
+SELECT *
+FROM gp_toolkit.gp_partitions
+WHERE schemaname = 'lesson01';
+```
+
+В выводе найди `DEFAULT partition`, `leaf_partitions`, примеры `PARTITION BY RANGE`, `PARTITION BY LIST`, `PARTITION BY HASH`. Объясни, что будет с out-of-range INSERT без default partition, и где в maintenance пригодятся `ATTACH PARTITION` / `DETACH PARTITION`.
+
 ## Optional Deep Tasks
 
 - Заполни plan-reading ladder из `student-workbook.md`.
@@ -109,6 +126,7 @@ WHERE sale_date >= DATE '2026-01-01'
 
 - DDL или псевдо-DDL фактов и dimensions;
 - rationale по grain, distribution key, partition key и storage;
+- partitioning evidence: RANGE/LIST/HASH выбор, `DEFAULT partition` policy, `leaf_partitions`;
 - self-check output по `gp_segment_id`;
 - один `EXPLAIN` с комментарием про Motion;
 - вопросы по partition pruning, retention, late-arriving facts, statistics after load, AOCO partitions и operational maintenance.
@@ -120,6 +138,7 @@ WHERE sale_date >= DATE '2026-01-01'
 - grain описан до выбора ключей;
 - distribution key выбран с аргументацией по cardinality и join pattern;
 - partition key не смешан с distribution key;
+- есть проверка partitions через `pg_partition_tree` или `gp_toolkit.gp_partitions`;
 - storage choice объяснен через workload;
 - есть проверка skew;
 - есть хотя бы один запрос с `EXPLAIN`.
