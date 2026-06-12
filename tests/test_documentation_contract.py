@@ -15,6 +15,7 @@ def test_professional_lesson_artifacts_exist():
         "docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md",
         "docs/lessons/01-greenplum/deep-dives/explain-plan-reading.md",
         "docs/lessons/01-greenplum/deep-dives/physical-joins-in-mpp.md",
+        "docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md",
         "docs/lessons/01-greenplum/deep-dives/mpp-system-taxonomy.md",
         "docs/lessons/01-greenplum/query-tuning-lab.md",
         "docs/lessons/01-greenplum/academy-loop.md",
@@ -23,6 +24,8 @@ def test_professional_lesson_artifacts_exist():
         "docs/lessons/01-greenplum/runbooks/homework-plan.md",
         "docs/lessons/01-greenplum/runbooks/student-prep.md",
         "labs/greenplum/examples/cluster-inspection.sql",
+        "labs/greenplum/examples/cluster-monitoring.sql",
+        "labs/greenplum/examples/partitioning-strategies.sql",
         "labs/greenplum/examples/storage-and-partitioning.sql",
         "decks/greenplum-theory/README.md",
         "decks/greenplum-theory/facilitator-guide.md",
@@ -81,6 +84,7 @@ def test_runbooks_have_commands_questions_checks_and_cross_links():
         assert "student-workbook.md" in content
         assert "homework.md" in content
         assert "storage-and-partitioning.sql" in content
+        assert "partitioning-strategies.sql" in content
 
 
 def test_workbook_homework_and_mentor_guide_are_cross_linked():
@@ -97,6 +101,8 @@ def test_workbook_homework_and_mentor_guide_are_cross_linked():
     assert "homework.md" in workbook
     assert "runbooks/homework-plan.md" in workbook
     assert "storage-and-partitioning.sql" in workbook
+    assert "partitioning-strategies.sql" in workbook
+    assert "deep-dives/partitioning-strategies.md" in workbook
     assert "Greenplum vs sharded PostgreSQL" in workbook
     assert "QD" in workbook and "QE" in workbook and "gang" in workbook and "slice" in workbook
     assert "appendoptimized=true" in workbook
@@ -121,7 +127,9 @@ def test_workbook_has_end_of_lesson_student_handoff_pack():
         "homework.md",
         "runbooks/homework-plan.md",
         "../../../labs/greenplum/examples/cluster-inspection.sql",
+        "../../../labs/greenplum/examples/cluster-monitoring.sql",
         "../../../labs/greenplum/examples/storage-and-partitioning.sql",
+        "../../../labs/greenplum/examples/partitioning-strategies.sql",
     ]
     required_commands = [
         "python3 mentor-lab.py doctor",
@@ -174,6 +182,48 @@ def test_storage_and_partitioning_sql_contains_runnable_demo_contracts():
     assert "gp_default_storage_options" in sql
 
 
+def test_partitioning_strategy_materials_are_complete_and_cross_linked():
+    sql = (ROOT / "labs/greenplum/examples/partitioning-strategies.sql").read_text(
+        encoding="utf-8"
+    )
+    deep_dive = (
+        ROOT / "docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md"
+    ).read_text(encoding="utf-8")
+    workbook = (ROOT / "docs/lessons/01-greenplum/student-workbook.md").read_text(
+        encoding="utf-8"
+    )
+    simple = (
+        ROOT / "docs/lessons/01-greenplum/runbooks/simple-path.md"
+    ).read_text(encoding="utf-8")
+    deep = (
+        ROOT / "docs/lessons/01-greenplum/runbooks/deep-dive-path.md"
+    ).read_text(encoding="utf-8")
+
+    expected_markers = [
+        "PARTITION BY RANGE",
+        "PARTITION BY LIST",
+        "PARTITION BY HASH",
+        "DEFAULT",
+        "pg_partition_tree",
+        "gp_toolkit.gp_partitions",
+        "leaf_partitions",
+        "partition key не равен distribution key",
+        "out-of-range INSERT",
+        "ATTACH PARTITION",
+        "DETACH PARTITION",
+    ]
+
+    for content in [sql, deep_dive, workbook, simple, deep]:
+        for marker in expected_markers:
+            assert marker in content
+
+    assert "RANGE / LIST / HASH" in deep_dive
+    assert "no default partitioning" in deep_dive
+    assert "partitioning-strategies.sql" in workbook
+    assert "partitioning-strategies.sql" in simple
+    assert "partitioning-strategies.sql" in deep
+
+
 def test_greenplum_lab_cluster_passport_is_documented_and_runnable():
     readme = (ROOT / "labs/greenplum/README.md").read_text(encoding="utf-8")
     sql = (ROOT / "labs/greenplum/examples/cluster-inspection.sql").read_text(
@@ -218,6 +268,46 @@ def test_greenplum_lab_cluster_passport_is_documented_and_runnable():
 
     assert "cluster-inspection.sql" in workbook
     assert "cluster-inspection.sql" in runbook
+
+
+def test_greenplum_cluster_monitoring_sql_is_documented_and_teachable():
+    sql = (ROOT / "labs/greenplum/examples/cluster-monitoring.sql").read_text(
+        encoding="utf-8"
+    )
+    lab_readme = (ROOT / "labs/greenplum/README.md").read_text(encoding="utf-8")
+    workbook = (ROOT / "docs/lessons/01-greenplum/student-workbook.md").read_text(
+        encoding="utf-8"
+    )
+    runbook = (
+        ROOT / "docs/lessons/01-greenplum/runbooks/simple-path.md"
+    ).read_text(encoding="utf-8")
+
+    expected_sql_markers = [
+        "gp_segment_configuration",
+        "gp_toolkit.gp_disk_free",
+        "gp_toolkit.gp_resgroup_status_per_segment",
+        "gp_toolkit.gp_skew_coefficients",
+        "gp_toolkit.gp_skew_idle_fractions",
+        "gp_segment_id",
+        "gp_dist_random",
+        "gp_execution_segment",
+        "gpstate -s",
+        "role <> preferred_role",
+        "status <> 'u'",
+        "mode <> 's'",
+        "STRING_AGG(content::text, ',' ORDER BY content)",
+        "max_to_avg_ratio",
+        "max_to_min_ratio",
+    ]
+
+    for marker in expected_sql_markers:
+        assert marker in sql
+
+    for content in [lab_readme, workbook, runbook]:
+        assert "cluster-monitoring.sql" in content
+        assert "gp_segment_configuration" in content
+        assert "gp_segment_id" in content
+        assert "gpstate -s" in content
 
 
 def test_master_segment_deep_dive_has_diagrams_and_source_anchors():

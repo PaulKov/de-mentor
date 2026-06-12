@@ -117,6 +117,71 @@ docker volume inspect greenplum_greenplum-data
 
 Если `NanoCpus=0`, `Memory=0`, `CpuQuota=0`, значит compose не ограничивает CPU/RAM на уровне container runtime.
 
+## Monitoring SQL
+
+Для более полного production-style осмотра кластера используй:
+
+```sql
+\i /mentor-lab/examples/cluster-monitoring.sql
+```
+
+Скрипт покрывает:
+
+- topology и health через `gp_segment_configuration`;
+- problem segments: `status <> 'u'`, `mode <> 's'`, `role <> preferred_role`;
+- segments per host и список segment ids через `STRING_AGG(content::text, ',' ORDER BY content)`;
+- disk free через `gp_toolkit.gp_disk_free`;
+- resource groups через `gp_toolkit.gp_resgroup_status_per_segment`, если view доступна;
+- skew helpers через `gp_segment_id`, `gp_toolkit.gp_skew_coefficients`, `gp_toolkit.gp_skew_idle_fractions`;
+- служебные псевдо/system-поля: `gp_segment_id`, `tableoid`, `ctid`, `xmin`, `xmax`, `cmin`, `cmax`;
+- segment-local helpers: `gp_dist_random`, `gp_execution_segment`, если доступны в версии кластера;
+- CLI snippets для `gpstate -s`, `gpstate -m`, `gpstate -c`, `gpstate -e`.
+
+## Partitioning Strategies SQL
+
+Для отдельного deep-dive по стратегиям partitioning:
+
+```sql
+\i /mentor-lab/examples/partitioning-strategies.sql
+```
+
+Скрипт создает runnable-примеры:
+
+- `PARTITION BY RANGE (sale_date)` для date pruning и retention;
+- `PARTITION BY LIST (region)` для конечного набора бизнес-категорий;
+- `PARTITION BY HASH (customer_id)` для bucketization;
+- `DEFAULT partition` для unexpected values;
+- multi-level пример: RANGE по дате, затем LIST по региону.
+
+Как смотреть партиции и сколько их в GP:
+
+```sql
+SELECT *
+FROM pg_partition_tree('lesson01.partition_range_demo'::regclass);
+
+WITH roots AS (
+    SELECT n.nspname AS schema_name, c.relname AS table_name, c.oid AS root_oid
+    FROM pg_class AS c
+    JOIN pg_namespace AS n ON n.oid = c.relnamespace
+    WHERE n.nspname = 'lesson01'
+      AND c.relname LIKE 'partition_%_demo'
+)
+SELECT
+    roots.schema_name,
+    roots.table_name,
+    COUNT(*) FILTER (WHERE tree.isleaf) AS leaf_partitions
+FROM roots
+CROSS JOIN LATERAL pg_partition_tree(roots.root_oid) AS tree
+GROUP BY roots.schema_name, roots.table_name
+ORDER BY roots.table_name;
+
+SELECT *
+FROM gp_toolkit.gp_partitions
+WHERE schemaname = 'lesson01';
+```
+
+Maintenance snippets в скрипте включают `ATTACH PARTITION`, `DETACH PARTITION`, `DROP` старой retention partition и пояснение про out-of-range INSERT без default partition.
+
 ## Переинициализация
 
 Init scripts выполняются только при пустом data volume. Если нужно пересоздать учебные данные:

@@ -93,8 +93,11 @@ python3 mentor-lab.py seed greenplum --profile skewed
 - [deep-dives/master-segment-data-path.md](deep-dives/master-segment-data-path.md) - глубокая техническая схема master/QD/QE, Motion, gpfdist и storage.
 - [deep-dives/explain-plan-reading.md](deep-dives/explain-plan-reading.md) - как читать план и формулировать RCA по `EXPLAIN ANALYZE`.
 - [deep-dives/physical-joins-in-mpp.md](deep-dives/physical-joins-in-mpp.md) - физика joins в MPP: co-located, broadcast, redistribute.
+- [deep-dives/partitioning-strategies.md](deep-dives/partitioning-strategies.md) - RANGE / LIST / HASH, DEFAULT partition, no default partitioning, `pg_partition_tree`, `gp_toolkit.gp_partitions`, `leaf_partitions`, `ATTACH PARTITION`, `DETACH PARTITION` и out-of-range INSERT.
 - [deep-dives/mpp-system-taxonomy.md](deep-dives/mpp-system-taxonomy.md) - SMP, MPP, EPP, lakehouse, HTAP и цена каждой архитектуры.
 - [greenplum-theory.pptx](../../../artifacts/greenplum-theory.pptx) - презентация урока.
 - [labs/greenplum](../../../labs/greenplum/README.md) - запуск стенда.
 - [cluster-inspection.sql](../../../labs/greenplum/examples/cluster-inspection.sql) - runnable SQL для проверки topology, settings и disk free учебного Docker-кластера.
+- [cluster-monitoring.sql](../../../labs/greenplum/examples/cluster-monitoring.sql) - расширенный monitoring SQL: `gp_segment_configuration`, `gp_toolkit.gp_disk_free`, `gp_segment_id`, `gpstate -s` snippets и segment health.
 - [storage-and-partitioning.sql](../../../labs/greenplum/examples/storage-and-partitioning.sql) - runnable demo для Heap/AO/AOCO и partitioning intro.
+- [partitioning-strategies.sql](../../../labs/greenplum/examples/partitioning-strategies.sql) - runnable drill по `PARTITION BY RANGE`, `PARTITION BY LIST`, `PARTITION BY HASH`, `DEFAULT partition` и подсчету partitions через `pg_partition_tree` / `gp_toolkit.gp_partitions`.

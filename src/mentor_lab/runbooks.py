@@ -63,6 +63,8 @@ class Runbook:
             "Workbook: docs/lessons/01-greenplum/student-workbook.md",
             "Homework: docs/lessons/01-greenplum/homework.md",
             "SQL examples: labs/greenplum/examples/storage-and-partitioning.sql",
+            "Partitioning examples: labs/greenplum/examples/partitioning-strategies.sql",
+            "Monitoring examples: labs/greenplum/examples/cluster-monitoring.sql",
             "",
         ]
         for index, stage in enumerate(self.stages, start=1):
@@ -88,7 +90,10 @@ class RunbookCatalog:
             "docs/lessons/01-greenplum/runbooks/student-prep.md",
             "docs/lessons/01-greenplum/student-workbook.md",
             "docs/lessons/01-greenplum/homework.md",
+            "labs/greenplum/examples/cluster-monitoring.sql",
             "labs/greenplum/examples/storage-and-partitioning.sql",
+            "labs/greenplum/examples/partitioning-strategies.sql",
+            "docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md",
         ]
         return cls(
             [
@@ -274,6 +279,7 @@ class RunbookCatalog:
                                 "columnstore через appendoptimized=true и orientation=column."
                             ),
                             [
+                                "\\i /mentor-lab/examples/cluster-monitoring.sql",
                                 "docker compose -f labs/greenplum/docker-compose.yml exec -T -u gpadmin greenplum bash -lc '. /usr/local/greenplum-db/greenplum_path.sh && psql -U gpadmin -d mentor -v ON_ERROR_STOP=1 -f /mentor-lab/examples/storage-and-partitioning.sql'",
                                 "\\d+ lesson01.storage_aoco_demo",
                                 "SELECT c.relname, am.amname AS access_method FROM pg_class c LEFT JOIN pg_am am ON am.oid = c.relam JOIN pg_namespace n ON n.oid = c.relnamespace WHERE n.nspname = 'lesson01' AND c.relname LIKE 'storage_%_demo' ORDER BY c.relname;",
@@ -313,6 +319,9 @@ class RunbookCatalog:
                                 "какой fix и что принести на следующий урок."
                             ),
                             [
+                                "\\i /mentor-lab/examples/partitioning-strategies.sql",
+                                "SELECT * FROM pg_partition_tree('lesson01.partition_range_demo'::regclass);",
+                                "SELECT * FROM gp_toolkit.gp_partitions WHERE schemaname = 'lesson01';",
                                 "python3 mentor-lab.py incident start greenplum skewed-distribution",
                                 "python3 mentor-lab.py grade greenplum --dry-run",
                                 "python3 mentor-lab.py runbook greenplum homework",
@@ -322,7 +331,7 @@ class RunbookCatalog:
                                 "Partition key режет данные для pruning/retention; "
                                 "distribution key размещает строки по сегментам."
                             ),
-                            "Ученик формулирует grain, distribution, partition и checks.",
+                            "Ученик формулирует grain, distribution, partition, leaf_partitions and checks.",
                             common_links,
                         ),
                     ],
@@ -368,8 +377,11 @@ class RunbookCatalog:
                             ),
                             [
                                 "\\i /mentor-lab/examples/storage-and-partitioning.sql",
+                                "\\i /mentor-lab/examples/partitioning-strategies.sql",
                                 "SHOW gp_default_storage_options;",
                                 "SELECT c.relname, am.amname AS access_method FROM pg_class c LEFT JOIN pg_am am ON am.oid = c.relam JOIN pg_namespace n ON n.oid = c.relnamespace WHERE n.nspname = 'lesson01' AND c.relname LIKE 'storage_%_demo' ORDER BY c.relname;",
+                                "SELECT * FROM pg_partition_tree('lesson01.partition_range_demo'::regclass);",
+                                "SELECT * FROM gp_toolkit.gp_partitions WHERE schemaname = 'lesson01';",
                                 "EXPLAIN SELECT sum(amount) FROM lesson01.fact_sales_partition_good WHERE sale_date >= DATE '2024-01-01' AND sale_date < DATE '2024-02-01';",
                             ],
                             "Почему partitioning intro не заменяет distribution design?",
@@ -377,7 +389,7 @@ class RunbookCatalog:
                                 "Partitioning дает pruning/retention по range/list; "
                                 "distribution решает parallel placement и join locality."
                             ),
-                            "Ученик находит PARTITION BY RANGE и объясняет pruning.",
+                            "Ученик находит PARTITION BY RANGE, PARTITION BY LIST, PARTITION BY HASH, DEFAULT partition, leaf_partitions, ATTACH PARTITION and DETACH PARTITION.",
                             common_links,
                         ),
                         RunbookStage(
@@ -462,6 +474,7 @@ class RunbookCatalog:
                                 "python3 mentor-lab.py check greenplum",
                                 "python3 mentor-lab.py seed greenplum --profile enterprise --dry-run",
                                 "docker compose -f labs/greenplum/docker-compose.yml exec -T -u gpadmin greenplum bash -lc '. /usr/local/greenplum-db/greenplum_path.sh && psql -U gpadmin -d mentor -v ON_ERROR_STOP=1 -f /mentor-lab/examples/storage-and-partitioning.sql'",
+                                "docker compose -f labs/greenplum/docker-compose.yml exec -T -u gpadmin greenplum bash -lc '. /usr/local/greenplum-db/greenplum_path.sh && psql -U gpadmin -d mentor -v ON_ERROR_STOP=1 -f /mentor-lab/examples/partitioning-strategies.sql'",
                             ],
                             "Почему выбранный partition key не обязан совпадать с distribution key?",
                             "Один оптимизирует pruning/retention, другой - segment placement.",

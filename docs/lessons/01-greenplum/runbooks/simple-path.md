@@ -11,7 +11,9 @@ Cross-links:
 - homework: `docs/lessons/01-greenplum/homework.md`
 - homework plan: `docs/lessons/01-greenplum/runbooks/homework-plan.md`
 - cluster inspection SQL: `labs/greenplum/examples/cluster-inspection.sql`
+- cluster monitoring SQL: `labs/greenplum/examples/cluster-monitoring.sql`
 - SQL examples: `labs/greenplum/examples/storage-and-partitioning.sql`
+- partitioning strategy examples: `labs/greenplum/examples/partitioning-strategies.sql`
 
 ## Stage 1: 00:00-10:00 - MPP И Роли Компонентов
 
@@ -68,6 +70,7 @@ Expected answer:
 
 ```sql
 \i /mentor-lab/examples/cluster-inspection.sql
+\i /mentor-lab/examples/cluster-monitoring.sql
 
 \i /mentor-lab/examples/storage-and-partitioning.sql
 \d+ lesson01.storage_heap_demo
@@ -91,9 +94,12 @@ python3 mentor-lab.py psql greenplum
 
 ```sql
 \i /mentor-lab/examples/cluster-inspection.sql
+\i /mentor-lab/examples/cluster-monitoring.sql
 \i /mentor-lab/examples/storage-and-partitioning.sql
 SHOW gp_default_storage_options;
 ```
+
+CLI snippets outside `psql` for mentor context: `gpstate -s`, `gpstate -m`, `gpstate -c`, `gpstate -e`.
 
 Production/admin snippet, не выполняем без необходимости:
 
@@ -127,7 +133,7 @@ Expected answer:
 - Ученик может назвать table-level, column-level, database-level, role-level и instance-level способы задать columnstore defaults.
 - Ученик понимает, что instance-level `gpconfig` - административный пример, а не команда для обычного урока.
 
-Ссылки: `student-workbook.md`, `homework.md`, `cluster-inspection.sql`, `storage-and-partitioning.sql`.
+Ссылки: `student-workbook.md`, `homework.md`, `cluster-inspection.sql`, `cluster-monitoring.sql`, `storage-and-partitioning.sql`, `partitioning-strategies.sql`.
 
 ## Stage 3: 24:00-42:00 - Distribution, Skew, EXPLAIN И Motion
 
@@ -194,6 +200,8 @@ Expected answer:
 Что показывает в Greenplum:
 
 ```sql
+\i /mentor-lab/examples/partitioning-strategies.sql
+
 EXPLAIN
 SELECT sum(amount)
 FROM lesson01.fact_sales_partition_bad
@@ -215,6 +223,19 @@ python3 mentor-lab.py grade greenplum --dry-run
 python3 mentor-lab.py runbook greenplum homework
 ```
 
+Если есть 5-7 минут на partitioning drill:
+
+```sql
+SELECT *
+FROM pg_partition_tree('lesson01.partition_range_demo'::regclass);
+
+SELECT *
+FROM gp_toolkit.gp_partitions
+WHERE schemaname = 'lesson01';
+```
+
+Ключевые маркеры: `PARTITION BY RANGE`, `PARTITION BY LIST`, `PARTITION BY HASH`, `DEFAULT partition`, `leaf_partitions`, `ATTACH PARTITION`, `DETACH PARTITION`, out-of-range INSERT.
+
 Что спрашиваем:
 
 > Почему partition key не равен distribution key?
@@ -223,10 +244,19 @@ Expected answer:
 
 > Partition key выбирается под фильтры времени, pruning и lifecycle/retention. Distribution key выбирается под равномерность, join locality и параллельность.
 
+Дополнительный вопрос:
+
+> Когда выбрать RANGE / LIST / HASH?
+
+Expected answer:
+
+> RANGE - для дат/числовых интервалов и retention, LIST - для конечных категорий, HASH - для bucketization. No default partitioning: partitions и `DEFAULT partition` нужно объявлять явно.
+
 Как проверяем:
 
 - Ученик формулирует RCA: symptom, evidence, root cause, fix, validation.
+- Ученик может посчитать `leaf_partitions` через `pg_partition_tree` или посмотреть их через `gp_toolkit.gp_partitions`.
 - Ученик называет домашние deliverables из `homework.md`.
 - Ученик понимает, что следующий урок - `Lesson 02: Partitioning, statistics and incremental loads in MPP`.
 
-Ссылки: `student-workbook.md`, `homework.md`, `cluster-inspection.sql`, `storage-and-partitioning.sql`.
+Ссылки: `student-workbook.md`, `homework.md`, `cluster-inspection.sql`, `cluster-monitoring.sql`, `storage-and-partitioning.sql`, `partitioning-strategies.sql`.

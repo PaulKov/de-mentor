@@ -5,7 +5,7 @@ from zipfile import ZipFile
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_greenplum_theory_deck_artifact_exists_and_has_31_slides():
+def test_greenplum_theory_deck_artifact_exists_and_has_32_slides():
     deck = ROOT / "artifacts" / "greenplum-theory.pptx"
 
     assert deck.exists()
@@ -18,15 +18,15 @@ def test_greenplum_theory_deck_artifact_exists_and_has_31_slides():
             if name.startswith("ppt/slides/slide") and name.endswith(".xml")
         ]
 
-    assert len(slides) == 31
+    assert len(slides) == 32
 
 
-def test_greenplum_theory_deck_source_has_31_slide_modules():
+def test_greenplum_theory_deck_source_has_32_slide_modules():
     slides_dir = ROOT / "decks" / "greenplum-theory" / "slides"
 
     slide_modules = sorted(slides_dir.glob("slide-*.mjs"))
 
-    assert len(slide_modules) == 31
+    assert len(slide_modules) == 32
     assert (slides_dir / "shared.mjs").exists()
 
 
@@ -57,6 +57,12 @@ def test_greenplum_theory_deck_uses_russian_light_theme():
     assert "appendoptimized=true" in source
     assert "orientation=column" in source
     assert "PARTITION BY RANGE" in source
+    assert "PARTITION BY LIST" in source
+    assert "PARTITION BY HASH" in source
+    assert "DEFAULT partition" in source
+    assert "pg_partition_tree" in source
+    assert "gp_toolkit.gp_partitions" in source
+    assert "leaf partitions" in source
     assert "Greenplum не sharded PostgreSQL" in source
     assert "APPENDIX: как читать EXPLAIN" in source
     assert "Physical joins in MPP" in source

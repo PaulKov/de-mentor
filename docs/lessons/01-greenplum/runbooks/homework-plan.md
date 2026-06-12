@@ -11,6 +11,7 @@ Cross-links:
 - simple runbook: `docs/lessons/01-greenplum/runbooks/simple-path.md`
 - deep-dive runbook: `docs/lessons/01-greenplum/runbooks/deep-dive-path.md`
 - SQL examples: `labs/greenplum/examples/storage-and-partitioning.sql`
+- partitioning strategy examples: `labs/greenplum/examples/partitioning-strategies.sql`
 
 ## Stage 1: 00:00-10:00 - Прочитать Задание И Зафиксировать Grain
 
@@ -46,7 +47,7 @@ Expected answer:
 - Ученик не подменил grain partition key или primary key.
 - Есть ссылка на `student-workbook.md` как источник базовых упражнений.
 
-Ссылки: `student-workbook.md`, `homework.md`, `storage-and-partitioning.sql`.
+Ссылки: `student-workbook.md`, `homework.md`, `storage-and-partitioning.sql`, `partitioning-strategies.sql`.
 
 ## Stage 2: 10:00-35:00 - Distribution, Skew И EXPLAIN Evidence
 
@@ -92,7 +93,7 @@ Expected answer:
 - В домашке есть хотя бы один `EXPLAIN`.
 - Ученик словами связывает Motion с distribution/join pattern.
 
-Ссылки: `student-workbook.md`, `homework.md`, `storage-and-partitioning.sql`.
+Ссылки: `student-workbook.md`, `homework.md`, `storage-and-partitioning.sql`, `partitioning-strategies.sql`.
 
 ## Stage 3: 35:00-60:00 - Storage И Partitioning Intro
 
@@ -104,6 +105,7 @@ Expected answer:
 
 ```sql
 \i /mentor-lab/examples/storage-and-partitioning.sql
+\i /mentor-lab/examples/partitioning-strategies.sql
 \d+ lesson01.storage_aoco_demo
 
 EXPLAIN
@@ -118,6 +120,9 @@ WHERE sale_date >= DATE '2026-01-01'
 ```bash
 docker compose -f labs/greenplum/docker-compose.yml exec -T -u gpadmin greenplum \
   bash -lc '. /usr/local/greenplum-db/greenplum_path.sh && psql -U gpadmin -d mentor -v ON_ERROR_STOP=1 -f /mentor-lab/examples/storage-and-partitioning.sql'
+
+docker compose -f labs/greenplum/docker-compose.yml exec -T -u gpadmin greenplum \
+  bash -lc '. /usr/local/greenplum-db/greenplum_path.sh && psql -U gpadmin -d mentor -v ON_ERROR_STOP=1 -f /mentor-lab/examples/partitioning-strategies.sql'
 ```
 
 Что спрашиваем:
@@ -131,10 +136,13 @@ Expected answer:
 Как проверяем:
 
 - В домашке есть `PARTITION BY RANGE` или явное объяснение, почему partitioning пока не нужен.
+- В домашке есть выбор `PARTITION BY RANGE`, `PARTITION BY LIST` или `PARTITION BY HASH` по workload.
+- В домашке есть проверка `leaf_partitions` через `pg_partition_tree` или `gp_toolkit.gp_partitions`.
+- Ученик объясняет `DEFAULT partition`, no default partitioning, out-of-range INSERT и maintenance snippets `ATTACH PARTITION` / `DETACH PARTITION`.
 - В домашке есть storage choice: heap, AO row или AOCO.
 - В домашке указано, что `gp_default_storage_options` можно задать на database/role/cluster level, но production-defaults не меняются без админского решения.
 
-Ссылки: `student-workbook.md`, `homework.md`, `storage-and-partitioning.sql`.
+Ссылки: `student-workbook.md`, `homework.md`, `storage-and-partitioning.sql`, `partitioning-strategies.sql`.
 
 ## Stage 4: 60:00-90:00 - Optional Deep Tasks И Что Принести На Следующий Урок
 
@@ -176,7 +184,7 @@ Expected answer:
 - Есть 3 риска и как они проверяются.
 - Есть список вопросов на следующий урок.
 
-Ссылки: `student-workbook.md`, `homework.md`, `storage-and-partitioning.sql`.
+Ссылки: `student-workbook.md`, `homework.md`, `storage-and-partitioning.sql`, `partitioning-strategies.sql`.
 
 ## Acceptance Criteria
 

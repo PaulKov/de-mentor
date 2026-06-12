@@ -249,7 +249,9 @@ python3 mentor-lab.py dsl greenplum show redistribute-join
 | Исходники презентации | [decks/greenplum-theory](decks/greenplum-theory/README.md) |
 | Стенд Greenplum | [labs/greenplum](labs/greenplum/README.md) |
 | Cluster inspection SQL | [cluster-inspection.sql](labs/greenplum/examples/cluster-inspection.sql) |
+| Cluster monitoring SQL | [cluster-monitoring.sql](labs/greenplum/examples/cluster-monitoring.sql) |
 | Storage/partitioning SQL | [storage-and-partitioning.sql](labs/greenplum/examples/storage-and-partitioning.sql) |
+| Partitioning strategies SQL | [partitioning-strategies.sql](labs/greenplum/examples/partitioning-strategies.sql) |
 
 ## Структура проекта
 
