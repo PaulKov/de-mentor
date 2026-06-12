@@ -1,6 +1,6 @@
 # Домашняя Работа
 
-План выполнения: `runbooks/homework-plan.md`. На выполнение закладывай 60-90 минут. Следующий урок: `Lesson 02: Partitioning, statistics and incremental loads in MPP`.
+План выполнения: [homework plan](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/homework-plan.md). На выполнение закладывай 60-90 минут. Следующий урок: `Lesson 02: Partitioning, statistics and incremental loads in MPP`.
 
 ## Кейс
 
@@ -115,7 +115,7 @@ WHERE schemaname = 'lesson01';
 
 ## Optional Deep Tasks
 
-- Заполни plan-reading ladder из `student-workbook.md`.
+- Заполни plan-reading ladder из [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md).
 - Сравни co-located join, Broadcast Motion и Redistribute Motion.
 - Объясни, почему Greenplum vs sharded PostgreSQL - это не только вопрос "несколько PostgreSQL-инстансов".
 - Опиши, где бы ты задал `gp_default_storage_options`: table, database, role или instance level.

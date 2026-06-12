@@ -18,7 +18,7 @@ python3 mentor-lab.py psql greenplum
 
 На Windows используй `py mentor-lab.py ...` вместо `python3 mentor-lab.py ...`.
 
-Первый запуск может занять несколько минут: контейнер поднимает Greenplum и выполняет SQL-файлы из `labs/greenplum/init`.
+Первый запуск может занять несколько минут: контейнер поднимает Greenplum и выполняет SQL-файлы из [init scripts](https://github.com/PaulKov/de-mentor/tree/master/labs/greenplum/init).
 
 ## Подключение
 
@@ -49,8 +49,8 @@ Compose поднимает учебный single-container Greenplum:
 | User / password | `gpadmin` / `gparray` |
 | Published port | `15432:5432` |
 | Data volume | `greenplum-data` |
-| Init scripts | `labs/greenplum/init` -> `/docker-entrypoint-initdb.d` |
-| Examples | `labs/greenplum/examples` -> `/mentor-lab/examples` |
+| Init scripts | [init scripts](https://github.com/PaulKov/de-mentor/tree/master/labs/greenplum/init) -> `/docker-entrypoint-initdb.d` |
+| Examples | [SQL examples](https://github.com/PaulKov/de-mentor/tree/master/labs/greenplum/examples) -> `/mentor-lab/examples` |
 
 Фактическая topology внутри Greenplum:
 

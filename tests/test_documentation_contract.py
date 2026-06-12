@@ -1,7 +1,17 @@
+import re
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+REPO_BLOB_BASE = "https://github.com/PaulKov/de-mentor/blob/master/"
+GPDB_BLOB_BASE = (
+    "https://github.com/PaulKov/gpdb/blob/"
+    "482967c1b49028cf072c15935462f75bc3e4b045/"
+)
+
+
+def _without_fenced_code(content: str) -> str:
+    return re.sub(r"```.*?```", "", content, flags=re.DOTALL)
 
 
 def test_professional_lesson_artifacts_exist():
@@ -121,15 +131,15 @@ def test_workbook_has_end_of_lesson_student_handoff_pack():
     assert "## Что Отправить Ученику После Урока" in workbook
 
     required_links = [
-        "runbooks/student-prep.md",
-        "../../../labs/greenplum/README.md",
-        "student-workbook.md",
-        "homework.md",
-        "runbooks/homework-plan.md",
-        "../../../labs/greenplum/examples/cluster-inspection.sql",
-        "../../../labs/greenplum/examples/cluster-monitoring.sql",
-        "../../../labs/greenplum/examples/storage-and-partitioning.sql",
-        "../../../labs/greenplum/examples/partitioning-strategies.sql",
+        f"{REPO_BLOB_BASE}docs/lessons/01-greenplum/runbooks/student-prep.md",
+        f"{REPO_BLOB_BASE}labs/greenplum/README.md",
+        f"{REPO_BLOB_BASE}docs/lessons/01-greenplum/student-workbook.md",
+        f"{REPO_BLOB_BASE}docs/lessons/01-greenplum/homework.md",
+        f"{REPO_BLOB_BASE}docs/lessons/01-greenplum/runbooks/homework-plan.md",
+        f"{REPO_BLOB_BASE}labs/greenplum/examples/cluster-inspection.sql",
+        f"{REPO_BLOB_BASE}labs/greenplum/examples/cluster-monitoring.sql",
+        f"{REPO_BLOB_BASE}labs/greenplum/examples/storage-and-partitioning.sql",
+        f"{REPO_BLOB_BASE}labs/greenplum/examples/partitioning-strategies.sql",
     ]
     required_commands = [
         "python3 mentor-lab.py doctor",
@@ -324,6 +334,101 @@ def test_master_segment_deep_dive_has_diagrams_and_source_anchors():
     assert "AOCO" in guide
     assert "cdbdisp_query.c" in guide
     assert "nodeMotion.c" in guide
+
+
+def test_greenplum_source_anchors_use_remote_fork_links():
+    docs = [
+        ROOT / "docs/lessons/01-greenplum/deep-dives/master-segment-data-path.md",
+        ROOT / "docs/lessons/01-greenplum/deep-dives/physical-joins-in-mpp.md",
+    ]
+    combined = "\n".join(path.read_text(encoding="utf-8") for path in docs)
+
+    expected_sources = [
+        "src/backend/cdb/dispatcher/cdbdisp_query.c",
+        "src/backend/cdb/cdbsrlz.c",
+        "src/include/executor/execdesc.h",
+        "src/backend/executor/execMain.c",
+        "src/backend/executor/nodeMotion.c",
+        "src/backend/cdb/motion/tupser.c",
+        "src/include/cdb/ml_ipc.h",
+        "src/backend/cdb/motion/ic_udpifc.c",
+        "src/include/commands/copy.h",
+        "src/bin/gpfdist/gpfdist.c",
+        "src/backend/access/external/url_curl.c",
+        "src/backend/cdb/cdbpath.c",
+        "src/backend/optimizer/path/joinpath.c",
+        "src/backend/optimizer/util/pathnode.c",
+        "src/backend/cdb/cdbpathtoplan.c",
+        "src/backend/executor/nodeHashjoin.c",
+        "src/backend/executor/nodeNestloop.c",
+        "src/backend/executor/nodeMergejoin.c",
+    ]
+
+    assert "/tmp/gpdb-source" not in combined
+    for source_path in expected_sources:
+        assert f"{GPDB_BLOB_BASE}{source_path}" in combined
+
+
+def test_lesson_cross_links_are_clickable_repo_links():
+    docs = [
+        ROOT / "decks/greenplum-theory/README.md",
+        ROOT / "decks/greenplum-theory/facilitator-guide.md",
+        ROOT / "docs/lessons/01-greenplum/README.md",
+        ROOT / "docs/lessons/01-greenplum/mentor-guide.md",
+        ROOT / "docs/lessons/01-greenplum/student-workbook.md",
+        ROOT / "docs/lessons/01-greenplum/homework.md",
+        ROOT / "docs/lessons/01-greenplum/runbooks/simple-path.md",
+        ROOT / "docs/lessons/01-greenplum/runbooks/deep-dive-path.md",
+        ROOT / "docs/lessons/01-greenplum/runbooks/homework-plan.md",
+        ROOT / "docs/lessons/01-greenplum/runbooks/student-prep.md",
+        ROOT / "docs/lessons/01-greenplum/deep-dives/master-segment-data-path.md",
+        ROOT / "docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md",
+        ROOT / "labs/greenplum/README.md",
+    ]
+    path_like_span = re.compile(
+        r"(\.\./|docs/lessons/|labs/greenplum/|decks/greenplum|"
+        r"artifacts/greenplum|\.md$|\.sql$|\.pptx$)"
+    )
+
+    offenders = []
+    for path in docs:
+        prose = _without_fenced_code(path.read_text(encoding="utf-8"))
+        for inline_code in re.findall(r"`([^`]+)`", prose):
+            if inline_code.startswith(r"\i /mentor-lab/examples/"):
+                continue
+            if path_like_span.search(inline_code):
+                offenders.append(f"{path.relative_to(ROOT).as_posix()}: `{inline_code}`")
+
+    assert offenders == []
+
+    relative_link_targets = []
+    for path in docs:
+        prose = _without_fenced_code(path.read_text(encoding="utf-8"))
+        for target in re.findall(r"\[[^\]]+\]\(([^)]+)\)", prose):
+            if target.startswith("../") or target.startswith("./"):
+                relative_link_targets.append(
+                    f"{path.relative_to(ROOT).as_posix()}: {target}"
+                )
+
+    assert relative_link_targets == []
+
+    workbook = (ROOT / "docs/lessons/01-greenplum/student-workbook.md").read_text(
+        encoding="utf-8"
+    )
+    runbook = (
+        ROOT / "docs/lessons/01-greenplum/runbooks/simple-path.md"
+    ).read_text(encoding="utf-8")
+    for url in [
+        f"{REPO_BLOB_BASE}docs/lessons/01-greenplum/runbooks/student-prep.md",
+        f"{REPO_BLOB_BASE}docs/lessons/01-greenplum/homework.md",
+        f"{REPO_BLOB_BASE}labs/greenplum/README.md",
+        f"{REPO_BLOB_BASE}labs/greenplum/examples/cluster-inspection.sql",
+        f"{REPO_BLOB_BASE}labs/greenplum/examples/cluster-monitoring.sql",
+        f"{REPO_BLOB_BASE}labs/greenplum/examples/storage-and-partitioning.sql",
+        f"{REPO_BLOB_BASE}labs/greenplum/examples/partitioning-strategies.sql",
+    ]:
+        assert url in workbook
+    assert f"{REPO_BLOB_BASE}artifacts/greenplum-theory.pptx" in runbook
 
 
 def test_qd_qe_gang_slices_deep_dive_is_canonical_and_teachable():

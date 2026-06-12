@@ -42,14 +42,14 @@ flowchart LR
 
 Важные source anchors:
 
-- `/tmp/gpdb-source/src/backend/cdb/cdbpath.c:1277-1304` - `cdbpath_motion_for_join()`, выбор места join и Motion.
-- `/tmp/gpdb-source/src/backend/optimizer/path/joinpath.c:2153-2167` - `select_cdb_redistribute_clauses()`, выбор equijoin clauses, пригодных для redistribution.
-- `/tmp/gpdb-source/src/backend/optimizer/util/pathnode.c:466-548` - проверка `CdbPathLocus` и сохранение paths с разным locus в upper planner.
-- `/tmp/gpdb-source/src/backend/cdb/cdbpathtoplan.c:23-87` - преобразование `CdbPathLocus` в executor `Flow`.
-- `/tmp/gpdb-source/src/backend/executor/nodeHashjoin.c:128-230` - state machine `Hash Join`.
-- `/tmp/gpdb-source/src/backend/executor/nodeHashjoin.c:1459-1515` - spill tuple format: hash value + `MinimalTuple`.
-- `/tmp/gpdb-source/src/backend/executor/nodeNestloop.c:39-115` - nested loop и MPP-комментарий про Motion ниже join.
-- `/tmp/gpdb-source/src/backend/executor/nodeMergejoin.c:632-705` - merge join state machine и MPP-комментарий про Motion.
+- [cdbpath.c:1277-1304](https://github.com/PaulKov/gpdb/blob/482967c1b49028cf072c15935462f75bc3e4b045/src/backend/cdb/cdbpath.c#L1277-L1304) - `cdbpath_motion_for_join()`, выбор места join и Motion.
+- [joinpath.c:2153-2167](https://github.com/PaulKov/gpdb/blob/482967c1b49028cf072c15935462f75bc3e4b045/src/backend/optimizer/path/joinpath.c#L2153-L2167) - `select_cdb_redistribute_clauses()`, выбор equijoin clauses, пригодных для redistribution.
+- [pathnode.c:466-548](https://github.com/PaulKov/gpdb/blob/482967c1b49028cf072c15935462f75bc3e4b045/src/backend/optimizer/util/pathnode.c#L466-L548) - проверка `CdbPathLocus` и сохранение paths с разным locus в upper planner.
+- [cdbpathtoplan.c:23-87](https://github.com/PaulKov/gpdb/blob/482967c1b49028cf072c15935462f75bc3e4b045/src/backend/cdb/cdbpathtoplan.c#L23-L87) - преобразование `CdbPathLocus` в executor `Flow`.
+- [nodeHashjoin.c:128-230](https://github.com/PaulKov/gpdb/blob/482967c1b49028cf072c15935462f75bc3e4b045/src/backend/executor/nodeHashjoin.c#L128-L230) - state machine `Hash Join`.
+- [nodeHashjoin.c:1459-1515](https://github.com/PaulKov/gpdb/blob/482967c1b49028cf072c15935462f75bc3e4b045/src/backend/executor/nodeHashjoin.c#L1459-L1515) - spill tuple format: hash value + `MinimalTuple`.
+- [nodeNestloop.c:39-115](https://github.com/PaulKov/gpdb/blob/482967c1b49028cf072c15935462f75bc3e4b045/src/backend/executor/nodeNestloop.c#L39-L115) - nested loop и MPP-комментарий про Motion ниже join.
+- [nodeMergejoin.c:632-705](https://github.com/PaulKov/gpdb/blob/482967c1b49028cf072c15935462f75bc3e4b045/src/backend/executor/nodeMergejoin.c#L632-L705) - merge join state machine и MPP-комментарий про Motion.
 
 ## Алгоритм Мышления
 
@@ -123,4 +123,3 @@ GROUP BY p.category;
 В Greenplum нельзя сказать "у нас Hash Join, значит все хорошо". Надо сказать полную фразу:
 
 > План делает `Hash Join` после `Redistribute Motion`, потому что физический locus входов не совпадает с join key. Риск состоит в сетевой цене, skew и возможном spill build side.
-

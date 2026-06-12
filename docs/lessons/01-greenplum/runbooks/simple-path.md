@@ -4,16 +4,16 @@
 
 Cross-links:
 
-- deck: `artifacts/greenplum-theory.pptx`
-- facilitator guide: `decks/greenplum-theory/facilitator-guide.md`
-- student prep: `docs/lessons/01-greenplum/runbooks/student-prep.md`
-- workbook: `docs/lessons/01-greenplum/student-workbook.md`
-- homework: `docs/lessons/01-greenplum/homework.md`
-- homework plan: `docs/lessons/01-greenplum/runbooks/homework-plan.md`
-- cluster inspection SQL: `labs/greenplum/examples/cluster-inspection.sql`
-- cluster monitoring SQL: `labs/greenplum/examples/cluster-monitoring.sql`
-- SQL examples: `labs/greenplum/examples/storage-and-partitioning.sql`
-- partitioning strategy examples: `labs/greenplum/examples/partitioning-strategies.sql`
+- deck: [Greenplum theory deck](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-theory.pptx)
+- facilitator guide: [facilitator guide](https://github.com/PaulKov/de-mentor/blob/master/decks/greenplum-theory/facilitator-guide.md)
+- student prep: [student prep](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/student-prep.md)
+- workbook: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md)
+- homework: [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md)
+- homework plan: [homework plan](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/homework-plan.md)
+- cluster inspection SQL: [cluster inspection SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-inspection.sql)
+- cluster monitoring SQL: [cluster monitoring SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-monitoring.sql)
+- SQL examples: [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql)
+- partitioning strategy examples: [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql)
 
 ## Stage 1: 00:00-10:00 - MPP И Роли Компонентов
 
@@ -56,7 +56,7 @@ Expected answer:
 
 > Теперь посмотрим, как физическая модель хранения влияет на scan, compression и демонстрацию columnstore.
 
-Ссылки: `student-workbook.md`, `homework.md`, `cluster-inspection.sql`, `storage-and-partitioning.sql`.
+Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [cluster inspection SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-inspection.sql), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql).
 
 ## Stage 2: 10:00-24:00 - Execution, Lab Passport, Heap И AOCO
 
@@ -133,7 +133,7 @@ Expected answer:
 - Ученик может назвать table-level, column-level, database-level, role-level и instance-level способы задать columnstore defaults.
 - Ученик понимает, что instance-level `gpconfig` - административный пример, а не команда для обычного урока.
 
-Ссылки: `student-workbook.md`, `homework.md`, `cluster-inspection.sql`, `cluster-monitoring.sql`, `storage-and-partitioning.sql`, `partitioning-strategies.sql`.
+Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [cluster inspection SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-inspection.sql), [cluster monitoring SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-monitoring.sql), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql), [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql).
 
 ## Stage 3: 24:00-42:00 - Distribution, Skew, EXPLAIN И Motion
 
@@ -187,7 +187,7 @@ Expected answer:
 - Ученик отличает `Hash Join` как локальный алгоритм от `Redistribute Motion` как сетевой цены.
 - Ученик связывает улучшение `fact_sales_good` с `DISTRIBUTED BY (customer_id)`.
 
-Ссылки: `student-workbook.md`, `homework.md`, `cluster-inspection.sql`, `storage-and-partitioning.sql`.
+Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [cluster inspection SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-inspection.sql), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql).
 
 ## Stage 4: 42:00-60:00 - Partitioning Intro, Incident И Homework
 
@@ -256,7 +256,7 @@ Expected answer:
 
 - Ученик формулирует RCA: symptom, evidence, root cause, fix, validation.
 - Ученик может посчитать `leaf_partitions` через `pg_partition_tree` или посмотреть их через `gp_toolkit.gp_partitions`.
-- Ученик называет домашние deliverables из `homework.md`.
+- Ученик называет домашние deliverables из [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md).
 - Ученик понимает, что следующий урок - `Lesson 02: Partitioning, statistics and incremental loads in MPP`.
 
-Ссылки: `student-workbook.md`, `homework.md`, `cluster-inspection.sql`, `cluster-monitoring.sql`, `storage-and-partitioning.sql`, `partitioning-strategies.sql`.
+Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [cluster inspection SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-inspection.sql), [cluster monitoring SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-monitoring.sql), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql), [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql).

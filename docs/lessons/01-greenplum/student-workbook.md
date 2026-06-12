@@ -2,21 +2,21 @@
 
 Этот workbook связан с маршрутами ментора и домашкой:
 
-- student prep: `runbooks/student-prep.md`
-- simple path: `runbooks/simple-path.md`
-- deep-dive path: `runbooks/deep-dive-path.md`
-- homework plan: `runbooks/homework-plan.md`
-- homework: `homework.md`
-- QD/QE/slices/gangs deep dive: `deep-dives/qd-qe-gang-slices-explained.md`
-- partitioning deep dive: `deep-dives/partitioning-strategies.md`
-- cluster inspection: `../../../labs/greenplum/examples/cluster-inspection.sql`
-- cluster monitoring: `../../../labs/greenplum/examples/cluster-monitoring.sql`
-- runnable storage/partitioning examples: `../../../labs/greenplum/examples/storage-and-partitioning.sql`
-- runnable partitioning strategies examples: `../../../labs/greenplum/examples/partitioning-strategies.sql`
+- student prep: [student prep](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/student-prep.md)
+- simple path: [simple path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/simple-path.md)
+- deep-dive path: [deep-dive path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/deep-dive-path.md)
+- homework plan: [homework plan](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/homework-plan.md)
+- homework: [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md)
+- QD/QE/slices/gangs deep dive: [QD/QE/gang/slices explained](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md)
+- partitioning deep dive: [partitioning strategies](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md)
+- cluster inspection: [cluster inspection SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-inspection.sql)
+- cluster monitoring: [cluster monitoring SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-monitoring.sql)
+- runnable storage/partitioning examples: [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql)
+- runnable partitioning strategies examples: [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql)
 
 ## Подготовка
 
-Перед уроком пройди `runbooks/student-prep.md`. Если стенд не стартует, принеси ментору вывод команд из секции "Что принести ментору, если не завелось".
+Перед уроком пройди [student prep](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/student-prep.md). Если стенд не стартует, принеси ментору вывод команд из секции "Что принести ментору, если не завелось".
 
 macOS:
 
@@ -88,7 +88,7 @@ ORDER BY content, role;
 
 ## Задание 1.1: QD, QE, Gang, Slice
 
-Перед заданием можно открыть `deep-dives/qd-qe-gang-slices-explained.md`: там есть короткая аналогия, пример `EXPLAIN` с `Redistribute Motion 48:48` и объяснение, почему slice - это часть плана, а gang - группа QE-процессов.
+Перед заданием можно открыть [QD/QE/gang/slices explained](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md): там есть короткая аналогия, пример `EXPLAIN` с `Redistribute Motion 48:48` и объяснение, почему slice - это часть плана, а gang - группа QE-процессов.
 
 Заполни короткую карту компонентов:
 
@@ -175,7 +175,7 @@ ORDER BY revenue DESC;
 
 ## Задание 5: Heap vs AO Row vs AOCO
 
-Запусти runnable demo из `storage-and-partitioning.sql`.
+Запусти runnable demo из [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql).
 
 Внутри `psql`:
 
@@ -277,7 +277,7 @@ gpstop -u
 
 Partitioning в первом уроке - intro + короткий catalog drill. Глубокая практика будет в `Lesson 02: Partitioning, statistics and incremental loads in MPP`.
 
-Сравни bad/good пример из `storage-and-partitioning.sql`:
+Сравни bad/good пример из [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql):
 
 ```sql
 -- bad: partition не помогает типичному фильтру по sale_date
@@ -303,7 +303,7 @@ WHERE sale_date >= DATE '2026-01-01'
 
 ## Задание 7.1: Partitioning Strategies И Catalog Checks
 
-Открой deep dive `deep-dives/partitioning-strategies.md`, затем запусти runnable drill:
+Открой deep dive [partitioning strategies](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md), затем запусти runnable drill:
 
 ```sql
 \i /mentor-lab/examples/partitioning-strategies.sql
@@ -503,10 +503,10 @@ python3 mentor-lab.py hint greenplum mpp-systems
 
 После урока открой:
 
-- `homework.md` - что сдать;
-- `runbooks/homework-plan.md` - как разложить домашку на 60-90 минут;
-- `storage-and-partitioning.sql` - SQL-демо, которое можно переиспользовать в домашней модели;
-- `partitioning-strategies.sql` - SQL-дрилл по `PARTITION BY RANGE`, `PARTITION BY LIST`, `PARTITION BY HASH`, `DEFAULT partition`, `pg_partition_tree`, `gp_toolkit.gp_partitions`, `leaf_partitions`, `ATTACH PARTITION`, `DETACH PARTITION` и out-of-range INSERT.
+- [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md) - что сдать;
+- [homework plan](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/homework-plan.md) - как разложить домашку на 60-90 минут;
+- [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql) - SQL-демо, которое можно переиспользовать в домашней модели;
+- [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql) - SQL-дрилл по `PARTITION BY RANGE`, `PARTITION BY LIST`, `PARTITION BY HASH`, `DEFAULT partition`, `pg_partition_tree`, `gp_toolkit.gp_partitions`, `leaf_partitions`, `ATTACH PARTITION`, `DETACH PARTITION` и out-of-range INSERT.
 
 На следующий урок принеси:
 
@@ -522,15 +522,15 @@ python3 mentor-lab.py hint greenplum mpp-systems
 
 Материалы:
 
-1. `runbooks/student-prep.md` - подготовка Docker, Python и базовая диагностика для macOS, Windows и Linux.
-2. `../../../labs/greenplum/README.md` - как устроен Docker-стенд Greenplum и как его запустить.
-3. `student-workbook.md` - задания урока и self-check по кластеру, skew, Motion, storage и partitioning intro.
-4. `homework.md` - что нужно сдать после урока.
-5. `runbooks/homework-plan.md` - план самостоятельной работы на 60-90 минут.
-6. `../../../labs/greenplum/examples/cluster-inspection.sql` - проверка topology, segments, memory settings и disk free.
-7. `../../../labs/greenplum/examples/cluster-monitoring.sql` - расширенная проверка `gp_segment_configuration`, `gp_toolkit.gp_disk_free`, `gp_segment_id`, pseudo/system columns и `gpstate -s` snippets.
-8. `../../../labs/greenplum/examples/storage-and-partitioning.sql` - runnable demo для Heap/AO/AOCO и partitioning intro.
-9. `../../../labs/greenplum/examples/partitioning-strategies.sql` - runnable demo для partitioning strategies и catalog checks.
+1. [Student prep](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/student-prep.md) - подготовка Docker, Python и базовая диагностика для macOS, Windows и Linux.
+2. [Greenplum lab README](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/README.md) - как устроен Docker-стенд Greenplum и как его запустить.
+3. [Student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md) - задания урока и self-check по кластеру, skew, Motion, storage и partitioning intro.
+4. [Homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md) - что нужно сдать после урока.
+5. [Homework plan](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/homework-plan.md) - план самостоятельной работы на 60-90 минут.
+6. [Cluster inspection SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-inspection.sql) - проверка topology, segments, memory settings и disk free.
+7. [Cluster monitoring SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-monitoring.sql) - расширенная проверка `gp_segment_configuration`, `gp_toolkit.gp_disk_free`, `gp_segment_id`, pseudo/system columns и `gpstate -s` snippets.
+8. [Storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql) - runnable demo для Heap/AO/AOCO и partitioning intro.
+9. [Partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql) - runnable demo для partitioning strategies и catalog checks.
 
 Команды для macOS/Linux:
 

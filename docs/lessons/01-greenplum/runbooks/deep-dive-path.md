@@ -4,20 +4,20 @@
 
 Cross-links:
 
-- deck: `artifacts/greenplum-theory.pptx`
-- facilitator guide: `decks/greenplum-theory/facilitator-guide.md`
-- student prep: `docs/lessons/01-greenplum/runbooks/student-prep.md`
-- workbook: `docs/lessons/01-greenplum/student-workbook.md`
-- homework: `docs/lessons/01-greenplum/homework.md`
-- homework plan: `docs/lessons/01-greenplum/runbooks/homework-plan.md`
-- SQL examples: `labs/greenplum/examples/storage-and-partitioning.sql`
-- partitioning strategy examples: `labs/greenplum/examples/partitioning-strategies.sql`
-- cluster monitoring SQL: `labs/greenplum/examples/cluster-monitoring.sql`
-- QD/QE/slices/gangs explained: `docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md`
-- QD/QE deep dive: `docs/lessons/01-greenplum/deep-dives/master-segment-data-path.md`
-- joins deep dive: `docs/lessons/01-greenplum/deep-dives/physical-joins-in-mpp.md`
-- partitioning deep dive: `docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md`
-- EXPLAIN ladder: `docs/lessons/01-greenplum/deep-dives/explain-plan-reading.md`
+- deck: [Greenplum theory deck](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-theory.pptx)
+- facilitator guide: [facilitator guide](https://github.com/PaulKov/de-mentor/blob/master/decks/greenplum-theory/facilitator-guide.md)
+- student prep: [student prep](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/student-prep.md)
+- workbook: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md)
+- homework: [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md)
+- homework plan: [homework plan](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/homework-plan.md)
+- SQL examples: [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql)
+- partitioning strategy examples: [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql)
+- cluster monitoring SQL: [cluster monitoring SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-monitoring.sql)
+- QD/QE/slices/gangs explained: [QD/QE/gang/slices explained](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md)
+- QD/QE deep dive: [master/segment data path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/master-segment-data-path.md)
+- joins deep dive: [physical joins in MPP](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/physical-joins-in-mpp.md)
+- partitioning deep dive: [partitioning strategies](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md)
+- EXPLAIN ladder: [EXPLAIN plan reading](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/explain-plan-reading.md)
 
 ## Stage 1: 00:00-15:00 - QD/QE, Gang, Slices
 
@@ -58,7 +58,7 @@ Expected answer:
 - Ученик объясняет `QD`, `QE`, `gang`, `slice` сначала простыми словами.
 - Ученик может технически сказать: plan режется на slices, slice исполняется gang-процессами на сегментах, а `QueryDispatchDesc` создается на QD и отправляется на QE.
 
-Ссылки: `student-workbook.md`, `deep-dives/qd-qe-gang-slices-explained.md`, `homework.md`, `storage-and-partitioning.sql`, `partitioning-strategies.sql`.
+Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [QD/QE/gang/slices explained](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql), [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql).
 
 ## Stage 2: 15:00-40:00 - Master/Coordinator Data Path И Bulk I/O
 
@@ -102,7 +102,7 @@ Expected answer:
 - Ученик отличает result gather от parallel external table read.
 - Ученик не говорит, что Redistribute Motion гоняет все строки через master.
 
-Ссылки: `student-workbook.md`, `homework.md`, `storage-and-partitioning.sql`, `cluster-monitoring.sql`, `partitioning-strategies.sql`.
+Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql), [cluster monitoring SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-monitoring.sql), [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql).
 
 ## Stage 3: 40:00-65:00 - Storage Internals, Defaults И Partitioning Strategies
 
@@ -175,7 +175,7 @@ Expected answer:
 - Ученик считает `leaf_partitions` через `pg_partition_tree` и знает compatibility view `gp_toolkit.gp_partitions`.
 - Ученик узнает maintenance snippets: `ATTACH PARTITION`, `DETACH PARTITION`, retention `DROP TABLE`.
 
-Ссылки: `student-workbook.md`, `homework.md`, `storage-and-partitioning.sql`, `partitioning-strategies.sql`, `deep-dives/partitioning-strategies.md`.
+Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql), [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql), [partitioning strategies deep dive](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md).
 
 ## Stage 4: 65:00-95:00 - EXPLAIN Ladder И Physical Joins In MPP
 
@@ -222,7 +222,7 @@ Expected answer:
 - Ученик отличает co-located join от Broadcast/Redistribute join.
 - Ученик понимает, почему один distribution key не оптимизирует все joins.
 
-Ссылки: `student-workbook.md`, `homework.md`, `storage-and-partitioning.sql`, `partitioning-strategies.sql`.
+Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql), [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql).
 
 ## Stage 5: 95:00-120:00 - System Taxonomy, Caveats И Next Lesson
 
@@ -261,6 +261,6 @@ Expected answer:
 
 - Ученик классифицирует сценарии как SMP/MPP/EPP/lakehouse/HTAP.
 - Ученик называет caveat: ALTER TABLE storage changes требуют понимания rewrite/maintenance и не являются бесплатной кнопкой.
-- Ученик забирает `homework.md` и `runbooks/homework-plan.md`.
+- Ученик забирает [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md) и [homework plan](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/homework-plan.md).
 
-Ссылки: `student-workbook.md`, `homework.md`, `storage-and-partitioning.sql`, `partitioning-strategies.sql`.
+Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql), [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql).
