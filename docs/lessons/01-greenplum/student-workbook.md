@@ -430,3 +430,42 @@ python3 mentor-lab.py hint greenplum mpp-systems
 - self-check commands;
 - `EXPLAIN` evidence;
 - вопросы по partition pruning, statistics after load и incremental loads.
+
+## Что Отправить Ученику После Урока
+
+Скопируй ученику этот handoff pack, чтобы он сам поднял Greenplum, воспроизвел тестовую среду и выполнил домашку.
+
+Материалы:
+
+1. `runbooks/student-prep.md` - подготовка Docker, Python и базовая диагностика для macOS, Windows и Linux.
+2. `../../../labs/greenplum/README.md` - как устроен Docker-стенд Greenplum и как его запустить.
+3. `student-workbook.md` - задания урока и self-check по кластеру, skew, Motion, storage и partitioning intro.
+4. `homework.md` - что нужно сдать после урока.
+5. `runbooks/homework-plan.md` - план самостоятельной работы на 60-90 минут.
+6. `../../../labs/greenplum/examples/cluster-inspection.sql` - проверка topology, segments, memory settings и disk free.
+7. `../../../labs/greenplum/examples/storage-and-partitioning.sql` - runnable demo для Heap/AO/AOCO и partitioning intro.
+
+Команды для macOS/Linux:
+
+```bash
+python3 mentor-lab.py doctor
+python3 mentor-lab.py up greenplum
+python3 mentor-lab.py check greenplum
+python3 mentor-lab.py psql greenplum
+```
+
+Команды для Windows PowerShell:
+
+```powershell
+py mentor-lab.py doctor
+py mentor-lab.py up greenplum
+py mentor-lab.py check greenplum
+py mentor-lab.py psql greenplum
+```
+
+Что ученик должен увидеть:
+
+- `mentor-lab.py check greenplum` возвращает `PASS`;
+- `\i /mentor-lab/examples/cluster-inspection.sql` показывает 1 coordinator/master и 2 primary segments;
+- `\i /mentor-lab/examples/storage-and-partitioning.sql` создает demo-таблицы для heap, AO row, AOCO и partitioning;
+- в домашке есть DDL/архитектурные решения, skew check, `EXPLAIN` evidence и вопросы к Lesson 02.
