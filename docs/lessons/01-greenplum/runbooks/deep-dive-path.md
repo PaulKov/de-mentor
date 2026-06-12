@@ -6,6 +6,7 @@ Cross-links:
 
 - deck: `artifacts/greenplum-theory.pptx`
 - facilitator guide: `decks/greenplum-theory/facilitator-guide.md`
+- student prep: `docs/lessons/01-greenplum/runbooks/student-prep.md`
 - workbook: `docs/lessons/01-greenplum/student-workbook.md`
 - homework: `docs/lessons/01-greenplum/homework.md`
 - homework plan: `docs/lessons/01-greenplum/runbooks/homework-plan.md`

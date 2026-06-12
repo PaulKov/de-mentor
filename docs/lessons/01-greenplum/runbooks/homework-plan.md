@@ -5,6 +5,7 @@
 Cross-links:
 
 - deck: `artifacts/greenplum-theory.pptx`
+- student prep: `docs/lessons/01-greenplum/runbooks/student-prep.md`
 - workbook: `docs/lessons/01-greenplum/student-workbook.md`
 - homework: `docs/lessons/01-greenplum/homework.md`
 - simple runbook: `docs/lessons/01-greenplum/runbooks/simple-path.md`

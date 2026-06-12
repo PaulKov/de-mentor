@@ -10,6 +10,7 @@
 
 - deck source: `decks/greenplum-theory/slides`;
 - facilitator guide: `decks/greenplum-theory/facilitator-guide.md`;
+- student prep: `docs/lessons/01-greenplum/runbooks/student-prep.md`;
 - simple path: `docs/lessons/01-greenplum/runbooks/simple-path.md`;
 - deep-dive path: `docs/lessons/01-greenplum/runbooks/deep-dive-path.md`;
 - homework route: `docs/lessons/01-greenplum/runbooks/homework-plan.md`;
@@ -32,6 +33,7 @@ CLI shortcuts:
 python3 mentor-lab.py runbook greenplum simple
 python3 mentor-lab.py runbook greenplum deep
 python3 mentor-lab.py runbook greenplum homework
+python3 mentor-lab.py runbook greenplum prep
 ```
 
 Advanced track подключай только после базового цикла `skew -> EXPLAIN -> fix -> evidence`. Для сильного ученика используй appendix-слайды и три deep dive:

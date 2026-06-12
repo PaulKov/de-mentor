@@ -159,6 +159,7 @@ def test_runbook_commands_are_available_without_database():
     simple_exit, simple_output = invoke(["runbook", "greenplum", "simple"])
     deep_exit, deep_output = invoke(["runbook", "greenplum", "deep"])
     homework_exit, homework_output = invoke(["runbook", "greenplum", "homework"])
+    prep_exit, prep_output = invoke(["runbook", "greenplum", "prep"])
 
     assert simple_exit == 0
     assert "Simple path" in simple_output
@@ -169,3 +170,8 @@ def test_runbook_commands_are_available_without_database():
     assert homework_exit == 0
     assert "Homework plan" in homework_output
     assert "Lesson 02" in homework_output
+    assert prep_exit == 0
+    assert "Student prep" in prep_output
+    assert "Docker Desktop" in prep_output
+    assert "Windows" in prep_output
+    assert "Linux" in prep_output
