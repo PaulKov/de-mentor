@@ -1,0 +1,24 @@
+services:
+  greenplum:
+    image: docker.io/woblerr/greenplum:7.1.0
+    environment:
+      TZ: Europe/Moscow
+      GREENPLUM_PASSWORD: gparray
+      GREENPLUM_DATABASE_NAME: mentor
+    ports:
+      - "15432:5432"
+    volumes:
+      - greenplum-data:/data
+      - ./init:/docker-entrypoint-initdb.d
+      - ./seed:/mentor-lab/seed
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - su - gpadmin -c ". /usr/local/greenplum-db/greenplum_path.sh && psql -U gpadmin -d mentor -c 'SELECT 1' >/dev/null 2>&1"
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 90s
+
+volumes:
+  greenplum-data:
