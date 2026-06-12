@@ -12,6 +12,7 @@ def test_professional_lesson_artifacts_exist():
         "docs/lessons/01-greenplum/capstone.md",
         "docs/lessons/01-greenplum/incidents/skewed-distribution.md",
         "docs/lessons/01-greenplum/deep-dives/master-segment-data-path.md",
+        "docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md",
         "docs/lessons/01-greenplum/deep-dives/explain-plan-reading.md",
         "docs/lessons/01-greenplum/deep-dives/physical-joins-in-mpp.md",
         "docs/lessons/01-greenplum/deep-dives/mpp-system-taxonomy.md",
@@ -155,6 +156,62 @@ def test_master_segment_deep_dive_has_diagrams_and_source_anchors():
     assert "AOCO" in guide
     assert "cdbdisp_query.c" in guide
     assert "nodeMotion.c" in guide
+
+
+def test_qd_qe_gang_slices_deep_dive_is_canonical_and_teachable():
+    deep_dive = (
+        ROOT
+        / "docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md"
+    ).read_text(encoding="utf-8")
+    workbook = (ROOT / "docs/lessons/01-greenplum/student-workbook.md").read_text(
+        encoding="utf-8"
+    )
+    runbook = (
+        ROOT / "docs/lessons/01-greenplum/runbooks/deep-dive-path.md"
+    ).read_text(encoding="utf-8")
+    lesson_readme = (ROOT / "docs/lessons/01-greenplum/README.md").read_text(
+        encoding="utf-8"
+    )
+
+    expected_terms = [
+        "QD  = Query Dispatcher на master",
+        "QE  = Query Executor на segment",
+        "Slice = кусок distributed execution plan",
+        "Gang = группа QE-процессов",
+        "Motion = граница между slice",
+        "QD — это backend-процесс на master/coordinator",
+        "QE — это worker/backend-процесс на segment instance",
+        "slice — это не процесс",
+        "Gang — это уже физическое исполнение slice",
+        "Redistribute Motion 48:48",
+        "Gather Motion 48:1",
+        "gp_max_slices",
+        "co-located plan",
+        "distribution keys",
+        "join keys",
+        "статистику",
+        "skew",
+    ]
+    expected_sections = [
+        "## 1. QD",
+        "## 2. QE",
+        "## 3. Slice",
+        "## 4. Gang",
+        "## Как они работают вместе",
+        "## Как это видно в EXPLAIN",
+        "## Почему это важно для производительности",
+        "## Самая полезная ментальная модель",
+    ]
+
+    for marker in [*expected_terms, *expected_sections]:
+        assert marker in deep_dive
+
+    assert "```mermaid" in deep_dive
+    assert "https://docs-cn.greenplum.org/v6/admin_guide/query/topics/parallel-proc.html" in deep_dive
+    assert "https://knowledge.broadcom.com/external/article/430557/understanding-and-managing-gpmaxslices.html" in deep_dive
+    assert "qd-qe-gang-slices-explained.md" in workbook
+    assert "qd-qe-gang-slices-explained.md" in runbook
+    assert "qd-qe-gang-slices-explained.md" in lesson_readme
 
 
 def test_advanced_deep_dives_cover_plan_reading_joins_and_mpp_taxonomy():

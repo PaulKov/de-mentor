@@ -89,6 +89,7 @@ python3 mentor-lab.py seed greenplum --profile skewed
 - [academy-loop.md](academy-loop.md) - professional loop: assessment, analyzer, hidden incidents, submit/review, certificate.
 - [academy-v2.md](academy-v2.md) - interactive student portal, visualizer, diagnostics, scenario randomizer, adaptive review.
 - [query-tuning-lab.md](query-tuning-lab.md) - усложненные задачи по query tuning.
+- [deep-dives/qd-qe-gang-slices-explained.md](deep-dives/qd-qe-gang-slices-explained.md) - цельное объяснение QD, QE, slices, gangs, Motion и того, как это видно в `EXPLAIN`.
 - [deep-dives/master-segment-data-path.md](deep-dives/master-segment-data-path.md) - глубокая техническая схема master/QD/QE, Motion, gpfdist и storage.
 - [deep-dives/explain-plan-reading.md](deep-dives/explain-plan-reading.md) - как читать план и формулировать RCA по `EXPLAIN ANALYZE`.
 - [deep-dives/physical-joins-in-mpp.md](deep-dives/physical-joins-in-mpp.md) - физика joins в MPP: co-located, broadcast, redistribute.
