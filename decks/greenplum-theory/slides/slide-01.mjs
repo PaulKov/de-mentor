@@ -1,4 +1,4 @@
-import { C, slideBase, pill } from "./shared.mjs";
+import { C, card, codeBlock, slideBase } from "./shared.mjs";
 
 export async function slide01(presentation, ctx) {
   const slide = slideBase(
@@ -6,14 +6,11 @@ export async function slide01(presentation, ctx) {
     ctx,
     "Теория Greenplum",
     "Greenplum MPP: мышление дата инженера",
-    "Как думать о SQL, когда данные физически распределены по сегментам."
+    "Первый урок: от системной карты до skew, Motion, storage и доказательного RCA."
   );
-  ctx.addShape(slide, { x: 760, y: 118, width: 390, height: 398, fill: C.panel, radius: 10, line: { fill: C.line, width: 1, style: "solid" } });
-  ctx.addShape(slide, { x: 802, y: 160, width: 306, height: 116, fill: C.softGreen, radius: 10, line: { fill: C.softGreen, width: 0, style: "solid" } });
-  await ctx.addLucideIcon(slide, { icon: "DatabaseZap", x: 880, y: 184, width: 84, height: 84, color: C.green, strokeWidth: 1.6 });
-  await ctx.addLucideIcon(slide, { icon: "Network", x: 980, y: 184, width: 84, height: 84, color: C.blue, strokeWidth: 1.6 });
-  pill(ctx, slide, 800, 336, 132, "SMP / MPP", C.green);
-  pill(ctx, slide, 950, 336, 132, "Skew", C.amber);
-  ctx.addText(slide, { x: 800, y: 398, width: 300, height: 74, text: "60 минут: модель -> практика -> incident -> capstone", fontSize: 19, bold: true, color: C.text, align: "center" });
+  card(ctx, slide, 60, 245, 520, 132, "Маршрут", "60 минут: теория -> SQL practice -> incident -> capstone.", C.green);
+  card(ctx, slide, 650, 245, 520, 132, "Главный навык", "Думать не только запросом, но и физикой размещения данных.", C.blue);
+  card(ctx, slide, 60, 405, 520, 132, "Фокус", "Coordinator, segments, interconnect, distribution, EXPLAIN.", C.green);
+
   return slide;
 }

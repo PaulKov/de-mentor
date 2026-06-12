@@ -5,7 +5,7 @@ from zipfile import ZipFile
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_greenplum_theory_deck_artifact_exists_and_has_22_slides():
+def test_greenplum_theory_deck_artifact_exists_and_has_30_slides():
     deck = ROOT / "artifacts" / "greenplum-theory.pptx"
 
     assert deck.exists()
@@ -18,15 +18,15 @@ def test_greenplum_theory_deck_artifact_exists_and_has_22_slides():
             if name.startswith("ppt/slides/slide") and name.endswith(".xml")
         ]
 
-    assert len(slides) == 22
+    assert len(slides) == 30
 
 
-def test_greenplum_theory_deck_source_has_22_slide_modules():
+def test_greenplum_theory_deck_source_has_30_slide_modules():
     slides_dir = ROOT / "decks" / "greenplum-theory" / "slides"
 
     slide_modules = sorted(slides_dir.glob("slide-*.mjs"))
 
-    assert len(slide_modules) == 22
+    assert len(slide_modules) == 30
     assert (slides_dir / "shared.mjs").exists()
 
 
@@ -41,9 +41,18 @@ def test_greenplum_theory_deck_uses_russian_light_theme():
     assert "#0B1020" not in shared
     assert "Greenplum MPP: мышление дата инженера" in source
     assert "SMP, MPP, EPP" in source
-    assert "QD/QE deep dive" in source
+    assert "Greenplum vs sharded PostgreSQL" in source
+    assert "QD / QE / gang / slices" in source
+    assert "QD/QE dispatch deep dive" in source
+    assert "gang" in source
+    assert "slice" in source
     assert "gpfdist external table" in source
-    assert "Heap, AO row, AOCO column" in source
+    assert "Heap vs AO row vs AOCO" in source
+    assert "gp_default_storage_options" in source
+    assert "appendoptimized=true" in source
+    assert "orientation=column" in source
+    assert "PARTITION BY RANGE" in source
+    assert "Greenplum не sharded PostgreSQL" in source
     assert "APPENDIX: как читать EXPLAIN" in source
     assert "Physical joins in MPP" in source
     assert "co-located join" in source

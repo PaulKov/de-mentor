@@ -1,6 +1,7 @@
 services:
   greenplum:
     image: docker.io/woblerr/greenplum:7.1.0
+    hostname: greenplum
     environment:
       TZ: Europe/Moscow
       GREENPLUM_PASSWORD: gparray
@@ -11,6 +12,7 @@ services:
       - greenplum-data:/data
       - ./init:/docker-entrypoint-initdb.d
       - ./seed:/mentor-lab/seed
+      - ./examples:/mentor-lab/examples
     healthcheck:
       test:
         - CMD-SHELL

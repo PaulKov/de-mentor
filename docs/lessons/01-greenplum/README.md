@@ -23,7 +23,8 @@
 | 5-15 | Архитектура | Рисует coordinator, segments, interconnect | Отвечает, где выполняется запрос |
 | 15-25 | Distribution | Показывает `DISTRIBUTED BY`, skew, colocated joins | Предлагает ключи распределения |
 | 25-35 | EXPLAIN | Разбирает Motion nodes | Находит Motion в плане |
-| 35-52 | Практика | Дает задания из workbook | Выполняет SQL и делает выводы |
+| 35-42 | Storage и partitioning intro | Показывает Heap/AO/AOCO, defaults и `PARTITION BY RANGE` | Запускает demo SQL |
+| 42-52 | Практика | Дает задания из workbook | Выполняет SQL и делает выводы |
 | 52-58 | Design review | Разбирает мини-кейс витрины продаж | Защищает модель |
 | 58-60 | Домашка | Объясняет критерии приемки | Фиксирует вопросы |
 
@@ -49,6 +50,9 @@
 
 ```bash
 python3 mentor-lab.py lesson greenplum
+python3 mentor-lab.py runbook greenplum simple
+python3 mentor-lab.py runbook greenplum deep
+python3 mentor-lab.py runbook greenplum homework
 python3 mentor-lab.py hint greenplum skew-investigation
 python3 mentor-lab.py portal greenplum
 python3 mentor-lab.py visualize-plan greenplum --query product_join --sample --format mermaid
@@ -71,6 +75,9 @@ python3 mentor-lab.py seed greenplum --profile skewed
 
 - [mentor-guide.md](mentor-guide.md) - подсказки для проведения урока.
 - [student-workbook.md](student-workbook.md) - задания для ученика.
+- [runbooks/simple-path.md](runbooks/simple-path.md) - 60-минутный маршрут: слайды, команды, вопросы, проверки.
+- [runbooks/deep-dive-path.md](runbooks/deep-dive-path.md) - расширенный deep-dive маршрут.
+- [runbooks/homework-plan.md](runbooks/homework-plan.md) - план домашки на 60-90 минут.
 - [cheat-sheet.md](cheat-sheet.md) - команды и SQL-шпаргалка.
 - [homework.md](homework.md) - домашняя работа.
 - [case-study.md](case-study.md) - сквозной профессиональный кейс.
@@ -86,3 +93,4 @@ python3 mentor-lab.py seed greenplum --profile skewed
 - [deep-dives/mpp-system-taxonomy.md](deep-dives/mpp-system-taxonomy.md) - SMP, MPP, EPP, lakehouse, HTAP и цена каждой архитектуры.
 - [greenplum-theory.pptx](../../../artifacts/greenplum-theory.pptx) - презентация урока.
 - [labs/greenplum](../../../labs/greenplum/README.md) - запуск стенда.
+- [storage-and-partitioning.sql](../../../labs/greenplum/examples/storage-and-partitioning.sql) - runnable demo для Heap/AO/AOCO и partitioning intro.

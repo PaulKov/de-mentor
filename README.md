@@ -233,6 +233,9 @@ python3 mentor-lab.py dsl greenplum show redistribute-join
 | Roadmap | [roadmap.md](docs/lessons/01-greenplum/roadmap.md) |
 | Workbook ученика | [student-workbook.md](docs/lessons/01-greenplum/student-workbook.md) |
 | Guide ментора | [mentor-guide.md](docs/lessons/01-greenplum/mentor-guide.md) |
+| Simple runbook | [simple-path.md](docs/lessons/01-greenplum/runbooks/simple-path.md) |
+| Deep-dive runbook | [deep-dive-path.md](docs/lessons/01-greenplum/runbooks/deep-dive-path.md) |
+| Homework plan | [homework-plan.md](docs/lessons/01-greenplum/runbooks/homework-plan.md) |
 | Cheat sheet | [cheat-sheet.md](docs/lessons/01-greenplum/cheat-sheet.md) |
 | Academy loop | [academy-loop.md](docs/lessons/01-greenplum/academy-loop.md) |
 | Academy v2 | [academy-v2.md](docs/lessons/01-greenplum/academy-v2.md) |
@@ -243,6 +246,7 @@ python3 mentor-lab.py dsl greenplum show redistribute-join
 | Презентация | [greenplum-theory.pptx](artifacts/greenplum-theory.pptx) |
 | Исходники презентации | [decks/greenplum-theory](decks/greenplum-theory/README.md) |
 | Стенд Greenplum | [labs/greenplum](labs/greenplum/README.md) |
+| Storage/partitioning SQL | [storage-and-partitioning.sql](labs/greenplum/examples/storage-and-partitioning.sql) |
 
 ## Структура проекта
 

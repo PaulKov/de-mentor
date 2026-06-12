@@ -1,30 +1,16 @@
-import { C, card, slideBase } from "./shared.mjs";
+import { C, card, codeBlock, slideBase } from "./shared.mjs";
 
 export async function slide22(presentation, ctx) {
   const slide = slideBase(
     presentation,
     ctx,
-    "Appendix",
-    "MPP-семейства: где цена архитектуры",
-    "Сильный инженер выбирает не модную систему, а bottleneck, который готов контролировать."
+    "Automation",
+    "Automation",
+    "CLI делает урок повторяемым для ментора и ученика на macOS и Windows."
   );
+  card(ctx, slide, 60, 245, 520, 132, "Student UX", "up/status/psql/reset без локального psql.", C.green);
+  card(ctx, slide, 650, 245, 520, 132, "Mentor UX", "runbook, hints, grading, incident, report.", C.blue);
 
-  card(ctx, slide, 56, 230, 210, 220, "SMP", "Простота и vertical scale. Цена: предел одного сервера.", C.blue);
-  card(ctx, slide, 296, 230, 210, 220, "MPP", "Shared-nothing scan/join scale-out. Цена: skew, Motion, distribution.", C.green);
-  card(ctx, slide, 536, 230, 210, 220, "EPP/cloud", "Elastic compute/storage. Цена: remote IO, shuffle, cost governance.", C.amber);
-  card(ctx, slide, 776, 230, 210, 220, "Lakehouse", "Open storage + engines. Цена: metadata, small files, compaction.", C.violet);
-  card(ctx, slide, 1016, 230, 210, 220, "HTAP", "Transactions + distributed SQL. Цена: consensus и OLAP-scan trade-offs.", C.red);
-
-  ctx.addText(slide, {
-    x: 150,
-    y: 548,
-    width: 980,
-    height: 60,
-    text: "Контрольный вопрос: где твоя система платит за движение данных - внутри сети MPP, в object storage, в shuffle engine или в одном сервере?",
-    fontSize: 22,
-    bold: true,
-    color: C.text,
-    align: "center",
-  });
+  codeBlock(ctx, slide, 60, 520, 1090, 130, "python3 mentor-lab.py runbook greenplum simple\npython3 mentor-lab.py runbook greenplum deep\npython3 mentor-lab.py runbook greenplum homework\npython3 mentor-lab.py check greenplum", "SQL / CLI");
   return slide;
 }

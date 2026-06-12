@@ -1,10 +1,16 @@
-import { C, codeBlock, slideBase } from "./shared.mjs";
+import { C, card, codeBlock, slideBase } from "./shared.mjs";
 
 export async function slide11(presentation, ctx) {
-  const slide = slideBase(presentation, ctx, "EXPLAIN", "Motion nodes — счет за сеть внутри запроса", "Ученику не нужно понимать весь optimizer сразу; сначала он должен видеть, где данные поехали.");
-  codeBlock(ctx, slide, 78, 230, 535, 300, "-> Redistribute Motion 2:2\n   Hash Key: fact_sales_bad.customer_id\n   -> Seq Scan on fact_sales_bad\n\n-> Gather Motion 2:1\n   Merge Key: sum(amount)", "PLAN FRAGMENT");
-  ctx.addText(slide, { x: 700, y: 230, width: 430, height: 52, text: "Правило чтения", fontSize: 30, bold: true, color: C.blue });
-  ctx.addText(slide, { x: 700, y: 298, width: 440, height: 150, text: "Redistribute Motion значит, что строки не лежат там, где нужны для join или aggregate. Это не всегда плохо, но всегда должно быть осознанно.", fontSize: 22, color: C.text });
-  ctx.addText(slide, { x: 700, y: 474, width: 430, height: 86, text: "Вопрос: может ли физическая модель убрать этот motion?", fontSize: 25, bold: true, color: C.amber });
+  const slide = slideBase(
+    presentation,
+    ctx,
+    "Runnable DDL",
+    "Heap vs AOCO: runnable DDL + catalog checks",
+    "Демо живет в labs/greenplum/examples/storage-and-partitioning.sql."
+  );
+  card(ctx, slide, 60, 245, 520, 132, "Проверяем", "Heap/AO/AOCO видны через psql \\d+ и catalog checks.", C.green);
+  card(ctx, slide, 650, 245, 520, 132, "Не путаем", "Storage ускоряет scan/compression, но не заменяет distribution key.", C.blue);
+
+  codeBlock(ctx, slide, 60, 520, 1090, 130, "CREATE TABLE lesson01.storage_aoco_demo (...)\nWITH (appendoptimized=true, orientation=column, compresstype=zstd, compresslevel=1)\nDISTRIBUTED BY (customer_id);\n\n\\d+ lesson01.storage_aoco_demo\nSELECT c.relname, am.amname AS access_method FROM pg_class c LEFT JOIN pg_am am ON am.oid = c.relam WHERE c.relname LIKE 'storage_%_demo';", "SQL / CLI");
   return slide;
 }

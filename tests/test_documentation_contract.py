@@ -17,6 +17,10 @@ def test_professional_lesson_artifacts_exist():
         "docs/lessons/01-greenplum/deep-dives/mpp-system-taxonomy.md",
         "docs/lessons/01-greenplum/query-tuning-lab.md",
         "docs/lessons/01-greenplum/academy-loop.md",
+        "docs/lessons/01-greenplum/runbooks/simple-path.md",
+        "docs/lessons/01-greenplum/runbooks/deep-dive-path.md",
+        "docs/lessons/01-greenplum/runbooks/homework-plan.md",
+        "labs/greenplum/examples/storage-and-partitioning.sql",
         "decks/greenplum-theory/README.md",
         "decks/greenplum-theory/facilitator-guide.md",
     ]
@@ -45,12 +49,74 @@ def test_presentation_facilitator_guide_has_timing_and_system_taxonomy():
 
     assert "00:00-02:00" in guide
     assert "57:00-60:00" in guide
+    assert "simple path" in guide.lower()
+    assert "deep-dive path" in guide.lower()
     assert "SMP" in guide
     assert "MPP" in guide
     assert "EPP" in guide
     assert "QD/QE deep dive" in guide
     assert "Heap, AO row, AOCO column" in guide
+    assert "Greenplum vs sharded PostgreSQL" in guide
+    assert "partitioning intro" in guide
     assert "Что сказать емко" in guide
+
+
+def test_runbooks_have_commands_questions_checks_and_cross_links():
+    runbook_paths = [
+        ROOT / "docs/lessons/01-greenplum/runbooks/simple-path.md",
+        ROOT / "docs/lessons/01-greenplum/runbooks/deep-dive-path.md",
+        ROOT / "docs/lessons/01-greenplum/runbooks/homework-plan.md",
+    ]
+
+    for path in runbook_paths:
+        content = path.read_text(encoding="utf-8")
+        assert "## Stage" in content
+        assert "Команды" in content
+        assert "Что спрашиваем" in content
+        assert "Expected answer" in content
+        assert "Как проверяем" in content
+        assert "student-workbook.md" in content
+        assert "homework.md" in content
+        assert "storage-and-partitioning.sql" in content
+
+
+def test_workbook_homework_and_mentor_guide_are_cross_linked():
+    workbook = (ROOT / "docs/lessons/01-greenplum/student-workbook.md").read_text(
+        encoding="utf-8"
+    )
+    homework = (ROOT / "docs/lessons/01-greenplum/homework.md").read_text(
+        encoding="utf-8"
+    )
+    mentor = (ROOT / "docs/lessons/01-greenplum/mentor-guide.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert "homework.md" in workbook
+    assert "runbooks/homework-plan.md" in workbook
+    assert "storage-and-partitioning.sql" in workbook
+    assert "Greenplum vs sharded PostgreSQL" in workbook
+    assert "QD" in workbook and "QE" in workbook and "gang" in workbook and "slice" in workbook
+    assert "appendoptimized=true" in workbook
+    assert "orientation=column" in workbook
+    assert "PARTITION BY RANGE" in workbook
+    assert "Lesson 02: Partitioning, statistics and incremental loads in MPP" in homework
+    assert "runbooks/simple-path.md" in mentor
+    assert "runbooks/deep-dive-path.md" in mentor
+
+
+def test_storage_and_partitioning_sql_contains_runnable_demo_contracts():
+    sql = (ROOT / "labs/greenplum/examples/storage-and-partitioning.sql").read_text(
+        encoding="utf-8"
+    )
+
+    assert "storage_heap_demo" in sql
+    assert "storage_ao_row_demo" in sql
+    assert "storage_aoco_demo" in sql
+    assert "appendoptimized=true" in sql
+    assert "orientation=row" in sql
+    assert "orientation=column" in sql
+    assert "PARTITION BY RANGE (sale_date)" in sql
+    assert "gp_default_storage_options" in sql
 
 
 def test_master_segment_deep_dive_has_diagrams_and_source_anchors():

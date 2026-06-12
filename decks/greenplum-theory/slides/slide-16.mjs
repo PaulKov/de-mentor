@@ -1,9 +1,17 @@
-import { C, card, slideBase } from "./shared.mjs";
+import { C, card, codeBlock, slideBase } from "./shared.mjs";
 
 export async function slide16(presentation, ctx) {
-  const slide = slideBase(presentation, ctx, "Автоматизация", "Лаборатория оценивает evidence, а не уверенность", "Команды превращают урок в self-service тренажер и дают ментору отчет.");
-  card(ctx, slide, 85, 238, 330, 250, "Цикл ученика", "lesson -> seed -> investigate -> check -> hint -> retry", C.blue);
-  card(ctx, slide, 475, 238, 330, 250, "Цикл ментора", "grade -> report -> rubric -> next actions -> homework focus", C.green);
-  card(ctx, slide, 865, 238, 330, 250, "Цикл платформы", "Та же CLI-форма позже расширяется на Postgres, ClickHouse, HDFS и Spark.", C.violet);
+  const slide = slideBase(
+    presentation,
+    ctx,
+    "Partitioning intro",
+    "Partitioning intro: pruning/retention != distribution",
+    "Partitioning режет таблицу внутри logical table; distribution размещает строки по сегментам."
+  );
+  card(ctx, slide, 60, 245, 520, 132, "Pruning", "Фильтр по sale_date может читать только нужные partitions.", C.green);
+  card(ctx, slide, 650, 245, 520, 132, "Retention", "Старые partitions можно удалять/архивировать операционно.", C.blue);
+  card(ctx, slide, 60, 405, 520, 132, "Не distribution", "Partition key не обязан быть distribution key.", C.green);
+
+  codeBlock(ctx, slide, 60, 520, 1090, 130, "CREATE TABLE lesson01.fact_sales_partition_good (...)\nDISTRIBUTED BY (customer_id)\nPARTITION BY RANGE (sale_date)\n(START (DATE '2026-01-01') END (DATE '2026-04-01') EVERY (INTERVAL '1 month'));", "SQL / CLI");
   return slide;
 }
