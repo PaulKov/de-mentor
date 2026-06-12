@@ -4,10 +4,10 @@
 
 Связанные материалы:
 
-- workbook: `docs/lessons/01-greenplum/student-workbook.md`
-- lesson plan: `docs/lessons/01-greenplum/README.md`
-- lab README: `labs/greenplum/README.md`
-- mentor simple path: `docs/lessons/01-greenplum/runbooks/simple-path.md`
+- workbook: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md)
+- lesson plan: [lesson plan](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/README.md)
+- lab README: [Greenplum lab README](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/README.md)
+- mentor simple path: [simple path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/simple-path.md)
 
 ## Что Подготовить
 

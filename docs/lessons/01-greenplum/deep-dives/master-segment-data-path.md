@@ -2,7 +2,7 @@
 
 Этот материал нужен как optional depth pack: на первом уроке его можно использовать выборочно, а после урока дать ученику как самостоятельное чтение. Термины `master` и `coordinator` ниже используются как синонимы: в новых версиях чаще говорят coordinator, но в инженерной речи Greenplum до сих пор часто встречается master.
 
-Если нужен standalone-разбор терминов QD, QE, slice, gang и Motion с аналогией, `EXPLAIN`-примером и контрольными вопросами, начни с `deep-dives/qd-qe-gang-slices-explained.md`, а затем возвращайся сюда за деталями dispatch path и data path.
+Если нужен standalone-разбор терминов QD, QE, slice, gang и Motion с аналогией, `EXPLAIN`-примером и контрольными вопросами, начни с [QD/QE/gang/slices explained](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md), а затем возвращайся сюда за деталями dispatch path и data path.
 
 ## Словарь
 
@@ -98,10 +98,10 @@ QE:
 
 Source anchors для самостоятельного чтения:
 
-- `/tmp/gpdb-source/src/backend/cdb/dispatcher/cdbdisp_query.c`: build/dispatch payload, `serializedPlantree`, `serializedQueryDispatchDesc`.
-- `/tmp/gpdb-source/src/backend/cdb/cdbsrlz.c`: `serializeNode()`, `deserializeNode()`, ZSTD compression/decompression.
-- `/tmp/gpdb-source/src/include/executor/execdesc.h`: `ExecSlice`, `QueryDispatchDesc`.
-- `/tmp/gpdb-source/src/backend/executor/execMain.c`: dispatcher/execute role handling and Motion layer setup.
+- [cdbdisp_query.c](https://github.com/PaulKov/gpdb/blob/482967c1b49028cf072c15935462f75bc3e4b045/src/backend/cdb/dispatcher/cdbdisp_query.c): build/dispatch payload, `serializedPlantree`, `serializedQueryDispatchDesc`.
+- [cdbsrlz.c](https://github.com/PaulKov/gpdb/blob/482967c1b49028cf072c15935462f75bc3e4b045/src/backend/cdb/cdbsrlz.c): `serializeNode()`, `deserializeNode()`, ZSTD compression/decompression.
+- [execdesc.h](https://github.com/PaulKov/gpdb/blob/482967c1b49028cf072c15935462f75bc3e4b045/src/include/executor/execdesc.h): `ExecSlice`, `QueryDispatchDesc`.
+- [execMain.c](https://github.com/PaulKov/gpdb/blob/482967c1b49028cf072c15935462f75bc3e4b045/src/backend/executor/execMain.c): dispatcher/execute role handling and Motion layer setup.
 
 ## Как Данные Передаются Между Сегментами
 
@@ -153,10 +153,10 @@ TupleTableSlot
 
 Source anchors:
 
-- `/tmp/gpdb-source/src/backend/executor/nodeMotion.c`: `doSendTuple()`, `ExecMotion()`, sender/receiver branches.
-- `/tmp/gpdb-source/src/backend/cdb/motion/tupser.c`: `SerializeTuple()`, `CvtChunksToTup()`.
-- `/tmp/gpdb-source/src/include/cdb/ml_ipc.h`: packet contains one or more serialized `TupleChunks`.
-- `/tmp/gpdb-source/src/backend/cdb/motion/ic_udpifc.c`: UDPIFC packet/ack/retry mechanics.
+- [nodeMotion.c](https://github.com/PaulKov/gpdb/blob/482967c1b49028cf072c15935462f75bc3e4b045/src/backend/executor/nodeMotion.c): `doSendTuple()`, `ExecMotion()`, sender/receiver branches.
+- [tupser.c](https://github.com/PaulKov/gpdb/blob/482967c1b49028cf072c15935462f75bc3e4b045/src/backend/cdb/motion/tupser.c): `SerializeTuple()`, `CvtChunksToTup()`.
+- [ml_ipc.h](https://github.com/PaulKov/gpdb/blob/482967c1b49028cf072c15935462f75bc3e4b045/src/include/cdb/ml_ipc.h): packet contains one or more serialized `TupleChunks`.
+- [ic_udpifc.c](https://github.com/PaulKov/gpdb/blob/482967c1b49028cf072c15935462f75bc3e4b045/src/backend/cdb/motion/ic_udpifc.c): UDPIFC packet/ack/retry mechanics.
 
 ## COPY Через Master И Альтернативный Parallel Data Path
 
@@ -212,9 +212,9 @@ Protocol 1:
 
 Source anchors:
 
-- `/tmp/gpdb-source/src/include/commands/copy.h`: COPY direct/dispatcher/executor modes.
-- `/tmp/gpdb-source/src/bin/gpfdist/gpfdist.c`: `X-GP-PROTO`, protocol 0/1, headers, optional `X-GP-ZSTD`.
-- `/tmp/gpdb-source/src/backend/access/external/url_curl.c`: segment-side curl path and ZSTD hooks for external table URLs.
+- [copy.h](https://github.com/PaulKov/gpdb/blob/482967c1b49028cf072c15935462f75bc3e4b045/src/include/commands/copy.h): COPY direct/dispatcher/executor modes.
+- [gpfdist.c](https://github.com/PaulKov/gpdb/blob/482967c1b49028cf072c15935462f75bc3e4b045/src/bin/gpfdist/gpfdist.c): `X-GP-PROTO`, protocol 0/1, headers, optional `X-GP-ZSTD`.
+- [url_curl.c](https://github.com/PaulKov/gpdb/blob/482967c1b49028cf072c15935462f75bc3e4b045/src/backend/access/external/url_curl.c): segment-side curl path and ZSTD hooks for external table URLs.
 
 ## Heap Vs AO Row Vs AOCO Column
 

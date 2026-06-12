@@ -6,30 +6,30 @@
 
 ## Как Вести Урок
 
-Используй презентацию `artifacts/greenplum-theory.pptx` вместе с поминутным presenter guide:
+Используй [презентацию PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-theory.pptx) вместе с поминутным presenter guide:
 
-- deck source: `decks/greenplum-theory/slides`;
-- facilitator guide: `decks/greenplum-theory/facilitator-guide.md`;
-- student prep: `docs/lessons/01-greenplum/runbooks/student-prep.md`;
-- simple path: `docs/lessons/01-greenplum/runbooks/simple-path.md`;
-- deep-dive path: `docs/lessons/01-greenplum/runbooks/deep-dive-path.md`;
-- homework route: `docs/lessons/01-greenplum/runbooks/homework-plan.md`;
-- QD/QE/slices/gangs explained: `docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md`;
-- deep dive: `docs/lessons/01-greenplum/deep-dives/master-segment-data-path.md`;
-- partitioning deep dive: `docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md`;
-- практика ученика: `docs/lessons/01-greenplum/student-workbook.md`;
-- домашка: `docs/lessons/01-greenplum/homework.md`;
-- runnable SQL: `labs/greenplum/examples/storage-and-partitioning.sql`;
-- partitioning SQL: `labs/greenplum/examples/partitioning-strategies.sql`;
-- monitoring SQL: `labs/greenplum/examples/cluster-monitoring.sql`;
+- deck source: [slides source](https://github.com/PaulKov/de-mentor/tree/master/decks/greenplum-theory/slides);
+- facilitator guide: [facilitator guide](https://github.com/PaulKov/de-mentor/blob/master/decks/greenplum-theory/facilitator-guide.md);
+- student prep: [student prep](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/student-prep.md);
+- simple path: [simple path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/simple-path.md);
+- deep-dive path: [deep-dive path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/deep-dive-path.md);
+- homework route: [homework plan](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/homework-plan.md);
+- QD/QE/slices/gangs explained: [QD/QE/gang/slices explained](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md);
+- deep dive: [master/segment data path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/master-segment-data-path.md);
+- partitioning deep dive: [partitioning strategies](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md);
+- практика ученика: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md);
+- домашка: [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md);
+- runnable SQL: [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql);
+- partitioning SQL: [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql);
+- monitoring SQL: [cluster monitoring SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-monitoring.sql);
 - автоматическая проверка: `python3 mentor-lab.py check greenplum`.
 
-Презентация должна занимать не весь час, а примерно половину урока: 33 минуты на theory framing, 12 минут на hands-on diagnostics, затем incident/capstone/review. Подробный тайминг по каждому слайду находится в `facilitator-guide.md`.
+Презентация должна занимать не весь час, а примерно половину урока: 33 минуты на theory framing, 12 минут на hands-on diagnostics, затем incident/capstone/review. Подробный тайминг по каждому слайду находится в [facilitator guide](https://github.com/PaulKov/de-mentor/blob/master/decks/greenplum-theory/facilitator-guide.md).
 
 Выбирай маршрут:
 
-- `runbooks/simple-path.md` - основной 60-минутный маршрут: MPP mental model, storage, distribution, skew, EXPLAIN, partitioning intro, homework.
-- `runbooks/deep-dive-path.md` - расширенный 90-120 минут: QD/QE/gang/slices, QueryDispatchDesc, physical joins, Broadcast vs Redistribute, storage caveats.
+- [Simple path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/simple-path.md) - основной 60-минутный маршрут: MPP mental model, storage, distribution, skew, EXPLAIN, partitioning intro, homework.
+- [Deep-dive path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/deep-dive-path.md) - расширенный 90-120 минут: QD/QE/gang/slices, QueryDispatchDesc, physical joins, Broadcast vs Redistribute, storage caveats.
 
 CLI shortcuts:
 
@@ -42,11 +42,11 @@ python3 mentor-lab.py runbook greenplum prep
 
 Advanced track подключай только после базового цикла `skew -> EXPLAIN -> fix -> evidence`. Для сильного ученика используй appendix-слайды и четыре deep dive:
 
-- `deep-dives/qd-qe-gang-slices-explained.md` - сначала простыми словами, затем технически объяснить QD, QE, slice, gang, Motion и `EXPLAIN`;
-- `deep-dives/explain-plan-reading.md` - читать план по scan/local work/join/Motion/global work/Rows out;
-- `deep-dives/physical-joins-in-mpp.md` - отличать локальный join algorithm от MPP data movement;
-- `deep-dives/partitioning-strategies.md` - выбирать `PARTITION BY RANGE`, `PARTITION BY LIST`, `PARTITION BY HASH`, смотреть `DEFAULT partition`, no default partitioning, out-of-range INSERT, `leaf_partitions`, `pg_partition_tree`, `gp_toolkit.gp_partitions`, `ATTACH PARTITION`, `DETACH PARTITION`;
-- `deep-dives/mpp-system-taxonomy.md` - сравнивать SMP, MPP, EPP, lakehouse и HTAP по bottleneck.
+- [QD/QE/gang/slices explained](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md) - сначала простыми словами, затем технически объяснить QD, QE, slice, gang, Motion и `EXPLAIN`;
+- [EXPLAIN plan reading](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/explain-plan-reading.md) - читать план по scan/local work/join/Motion/global work/Rows out;
+- [Physical joins in MPP](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/physical-joins-in-mpp.md) - отличать локальный join algorithm от MPP data movement;
+- [Partitioning strategies](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md) - выбирать `PARTITION BY RANGE`, `PARTITION BY LIST`, `PARTITION BY HASH`, смотреть `DEFAULT partition`, no default partitioning, out-of-range INSERT, `leaf_partitions`, `pg_partition_tree`, `gp_toolkit.gp_partitions`, `ATTACH PARTITION`, `DETACH PARTITION`;
+- [MPP system taxonomy](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/mpp-system-taxonomy.md) - сравнивать SMP, MPP, EPP, lakehouse и HTAP по bottleneck.
 
 ### 0-5 Минут: Контекст
 

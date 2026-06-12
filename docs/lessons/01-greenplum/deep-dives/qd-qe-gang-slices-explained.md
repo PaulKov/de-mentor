@@ -358,11 +358,11 @@ Expected answer: сначала объяснить locus/data movement (`co-loca
 
 ## Связанные Материалы
 
-- `student-workbook.md` - задания 1.1, 3 и 4.
-- `runbooks/deep-dive-path.md` - маршрут, где этот материал используется на Stage 1.
-- `deep-dives/master-segment-data-path.md` - более технический разбор dispatch path, `QueryDispatchDesc`, `TupleChunks`, `gpfdist` и storage.
-- `deep-dives/explain-plan-reading.md` - ladder для чтения `EXPLAIN ANALYZE`.
-- `deep-dives/physical-joins-in-mpp.md` - как отделять local join algorithm от MPP data movement.
+- [Student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md) - задания 1.1, 3 и 4.
+- [Deep-dive path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/deep-dive-path.md) - маршрут, где этот материал используется на Stage 1.
+- [Master/segment data path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/master-segment-data-path.md) - более технический разбор dispatch path, `QueryDispatchDesc`, `TupleChunks`, `gpfdist` и storage.
+- [EXPLAIN plan reading](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/explain-plan-reading.md) - ladder для чтения `EXPLAIN ANALYZE`.
+- [Physical joins in MPP](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/physical-joins-in-mpp.md) - как отделять local join algorithm от MPP data movement.
 
 ## References
 

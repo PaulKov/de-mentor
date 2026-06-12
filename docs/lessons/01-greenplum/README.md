@@ -30,7 +30,7 @@
 
 ## Roadmap
 
-См. [roadmap.md](roadmap.md).
+См. [roadmap](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/roadmap.md).
 
 ## Практика
 
@@ -44,7 +44,7 @@
 8. Advanced: сравнить co-located, Broadcast Motion и Redistribute Motion joins.
 9. Advanced: выбрать класс системы под workload.
 
-Подробные шаги: [student-workbook.md](student-workbook.md).
+Подробные шаги: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md).
 
 ## Автоматизация
 
@@ -74,30 +74,30 @@ python3 mentor-lab.py seed greenplum --profile skewed
 
 ## Материалы
 
-- [mentor-guide.md](mentor-guide.md) - подсказки для проведения урока.
-- [student-workbook.md](student-workbook.md) - задания для ученика.
-- [runbooks/student-prep.md](runbooks/student-prep.md) - подготовка окружения ученика для macOS, Windows и Linux.
-- [runbooks/simple-path.md](runbooks/simple-path.md) - 60-минутный маршрут: слайды, команды, вопросы, проверки.
-- [runbooks/deep-dive-path.md](runbooks/deep-dive-path.md) - расширенный deep-dive маршрут.
-- [runbooks/homework-plan.md](runbooks/homework-plan.md) - план домашки на 60-90 минут.
-- [cheat-sheet.md](cheat-sheet.md) - команды и SQL-шпаргалка.
-- [homework.md](homework.md) - домашняя работа.
-- [case-study.md](case-study.md) - сквозной профессиональный кейс.
-- [architecture.md](architecture.md) - визуальная карта Greenplum.
-- [rubric.md](rubric.md) - skill matrix и критерии оценки.
-- [capstone.md](capstone.md) - финальная архитектурная задача.
-- [academy-loop.md](academy-loop.md) - professional loop: assessment, analyzer, hidden incidents, submit/review, certificate.
-- [academy-v2.md](academy-v2.md) - interactive student portal, visualizer, diagnostics, scenario randomizer, adaptive review.
-- [query-tuning-lab.md](query-tuning-lab.md) - усложненные задачи по query tuning.
-- [deep-dives/qd-qe-gang-slices-explained.md](deep-dives/qd-qe-gang-slices-explained.md) - цельное объяснение QD, QE, slices, gangs, Motion и того, как это видно в `EXPLAIN`.
-- [deep-dives/master-segment-data-path.md](deep-dives/master-segment-data-path.md) - глубокая техническая схема master/QD/QE, Motion, gpfdist и storage.
-- [deep-dives/explain-plan-reading.md](deep-dives/explain-plan-reading.md) - как читать план и формулировать RCA по `EXPLAIN ANALYZE`.
-- [deep-dives/physical-joins-in-mpp.md](deep-dives/physical-joins-in-mpp.md) - физика joins в MPP: co-located, broadcast, redistribute.
-- [deep-dives/partitioning-strategies.md](deep-dives/partitioning-strategies.md) - RANGE / LIST / HASH, DEFAULT partition, no default partitioning, `pg_partition_tree`, `gp_toolkit.gp_partitions`, `leaf_partitions`, `ATTACH PARTITION`, `DETACH PARTITION` и out-of-range INSERT.
-- [deep-dives/mpp-system-taxonomy.md](deep-dives/mpp-system-taxonomy.md) - SMP, MPP, EPP, lakehouse, HTAP и цена каждой архитектуры.
-- [greenplum-theory.pptx](../../../artifacts/greenplum-theory.pptx) - презентация урока.
-- [labs/greenplum](../../../labs/greenplum/README.md) - запуск стенда.
-- [cluster-inspection.sql](../../../labs/greenplum/examples/cluster-inspection.sql) - runnable SQL для проверки topology, settings и disk free учебного Docker-кластера.
-- [cluster-monitoring.sql](../../../labs/greenplum/examples/cluster-monitoring.sql) - расширенный monitoring SQL: `gp_segment_configuration`, `gp_toolkit.gp_disk_free`, `gp_segment_id`, `gpstate -s` snippets и segment health.
-- [storage-and-partitioning.sql](../../../labs/greenplum/examples/storage-and-partitioning.sql) - runnable demo для Heap/AO/AOCO и partitioning intro.
-- [partitioning-strategies.sql](../../../labs/greenplum/examples/partitioning-strategies.sql) - runnable drill по `PARTITION BY RANGE`, `PARTITION BY LIST`, `PARTITION BY HASH`, `DEFAULT partition` и подсчету partitions через `pg_partition_tree` / `gp_toolkit.gp_partitions`.
+- [Mentor guide](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/mentor-guide.md) - подсказки для проведения урока.
+- [Student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md) - задания для ученика.
+- [Student prep](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/student-prep.md) - подготовка окружения ученика для macOS, Windows и Linux.
+- [Simple path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/simple-path.md) - 60-минутный маршрут: слайды, команды, вопросы, проверки.
+- [Deep-dive path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/deep-dive-path.md) - расширенный deep-dive маршрут.
+- [Homework plan](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/homework-plan.md) - план домашки на 60-90 минут.
+- [Cheat sheet](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/cheat-sheet.md) - команды и SQL-шпаргалка.
+- [Homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md) - домашняя работа.
+- [Case study](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/case-study.md) - сквозной профессиональный кейс.
+- [Architecture](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/architecture.md) - визуальная карта Greenplum.
+- [Rubric](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/rubric.md) - skill matrix и критерии оценки.
+- [Capstone](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/capstone.md) - финальная архитектурная задача.
+- [Academy loop](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/academy-loop.md) - professional loop: assessment, analyzer, hidden incidents, submit/review, certificate.
+- [Academy v2](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/academy-v2.md) - interactive student portal, visualizer, diagnostics, scenario randomizer, adaptive review.
+- [Query tuning lab](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/query-tuning-lab.md) - усложненные задачи по query tuning.
+- [QD/QE/gang/slices explained](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md) - цельное объяснение QD, QE, slices, gangs, Motion и того, как это видно в `EXPLAIN`.
+- [Master/segment data path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/master-segment-data-path.md) - глубокая техническая схема master/QD/QE, Motion, gpfdist и storage.
+- [EXPLAIN plan reading](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/explain-plan-reading.md) - как читать план и формулировать RCA по `EXPLAIN ANALYZE`.
+- [Physical joins in MPP](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/physical-joins-in-mpp.md) - физика joins в MPP: co-located, broadcast, redistribute.
+- [Partitioning strategies](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md) - RANGE / LIST / HASH, DEFAULT partition, no default partitioning, `pg_partition_tree`, `gp_toolkit.gp_partitions`, `leaf_partitions`, `ATTACH PARTITION`, `DETACH PARTITION` и out-of-range INSERT.
+- [MPP system taxonomy](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/mpp-system-taxonomy.md) - SMP, MPP, EPP, lakehouse, HTAP и цена каждой архитектуры.
+- [Greenplum theory deck](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-theory.pptx) - презентация урока.
+- [Greenplum lab README](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/README.md) - запуск стенда.
+- [Cluster inspection SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-inspection.sql) - runnable SQL для проверки topology, settings и disk free учебного Docker-кластера.
+- [Cluster monitoring SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-monitoring.sql) - расширенный monitoring SQL: `gp_segment_configuration`, `gp_toolkit.gp_disk_free`, `gp_segment_id`, `gpstate -s` snippets и segment health.
+- [Storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql) - runnable demo для Heap/AO/AOCO и partitioning intro.
+- [Partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql) - runnable drill по `PARTITION BY RANGE`, `PARTITION BY LIST`, `PARTITION BY HASH`, `DEFAULT partition` и подсчету partitions через `pg_partition_tree` / `gp_toolkit.gp_partitions`.
