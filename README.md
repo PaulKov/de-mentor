@@ -241,6 +241,7 @@ python3 mentor-lab.py dsl greenplum show redistribute-join
 | Academy loop | [academy-loop.md](docs/lessons/01-greenplum/academy-loop.md) |
 | Academy v2 | [academy-v2.md](docs/lessons/01-greenplum/academy-v2.md) |
 | Query tuning lab | [query-tuning-lab.md](docs/lessons/01-greenplum/query-tuning-lab.md) |
+| QD/QE/slices/gangs deep dive | [qd-qe-gang-slices-explained.md](docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md) |
 | Rubric | [rubric.md](docs/lessons/01-greenplum/rubric.md) |
 | Capstone | [capstone.md](docs/lessons/01-greenplum/capstone.md) |
 | Case study | [case-study.md](docs/lessons/01-greenplum/case-study.md) |

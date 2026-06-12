@@ -7,6 +7,7 @@
 - deep-dive path: `runbooks/deep-dive-path.md`
 - homework plan: `runbooks/homework-plan.md`
 - homework: `homework.md`
+- QD/QE/slices/gangs deep dive: `deep-dives/qd-qe-gang-slices-explained.md`
 - runnable storage/partitioning examples: `../../../labs/greenplum/examples/storage-and-partitioning.sql`
 
 ## Подготовка
@@ -69,6 +70,8 @@ ORDER BY content, role;
 - почему в MPP-базе важна равномерность работы сегментов.
 
 ## Задание 1.1: QD, QE, Gang, Slice
+
+Перед заданием можно открыть `deep-dives/qd-qe-gang-slices-explained.md`: там есть короткая аналогия, пример `EXPLAIN` с `Redistribute Motion 48:48` и объяснение, почему slice - это часть плана, а gang - группа QE-процессов.
 
 Заполни короткую карту компонентов:
 

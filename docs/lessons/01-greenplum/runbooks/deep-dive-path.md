@@ -11,6 +11,7 @@ Cross-links:
 - homework: `docs/lessons/01-greenplum/homework.md`
 - homework plan: `docs/lessons/01-greenplum/runbooks/homework-plan.md`
 - SQL examples: `labs/greenplum/examples/storage-and-partitioning.sql`
+- QD/QE/slices/gangs explained: `docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md`
 - QD/QE deep dive: `docs/lessons/01-greenplum/deep-dives/master-segment-data-path.md`
 - joins deep dive: `docs/lessons/01-greenplum/deep-dives/physical-joins-in-mpp.md`
 - EXPLAIN ladder: `docs/lessons/01-greenplum/deep-dives/explain-plan-reading.md`
@@ -54,7 +55,7 @@ Expected answer:
 - Ученик объясняет `QD`, `QE`, `gang`, `slice` сначала простыми словами.
 - Ученик может технически сказать: plan режется на slices, slice исполняется gang-процессами на сегментах, а `QueryDispatchDesc` создается на QD и отправляется на QE.
 
-Ссылки: `student-workbook.md`, `homework.md`, `storage-and-partitioning.sql`.
+Ссылки: `student-workbook.md`, `deep-dives/qd-qe-gang-slices-explained.md`, `homework.md`, `storage-and-partitioning.sql`.
 
 ## Stage 2: 15:00-40:00 - Master/Coordinator Data Path И Bulk I/O
 

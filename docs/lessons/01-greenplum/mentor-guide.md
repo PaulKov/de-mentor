@@ -14,6 +14,7 @@
 - simple path: `docs/lessons/01-greenplum/runbooks/simple-path.md`;
 - deep-dive path: `docs/lessons/01-greenplum/runbooks/deep-dive-path.md`;
 - homework route: `docs/lessons/01-greenplum/runbooks/homework-plan.md`;
+- QD/QE/slices/gangs explained: `docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md`;
 - deep dive: `docs/lessons/01-greenplum/deep-dives/master-segment-data-path.md`;
 - практика ученика: `docs/lessons/01-greenplum/student-workbook.md`;
 - домашка: `docs/lessons/01-greenplum/homework.md`;
@@ -36,8 +37,9 @@ python3 mentor-lab.py runbook greenplum homework
 python3 mentor-lab.py runbook greenplum prep
 ```
 
-Advanced track подключай только после базового цикла `skew -> EXPLAIN -> fix -> evidence`. Для сильного ученика используй appendix-слайды и три deep dive:
+Advanced track подключай только после базового цикла `skew -> EXPLAIN -> fix -> evidence`. Для сильного ученика используй appendix-слайды и четыре deep dive:
 
+- `deep-dives/qd-qe-gang-slices-explained.md` - сначала простыми словами, затем технически объяснить QD, QE, slice, gang, Motion и `EXPLAIN`;
 - `deep-dives/explain-plan-reading.md` - читать план по scan/local work/join/Motion/global work/Rows out;
 - `deep-dives/physical-joins-in-mpp.md` - отличать локальный join algorithm от MPP data movement;
 - `deep-dives/mpp-system-taxonomy.md` - сравнивать SMP, MPP, EPP, lakehouse и HTAP по bottleneck.
