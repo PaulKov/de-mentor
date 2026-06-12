@@ -2,6 +2,7 @@
 
 Этот workbook связан с маршрутами ментора и домашкой:
 
+- student prep: `runbooks/student-prep.md`
 - simple path: `runbooks/simple-path.md`
 - deep-dive path: `runbooks/deep-dive-path.md`
 - homework plan: `runbooks/homework-plan.md`
@@ -9,6 +10,8 @@
 - runnable storage/partitioning examples: `../../../labs/greenplum/examples/storage-and-partitioning.sql`
 
 ## Подготовка
+
+Перед уроком пройди `runbooks/student-prep.md`. Если стенд не стартует, принеси ментору вывод команд из секции "Что принести ментору, если не завелось".
 
 macOS:
 

@@ -50,6 +50,7 @@
 
 ```bash
 python3 mentor-lab.py lesson greenplum
+python3 mentor-lab.py runbook greenplum prep
 python3 mentor-lab.py runbook greenplum simple
 python3 mentor-lab.py runbook greenplum deep
 python3 mentor-lab.py runbook greenplum homework
@@ -75,6 +76,7 @@ python3 mentor-lab.py seed greenplum --profile skewed
 
 - [mentor-guide.md](mentor-guide.md) - подсказки для проведения урока.
 - [student-workbook.md](student-workbook.md) - задания для ученика.
+- [runbooks/student-prep.md](runbooks/student-prep.md) - подготовка окружения ученика для macOS, Windows и Linux.
 - [runbooks/simple-path.md](runbooks/simple-path.md) - 60-минутный маршрут: слайды, команды, вопросы, проверки.
 - [runbooks/deep-dive-path.md](runbooks/deep-dive-path.md) - расширенный deep-dive маршрут.
 - [runbooks/homework-plan.md](runbooks/homework-plan.md) - план домашки на 60-90 минут.

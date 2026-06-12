@@ -20,6 +20,7 @@ def test_professional_lesson_artifacts_exist():
         "docs/lessons/01-greenplum/runbooks/simple-path.md",
         "docs/lessons/01-greenplum/runbooks/deep-dive-path.md",
         "docs/lessons/01-greenplum/runbooks/homework-plan.md",
+        "docs/lessons/01-greenplum/runbooks/student-prep.md",
         "labs/greenplum/examples/storage-and-partitioning.sql",
         "decks/greenplum-theory/README.md",
         "decks/greenplum-theory/facilitator-guide.md",
@@ -102,6 +103,27 @@ def test_workbook_homework_and_mentor_guide_are_cross_linked():
     assert "Lesson 02: Partitioning, statistics and incremental loads in MPP" in homework
     assert "runbooks/simple-path.md" in mentor
     assert "runbooks/deep-dive-path.md" in mentor
+
+
+def test_student_prep_runbook_has_cross_platform_environment_contract():
+    prep = (ROOT / "docs/lessons/01-greenplum/runbooks/student-prep.md").read_text(
+        encoding="utf-8"
+    )
+    workbook = (ROOT / "docs/lessons/01-greenplum/student-workbook.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert "macOS" in prep
+    assert "Windows" in prep
+    assert "Linux" in prep
+    assert "Docker Desktop" in prep
+    assert "WSL 2" in prep
+    assert "Docker Engine" in prep
+    assert "python3 mentor-lab.py doctor" in prep
+    assert "py mentor-lab.py doctor" in prep
+    assert "docker compose version" in prep
+    assert "15432" in prep
+    assert "student-prep.md" in workbook
 
 
 def test_storage_and_partitioning_sql_contains_runnable_demo_contracts():

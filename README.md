@@ -233,6 +233,7 @@ python3 mentor-lab.py dsl greenplum show redistribute-join
 | Roadmap | [roadmap.md](docs/lessons/01-greenplum/roadmap.md) |
 | Workbook ученика | [student-workbook.md](docs/lessons/01-greenplum/student-workbook.md) |
 | Guide ментора | [mentor-guide.md](docs/lessons/01-greenplum/mentor-guide.md) |
+| Student prep | [student-prep.md](docs/lessons/01-greenplum/runbooks/student-prep.md) |
 | Simple runbook | [simple-path.md](docs/lessons/01-greenplum/runbooks/simple-path.md) |
 | Deep-dive runbook | [deep-dive-path.md](docs/lessons/01-greenplum/runbooks/deep-dive-path.md) |
 | Homework plan | [homework-plan.md](docs/lessons/01-greenplum/runbooks/homework-plan.md) |

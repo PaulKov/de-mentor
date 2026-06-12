@@ -94,7 +94,7 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Print a mentor runbook route with slides, commands, questions, and checks.",
     )
     runbook_parser.add_argument("lab_name")
-    runbook_parser.add_argument("route", choices=["simple", "deep", "homework"])
+    runbook_parser.add_argument("route", choices=["prep", "simple", "deep", "homework"])
     runbook_parser.set_defaults(handler=_handle_runbook)
 
     hint_parser = subparsers.add_parser(
