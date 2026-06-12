@@ -153,3 +153,19 @@ def test_grade_dry_run_accepts_greenplum_alias():
 
     assert exit_code == 0
     assert "Score requires a running Greenplum lab" in output
+
+
+def test_runbook_commands_are_available_without_database():
+    simple_exit, simple_output = invoke(["runbook", "greenplum", "simple"])
+    deep_exit, deep_output = invoke(["runbook", "greenplum", "deep"])
+    homework_exit, homework_output = invoke(["runbook", "greenplum", "homework"])
+
+    assert simple_exit == 0
+    assert "Simple path" in simple_output
+    assert "python3 mentor-lab.py check greenplum" in simple_output
+    assert deep_exit == 0
+    assert "Deep-dive path" in deep_output
+    assert "QD" in deep_output
+    assert homework_exit == 0
+    assert "Homework plan" in homework_output
+    assert "Lesson 02" in homework_output

@@ -1,13 +1,16 @@
-import { C, bar, slideBase } from "./shared.mjs";
+import { C, card, codeBlock, slideBase } from "./shared.mjs";
 
 export async function slide10(presentation, ctx) {
-  const slide = slideBase(presentation, ctx, "Доказательство", "Skew видно до production-инцидента", "Проверка `gp_segment_id` превращает архитектурную гипотезу в измеримый факт.");
-  ctx.addText(slide, { x: 96, y: 230, width: 430, height: 34, text: "Плохо: DISTRIBUTED BY(status)", fontSize: 24, bold: true, color: C.red });
-  bar(ctx, slide, 100, 312, 380, "Segment 0", 0.01, C.red);
-  bar(ctx, slide, 100, 402, 380, "Segment 1", 0.99, C.red);
-  ctx.addText(slide, { x: 710, y: 230, width: 430, height: 34, text: "Лучше: BY(customer_id)", fontSize: 24, bold: true, color: C.green });
-  bar(ctx, slide, 714, 312, 380, "Segment 0", 0.501, C.green);
-  bar(ctx, slide, 714, 402, 380, "Segment 1", 0.499, C.green);
-  ctx.addText(slide, { x: 250, y: 548, width: 780, height: 70, text: "Оптимизатору легче помогать, когда физическая модель не мешает.", fontSize: 26, bold: true, color: C.text, align: "center" });
+  const slide = slideBase(
+    presentation,
+    ctx,
+    "Storage",
+    "Heap vs AO row vs AOCO: концепт",
+    "Heap vs AO row vs AOCO - выбор под workload, scan pattern и частоту изменений."
+  );
+  card(ctx, slide, 60, 245, 520, 132, "Heap", "Row storage по умолчанию, удобен для small/mutable tables.", C.green);
+  card(ctx, slide, 650, 245, 520, 132, "AO row", "Append-optimized row storage для append-heavy аналитики, когда читаем много колонок.", C.blue);
+  card(ctx, slide, 60, 405, 520, 132, "AOCO", "Append-optimized column storage: column pruning и compression для широких фактов.", C.green);
+
   return slide;
 }

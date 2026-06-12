@@ -12,10 +12,14 @@ docs/lessons/01-greenplum/deep-dives/master-segment-data-path.md
 
 ## Как Использовать
 
-- `greenplum-theory.pptx` - светлая русскоязычная презентация для первого урока: 17 основных слайдов и 5 appendix-слайдов.
+- `greenplum-theory.pptx` - светлая русскоязычная презентация для первого урока: 23 слайда основного маршрута и 7 appendix/deep-route слайдов.
 - `facilitator-guide.md` - поминутный план прохождения слайдов, talk track, вопросы ученику и переходы к практике.
 - `master-segment-data-path.md` - deep-dive по master/coordinator, QD/QE, Motion, gpfdist и storage models.
 - Appendix track добавляет чтение `EXPLAIN`, физические joins в MPP и сравнение SMP/MPP/EPP/lakehouse.
+- Runbooks связывают deck с командами Greenplum:
+  - `docs/lessons/01-greenplum/runbooks/simple-path.md`;
+  - `docs/lessons/01-greenplum/runbooks/deep-dive-path.md`;
+  - `docs/lessons/01-greenplum/runbooks/homework-plan.md`.
 - Workbook заставляет ученика доказать тезисы в SQL.
 - CLI checks проверяют состояние лаборатории.
 - Mentor report превращает сессию в follow-up actions.

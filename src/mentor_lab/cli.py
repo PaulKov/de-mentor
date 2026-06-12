@@ -29,6 +29,7 @@ from mentor_lab.portal import StudentPortal
 from mentor_lab.query_tuning import QueryTuningCatalog
 from mentor_lab.reports import MentorReport
 from mentor_lab.registry import create_default_registry
+from mentor_lab.runbooks import RunbookCatalog
 from mentor_lab.scenario_dsl import ScenarioDslCatalog
 from mentor_lab.scenario_engine import ScenarioRandomizer
 from mentor_lab.seed_profiles import SeedProfileCatalog
@@ -87,6 +88,14 @@ def _build_parser() -> argparse.ArgumentParser:
     lesson_parser.add_argument("lesson_code")
     lesson_parser.add_argument("--step", type=int)
     lesson_parser.set_defaults(handler=_handle_lesson)
+
+    runbook_parser = subparsers.add_parser(
+        "runbook",
+        help="Print a mentor runbook route with slides, commands, questions, and checks.",
+    )
+    runbook_parser.add_argument("lab_name")
+    runbook_parser.add_argument("route", choices=["simple", "deep", "homework"])
+    runbook_parser.set_defaults(handler=_handle_runbook)
 
     hint_parser = subparsers.add_parser(
         "hint",
@@ -435,6 +444,19 @@ def _handle_lesson(args: argparse.Namespace) -> int:
         print(f"Student: {step.student_action}")
         print(f"Expected outcome: {step.expected_outcome}")
         print("")
+    return 0
+
+
+def _handle_runbook(args: argparse.Namespace) -> int:
+    lab = _lab_or_none(args.lab_name)
+    if lab is None:
+        return 1
+    try:
+        runbook = RunbookCatalog.default().get(lab.name, args.route)
+    except KeyError as exc:
+        print(str(exc))
+        return 1
+    print(runbook.render(), end="")
     return 0
 
 

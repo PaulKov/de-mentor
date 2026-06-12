@@ -1,5 +1,13 @@
 # Student Workbook
 
+Этот workbook связан с маршрутами ментора и домашкой:
+
+- simple path: `runbooks/simple-path.md`
+- deep-dive path: `runbooks/deep-dive-path.md`
+- homework plan: `runbooks/homework-plan.md`
+- homework: `homework.md`
+- runnable storage/partitioning examples: `../../../labs/greenplum/examples/storage-and-partitioning.sql`
+
 ## Подготовка
 
 macOS:
@@ -23,6 +31,26 @@ python3 mentor-lab.py reset greenplum
 python3 mentor-lab.py up greenplum
 ```
 
+## Задание 0: Greenplum vs Sharded PostgreSQL
+
+Сначала сформулируй разницу своими словами.
+
+```text
+Greenplum vs sharded PostgreSQL:
+
+Single SQL endpoint:
+Who builds distributed plan:
+Who dispatches work:
+Where data movement is visible:
+Why application-side routing is not the main model:
+```
+
+Контрольная мысль:
+
+- sharded PostgreSQL часто требует внешнего routing/fan-out слоя или ручной логики приложения;
+- Greenplum дает единый SQL endpoint, где QD строит distributed plan, QE исполняют slices, а Motion виден в плане;
+- Greenplum не sharded PostgreSQL: это MPP engine с optimizer/executor/interconnect как частью СУБД.
+
 ## Задание 1: Осмотри Кластер
 
 ```sql
@@ -36,6 +64,26 @@ ORDER BY content, role;
 - сколько сегментов участвует в хранении данных;
 - какой узел принимает пользовательские подключения;
 - почему в MPP-базе важна равномерность работы сегментов.
+
+## Задание 1.1: QD, QE, Gang, Slice
+
+Заполни короткую карту компонентов:
+
+```text
+QD:
+QE:
+gang:
+slice:
+Motion boundary:
+```
+
+Expected answer:
+
+- `QD` - query dispatcher на coordinator/master: принимает SQL, планирует, режет plan на slices и dispatch-ит работу;
+- `QE` - query executor на сегментах: исполняет slice на локальных данных;
+- `gang` - набор QE-процессов, обычно по одному на segment для конкретного slice;
+- `slice` - фрагмент distributed plan, часто отделенный Motion boundary;
+- `Motion` - оператор передачи строк между slices/QE через interconnect.
 
 ## Задание 2: Найди Skew
 
@@ -102,7 +150,135 @@ ORDER BY revenue DESC;
 - какой Motion исчез или стал дешевле;
 - почему `customer_id` лучше для этого join.
 
-## Задание 5: Мини Design Review
+## Задание 5: Heap vs AO Row vs AOCO
+
+Запусти runnable demo из `storage-and-partitioning.sql`.
+
+Внутри `psql`:
+
+```sql
+\i /mentor-lab/examples/storage-and-partitioning.sql
+\d+ lesson01.storage_heap_demo
+\d+ lesson01.storage_ao_row_demo
+\d+ lesson01.storage_aoco_demo
+
+SELECT n.nspname AS schema_name, c.relname, am.amname AS access_method
+FROM pg_class AS c
+JOIN pg_namespace AS n ON n.oid = c.relnamespace
+LEFT JOIN pg_am AS am ON am.oid = c.relam
+WHERE n.nspname = 'lesson01'
+  AND c.relname LIKE 'storage_%_demo'
+ORDER BY c.relname;
+```
+
+Обрати внимание на DDL:
+
+```sql
+CREATE TABLE lesson01.storage_ao_row_demo (...)
+WITH (appendoptimized=true, orientation=row, compresstype=zstd, compresslevel=1)
+DISTRIBUTED BY (customer_id);
+
+CREATE TABLE lesson01.storage_aoco_demo (
+    amount numeric(12, 2) ENCODING (compresstype=zstd, compresslevel=3)
+)
+WITH (appendoptimized=true, orientation=column, compresstype=zstd, compresslevel=1)
+DISTRIBUTED BY (customer_id);
+```
+
+Ответь:
+
+- где heap, где AO row, где AOCO;
+- почему AOCO полезен для wide analytical scans;
+- почему `orientation=column` не исправляет skew;
+- когда `heap` может быть лучше для маленькой mutable dimension.
+
+## Задание 6: Как Включить Columnstore
+
+Table-level:
+
+```sql
+CREATE TABLE lesson01.fact_sales_aoco (
+    sale_id bigint,
+    customer_id integer,
+    sale_date date,
+    amount numeric(12, 2)
+)
+WITH (
+    appendoptimized=true,
+    orientation=column,
+    compresstype=zstd,
+    compresslevel=1
+)
+DISTRIBUTED BY (customer_id);
+```
+
+Column-level:
+
+```sql
+amount numeric(12, 2) ENCODING (compresstype=zstd, compresslevel=3)
+```
+
+Database-level default:
+
+```sql
+ALTER DATABASE mentor
+SET gp_default_storage_options =
+'appendoptimized=true, orientation=column, compresstype=zstd, compresslevel=1';
+```
+
+Role-level default:
+
+```sql
+ALTER ROLE gpadmin
+SET gp_default_storage_options =
+'appendoptimized=true, orientation=column, compresstype=zstd, compresslevel=1';
+```
+
+Instance-level default, production/admin snippet:
+
+```bash
+gpconfig -c gp_default_storage_options \
+  -v "'appendoptimized=true, orientation=column, compresstype=zstd, compresslevel=1'"
+
+gpconfig -s gp_default_storage_options
+gpstop -u
+```
+
+Важно:
+
+- на уроке instance-level `gpconfig` обычно не выполняем;
+- сначала учимся задавать storage явно на table/column level;
+- precedence: table `WITH/ENCODING` > role/database/cluster defaults.
+
+## Задание 7: Partitioning Intro
+
+Partitioning в первом уроке - только intro. Глубокая практика будет в `Lesson 02: Partitioning, statistics and incremental loads in MPP`.
+
+Сравни bad/good пример из `storage-and-partitioning.sql`:
+
+```sql
+-- bad: partition не помогает типичному фильтру по sale_date
+EXPLAIN
+SELECT sum(amount)
+FROM lesson01.fact_sales_partition_bad
+WHERE sale_date >= DATE '2026-01-01'
+  AND sale_date < DATE '2026-02-01';
+
+-- good: PARTITION BY RANGE (sale_date) помогает pruning
+EXPLAIN
+SELECT sum(amount)
+FROM lesson01.fact_sales_partition_good
+WHERE sale_date >= DATE '2026-01-01'
+  AND sale_date < DATE '2026-02-01';
+```
+
+Ответь:
+
+- почему `PARTITION BY RANGE (sale_date)` помогает отчетам по датам;
+- почему partition key не равен distribution key;
+- почему partitioning помогает pruning/retention, а distribution помогает сегментам и joins.
+
+## Задание 8: Мини Design Review
 
 Спроектируй факт `fact_daily_sales`:
 
@@ -218,3 +394,19 @@ Why not the alternatives:
 ```bash
 python3 mentor-lab.py hint greenplum mpp-systems
 ```
+
+## Домашка И Следующий Урок
+
+После урока открой:
+
+- `homework.md` - что сдать;
+- `runbooks/homework-plan.md` - как разложить домашку на 60-90 минут;
+- `storage-and-partitioning.sql` - SQL-демо, которое можно переиспользовать в домашней модели.
+
+На следующий урок принеси:
+
+- DDL фактов и dimensions;
+- rationale по grain, distribution, partitioning и storage;
+- self-check commands;
+- `EXPLAIN` evidence;
+- вопросы по partition pruning, statistics after load и incremental loads.

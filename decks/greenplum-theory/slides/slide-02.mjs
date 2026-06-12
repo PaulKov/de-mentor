@@ -1,16 +1,17 @@
-import { C, card, slideBase } from "./shared.mjs";
+import { C, card, codeBlock, slideBase } from "./shared.mjs";
 
 export async function slide02(presentation, ctx) {
   const slide = slideBase(
     presentation,
     ctx,
     "Карта систем",
-    "SMP, MPP, EPP: разная цена масштабирования",
-    "Архитектура определяет, где узкое место: CPU, память, диск, сеть или стоимость эластики."
+    "SMP, MPP, EPP: где живет узкое место",
+    "SMP / Shared-disk / MPP / EPP дают разные компромиссы по простоте, масштабу и цене сети."
   );
-  card(ctx, slide, 55, 230, 272, 285, "SMP", "Один большой сервер, общая память и диски. Плюс: проще администрировать. Минус: масштабирование в основном вертикальное.", C.violet);
-  card(ctx, slide, 355, 230, 272, 285, "Shared-disk", "Несколько вычислителей, общее хранилище. Плюс: проще хранить единые данные. Минус: contention вокруг storage и сети.", C.blue);
-  card(ctx, slide, 655, 230, 272, 285, "MPP", "Shared-nothing: каждый сегмент имеет свои CPU, память и данные. Плюс: горизонтальный рост. Минус: надо проектировать распределение.", C.green);
-  card(ctx, slide, 955, 230, 272, 285, "EPP / cloud", "Эластичная модель с разделением compute и storage. Плюс: гибкость. Минус: стоимость и движение данных становятся менее очевидными.", C.amber);
+  card(ctx, slide, 60, 245, 520, 132, "SMP", "Один большой сервер, общая память/storage. Простота, но вертикальный потолок.", C.green);
+  card(ctx, slide, 650, 245, 520, 132, "Shared-disk", "Несколько compute-узлов, общее хранилище. Единые данные, но storage contention.", C.blue);
+  card(ctx, slide, 60, 405, 520, 132, "MPP", "Shared-nothing: сегменты хранят свои данные и параллельно исполняют запросы.", C.green);
+  card(ctx, slide, 650, 405, 520, 132, "EPP / cloud elastic", "Compute и storage часто масштабируются независимо; цена и shuffle требуют контроля.", C.blue);
+
   return slide;
 }

@@ -1,11 +1,16 @@
-import { C, slideBase, card } from "./shared.mjs";
+import { C, card, codeBlock, slideBase } from "./shared.mjs";
 
 export async function slide17(presentation, ctx) {
-  const slide = slideBase(presentation, ctx, "Итоги", "Что ученик должен унести с урока", "Если эти пять тезисов закрепились, первый урок выполнил свою работу.");
-  card(ctx, slide, 120, 210, 470, 86, "1. Greenplum — не просто большой PostgreSQL.", "", C.blue);
-  card(ctx, slide, 120, 320, 470, 86, "2. Distribution key — физическое решение.", "", C.green);
-  card(ctx, slide, 120, 430, 470, 86, "3. Skew измеряется через gp_segment_id.", "", C.amber);
-  card(ctx, slide, 690, 265, 470, 86, "4. Motion nodes показывают движение по сети.", "", C.violet);
-  card(ctx, slide, 690, 375, 470, 86, "5. Фикс доказывается distribution и EXPLAIN.", "", C.red);
+  const slide = slideBase(
+    presentation,
+    ctx,
+    "Цикл",
+    "Диагностический цикл",
+    "Профессиональный Greenplum fix выглядит как evidence loop, а не как догадка."
+  );
+  card(ctx, slide, 60, 245, 520, 132, "1. Измерить", "gp_segment_id, row counts, EXPLAIN, runtime symptoms.", C.green);
+  card(ctx, slide, 650, 245, 520, 132, "2. Объяснить", "Связать skew/Motion/storage/statistics с физической причиной.", C.blue);
+  card(ctx, slide, 60, 405, 520, 132, "3. Изменить и проверить", "Новый DDL или query shape плюс повторный evidence.", C.green);
+
   return slide;
 }
