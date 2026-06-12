@@ -4,13 +4,13 @@ export async function slide20(presentation, ctx) {
   const slide = slideBase(
     presentation,
     ctx,
-    "Evidence",
-    "Fix and evidence",
-    "Фикс без проверки - мнение. Фикс с повторным EXPLAIN и skew check - инженерное решение."
+    "Incident",
+    "Incident mode",
+    "Теперь это не упражнение, а замедлившийся отчет и короткий RCA для бизнеса."
   );
-  card(ctx, slide, 60, 245, 520, 132, "До", "DISTRIBUTED BY(status), skew, Redistribute Motion.", C.green);
-  card(ctx, slide, 650, 245, 520, 132, "После", "DISTRIBUTED BY(customer_id), ровнее gp_segment_id, дешевле движение.", C.blue);
-  card(ctx, slide, 60, 405, 520, 132, "Доказываем", "Скрин/вывод SQL, короткая интерпретация, оставшийся риск.", C.green);
+  card(ctx, slide, 60, 245, 520, 132, "Симптом", "Отчет по выручке стал медленнее после новой fact table.", C.green);
+  card(ctx, slide, 650, 245, 520, 132, "Гипотезы", "Skew, non-colocated join, missing statistics, плохой storage/load path.", C.blue);
+  card(ctx, slide, 60, 405, 520, 132, "Артефакт", "RCA: symptom -> evidence -> root cause -> fix -> validation.", C.green);
 
   return slide;
 }

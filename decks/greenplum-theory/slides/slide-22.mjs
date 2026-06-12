@@ -4,13 +4,13 @@ export async function slide22(presentation, ctx) {
   const slide = slideBase(
     presentation,
     ctx,
-    "Automation",
-    "Automation",
-    "CLI делает урок повторяемым для ментора и ученика на macOS и Windows."
+    "Capstone",
+    "Capstone mart design",
+    "Факт проектируется от grain и workload, а не от любимой DDL-опции."
   );
-  card(ctx, slide, 60, 245, 520, 132, "Student UX", "up/status/psql/reset без локального psql.", C.green);
-  card(ctx, slide, 650, 245, 520, 132, "Mentor UX", "runbook, hints, grading, incident, report.", C.blue);
+  card(ctx, slide, 60, 245, 520, 132, "Grain", "Одна строка что означает? order, order item, daily customer aggregate?", C.green);
+  card(ctx, slide, 650, 245, 520, 132, "Physical design", "Distribution для joins, partitioning для date pruning/retention, storage для scans.", C.blue);
+  card(ctx, slide, 60, 405, 520, 132, "Risk register", "Skew, late facts, stats after load, hot partitions, huge final gather.", C.green);
 
-  codeBlock(ctx, slide, 60, 520, 1090, 130, "python3 mentor-lab.py runbook greenplum simple\npython3 mentor-lab.py runbook greenplum deep\npython3 mentor-lab.py runbook greenplum homework\npython3 mentor-lab.py check greenplum", "SQL / CLI");
   return slide;
 }

@@ -5,12 +5,12 @@ export async function slide27(presentation, ctx) {
     presentation,
     ctx,
     "APPENDIX",
-    "Hash Join deep dive",
-    "QE строит hash table на inner side и probe-ит outer side; memory pressure ведет к batching/workfiles."
+    "Broadcast vs Redistribute",
+    "Выбор data movement зависит от размера сторон после фильтров и ключей распределения."
   );
-  card(ctx, slide, 60, 245, 520, 132, "Build side", "Обычно меньшая сторона. Ошибка оценок может привести к spill.", C.green);
-  card(ctx, slide, 650, 245, 520, 132, "Probe side", "Большая сторона проходит через hash lookup локально на QE.", C.blue);
-  card(ctx, slide, 60, 405, 520, 132, "MPP context", "Перед локальным Hash Join данные могли пройти Broadcast или Redistribute Motion.", C.green);
+  card(ctx, slide, 60, 245, 520, 132, "Broadcast", "Хорош, когда broadcast-side реально мала. Плох для большой dimension/fact.", C.green);
+  card(ctx, slide, 650, 245, 520, 132, "Redistribute", "Нормальная цена несовпадения distribution и join key, но может стать дорогой.", C.blue);
+  card(ctx, slide, 60, 405, 520, 132, "Вопрос ученику", "Что дешевле: разослать 10k строк или переразложить 50M строк?", C.green);
 
   return slide;
 }

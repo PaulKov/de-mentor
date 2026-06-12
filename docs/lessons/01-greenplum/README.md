@@ -35,7 +35,7 @@
 ## Практика
 
 1. Запустить стенд.
-2. Проверить сегменты.
+2. Проверить Docker lab cluster passport: master/coordinator, primary segments, memory settings и disk free.
 3. Найти skew в плохо распределенной таблице.
 4. Поймать `Redistribute Motion` в плане запроса.
 5. Сравнить с исправленной таблицей.
@@ -96,4 +96,5 @@ python3 mentor-lab.py seed greenplum --profile skewed
 - [deep-dives/mpp-system-taxonomy.md](deep-dives/mpp-system-taxonomy.md) - SMP, MPP, EPP, lakehouse, HTAP и цена каждой архитектуры.
 - [greenplum-theory.pptx](../../../artifacts/greenplum-theory.pptx) - презентация урока.
 - [labs/greenplum](../../../labs/greenplum/README.md) - запуск стенда.
+- [cluster-inspection.sql](../../../labs/greenplum/examples/cluster-inspection.sql) - runnable SQL для проверки topology, settings и disk free учебного Docker-кластера.
 - [storage-and-partitioning.sql](../../../labs/greenplum/examples/storage-and-partitioning.sql) - runnable demo для Heap/AO/AOCO и partitioning intro.

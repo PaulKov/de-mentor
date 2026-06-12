@@ -8,6 +8,7 @@
 - homework plan: `runbooks/homework-plan.md`
 - homework: `homework.md`
 - QD/QE/slices/gangs deep dive: `deep-dives/qd-qe-gang-slices-explained.md`
+- cluster inspection: `../../../labs/greenplum/examples/cluster-inspection.sql`
 - runnable storage/partitioning examples: `../../../labs/greenplum/examples/storage-and-partitioning.sql`
 
 ## Подготовка
@@ -57,6 +58,16 @@ Why application-side routing is not the main model:
 
 ## Задание 1: Осмотри Кластер
 
+Сначала выполни готовый inspection script:
+
+```sql
+\i /mentor-lab/examples/cluster-inspection.sql
+```
+
+Он покажет версию Greenplum, строки `gp_segment_configuration`, memory-related настройки из `pg_settings`, размер базы и свободное место из `gp_toolkit.gp_disk_free`.
+
+Затем отдельно повтори главный topology-запрос:
+
 ```sql
 SELECT content, role, preferred_role, mode, status, hostname, port
 FROM gp_segment_configuration
@@ -65,8 +76,11 @@ ORDER BY content, role;
 
 Ответь:
 
+- сколько coordinator/master instances видно в output;
 - сколько сегментов участвует в хранении данных;
+- сколько segment hosts используется в Docker-стенде;
 - какой узел принимает пользовательские подключения;
+- заданы ли CPU/RAM limits в compose или контейнер берет лимиты Docker Desktop/Engine;
 - почему в MPP-базе важна равномерность работы сегментов.
 
 ## Задание 1.1: QD, QE, Gang, Slice

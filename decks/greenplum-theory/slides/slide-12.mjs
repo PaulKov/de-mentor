@@ -4,14 +4,13 @@ export async function slide12(presentation, ctx) {
   const slide = slideBase(
     presentation,
     ctx,
-    "Defaults",
-    "Columnstore defaults: table / database / role / instance",
-    "Columnstore включается явно; defaults помогают стандарту, но требуют дисциплины."
+    "Runnable DDL",
+    "Heap vs AOCO: runnable DDL + catalog checks",
+    "Демо живет в labs/greenplum/examples/storage-and-partitioning.sql."
   );
-  card(ctx, slide, 60, 245, 520, 132, "Table level", "WITH (appendoptimized=true, orientation=column, compresstype=zstd, compresslevel=1).", C.green);
-  card(ctx, slide, 650, 245, 520, 132, "Column level", "amount numeric(12,2) ENCODING (compresstype=zstd, compresslevel=3).", C.blue);
-  card(ctx, slide, 60, 405, 520, 132, "Admin note", "Instance-level gpconfig показываем как production/admin snippet, не выполняем без необходимости.", C.green);
+  card(ctx, slide, 60, 245, 520, 132, "Проверяем", "Heap/AO/AOCO видны через psql \\d+ и catalog checks.", C.green);
+  card(ctx, slide, 650, 245, 520, 132, "Не путаем", "Storage ускоряет scan/compression, но не заменяет distribution key.", C.blue);
 
-  codeBlock(ctx, slide, 60, 520, 1090, 130, "ALTER DATABASE mentor SET gp_default_storage_options =\n'appendoptimized=true, orientation=column, compresstype=zstd, compresslevel=1';\n\ngpconfig -c gp_default_storage_options \\\n  -v \"'appendoptimized=true, orientation=column, compresstype=zstd, compresslevel=1'\"", "SQL / CLI");
+  codeBlock(ctx, slide, 60, 520, 1090, 130, "CREATE TABLE lesson01.storage_aoco_demo (...)\nWITH (appendoptimized=true, orientation=column, compresstype=zstd, compresslevel=1)\nDISTRIBUTED BY (customer_id);\n\n\\d+ lesson01.storage_aoco_demo\nSELECT c.relname, am.amname AS access_method FROM pg_class c LEFT JOIN pg_am am ON am.oid = c.relam WHERE c.relname LIKE 'storage_%_demo';", "SQL / CLI");
   return slide;
 }

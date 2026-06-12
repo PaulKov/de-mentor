@@ -5,13 +5,12 @@ export async function slide30(presentation, ctx) {
     presentation,
     ctx,
     "APPENDIX",
-    "MPP-семейства: где цена архитектуры",
-    "System taxonomy and next steps: SMP, MPP, EPP, lakehouse, HTAP переносят bottleneck в разные места."
+    "Storage internals and ALTER TABLE caveats",
+    "Heap/AO/AOCO и ALTER TABLE storage changes требуют понимания rewrite, locks и maintenance window."
   );
-  card(ctx, slide, 60, 245, 520, 132, "SMP", "Простота и вертикальный масштаб.", C.green);
-  card(ctx, slide, 650, 245, 520, 132, "MPP", "Параллельная аналитика ценой distribution design и Motion.", C.blue);
-  card(ctx, slide, 60, 405, 520, 132, "EPP / lakehouse", "Эластика и открытые форматы ценой cost, shuffle, metadata и governance.", C.green);
-  card(ctx, slide, 650, 405, 520, 132, "Lesson 02", "Partitioning, statistics and incremental loads in MPP.", C.blue);
+  card(ctx, slide, 60, 245, 520, 132, "AOCO files", "Колонки хранятся отдельно, compression работает по column segments.", C.green);
+  card(ctx, slide, 650, 245, 520, 132, "ALTER caveat", "Смена storage может требовать rewrite и операционного окна.", C.blue);
+  card(ctx, slide, 60, 405, 520, 132, "Production checklist", "Объем данных, locks, stats, vacuum/analyze, rollback plan.", C.green);
 
   return slide;
 }

@@ -4,13 +4,13 @@ export async function slide19(presentation, ctx) {
   const slide = slideBase(
     presentation,
     ctx,
-    "Incident",
-    "Incident mode",
-    "Теперь это не упражнение, а замедлившийся отчет и короткий RCA для бизнеса."
+    "Practice",
+    "Practice checkpoint",
+    "Ученик сам проходит skew -> EXPLAIN -> comparison -> short RCA."
   );
-  card(ctx, slide, 60, 245, 520, 132, "Симптом", "Отчет по выручке стал медленнее после новой fact table.", C.green);
-  card(ctx, slide, 650, 245, 520, 132, "Гипотезы", "Skew, non-colocated join, missing statistics, плохой storage/load path.", C.blue);
-  card(ctx, slide, 60, 405, 520, 132, "Артефакт", "RCA: symptom -> evidence -> root cause -> fix -> validation.", C.green);
+  card(ctx, slide, 60, 245, 520, 132, "Что делает ученик", "Запускает workbook, ищет skew, читает Motion, сравнивает bad/good fact.", C.green);
+  card(ctx, slide, 650, 245, 520, 132, "Что делает ментор", "Задает вопросы и просит доказывать каждый вывод SQL-артефактом.", C.blue);
+  card(ctx, slide, 60, 405, 520, 132, "Критерий", "Ученик может назвать root cause и validation query.", C.green);
 
   return slide;
 }

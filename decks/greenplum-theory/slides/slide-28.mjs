@@ -5,12 +5,12 @@ export async function slide28(presentation, ctx) {
     presentation,
     ctx,
     "APPENDIX",
-    "QD/QE internals with source anchors",
-    "Глубина для любопытного ученика: source anchors без превращения урока в чтение C-кода."
+    "Hash Join deep dive",
+    "QE строит hash table на inner side и probe-ит outer side; memory pressure ведет к batching/workfiles."
   );
-  card(ctx, slide, 60, 245, 520, 132, "cdbdisp_query.c", "Dispatch path: QD готовит и отправляет plan payload на QE.", C.green);
-  card(ctx, slide, 650, 245, 520, 132, "nodeMotion.c", "Motion executor обрабатывает send/receive tuple flow между slices.", C.blue);
-  card(ctx, slide, 60, 405, 520, 132, "nodeHashjoin.c / joinpath.c", "Локальный Hash Join и optimizer choices отдельно от CdbPathLocus.", C.green);
+  card(ctx, slide, 60, 245, 520, 132, "Build side", "Обычно меньшая сторона. Ошибка оценок может привести к spill.", C.green);
+  card(ctx, slide, 650, 245, 520, 132, "Probe side", "Большая сторона проходит через hash lookup локально на QE.", C.blue);
+  card(ctx, slide, 60, 405, 520, 132, "MPP context", "Перед локальным Hash Join данные могли пройти Broadcast или Redistribute Motion.", C.green);
 
   return slide;
 }

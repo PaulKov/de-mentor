@@ -36,6 +36,87 @@ psql -h localhost -p 15432 -U gpadmin -d mentor
 
 Пароль: `gparray`.
 
+## Паспорт Docker-Кластера
+
+Compose поднимает учебный single-container Greenplum:
+
+| Параметр | Значение |
+| --- | --- |
+| Docker service | `greenplum` |
+| Container hostname | `greenplum` |
+| Image | `woblerr/greenplum:7.1.0` |
+| Database | `mentor` |
+| User / password | `gpadmin` / `gparray` |
+| Published port | `15432:5432` |
+| Data volume | `greenplum-data` |
+| Init scripts | `labs/greenplum/init` -> `/docker-entrypoint-initdb.d` |
+| Examples | `labs/greenplum/examples` -> `/mentor-lab/examples` |
+
+Фактическая topology внутри Greenplum:
+
+- `1 coordinator/master`: `content = -1`, порт `5432` внутри контейнера;
+- `2 primary segments`: `content = 0` и `content = 1`, порты `6000` и `6001`;
+- `0 mirror segments`: HA отключен, чтобы стенд был легким;
+- `1 segment host`: все segment instances живут в одном Docker container/hostname `greenplum`.
+
+CPU/RAM limits в `docker-compose.yml` **не заданы**. Это значит, что контейнер использует лимиты Docker Desktop/Engine. В Greenplum можно посмотреть memory-related настройки executor'а, но не полную физическую квоту Docker VM.
+
+Быстрая проверка через SQL:
+
+```bash
+python3 mentor-lab.py psql greenplum
+```
+
+```sql
+\i /mentor-lab/examples/cluster-inspection.sql
+```
+
+Ключевые SQL-запросы из скрипта:
+
+```sql
+SELECT content, role, preferred_role, mode, status, hostname, address, port, datadir
+FROM gp_segment_configuration
+ORDER BY content, role;
+
+SELECT name, setting, unit
+FROM pg_settings
+WHERE name IN (
+    'gp_resource_manager',
+    'gp_vmem_protect_limit',
+    'max_connections',
+    'shared_buffers',
+    'statement_mem',
+    'work_mem'
+)
+ORDER BY name;
+
+SELECT dfsegment, dfhostname, dfdevice, pg_size_pretty(dfspace::bigint * 1024) AS free_space
+FROM gp_toolkit.gp_disk_free
+ORDER BY dfsegment;
+```
+
+Ожидаемые ориентиры для текущего образа:
+
+- `gp_segment_configuration`: 1 master row и 2 primary segment rows;
+- `gp_vmem_protect_limit`: `8192`;
+- `statement_mem`: `128000 kB`;
+- `work_mem`: `32768 kB`;
+- `shared_buffers`: `4000` blocks по `32kB`, примерно 125 MB;
+- disk free зависит от Docker VM и volume, смотри `gp_toolkit.gp_disk_free`.
+
+Проверка Docker-level ресурсов снаружи Greenplum:
+
+```bash
+docker inspect greenplum-greenplum-1 \
+  --format 'NanoCpus={{.HostConfig.NanoCpus}} Memory={{.HostConfig.Memory}} CpuQuota={{.HostConfig.CpuQuota}}'
+
+docker stats greenplum-greenplum-1 --no-stream
+docker system df
+docker volume inspect greenplum_greenplum-data
+```
+
+Если `NanoCpus=0`, `Memory=0`, `CpuQuota=0`, значит compose не ограничивает CPU/RAM на уровне container runtime.
+
 ## Переинициализация
 
 Init scripts выполняются только при пустом data volume. Если нужно пересоздать учебные данные:

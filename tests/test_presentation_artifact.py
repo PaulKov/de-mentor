@@ -5,7 +5,7 @@ from zipfile import ZipFile
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_greenplum_theory_deck_artifact_exists_and_has_30_slides():
+def test_greenplum_theory_deck_artifact_exists_and_has_31_slides():
     deck = ROOT / "artifacts" / "greenplum-theory.pptx"
 
     assert deck.exists()
@@ -18,15 +18,15 @@ def test_greenplum_theory_deck_artifact_exists_and_has_30_slides():
             if name.startswith("ppt/slides/slide") and name.endswith(".xml")
         ]
 
-    assert len(slides) == 30
+    assert len(slides) == 31
 
 
-def test_greenplum_theory_deck_source_has_30_slide_modules():
+def test_greenplum_theory_deck_source_has_31_slide_modules():
     slides_dir = ROOT / "decks" / "greenplum-theory" / "slides"
 
     slide_modules = sorted(slides_dir.glob("slide-*.mjs"))
 
-    assert len(slide_modules) == 30
+    assert len(slide_modules) == 31
     assert (slides_dir / "shared.mjs").exists()
 
 
@@ -44,6 +44,11 @@ def test_greenplum_theory_deck_uses_russian_light_theme():
     assert "Greenplum vs sharded PostgreSQL" in source
     assert "QD / QE / gang / slices" in source
     assert "QD/QE dispatch deep dive" in source
+    assert "Docker lab cluster passport" in source
+    assert "woblerr/greenplum:7.1.0" in source
+    assert "1 coordinator + 2 primary segments" in source
+    assert "gp_segment_configuration" in source
+    assert "gp_toolkit.gp_disk_free" in source
     assert "gang" in source
     assert "slice" in source
     assert "gpfdist external table" in source

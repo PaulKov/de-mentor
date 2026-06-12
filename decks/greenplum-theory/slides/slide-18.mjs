@@ -4,13 +4,13 @@ export async function slide18(presentation, ctx) {
   const slide = slideBase(
     presentation,
     ctx,
-    "Practice",
-    "Practice checkpoint",
-    "Ученик сам проходит skew -> EXPLAIN -> comparison -> short RCA."
+    "Цикл",
+    "Диагностический цикл",
+    "Профессиональный Greenplum fix выглядит как evidence loop, а не как догадка."
   );
-  card(ctx, slide, 60, 245, 520, 132, "Что делает ученик", "Запускает workbook, ищет skew, читает Motion, сравнивает bad/good fact.", C.green);
-  card(ctx, slide, 650, 245, 520, 132, "Что делает ментор", "Задает вопросы и просит доказывать каждый вывод SQL-артефактом.", C.blue);
-  card(ctx, slide, 60, 405, 520, 132, "Критерий", "Ученик может назвать root cause и validation query.", C.green);
+  card(ctx, slide, 60, 245, 520, 132, "1. Измерить", "gp_segment_id, row counts, EXPLAIN, runtime symptoms.", C.green);
+  card(ctx, slide, 650, 245, 520, 132, "2. Объяснить", "Связать skew/Motion/storage/statistics с физической причиной.", C.blue);
+  card(ctx, slide, 60, 405, 520, 132, "3. Изменить и проверить", "Новый DDL или query shape плюс повторный evidence.", C.green);
 
   return slide;
 }

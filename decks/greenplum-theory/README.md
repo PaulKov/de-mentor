@@ -13,7 +13,7 @@ docs/lessons/01-greenplum/deep-dives/master-segment-data-path.md
 
 ## Как Использовать
 
-- `greenplum-theory.pptx` - светлая русскоязычная презентация для первого урока: 23 слайда основного маршрута и 7 appendix/deep-route слайдов.
+- `greenplum-theory.pptx` - светлая русскоязычная презентация для первого урока: 24 слайда основного маршрута и 7 appendix/deep-route слайдов.
 - `facilitator-guide.md` - поминутный план прохождения слайдов, talk track, вопросы ученику и переходы к практике.
 - `qd-qe-gang-slices-explained.md` - standalone-объяснение QD, QE, slices, gangs и Motion в формате, удобном для ученика.
 - `master-segment-data-path.md` - deep-dive по master/coordinator, QD/QE, Motion, gpfdist и storage models.

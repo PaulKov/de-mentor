@@ -4,13 +4,14 @@ export async function slide17(presentation, ctx) {
   const slide = slideBase(
     presentation,
     ctx,
-    "Цикл",
-    "Диагностический цикл",
-    "Профессиональный Greenplum fix выглядит как evidence loop, а не как догадка."
+    "Partitioning intro",
+    "Partitioning intro: pruning/retention != distribution",
+    "Partitioning режет таблицу внутри logical table; distribution размещает строки по сегментам."
   );
-  card(ctx, slide, 60, 245, 520, 132, "1. Измерить", "gp_segment_id, row counts, EXPLAIN, runtime symptoms.", C.green);
-  card(ctx, slide, 650, 245, 520, 132, "2. Объяснить", "Связать skew/Motion/storage/statistics с физической причиной.", C.blue);
-  card(ctx, slide, 60, 405, 520, 132, "3. Изменить и проверить", "Новый DDL или query shape плюс повторный evidence.", C.green);
+  card(ctx, slide, 60, 245, 520, 132, "Pruning", "Фильтр по sale_date может читать только нужные partitions.", C.green);
+  card(ctx, slide, 650, 245, 520, 132, "Retention", "Старые partitions можно удалять/архивировать операционно.", C.blue);
+  card(ctx, slide, 60, 405, 520, 132, "Не distribution", "Partition key не обязан быть distribution key.", C.green);
 
+  codeBlock(ctx, slide, 60, 520, 1090, 130, "CREATE TABLE lesson01.fact_sales_partition_good (...)\nDISTRIBUTED BY (customer_id)\nPARTITION BY RANGE (sale_date)\n(START (DATE '2026-01-01') END (DATE '2026-04-01') EVERY (INTERVAL '1 month'));", "SQL / CLI");
   return slide;
 }
