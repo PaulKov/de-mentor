@@ -115,11 +115,13 @@ python3 mentor-lab.py dsl greenplum show redistribute-join
 
 ## Academy Experience v5
 
-`Academy Experience v5` заменяет ручную навигацию по portal/control-room артефактам единым session workflow. Портал в `apps/academy-portal` написан на Vue 3 + Nuxt 3 + Vite и читает состояние из `session.json`.
+`Academy Experience v5` заменяет ручную навигацию по portal/control-room артефактам единым session workflow. Портал [de-mentor-portal](https://github.com/PaulKov/de-mentor-portal) написан на Vue 3 + Nuxt 3 + Vite и читает состояние из `session.json`.
 
 ```bash
 python3 mentor-lab.py session greenplum start --student Иван --output artifacts/sessions/ivan
-MENTOR_LAB_SESSION=artifacts/sessions/ivan/session.json npm --prefix apps/academy-portal run dev
+git clone https://github.com/PaulKov/de-mentor-portal.git
+cd de-mentor-portal
+MENTOR_LAB_SESSION=../de-mentor/artifacts/sessions/ivan/session.json npm run dev
 python3 mentor-lab.py session greenplum report --session artifacts/sessions/ivan --output artifacts/greenplum-session-report.md
 python3 mentor-lab.py lesson-doctor greenplum --output artifacts/greenplum-lesson-doctor.md
 ```

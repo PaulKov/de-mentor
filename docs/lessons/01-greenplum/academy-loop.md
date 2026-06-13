@@ -96,11 +96,13 @@ python3 mentor-lab.py certificate greenplum
 
 ## Academy Experience v5
 
-Новый основной маршрут запускает занятие как session, а не как набор разрозненных команд. `apps/academy-portal` читает `session.json`, показывает current stage, skill graph и copy-command кнопки, а ментор в конце получает session report.
+Новый основной маршрут запускает занятие как session, а не как набор разрозненных команд. [de-mentor-portal](https://github.com/PaulKov/de-mentor-portal) читает `session.json`, показывает current stage, skill graph и copy-command кнопки, а ментор в конце получает session report.
 
 ```bash
 python3 mentor-lab.py session greenplum start --student Иван --output artifacts/sessions/ivan
-MENTOR_LAB_SESSION=artifacts/sessions/ivan/session.json npm --prefix apps/academy-portal run dev
+git clone https://github.com/PaulKov/de-mentor-portal.git
+cd de-mentor-portal
+MENTOR_LAB_SESSION=../de-mentor/artifacts/sessions/ivan/session.json npm run dev
 python3 mentor-lab.py session greenplum report --session artifacts/sessions/ivan --output artifacts/greenplum-session-report.md
 python3 mentor-lab.py lesson-doctor greenplum --output artifacts/greenplum-lesson-doctor.md
 ```

@@ -638,11 +638,13 @@ python3 mentor-lab.py ci-smoke greenplum --dry-run
 
 ## Academy Experience v5 Portal
 
-Для урока ментор может открыть единый stateful portal. Он лежит в `apps/academy-portal`, написан на Vue 3 + Nuxt 3 + Vite и показывает current stage, timeline, skill graph, copy-command кнопки и evidence checklist.
+Для урока ментор может открыть единый stateful portal. Он лежит в отдельном repo [de-mentor-portal](https://github.com/PaulKov/de-mentor-portal), написан на Vue 3 + Nuxt 3 + Vite и показывает current stage, timeline, skill graph, copy-command кнопки и evidence checklist.
 
 ```bash
 python3 mentor-lab.py session greenplum start --student Иван --output artifacts/sessions/ivan
-MENTOR_LAB_SESSION=artifacts/sessions/ivan/session.json npm --prefix apps/academy-portal run dev
+git clone https://github.com/PaulKov/de-mentor-portal.git
+cd de-mentor-portal
+MENTOR_LAB_SESSION=../de-mentor/artifacts/sessions/ivan/session.json npm run dev
 python3 mentor-lab.py session greenplum report --session artifacts/sessions/ivan --output artifacts/greenplum-session-report.md
 python3 mentor-lab.py lesson-doctor greenplum --output artifacts/greenplum-lesson-doctor.md
 ```
