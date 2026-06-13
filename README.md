@@ -9,7 +9,7 @@
 ![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-3776AB)
 ![Docker Desktop](https://img.shields.io/badge/Docker-Desktop-2496ED)
 ![Greenplum](https://img.shields.io/badge/Module-Greenplum-2E7D32)
-![Tests](https://img.shields.io/badge/tests-99%20passing-0A7F3F)
+![Tests](https://img.shields.io/badge/tests-104%20passing-0A7F3F)
 
 </div>
 
@@ -69,6 +69,9 @@
 - One-Button Mentor Mode для ведения урока по stage.
 - Evidence Capture: submission-ready markdown pack для практических сценариев.
 - Homework Autograder для проверки физического дизайна и evidence.
+- Misconception Bank для быстрых mentor interventions.
+- Student Portal v2 с progress, hints, evidence checklist и export-ready submission.
+- Debrief Generator для персональной обратной связи после урока.
 - Adaptive review по evidence-first rubric.
 - Golden solutions и anti-solutions.
 - Lesson telemetry report.
@@ -152,6 +155,7 @@ python3 mentor-lab.py diagnostics greenplum list
 python3 mentor-lab.py scenario greenplum start --difficulty medium --seed 42 --dry-run
 python3 mentor-lab.py challenge greenplum start --difficulty hard --minutes 15 --seed 7
 python3 mentor-lab.py evidence greenplum collect redistribute-join --output submissions/redistribute-join.md
+python3 mentor-lab.py misconception greenplum diagnose --text "partition key это то же самое что distribution key"
 ```
 
 После выполнения задания:
@@ -160,6 +164,7 @@ python3 mentor-lab.py evidence greenplum collect redistribute-join --output subm
 python3 mentor-lab.py submit greenplum query-tuning
 python3 mentor-lab.py homework greenplum check --submission submissions/homework.md
 python3 mentor-lab.py adaptive-review greenplum --submission submissions/query-tuning.md
+python3 mentor-lab.py debrief greenplum --student Иван --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/greenplum-debrief.md
 python3 mentor-lab.py telemetry greenplum --pre 40 --post 85 --review 70
 python3 mentor-lab.py learning-loop greenplum --pre 40 --post 85 --submission submissions/query-tuning.md --output artifacts/greenplum-learning-loop.md
 python3 mentor-lab.py certificate greenplum
@@ -171,6 +176,7 @@ python3 mentor-lab.py certificate greenplum
 
 ```bash
 python3 mentor-lab.py portal greenplum --output artifacts/greenplum-student-portal.html
+python3 mentor-lab.py portal greenplum --version v2 --output artifacts/greenplum-student-portal-v2.html
 ```
 
 Сгенерировать control room ментора:
@@ -299,9 +305,9 @@ python3 mentor-lab.py grade greenplum
 На момент публикации:
 
 ```text
-73 tests passing
+104 tests passing
 Greenplum health checks passing
-22-slide Russian theory deck included
+30-slide Russian theory deck included
 ```
 
 ## Roadmap

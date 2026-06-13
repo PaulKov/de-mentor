@@ -33,7 +33,9 @@ class MentorCockpit:
   <section><h2>Assessment</h2><code>python3 mentor-lab.py assessment {lab_name} pre</code></section>
   <section><h2>Review loop</h2><code>python3 mentor-lab.py submit {lab_name} advanced-joins</code></section>
   <section><h2>Evidence pack</h2><code>python3 mentor-lab.py evidence {lab_name} collect redistribute-join --output submissions/redistribute-join.md</code></section>
+  <section><h2>Misconception check</h2><code>python3 mentor-lab.py misconception {lab_name} diagnose --text "partition key это то же самое что distribution key"</code></section>
   <section><h2>Homework check</h2><code>python3 mentor-lab.py homework {lab_name} check --submission submissions/homework.md</code></section>
+  <section><h2>Debrief</h2><code>python3 mentor-lab.py debrief {lab_name} --student &lt;name&gt; --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/{lab_name}-debrief.md</code></section>
   <section><h2>Learning loop</h2><code>python3 mentor-lab.py learning-loop {lab_name} --pre 40 --post 85 --submission submissions/query-tuning.md --output artifacts/{lab_name}-learning-loop.md</code></section>
 </body>
 </html>

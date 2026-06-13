@@ -228,3 +228,57 @@ def test_homework_command_returns_non_zero_for_incomplete_submission(tmp_path):
     assert result.returncode == 1
     assert "Accepted: no" in result.stdout
     assert "EXPLAIN/gp_segment_id evidence" in result.stdout
+
+
+def test_misconception_portal_v2_and_debrief_commands_are_available(tmp_path):
+    misconception = run_cli(
+        "misconception",
+        "greenplum",
+        "diagnose",
+        "--text",
+        "partition key это то же самое что distribution key",
+    )
+
+    portal = tmp_path / "portal-v2.html"
+    portal_result = run_cli(
+        "portal",
+        "greenplum",
+        "--version",
+        "v2",
+        "--output",
+        str(portal),
+    )
+
+    submission = tmp_path / "submission.md"
+    submission.write_text(
+        "Redistribute Motion Hash Join gp_segment_id Physical cause distribution key "
+        "join key Change DISTRIBUTED BY Validation EXPLAIN ANALYZE Residual risk "
+        "Broadcast Motion. partition key equals distribution key.",
+        encoding="utf-8",
+    )
+    debrief = tmp_path / "debrief.md"
+    debrief_result = run_cli(
+        "debrief",
+        "greenplum",
+        "--student",
+        "Иван",
+        "--submission",
+        str(submission),
+        "--pre",
+        "40",
+        "--post",
+        "85",
+        "--output",
+        str(debrief),
+    )
+
+    assert misconception.returncode == 0
+    assert "partition key != distribution key" in misconception.stdout
+    assert portal_result.returncode == 0
+    assert portal.exists()
+    portal_html = portal.read_text(encoding="utf-8")
+    assert "Student Portal v2" in portal_html
+    assert "Export submission" in portal_html
+    assert debrief_result.returncode == 0
+    assert "Debrief written" in debrief_result.stdout
+    assert "Debrief: Иван / Greenplum" in debrief.read_text(encoding="utf-8")

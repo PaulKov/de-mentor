@@ -18,6 +18,7 @@ from mentor_lab.checks import CheckStatus, GreenplumCheckSuite
 from mentor_lab.challenges import ChallengeCatalog
 from mentor_lab.cockpit import MentorCockpit
 from mentor_lab.control_room import MentorControlRoom
+from mentor_lab.debrief import DebriefGenerator
 from mentor_lab.diagnostics import DiagnosticsCatalog
 from mentor_lab.docker_compose import DockerComposeRunner
 from mentor_lab.domain import LabDefinition, UnknownLabError
@@ -27,6 +28,7 @@ from mentor_lab.grading import GradeCalculator
 from mentor_lab.homework_review import HomeworkReviewer
 from mentor_lab.lesson_catalog import LessonCatalog, normalize_lesson_code
 from mentor_lab.learning_loop import LearningLoopBuilder
+from mentor_lab.misconceptions import MisconceptionCatalog
 from mentor_lab.plan_visualizer import PlanVisualizer
 from mentor_lab.portal import StudentPortal
 from mentor_lab.query_tuning import QueryTuningCatalog
@@ -196,8 +198,22 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Generate a local student portal HTML page.",
     )
     portal_parser.add_argument("lab_name")
+    portal_parser.add_argument("--version", choices=["v1", "v2"], default="v1")
     portal_parser.add_argument("--output")
     portal_parser.set_defaults(handler=_handle_portal)
+
+    misconception_parser = subparsers.add_parser(
+        "misconception",
+        help="List, show, or diagnose common Greenplum misconceptions.",
+    )
+    misconception_parser.add_argument("lab_name")
+    misconception_parser.add_argument(
+        "misconception_command",
+        choices=["list", "show", "diagnose"],
+    )
+    misconception_parser.add_argument("code", nargs="?")
+    misconception_parser.add_argument("--text")
+    misconception_parser.set_defaults(handler=_handle_misconception)
 
     visualize_parser = subparsers.add_parser(
         "visualize-plan",
@@ -350,6 +366,18 @@ def _build_parser() -> argparse.ArgumentParser:
     report_parser.add_argument("--output")
     report_parser.add_argument("--dry-run", action="store_true")
     report_parser.set_defaults(handler=_handle_report)
+
+    debrief_parser = subparsers.add_parser(
+        "debrief",
+        help="Generate a student-facing post-lesson debrief and mentor notes.",
+    )
+    debrief_parser.add_argument("lab_name")
+    debrief_parser.add_argument("--student", required=True)
+    debrief_parser.add_argument("--submission", required=True)
+    debrief_parser.add_argument("--pre", type=int)
+    debrief_parser.add_argument("--post", type=int)
+    debrief_parser.add_argument("--output")
+    debrief_parser.set_defaults(handler=_handle_debrief)
 
     certificate_parser = subparsers.add_parser(
         "certificate",
@@ -677,9 +705,41 @@ def _handle_portal(args: argparse.Namespace) -> int:
     lab = _lab_or_none(args.lab_name)
     if lab is None:
         return 1
-    output = Path(args.output) if args.output else Path("artifacts") / f"{lab.name}-student-portal.html"
-    written = StudentPortal().write(output, lab.name)
+    suffix = "student-portal-v2" if args.version == "v2" else "student-portal"
+    output = Path(args.output) if args.output else Path("artifacts") / f"{lab.name}-{suffix}.html"
+    try:
+        written = StudentPortal().write(output, lab.name, version=args.version)
+    except ValueError as exc:
+        print(str(exc))
+        return 1
     print(f"Student portal written to {written}")
+    return 0
+
+
+def _handle_misconception(args: argparse.Namespace) -> int:
+    lab = _lab_or_none(args.lab_name)
+    if lab is None:
+        return 1
+    catalog = MisconceptionCatalog.default()
+    try:
+        if args.misconception_command == "list":
+            for card in catalog.list(lab.name):
+                print(f"- {card.code}: {card.title}")
+            return 0
+        if args.misconception_command == "show":
+            if not args.code:
+                print("Use: mentor-lab misconception <lab> show <code>")
+                return 1
+            print(catalog.get(lab.name, args.code).render(), end="")
+            return 0
+        text = args.text or ""
+        if not text:
+            print("Use --text for misconception diagnosis.")
+            return 1
+        print(catalog.diagnose(lab.name, text).render(), end="")
+    except KeyError as exc:
+        print(str(exc))
+        return 1
     return 0
 
 
@@ -1064,6 +1124,31 @@ def _handle_report(args: argparse.Namespace) -> int:
     grade = GradeCalculator.default().calculate(lesson_code, checks)
     written = MentorReport().write(report_path, lesson_code, checks, grade)
     print(f"Report written to {written}")
+    return 0
+
+
+def _handle_debrief(args: argparse.Namespace) -> int:
+    lab = _lab_or_none(args.lab_name)
+    if lab is None:
+        return 1
+    submission_path = Path(args.submission)
+    if not submission_path.exists():
+        print(f"Submission file does not exist: {submission_path}")
+        return 1
+    debrief = DebriefGenerator.default().generate(
+        lab.name,
+        student_name=args.student,
+        submission_path=submission_path,
+        pre_score=args.pre,
+        post_score=args.post,
+    ).render()
+    if args.output:
+        output = Path(args.output)
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(debrief, encoding="utf-8")
+        print(f"Debrief written to {output}")
+        return 0
+    print(debrief, end="")
     return 0
 
 

@@ -532,8 +532,17 @@ python3 mentor-lab.py hint greenplum mpp-systems
 8. [Storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql) - runnable demo для Heap/AO/AOCO и partitioning intro.
 9. [Partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql) - runnable demo для partitioning strategies и catalog checks.
 10. Evidence pack - markdown-шаблон сдачи практики с командами для `EXPLAIN`, `gp_segment_id`, RCA и validation.
-11. Homework review - автопроверка домашки по physical-design evidence.
-12. Личный Learning Loop report - карта навыков, missing evidence и план повторения на +1/+3/+7 дней.
+11. Student Portal v2 - интерактивный self-service маршрут с progress, hints, evidence checklist и export-ready submission.
+12. Misconception diagnosis - быстрый разбор типичных ошибок вроде `partition key = distribution key`.
+13. Homework review - автопроверка домашки по physical-design evidence.
+14. Debrief report - персональная обратная связь ученику и private notes для ментора.
+15. Личный Learning Loop report - карта навыков, missing evidence и план повторения на +1/+3/+7 дней.
+
+Команда для Student Portal v2:
+
+```bash
+python3 mentor-lab.py portal greenplum --version v2 --output artifacts/greenplum-student-portal-v2.html
+```
 
 Команда ментора для stage-oriented ведения урока:
 
@@ -547,10 +556,22 @@ python3 mentor-lab.py teach greenplum simple --stage 1
 python3 mentor-lab.py evidence greenplum collect redistribute-join --output submissions/redistribute-join.md
 ```
 
+Команда диагностики misconception:
+
+```bash
+python3 mentor-lab.py misconception greenplum diagnose --text "partition key это то же самое что distribution key"
+```
+
 Команда проверки домашки:
 
 ```bash
 python3 mentor-lab.py homework greenplum check --submission submissions/homework.md
+```
+
+Команда для debrief:
+
+```bash
+python3 mentor-lab.py debrief greenplum --student Иван --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/greenplum-debrief.md
 ```
 
 Команда ментора для итогового Learning Loop report:

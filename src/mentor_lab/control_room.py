@@ -36,8 +36,10 @@ class MentorControlRoom:
                 [
                     f"python3 mentor-lab.py challenge {lab_name} start --difficulty hard --minutes 15 --seed 7",
                     f"python3 mentor-lab.py evidence {lab_name} collect redistribute-join --output submissions/redistribute-join.md",
+                    f"python3 mentor-lab.py misconception {lab_name} diagnose --text \"partition key это то же самое что distribution key\"",
                     f"python3 mentor-lab.py homework {lab_name} check --submission submissions/homework.md",
                     f"python3 mentor-lab.py adaptive-review {lab_name} --submission submissions/query-tuning.md",
+                    f"python3 mentor-lab.py debrief {lab_name} --student <name> --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/{lab_name}-debrief.md",
                     f"python3 mentor-lab.py telemetry {lab_name} --pre 40 --post 85 --review 70",
                     f"python3 mentor-lab.py learning-loop {lab_name} --pre 40 --post 85 --submission submissions/query-tuning.md --output artifacts/{lab_name}-learning-loop.md",
                 ],
