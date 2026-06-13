@@ -47,7 +47,8 @@ from mentor_lab.runbooks import RunbookCatalog
 from mentor_lab.scenario_dsl import ScenarioDslCatalog
 from mentor_lab.scenario_engine import ScenarioRandomizer
 from mentor_lab.seed_profiles import SeedProfileCatalog
-from mentor_lab.session_experience import PORTAL_PATH, SessionManager
+from mentor_lab.session_contract import PORTAL_APP_PATH, PORTAL_REPOSITORY, SessionContractValidator
+from mentor_lab.session_experience import SessionManager
 from mentor_lab.sql_client import GreenplumSqlClient
 from mentor_lab.sql_autograder import SqlSubmissionGrader, build_transactional_sql
 from mentor_lab.solutions import SolutionCatalog
@@ -154,6 +155,12 @@ def _build_parser() -> argparse.ArgumentParser:
     session_report.add_argument("--session", required=True)
     session_report.add_argument("--output")
     session_report.set_defaults(handler=_handle_session_report)
+    session_validate = session_subparsers.add_parser(
+        "validate",
+        help="Validate a session JSON file against the published contract.",
+    )
+    session_validate.add_argument("--session", required=True)
+    session_validate.set_defaults(handler=_handle_session_validate)
 
     lesson_doctor_parser = subparsers.add_parser(
         "lesson-doctor",
@@ -704,11 +711,12 @@ def _handle_session_start(args: argparse.Namespace) -> int:
     session_dir = SessionManager().start(lab.name, args.student, output)
     session_file = session_dir / "session.json"
     portal_command = (
-        f"MENTOR_LAB_SESSION={session_file} "
-        f"npm --prefix {PORTAL_PATH} run dev"
+        f"cd {PORTAL_APP_PATH} && MENTOR_LAB_SESSION={session_file} npm run dev"
     )
     print(f"Academy Experience v5 session started at {session_dir}")
-    print(f"Nuxt portal: {portal_command}")
+    print(f"Nuxt portal repo: {PORTAL_REPOSITORY}")
+    print(f"Clone: git clone {PORTAL_REPOSITORY}.git")
+    print(f"Run: {portal_command}")
     print(f"Report: python3 mentor-lab.py session {lab.name} report --session {session_dir}")
     return 0
 
@@ -747,6 +755,15 @@ def _handle_session_report(args: argparse.Namespace) -> int:
     else:
         print(rendered, end="")
     return 0
+
+
+def _handle_session_validate(args: argparse.Namespace) -> int:
+    lab = _lab_or_none(args.lab_name)
+    if lab is None:
+        return 1
+    result = SessionContractValidator().validate_file(Path(args.session))
+    print(result.render(), end="")
+    return 0 if result.valid else 1
 
 
 def _handle_lesson_doctor(args: argparse.Namespace) -> int:

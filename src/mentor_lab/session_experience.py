@@ -8,10 +8,15 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+from mentor_lab.session_contract import (
+    CONTRACT_VERSION,
+    PORTAL_APP_PATH,
+    PORTAL_FRAMEWORK,
+    PORTAL_REPOSITORY,
+)
+
 
 ACADEMY_VERSION = "Academy Experience v5"
-PORTAL_FRAMEWORK = "Vue 3 + Nuxt 3 + Vite"
-PORTAL_PATH = "apps/academy-portal"
 
 
 @dataclass(frozen=True)
@@ -101,9 +106,10 @@ class AcademySession:
     def to_dict(self) -> Dict[str, Any]:
         dev_command = (
             f"MENTOR_LAB_SESSION=/absolute/path/to/session.json "
-            f"npm --prefix {PORTAL_PATH} run dev"
+            "npm run dev"
         )
         return {
+            "contract_version": CONTRACT_VERSION,
             "academy_version": ACADEMY_VERSION,
             "lab_name": self.lab_name,
             "student_name": self.student_name,
@@ -115,7 +121,8 @@ class AcademySession:
             "events": [event.to_dict() for event in self.events],
             "portal": {
                 "framework": PORTAL_FRAMEWORK,
-                "app_path": PORTAL_PATH,
+                "repository": PORTAL_REPOSITORY,
+                "app_path": PORTAL_APP_PATH,
                 "session_env": "MENTOR_LAB_SESSION",
                 "dev_command": dev_command,
             },
@@ -387,7 +394,7 @@ def _render_mentor_cockpit(session: AcademySession, session_dir: Path) -> str:
     )
     portal_command = (
         f"MENTOR_LAB_SESSION={session_dir / 'session.json'} "
-        f"npm --prefix {PORTAL_PATH} run dev"
+        "npm run dev"
     )
     lines = [
         f"# Mentor Cockpit: {session.lab_name}",
@@ -397,7 +404,10 @@ def _render_mentor_cockpit(session: AcademySession, session_dir: Path) -> str:
         "## Команды",
         "",
         "```bash",
+        f"git clone {PORTAL_REPOSITORY}.git",
+        f"cd {PORTAL_APP_PATH}",
         portal_command,
+        "cd -",
         report_command,
         f"python3 mentor-lab.py lesson-doctor {session.lab_name}",
         "```",
@@ -422,7 +432,9 @@ def _render_student_handoff(session: AcademySession, session_dir: Path) -> str:
         "## Как Открыть Портал",
         "",
         "```bash",
-        f"MENTOR_LAB_SESSION={session_dir / 'session.json'} npm --prefix {PORTAL_PATH} run dev",
+        f"git clone {PORTAL_REPOSITORY}.git",
+        f"cd {PORTAL_APP_PATH}",
+        f"MENTOR_LAB_SESSION={session_dir / 'session.json'} npm run dev",
         "```",
         "",
         "## Что Сделать После Урока",

@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/PaulKov/de-mentor/blob/master/contracts/academy-session/v1/session.schema.json",
+  "title": "Academy Session v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "academy_version",
+    "lab_name",
+    "student_name",
+    "created_at",
+    "current_stage",
+    "stages",
+    "skill_graph",
+    "commands",
+    "events",
+    "portal"
+  ],
+  "properties": {
+    "contract_version": {
+      "const": "academy-session/v1"
+    },
+    "academy_version": {
+      "type": "string"
+    },
+    "lab_name": {
+      "type": "string"
+    },
+    "student_name": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "current_stage": {
+      "$ref": "#/$defs/stage"
+    },
+    "stages": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/stage"
+      }
+    },
+    "skill_graph": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/skill"
+      }
+    },
+    "commands": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/event"
+      }
+    },
+    "portal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "framework",
+        "repository",
+        "app_path",
+        "session_env",
+        "dev_command"
+      ],
+      "properties": {
+        "framework": {
+          "const": "Vue 3 + Nuxt 3 + Vite"
+        },
+        "repository": {
+          "const": "https://github.com/PaulKov/de-mentor-portal"
+        },
+        "app_path": {
+          "const": "de-mentor-portal"
+        },
+        "session_env": {
+          "const": "MENTOR_LAB_SESSION"
+        },
+        "dev_command": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "stage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "title",
+        "timebox",
+        "mentor_focus",
+        "student_action",
+        "command"
+      ],
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "timebox": {
+          "type": "string"
+        },
+        "mentor_focus": {
+          "type": "string"
+        },
+        "student_action": {
+          "type": "string"
+        },
+        "command": {
+          "type": "string"
+        }
+      }
+    },
+    "skill": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "title",
+        "level",
+        "evidence"
+      ],
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "level": {
+          "type": "string"
+        },
+        "evidence": {
+          "type": "string"
+        }
+      }
+    },
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_type",
+        "note",
+        "created_at"
+      ],
+      "properties": {
+        "event_type": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

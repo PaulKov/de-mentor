@@ -9,7 +9,7 @@
 ![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-3776AB)
 ![Docker Desktop](https://img.shields.io/badge/Docker-Desktop-2496ED)
 ![Greenplum](https://img.shields.io/badge/Module-Greenplum-2E7D32)
-![Tests](https://img.shields.io/badge/tests-122%20passing-0A7F3F)
+![Tests](https://img.shields.io/badge/tests-124%20passing-0A7F3F)
 
 </div>
 
@@ -98,9 +98,9 @@
 ### Academy Experience v5
 
 - Stateful session: `mentor-lab.py session greenplum start` создает `session.json`, timeline, skill graph, mentor cockpit и student handoff.
-- Nuxt portal: `apps/academy-portal` — основной интерфейс занятия на Vue 3 + Nuxt 3 + Vite.
+- Nuxt portal: [de-mentor-portal](https://github.com/PaulKov/de-mentor-portal) — отдельный frontend-сервис занятия на Vue 3 + Nuxt 3 + Vite.
 - Lesson Doctor: `mentor-lab.py lesson-doctor greenplum` проверяет презентацию, docs, SQL examples, CI smoke и Nuxt portal перед уроком.
-- Единый runtime state: портал запускается командой `MENTOR_LAB_SESSION=artifacts/sessions/<name>/session.json npm --prefix apps/academy-portal run dev`.
+- Единый runtime state: портал запускается из отдельного repo командой `MENTOR_LAB_SESSION=/path/to/session.json npm run dev`.
 - Session report: `mentor-lab.py session greenplum report` собирает события, skill graph и next actions после урока.
 
 ## Быстрый старт
@@ -165,7 +165,9 @@ python3 mentor-lab.py up greenplum
 
 ```bash
 python3 mentor-lab.py session greenplum start --student Иван --output artifacts/sessions/ivan
-MENTOR_LAB_SESSION=artifacts/sessions/ivan/session.json npm --prefix apps/academy-portal run dev
+git clone https://github.com/PaulKov/de-mentor-portal.git
+cd de-mentor-portal
+MENTOR_LAB_SESSION=../de-mentor/artifacts/sessions/ivan/session.json npm run dev
 python3 mentor-lab.py portal greenplum
 python3 mentor-lab.py assessment greenplum pre
 python3 mentor-lab.py teach greenplum simple --stage 1
@@ -215,12 +217,14 @@ python3 mentor-lab.py certificate greenplum
 
 ```bash
 python3 mentor-lab.py session greenplum start --student Иван --output artifacts/sessions/ivan
-MENTOR_LAB_SESSION=artifacts/sessions/ivan/session.json npm --prefix apps/academy-portal run dev
+git clone https://github.com/PaulKov/de-mentor-portal.git
+cd de-mentor-portal
+MENTOR_LAB_SESSION=../de-mentor/artifacts/sessions/ivan/session.json npm run dev
 python3 mentor-lab.py session greenplum report --session artifacts/sessions/ivan --output artifacts/greenplum-session-report.md
 python3 mentor-lab.py lesson-doctor greenplum --output artifacts/greenplum-lesson-doctor.md
 ```
 
-Портал в `apps/academy-portal` написан на Vue 3 + Nuxt 3 + Vite и показывает current stage, timeline, skill graph, copy-command кнопки, evidence checklist и handoff после урока.
+Портал [de-mentor-portal](https://github.com/PaulKov/de-mentor-portal) написан на Vue 3 + Nuxt 3 + Vite и показывает current stage, timeline, skill graph, copy-command кнопки, evidence checklist и handoff после урока.
 
 Сгенерировать локальный портал ученика:
 

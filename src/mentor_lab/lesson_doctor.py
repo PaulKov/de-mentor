@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, List
 
+from mentor_lab.session_contract import PORTAL_REPOSITORY
 from mentor_lab.session_experience import ACADEMY_VERSION, PORTAL_FRAMEWORK
 
 
@@ -79,7 +80,10 @@ class LessonDoctorReport:
                 "```bash",
                 "python3 mentor-lab.py check greenplum --dry-run",
                 "python3 mentor-lab.py session greenplum start --student <name> --output artifacts/sessions/<name>",
-                "MENTOR_LAB_SESSION=artifacts/sessions/<name>/session.json npm --prefix apps/academy-portal run dev",
+                "python3 mentor-lab.py session greenplum validate --session artifacts/sessions/<name>/session.json",
+                f"git clone {PORTAL_REPOSITORY}.git",
+                "cd de-mentor-portal",
+                "MENTOR_LAB_SESSION=../de-mentor/artifacts/sessions/<name>/session.json npm run dev",
                 "python3 mentor-lab.py autograde-sql greenplum --submission labs/greenplum/examples/student-solution-example.sql --output artifacts/sql-autograde.md",
                 "python3 mentor-lab.py ci-smoke greenplum --dry-run",
                 "```",
@@ -87,6 +91,7 @@ class LessonDoctorReport:
                 "## Что Проверить Глазами",
                 "",
                 "- Nuxt portal открывается и показывает current stage;",
+                f"- Portal repository доступен: {PORTAL_REPOSITORY};",
                 "- copy-command кнопки копируют команды;",
                 "- skill graph совпадает с маршрутом урока;",
                 "- workbook, homework и runbook кликабельно ведут в репозиторий;",
@@ -166,13 +171,13 @@ def _greenplum_checks() -> Iterable[LessonDoctorCheck]:
             ("Greenplum Live Smoke", "autograde-sql", "student-solution-example.sql"),
         ),
         LessonDoctorCheck(
-            "Nuxt portal package",
-            Path("apps/academy-portal/package.json"),
-            ("nuxt", "vue"),
+            "Session contract schema",
+            Path("contracts/academy-session/v1/session.schema.json"),
+            ("academy-session/v1", "de-mentor-portal", "skill_graph"),
         ),
         LessonDoctorCheck(
-            "Nuxt portal screen",
-            Path("apps/academy-portal/app.vue"),
-            ("Academy Experience v5", "current stage", "copy-command", "skill graph"),
+            "Session contract sample",
+            Path("contracts/academy-session/v1/session.sample.json"),
+            ("academy-session/v1", "https://github.com/PaulKov/de-mentor-portal"),
         ),
     ]

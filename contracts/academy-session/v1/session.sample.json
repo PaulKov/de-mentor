@@ -1,4 +1,5 @@
 {
+  "contract_version": "academy-session/v1",
   "academy_version": "Academy Experience v5",
   "lab_name": "greenplum",
   "student_name": "Demo Student",
@@ -19,14 +20,6 @@
       "mentor_focus": "Проверить Docker, поднять Greenplum, показать topology.",
       "student_action": "Запустить doctor/check и назвать coordinator/segments.",
       "command": "python3 mentor-lab.py check greenplum --dry-run"
-    },
-    {
-      "code": "plan-reading",
-      "title": "EXPLAIN, Motion, QD/QE/gang/slice",
-      "timebox": "22:00-40:00",
-      "mentor_focus": "Показать, как Motion режет план на slices.",
-      "student_action": "Найти Redistribute/Broadcast/Gather Motion в плане.",
-      "command": "python3 mentor-lab.py coach-plan greenplum --query bad_customer_join --sample"
     }
   ],
   "skill_graph": [
@@ -35,24 +28,17 @@
       "title": "QD/QE/gang/slice",
       "level": "core",
       "evidence": "Ученик связывает QD, QE, gang, slice и Motion с EXPLAIN."
-    },
-    {
-      "code": "explain-motion",
-      "title": "EXPLAIN и Motion",
-      "level": "core",
-      "evidence": "Ученик отличает Broadcast Motion, Redistribute Motion и Gather Motion."
     }
   ],
   "commands": [
-    "python3 mentor-lab.py dataset greenplum generate --scale small --seed 42 --skew high --late-facts --wide-rows --output artifacts/generated-enterprise.sql",
-    "python3 mentor-lab.py autograde-sql greenplum --submission labs/greenplum/examples/student-solution-example.sql --output artifacts/sql-autograde.md",
     "python3 mentor-lab.py session greenplum report --session artifacts/sessions/demo --output artifacts/greenplum-session-report.md"
   ],
   "events": [],
   "portal": {
     "framework": "Vue 3 + Nuxt 3 + Vite",
-    "app_path": "apps/academy-portal",
+    "repository": "https://github.com/PaulKov/de-mentor-portal",
+    "app_path": "de-mentor-portal",
     "session_env": "MENTOR_LAB_SESSION",
-    "dev_command": "MENTOR_LAB_SESSION=/absolute/path/to/session.json npm --prefix apps/academy-portal run dev"
+    "dev_command": "MENTOR_LAB_SESSION=/absolute/path/to/session.json npm run dev"
   }
 }
