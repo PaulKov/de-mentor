@@ -103,8 +103,13 @@ def test_student_portal_and_control_room_artifacts_are_written(tmp_path: Path):
     room_html = room_path.read_text(encoding="utf-8")
     assert "Greenplum Student Portal" in portal_html
     assert "mentor-lab.py visualize-plan" in portal_html
+    assert "mentor-lab.py evidence" in portal_html
+    assert "mentor-lab.py homework" in portal_html
     assert "Greenplum Mentor Control Room" in room_html
     assert "Timed challenge" in room_html
+    assert "mentor-lab.py teach" in room_html
+    assert "mentor-lab.py evidence" in room_html
+    assert "mentor-lab.py homework" in room_html
     assert "mentor-lab.py learning-loop" in room_html
 
 

@@ -7,16 +7,18 @@
 ```mermaid
 flowchart LR
     A["Pre-assessment"] --> B["Lesson runner"]
-    B --> C["Practice + hints"]
-    C --> D["EXPLAIN Analyzer"]
-    D --> E["EXPLAIN Visualizer"]
-    E --> F["Runtime diagnostics"]
-    F --> G["Random scenario"]
-    G --> H["Submit evidence"]
-    H --> I["Adaptive review"]
-    I --> J["Telemetry"]
-    J --> K["Learning Loop report"]
-    K --> L["Next challenge"]
+    B --> C["Teach mode"]
+    C --> D["Practice + hints"]
+    D --> E["EXPLAIN Analyzer"]
+    E --> F["EXPLAIN Visualizer"]
+    F --> G["Runtime diagnostics"]
+    G --> H["Random scenario"]
+    H --> I["Evidence pack"]
+    I --> J["Homework autograder"]
+    J --> K["Adaptive review"]
+    K --> L["Telemetry"]
+    L --> M["Learning Loop report"]
+    M --> N["Next challenge"]
 ```
 
 ## Команды
@@ -24,12 +26,15 @@ flowchart LR
 ```bash
 python3 mentor-lab.py assessment greenplum pre
 python3 mentor-lab.py lesson greenplum
+python3 mentor-lab.py teach greenplum simple --stage 1
 python3 mentor-lab.py hint greenplum physical-joins --level 2
 python3 mentor-lab.py analyze-plan greenplum --query bad_customer_join
 python3 mentor-lab.py visualize-plan greenplum --query product_join --sample --format html --output artifacts/product-plan.html
 python3 mentor-lab.py diagnostics greenplum list
 python3 mentor-lab.py incident start greenplum slow-product-analytics
 python3 mentor-lab.py scenario greenplum start --difficulty medium --seed 42 --dry-run
+python3 mentor-lab.py evidence greenplum collect redistribute-join --output submissions/redistribute-join.md
+python3 mentor-lab.py homework greenplum check --submission submissions/homework.md
 python3 mentor-lab.py submit greenplum advanced-joins
 python3 mentor-lab.py review greenplum --submission submissions/advanced-joins.md
 python3 mentor-lab.py adaptive-review greenplum --submission submissions/advanced-joins.md
@@ -43,12 +48,15 @@ python3 mentor-lab.py certificate greenplum
 ## Что Автоматизируется
 
 - **Assessment**: быстрый pre/post с answer key и score.
+- **Teach mode**: stage-by-stage view для ментора: слайды, речь, команды, вопрос, expected answer и evidence checkpoint.
 - **Adaptive hints**: можно показать все подсказки или конкретный уровень.
 - **EXPLAIN Analyzer**: выделяет Motion, join algorithms, slices, hash keys и risks.
 - **EXPLAIN Visualizer**: рисует Mermaid/HTML карту coordinator, interconnect, Motion и joins.
 - **Runtime diagnostics**: дает probes для skew, active queries, statistics и spill-risk.
 - **Scenario randomizer**: выдает replayable hidden scenario по difficulty и seed.
 - **Hidden incidents**: новые сценарии без заранее очевидного ответа.
+- **Evidence capture**: создает submission-ready markdown pack с командами и секциями для RCA.
+- **Homework autograder**: проверяет домашку по физическому дизайну и evidence-first контракту.
 - **Submit/adaptive review**: ученик сдает evidence, ментор получает score, missing evidence и next task.
 - **Cockpit / control room**: локальные HTML-страницы для ученика и ментора.
 - **Telemetry**: growth report по pre/post/review.

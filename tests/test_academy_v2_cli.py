@@ -165,3 +165,66 @@ def test_learning_loop_command_generates_student_follow_up_report(tmp_path):
     assert "Рост: +45" in content
     assert "Карта Навыков" in content
     assert "+1 день" in content
+
+
+def test_teach_evidence_and_homework_commands_are_available(tmp_path):
+    teach = run_cli("teach", "greenplum", "simple", "--stage", "1")
+
+    evidence_output = tmp_path / "redistribute-evidence.md"
+    evidence = run_cli(
+        "evidence",
+        "greenplum",
+        "collect",
+        "redistribute-join",
+        "--output",
+        str(evidence_output),
+    )
+
+    homework_submission = tmp_path / "homework.md"
+    homework_submission.write_text(
+        "Fact tables: fact_orders. Dimension tables: dim_customers. "
+        "Fact grain: one row per order item. "
+        "Distribution strategy: DISTRIBUTED BY (customer_id), join pattern, cardinality. "
+        "Partition strategy: PARTITION BY RANGE (sale_date), partition key is not distribution key. "
+        "Storage strategy: AOCO appendoptimized=true orientation=column; heap for dimensions. "
+        "Catalog evidence: pg_partition_tree gp_toolkit.gp_partitions leaf_partitions. "
+        "Quality checks: EXPLAIN ANALYZE gp_segment_id before/after validation. "
+        "Risks: stale statistics Broadcast Motion residual risk. "
+        "Questions for Lesson 02: partition pruning statistics incremental loads.",
+        encoding="utf-8",
+    )
+    homework = run_cli(
+        "homework",
+        "greenplum",
+        "check",
+        "--submission",
+        str(homework_submission),
+    )
+
+    assert teach.returncode == 0
+    assert "Teach Mode" in teach.stdout
+    assert "Evidence checkpoint" in teach.stdout
+    assert evidence.returncode == 0
+    assert "Evidence pack written" in evidence.stdout
+    assert evidence_output.exists()
+    assert "Redistribute Motion" in evidence_output.read_text(encoding="utf-8")
+    assert homework.returncode == 0
+    assert "Homework review" in homework.stdout
+    assert "Accepted: yes" in homework.stdout
+
+
+def test_homework_command_returns_non_zero_for_incomplete_submission(tmp_path):
+    homework_submission = tmp_path / "homework.md"
+    homework_submission.write_text("I understood everything.", encoding="utf-8")
+
+    result = run_cli(
+        "homework",
+        "greenplum",
+        "check",
+        "--submission",
+        str(homework_submission),
+    )
+
+    assert result.returncode == 1
+    assert "Accepted: no" in result.stdout
+    assert "EXPLAIN/gp_segment_id evidence" in result.stdout

@@ -235,6 +235,8 @@ def test_workbook_has_end_of_lesson_student_handoff_pack():
         "py mentor-lab.py up greenplum",
         "py mentor-lab.py check greenplum",
         "py mentor-lab.py psql greenplum",
+        "python3 mentor-lab.py evidence greenplum collect redistribute-join",
+        "python3 mentor-lab.py homework greenplum check",
         "python3 mentor-lab.py learning-loop greenplum",
     ]
 
@@ -256,6 +258,33 @@ def test_learning_loop_is_documented_as_end_of_lesson_artifact():
         content = path.read_text(encoding="utf-8")
         assert "mentor-lab.py learning-loop greenplum" in content
         assert "Learning Loop" in content
+
+
+def test_mentor_automation_commands_are_documented():
+    overview_docs = [
+        ROOT / "README.md",
+        ROOT / "docs/lessons/01-greenplum/README.md",
+        ROOT / "docs/lessons/01-greenplum/academy-loop.md",
+        ROOT / "docs/lessons/01-greenplum/academy-v2.md",
+        ROOT / "docs/lessons/01-greenplum/mentor-guide.md",
+        ROOT / "docs/lessons/01-greenplum/student-workbook.md",
+        ROOT / "docs/lessons/01-greenplum/cheat-sheet.md",
+    ]
+    expected_commands = [
+        "mentor-lab.py teach greenplum simple",
+        "mentor-lab.py evidence greenplum collect redistribute-join",
+        "mentor-lab.py homework greenplum check",
+    ]
+
+    for path in overview_docs:
+        content = path.read_text(encoding="utf-8")
+        for command in expected_commands:
+            assert command in content
+
+    homework = (ROOT / "docs/lessons/01-greenplum/homework.md").read_text(
+        encoding="utf-8"
+    )
+    assert "mentor-lab.py homework greenplum check" in homework
 
 
 def test_student_prep_runbook_has_cross_platform_environment_contract():
