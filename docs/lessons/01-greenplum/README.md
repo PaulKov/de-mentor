@@ -62,7 +62,10 @@ python3 mentor-lab.py scenario greenplum start --difficulty medium --seed 42 --d
 python3 mentor-lab.py check greenplum
 python3 mentor-lab.py grade greenplum
 python3 mentor-lab.py report greenplum
+python3 mentor-lab.py learning-loop greenplum --pre 40 --post 85 --submission submissions/query-tuning.md --output artifacts/greenplum-learning-loop.md
 ```
+
+`learning-loop` генерирует Learning Loop report: карту навыков ученика, missing evidence и план повторения на +1/+3/+7 дней.
 
 Для incident mode:
 
@@ -86,8 +89,8 @@ python3 mentor-lab.py seed greenplum --profile skewed
 - [Карта архитектуры](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/architecture.md) - визуальная карта Greenplum.
 - [Матрица оценки](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/rubric.md) - skill matrix и критерии оценки.
 - [Финальная задача](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/capstone.md) - финальная архитектурная задача.
-- [Контур Academy](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/academy-loop.md) - professional loop: assessment, analyzer, hidden incidents, submit/review, certificate.
-- [Academy v2](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/academy-v2.md) - interactive student portal, visualizer, diagnostics, scenario randomizer, adaptive review.
+- [Контур Academy](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/academy-loop.md) - профессиональный контур: assessment, analyzer, hidden incidents, submit/review, learning loop и certificate.
+- [Academy v2](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/academy-v2.md) - портал ученика, visualizer, diagnostics, scenario randomizer, adaptive review и итоговый learning loop.
 - [Лабораторная по query tuning](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/query-tuning-lab.md) - усложненные задачи по query tuning.
 - [QD/QE/gang/slices explained](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md) - цельное объяснение QD, QE, slices, gangs, Motion и того, как это видно в `EXPLAIN`.
 - [Master/segment data path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/master-segment-data-path.md) - глубокая техническая схема master/QD/QE, Motion, gpfdist и storage.

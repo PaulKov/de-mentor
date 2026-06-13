@@ -23,6 +23,7 @@
 - partitioning SQL: [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql);
 - monitoring SQL: [cluster monitoring SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-monitoring.sql);
 - автоматическая проверка: `python3 mentor-lab.py check greenplum`.
+- итоговый Learning Loop report: карта навыков, missing evidence и план повторения после урока.
 
 Презентация должна занимать не весь час, а примерно половину урока: 33 минуты на theory framing, 12 минут на hands-on diagnostics, затем incident/capstone/review. Подробный тайминг по каждому слайду находится в [facilitator guide](https://github.com/PaulKov/de-mentor/blob/master/decks/greenplum-theory/facilitator-guide.md).
 
@@ -38,6 +39,7 @@ python3 mentor-lab.py runbook greenplum simple
 python3 mentor-lab.py runbook greenplum deep
 python3 mentor-lab.py runbook greenplum homework
 python3 mentor-lab.py runbook greenplum prep
+python3 mentor-lab.py learning-loop greenplum --pre 40 --post 85 --submission submissions/query-tuning.md --output artifacts/greenplum-learning-loop.md
 ```
 
 Advanced track подключай только после базового цикла `skew -> EXPLAIN -> fix -> evidence`. Для сильного ученика используй appendix-слайды и четыре deep dive:
