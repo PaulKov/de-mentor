@@ -293,6 +293,44 @@ def test_mentor_automation_commands_are_documented():
     assert "mentor-lab.py homework greenplum check" in homework
 
 
+def test_academy_pro_v3_commands_and_lesson02_scaffold_are_documented():
+    overview_docs = [
+        ROOT / "README.md",
+        ROOT / "docs/lessons/01-greenplum/README.md",
+        ROOT / "docs/lessons/01-greenplum/academy-loop.md",
+        ROOT / "docs/lessons/01-greenplum/academy-v2.md",
+        ROOT / "docs/lessons/01-greenplum/mentor-guide.md",
+        ROOT / "docs/lessons/01-greenplum/student-workbook.md",
+        ROOT / "docs/lessons/01-greenplum/cheat-sheet.md",
+    ]
+    expected_commands = [
+        "mentor-lab.py readiness greenplum --platform macos",
+        "mentor-lab.py orchestrate greenplum --route simple --stage 1 --mode recovery",
+        "mentor-lab.py observe greenplum start",
+        "mentor-lab.py coach-plan greenplum --query bad_customer_join --sample",
+        "mentor-lab.py calibration greenplum show senior",
+        "mentor-lab.py replay greenplum",
+    ]
+
+    for path in overview_docs:
+        content = path.read_text(encoding="utf-8")
+        for command in expected_commands:
+            assert command in content
+
+    lesson02_files = [
+        ROOT / "docs/lessons/02-greenplum-partitioning/README.md",
+        ROOT / "docs/lessons/02-greenplum-partitioning/runbooks/simple-path.md",
+        ROOT / "docs/lessons/02-greenplum-partitioning/student-workbook.md",
+    ]
+    for path in lesson02_files:
+        assert path.exists()
+        content = path.read_text(encoding="utf-8")
+        assert "Lesson 02" in content
+        assert "partition" in content.lower()
+        assert "statistics" in content.lower()
+        assert "incremental loads" in content.lower()
+
+
 def test_student_prep_runbook_has_cross_platform_environment_contract():
     prep = (ROOT / "docs/lessons/01-greenplum/runbooks/student-prep.md").read_text(
         encoding="utf-8"

@@ -19,9 +19,11 @@ class StudentPortal:
             raise ValueError("Portal version must be v1 or v2.")
         commands = [
             f"python3 mentor-lab.py doctor",
+            f"python3 mentor-lab.py readiness {lab_name} --platform macos",
             f"python3 mentor-lab.py up {lab_name}",
             f"python3 mentor-lab.py assessment {lab_name} pre",
             f"python3 mentor-lab.py lesson {lab_name}",
+            f"python3 mentor-lab.py coach-plan {lab_name} --query bad_customer_join --sample",
             f"python3 mentor-lab.py visualize-plan {lab_name} --query bad_customer_join --sample --format html --output artifacts/{lab_name}-plan.html",
             f"python3 mentor-lab.py diagnostics {lab_name} list",
             f"python3 mentor-lab.py scenario {lab_name} start --difficulty medium --seed 42 --dry-run",
@@ -31,6 +33,7 @@ class StudentPortal:
             f"python3 mentor-lab.py misconception {lab_name} diagnose --text \"partition key это то же самое что distribution key\"",
             f"python3 mentor-lab.py homework {lab_name} check --submission submissions/homework.md",
             f"python3 mentor-lab.py debrief {lab_name} --student <name> --submission submissions/query-tuning.md --pre 40 --post 85",
+            f"python3 mentor-lab.py replay {lab_name} --student <name> --submission submissions/query-tuning.md --pre 40 --post 85",
         ]
         rows = "\n".join(
             f"<li><code>{escape(command)}</code></li>" for command in commands
@@ -43,14 +46,16 @@ class StudentPortal:
 
     def _render_v2(self, lab_name: str) -> str:
         steps = [
-            ("Readiness", f"python3 mentor-lab.py doctor"),
+            ("Readiness", f"python3 mentor-lab.py readiness {lab_name} --platform macos"),
             ("Start Greenplum", f"python3 mentor-lab.py up {lab_name}"),
             ("Pre-assessment", f"python3 mentor-lab.py assessment {lab_name} pre"),
+            ("Plan coach", f"python3 mentor-lab.py coach-plan {lab_name} --query bad_customer_join --sample"),
             ("Visual plan", f"python3 mentor-lab.py visualize-plan {lab_name} --query bad_customer_join --sample --format html --output artifacts/{lab_name}-plan.html"),
             ("Evidence pack", f"python3 mentor-lab.py evidence {lab_name} collect redistribute-join --output submissions/redistribute-join.md"),
             ("Misconception check", f"python3 mentor-lab.py misconception {lab_name} diagnose --text \"partition key это то же самое что distribution key\""),
             ("Homework check", f"python3 mentor-lab.py homework {lab_name} check --submission submissions/homework.md"),
             ("Debrief", f"python3 mentor-lab.py debrief {lab_name} --student <name> --submission submissions/query-tuning.md --pre 40 --post 85"),
+            ("Replay", f"python3 mentor-lab.py replay {lab_name} --student <name> --submission submissions/query-tuning.md --pre 40 --post 85"),
         ]
         step_cards = "\n".join(
             (

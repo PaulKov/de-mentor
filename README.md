@@ -9,7 +9,7 @@
 ![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-3776AB)
 ![Docker Desktop](https://img.shields.io/badge/Docker-Desktop-2496ED)
 ![Greenplum](https://img.shields.io/badge/Module-Greenplum-2E7D32)
-![Tests](https://img.shields.io/badge/tests-104%20passing-0A7F3F)
+![Tests](https://img.shields.io/badge/tests-111%20passing-0A7F3F)
 
 </div>
 
@@ -78,6 +78,16 @@
 - Learning Loop report: карта навыков, gaps по evidence и план повторения на 1/3/7 дней.
 - Cross-engine Scenario DSL для будущих стендов.
 
+### Academy Pro v3
+
+- Readiness Doctor Pro для macOS, Windows и Linux.
+- Live Lesson Orchestrator с режимами `simple`, `deep`, `recovery` и `fast-student`.
+- Live Lab Observation: checklist и evidence trail report по действиям ученика.
+- Query Plan Coach: объяснение Motion, slices, root cause hypothesis и следующий SQL.
+- Scenario Pack v2 с production-инцидентами про AOCO mutable dimension и coordinator bottleneck.
+- Gold submission calibration: слабый, уверенный и senior-level ответы для калибровки оценки.
+- Lesson Replay Pack: debrief, learning loop и подготовка к Lesson 02 в одном артефакте.
+
 ## Быстрый старт
 
 ### Требования
@@ -91,12 +101,14 @@
 
 ```bash
 python3 mentor-lab.py doctor
+python3 mentor-lab.py readiness greenplum --platform macos
 ```
 
 На Windows:
 
 ```powershell
 py mentor-lab.py doctor
+py mentor-lab.py readiness greenplum --platform windows
 ```
 
 ### Запустить Greenplum
@@ -149,13 +161,17 @@ python3 mentor-lab.py grade greenplum
 
 ```bash
 python3 mentor-lab.py tuning greenplum list
+python3 mentor-lab.py orchestrate greenplum --route simple --stage 1 --mode recovery
+python3 mentor-lab.py observe greenplum start --output artifacts/greenplum-observe-checklist.md
 python3 mentor-lab.py analyze-plan greenplum --query bad_customer_join
+python3 mentor-lab.py coach-plan greenplum --query bad_customer_join --sample
 python3 mentor-lab.py visualize-plan greenplum --query product_join --sample --format mermaid
 python3 mentor-lab.py diagnostics greenplum list
 python3 mentor-lab.py scenario greenplum start --difficulty medium --seed 42 --dry-run
 python3 mentor-lab.py challenge greenplum start --difficulty hard --minutes 15 --seed 7
 python3 mentor-lab.py evidence greenplum collect redistribute-join --output submissions/redistribute-join.md
 python3 mentor-lab.py misconception greenplum diagnose --text "partition key это то же самое что distribution key"
+python3 mentor-lab.py calibration greenplum show senior
 ```
 
 После выполнения задания:
@@ -167,6 +183,7 @@ python3 mentor-lab.py adaptive-review greenplum --submission submissions/query-t
 python3 mentor-lab.py debrief greenplum --student Иван --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/greenplum-debrief.md
 python3 mentor-lab.py telemetry greenplum --pre 40 --post 85 --review 70
 python3 mentor-lab.py learning-loop greenplum --pre 40 --post 85 --submission submissions/query-tuning.md --output artifacts/greenplum-learning-loop.md
+python3 mentor-lab.py replay greenplum --student Иван --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/greenplum-replay.md
 python3 mentor-lab.py certificate greenplum
 ```
 
@@ -305,7 +322,7 @@ python3 mentor-lab.py grade greenplum
 На момент публикации:
 
 ```text
-104 tests passing
+111 tests passing
 Greenplum health checks passing
 30-slide Russian theory deck included
 ```

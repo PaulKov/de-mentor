@@ -6,7 +6,9 @@
 python3 mentor-lab.py list
 python3 mentor-lab.py info greenplum
 python3 mentor-lab.py lesson greenplum
+python3 mentor-lab.py readiness greenplum --platform macos
 python3 mentor-lab.py teach greenplum simple --stage 1
+python3 mentor-lab.py orchestrate greenplum --route simple --stage 1 --mode recovery
 python3 mentor-lab.py portal greenplum --version v2 --output artifacts/greenplum-student-portal-v2.html
 python3 mentor-lab.py hint greenplum skew-investigation
 python3 mentor-lab.py hint greenplum plan-reading
@@ -15,12 +17,16 @@ python3 mentor-lab.py hint greenplum physical-joins --level 2
 python3 mentor-lab.py hint greenplum mpp-systems
 python3 mentor-lab.py assessment greenplum pre
 python3 mentor-lab.py analyze-plan greenplum --query bad_customer_join
+python3 mentor-lab.py coach-plan greenplum --query bad_customer_join --sample
 python3 mentor-lab.py tuning greenplum list
 python3 mentor-lab.py submit greenplum advanced-joins
+python3 mentor-lab.py observe greenplum start --output artifacts/greenplum-observe-checklist.md
 python3 mentor-lab.py evidence greenplum collect redistribute-join --output submissions/redistribute-join.md
 python3 mentor-lab.py misconception greenplum diagnose --text "partition key это то же самое что distribution key"
 python3 mentor-lab.py homework greenplum check --submission submissions/homework.md
+python3 mentor-lab.py calibration greenplum show senior
 python3 mentor-lab.py debrief greenplum --student Иван --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/greenplum-debrief.md
+python3 mentor-lab.py replay greenplum --student Иван --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/greenplum-replay.md
 python3 mentor-lab.py review greenplum --submission submissions/advanced-joins.md
 python3 mentor-lab.py cockpit greenplum
 python3 mentor-lab.py certificate greenplum
