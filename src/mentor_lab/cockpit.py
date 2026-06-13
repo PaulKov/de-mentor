@@ -33,16 +33,19 @@ class MentorCockpit:
   <section><h2>EXPLAIN Analyzer</h2><code>python3 mentor-lab.py analyze-plan {lab_name} --query bad_customer_join</code></section>
   <section><h2>Query Plan Coach</h2><code>python3 mentor-lab.py coach-plan {lab_name} --query bad_customer_join --sample</code></section>
   <section><h2>Observation</h2><code>python3 mentor-lab.py observe {lab_name} start --output artifacts/{lab_name}-observe-checklist.md</code></section>
+  <section><h2>Dataset Generator Pro</h2><code>python3 mentor-lab.py dataset {lab_name} generate --scale small --seed 42 --skew high --late-facts --wide-rows --output artifacts/generated-enterprise.sql</code></section>
   <section><h2>Hidden incidents</h2><code>python3 mentor-lab.py incident list {lab_name}</code></section>
   <section><h2>Assessment</h2><code>python3 mentor-lab.py assessment {lab_name} pre</code></section>
   <section><h2>Review loop</h2><code>python3 mentor-lab.py submit {lab_name} advanced-joins</code></section>
   <section><h2>Evidence pack</h2><code>python3 mentor-lab.py evidence {lab_name} collect redistribute-join --output submissions/redistribute-join.md</code></section>
   <section><h2>Misconception check</h2><code>python3 mentor-lab.py misconception {lab_name} diagnose --text "partition key это то же самое что distribution key"</code></section>
   <section><h2>Homework check</h2><code>python3 mentor-lab.py homework {lab_name} check --submission submissions/homework.md</code></section>
+  <section><h2>SQL Autograder</h2><code>python3 mentor-lab.py autograde-sql {lab_name} --submission labs/greenplum/examples/student-solution-example.sql --output artifacts/sql-autograde.md</code></section>
   <section><h2>Calibration</h2><code>python3 mentor-lab.py calibration {lab_name} show senior</code></section>
   <section><h2>Debrief</h2><code>python3 mentor-lab.py debrief {lab_name} --student &lt;name&gt; --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/{lab_name}-debrief.md</code></section>
   <section><h2>Learning loop</h2><code>python3 mentor-lab.py learning-loop {lab_name} --pre 40 --post 85 --submission submissions/query-tuning.md --output artifacts/{lab_name}-learning-loop.md</code></section>
   <section><h2>Replay pack</h2><code>python3 mentor-lab.py replay {lab_name} --student &lt;name&gt; --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/{lab_name}-replay.md</code></section>
+  <section><h2>Live smoke</h2><code>python3 mentor-lab.py ci-smoke {lab_name} --dry-run</code></section>
 </body>
 </html>
 """

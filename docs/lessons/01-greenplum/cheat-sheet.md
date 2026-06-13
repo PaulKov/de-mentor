@@ -21,12 +21,15 @@ python3 mentor-lab.py coach-plan greenplum --query bad_customer_join --sample
 python3 mentor-lab.py tuning greenplum list
 python3 mentor-lab.py submit greenplum advanced-joins
 python3 mentor-lab.py observe greenplum start --output artifacts/greenplum-observe-checklist.md
+python3 mentor-lab.py dataset greenplum generate --scale small --seed 42 --skew high --late-facts --wide-rows --output artifacts/generated-enterprise.sql
 python3 mentor-lab.py evidence greenplum collect redistribute-join --output submissions/redistribute-join.md
 python3 mentor-lab.py misconception greenplum diagnose --text "partition key это то же самое что distribution key"
 python3 mentor-lab.py homework greenplum check --submission submissions/homework.md
+python3 mentor-lab.py autograde-sql greenplum --submission labs/greenplum/examples/student-solution-example.sql --output artifacts/sql-autograde.md
 python3 mentor-lab.py calibration greenplum show senior
 python3 mentor-lab.py debrief greenplum --student Иван --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/greenplum-debrief.md
 python3 mentor-lab.py replay greenplum --student Иван --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/greenplum-replay.md
+python3 mentor-lab.py ci-smoke greenplum --dry-run
 python3 mentor-lab.py review greenplum --submission submissions/advanced-joins.md
 python3 mentor-lab.py cockpit greenplum
 python3 mentor-lab.py certificate greenplum
