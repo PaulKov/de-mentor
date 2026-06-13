@@ -1,11 +1,11 @@
-# Greenplum Architecture Map
+# Карта Архитектуры Greenplum
 
-## MPP Mental Model
+## Ментальная Модель MPP
 
 ```mermaid
 flowchart TB
-    Client["Client / psql"] --> Coord["Coordinator"]
-    Coord --> Plan["Optimizer builds parallel plan"]
+    Client["Клиент / psql"] --> Coord["Coordinator"]
+    Coord --> Plan["Optimizer строит параллельный план"]
     Plan --> S0["Segment 0"]
     Plan --> S1["Segment 1"]
     S0 <--> Interconnect["Interconnect"]
@@ -15,7 +15,9 @@ flowchart TB
     Gather --> Coord
 ```
 
-## Distribution And Join Locality
+Главная идея: coordinator управляет запросом, а данные и основная работа живут на segments. Любое движение строк между segments видно в плане как `Motion`.
+
+## Distribution И Локальность Join
 
 ```mermaid
 flowchart LR
@@ -23,26 +25,27 @@ flowchart LR
     Motion --> JoinBad["Join with dim_customers"]
     DimCustomers["dim_customers<br/>DISTRIBUTED BY customer_id"] --> JoinBad
 
-    FactGood["fact_sales_good<br/>DISTRIBUTED BY customer_id"] --> JoinGood["Colocated join"]
+    FactGood["fact_sales_good<br/>DISTRIBUTED BY customer_id"] --> JoinGood["Co-located join"]
     DimCustomers2["dim_customers<br/>DISTRIBUTED BY customer_id"] --> JoinGood
 ```
 
-## What To Look For In EXPLAIN
+`DISTRIBUTED BY` отвечает за физическое размещение строк. Если большая fact-таблица и dimension-таблица распределены по ключу частого join, Greenplum может выполнить join локально на segments и уменьшить сетевое движение.
 
-| Plan fragment | Interpretation |
+## Что Смотреть В EXPLAIN
+
+| Фрагмент плана | Как читать |
 |---|---|
-| `Seq Scan on fact_sales_bad` | Each segment scans its local slice. |
-| `Redistribute Motion` | Rows move across the interconnect by a new hash key. |
-| `Broadcast Motion` | A relation is copied to every segment. |
-| `Gather Motion` | Final rows return to coordinator. |
+| `Seq Scan on fact_sales_bad` | Каждый segment читает свою локальную часть таблицы. |
+| `Redistribute Motion` | Строки переезжают через interconnect по новому hash key. |
+| `Broadcast Motion` | Один input копируется на все segments. |
+| `Gather Motion` | Финальные строки собираются на coordinator. |
 
-## Architect's Heuristic
+## Архитектурная Эвристика
 
-1. Define grain.
-2. Identify largest facts.
-3. List frequent joins.
-4. Check cardinality and skew risk.
-5. Choose distribution key.
-6. Choose partition key separately.
-7. Validate with `EXPLAIN` and segment distribution.
-
+1. Сначала определи grain.
+2. Найди самые большие fact-таблицы.
+3. Выпиши частые joins и фильтры.
+4. Проверь cardinality и риск skew.
+5. Выбери distribution key под равномерность и join locality.
+6. Выбери partition key отдельно под pruning и retention.
+7. Подтверди решение через `EXPLAIN` и распределение строк по segments.

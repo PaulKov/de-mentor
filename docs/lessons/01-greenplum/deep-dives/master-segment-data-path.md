@@ -1,4 +1,4 @@
-# Deep Dive: Master, Segments, QD/QE И Data Path В Greenplum
+# Глубокий Разбор: Master, Segments, QD/QE И Data Path В Greenplum
 
 Этот материал нужен как optional depth pack: на первом уроке его можно использовать выборочно, а после урока дать ученику как самостоятельное чтение. Термины `master` и `coordinator` ниже используются как синонимы: в новых версиях чаще говорят coordinator, но в инженерной речи Greenplum до сих пор часто встречается master.
 
@@ -96,7 +96,7 @@ QE:
 
 Техническая деталь по сериализации: в GPDB source `serializeNode()` превращает plan/query tree в binary string. Если сборка поддерживает `USE_ZSTD`, этот binary string сжимается ZSTD перед отправкой на QEs; на QE `deserializeNode()` сначала распаковывает ZSTD frame, затем восстанавливает node tree.
 
-Source anchors для самостоятельного чтения:
+Якоря исходного кода для самостоятельного чтения:
 
 - [cdbdisp_query.c](https://github.com/PaulKov/gpdb/blob/482967c1b49028cf072c15935462f75bc3e4b045/src/backend/cdb/dispatcher/cdbdisp_query.c): build/dispatch payload, `serializedPlantree`, `serializedQueryDispatchDesc`.
 - [cdbsrlz.c](https://github.com/PaulKov/gpdb/blob/482967c1b49028cf072c15935462f75bc3e4b045/src/backend/cdb/cdbsrlz.c): `serializeNode()`, `deserializeNode()`, ZSTD compression/decompression.
@@ -151,7 +151,7 @@ TupleTableSlot
 
 Полезная nuance: это runtime-сериализация tuples для interconnect, а не storage compression AO/AOCO. Сжатие plan dispatch через ZSTD и compression table storage через `compresstype` - разные механизмы.
 
-Source anchors:
+Якоря исходного кода:
 
 - [nodeMotion.c](https://github.com/PaulKov/gpdb/blob/482967c1b49028cf072c15935462f75bc3e4b045/src/backend/executor/nodeMotion.c): `doSendTuple()`, `ExecMotion()`, sender/receiver branches.
 - [tupser.c](https://github.com/PaulKov/gpdb/blob/482967c1b49028cf072c15935462f75bc3e4b045/src/backend/cdb/motion/tupser.c): `SerializeTuple()`, `CvtChunksToTup()`.
@@ -210,7 +210,7 @@ Protocol 1:
 - writable external table: segments могут писать наружу параллельно, вместо того чтобы собирать все через master.
 - PXF/HDFS/S3-подобные paths работают по той же архитектурной идее: master управляет, segments двигают данные.
 
-Source anchors:
+Якоря исходного кода:
 
 - [copy.h](https://github.com/PaulKov/gpdb/blob/482967c1b49028cf072c15935462f75bc3e4b045/src/include/commands/copy.h): COPY direct/dispatcher/executor modes.
 - [gpfdist.c](https://github.com/PaulKov/gpdb/blob/482967c1b49028cf072c15935462f75bc3e4b045/src/bin/gpfdist/gpfdist.c): `X-GP-PROTO`, protocol 0/1, headers, optional `X-GP-ZSTD`.

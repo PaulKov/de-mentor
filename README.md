@@ -230,28 +230,28 @@ python3 mentor-lab.py dsl greenplum show redistribute-join
 | Материал | Ссылка |
 |---|---|
 | Главный план урока | [docs/lessons/01-greenplum/README.md](docs/lessons/01-greenplum/README.md) |
-| Roadmap | [roadmap.md](docs/lessons/01-greenplum/roadmap.md) |
+| Дорожная карта | [roadmap.md](docs/lessons/01-greenplum/roadmap.md) |
 | Workbook ученика | [student-workbook.md](docs/lessons/01-greenplum/student-workbook.md) |
-| Guide ментора | [mentor-guide.md](docs/lessons/01-greenplum/mentor-guide.md) |
-| Student prep | [student-prep.md](docs/lessons/01-greenplum/runbooks/student-prep.md) |
-| Simple runbook | [simple-path.md](docs/lessons/01-greenplum/runbooks/simple-path.md) |
-| Deep-dive runbook | [deep-dive-path.md](docs/lessons/01-greenplum/runbooks/deep-dive-path.md) |
-| Homework plan | [homework-plan.md](docs/lessons/01-greenplum/runbooks/homework-plan.md) |
-| Cheat sheet | [cheat-sheet.md](docs/lessons/01-greenplum/cheat-sheet.md) |
-| Academy loop | [academy-loop.md](docs/lessons/01-greenplum/academy-loop.md) |
+| Гайд ментора | [mentor-guide.md](docs/lessons/01-greenplum/mentor-guide.md) |
+| Подготовка ученика | [student-prep.md](docs/lessons/01-greenplum/runbooks/student-prep.md) |
+| Упрощенный runbook | [simple-path.md](docs/lessons/01-greenplum/runbooks/simple-path.md) |
+| Расширенный runbook | [deep-dive-path.md](docs/lessons/01-greenplum/runbooks/deep-dive-path.md) |
+| План домашки | [homework-plan.md](docs/lessons/01-greenplum/runbooks/homework-plan.md) |
+| Шпаргалка | [cheat-sheet.md](docs/lessons/01-greenplum/cheat-sheet.md) |
+| Контур Academy | [academy-loop.md](docs/lessons/01-greenplum/academy-loop.md) |
 | Academy v2 | [academy-v2.md](docs/lessons/01-greenplum/academy-v2.md) |
-| Query tuning lab | [query-tuning-lab.md](docs/lessons/01-greenplum/query-tuning-lab.md) |
-| QD/QE/slices/gangs deep dive | [qd-qe-gang-slices-explained.md](docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md) |
-| Rubric | [rubric.md](docs/lessons/01-greenplum/rubric.md) |
-| Capstone | [capstone.md](docs/lessons/01-greenplum/capstone.md) |
-| Case study | [case-study.md](docs/lessons/01-greenplum/case-study.md) |
+| Лабораторная по query tuning | [query-tuning-lab.md](docs/lessons/01-greenplum/query-tuning-lab.md) |
+| Deep dive по QD/QE/slices/gangs | [qd-qe-gang-slices-explained.md](docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md) |
+| Матрица оценки | [rubric.md](docs/lessons/01-greenplum/rubric.md) |
+| Финальная задача | [capstone.md](docs/lessons/01-greenplum/capstone.md) |
+| Сквозной кейс | [case-study.md](docs/lessons/01-greenplum/case-study.md) |
 | Презентация | [greenplum-theory.pptx](artifacts/greenplum-theory.pptx) |
 | Исходники презентации | [decks/greenplum-theory](decks/greenplum-theory/README.md) |
 | Стенд Greenplum | [labs/greenplum](labs/greenplum/README.md) |
-| Cluster inspection SQL | [cluster-inspection.sql](labs/greenplum/examples/cluster-inspection.sql) |
-| Cluster monitoring SQL | [cluster-monitoring.sql](labs/greenplum/examples/cluster-monitoring.sql) |
-| Storage/partitioning SQL | [storage-and-partitioning.sql](labs/greenplum/examples/storage-and-partitioning.sql) |
-| Partitioning strategies SQL | [partitioning-strategies.sql](labs/greenplum/examples/partitioning-strategies.sql) |
+| SQL для паспорта кластера | [cluster-inspection.sql](labs/greenplum/examples/cluster-inspection.sql) |
+| SQL для мониторинга кластера | [cluster-monitoring.sql](labs/greenplum/examples/cluster-monitoring.sql) |
+| SQL по storage и partitioning | [storage-and-partitioning.sql](labs/greenplum/examples/storage-and-partitioning.sql) |
+| SQL по partitioning strategies | [partitioning-strategies.sql](labs/greenplum/examples/partitioning-strategies.sql) |
 
 ## Структура проекта
 

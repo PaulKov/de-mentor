@@ -1,19 +1,19 @@
-# Homework Plan: Greenplum Lesson 01
+# План Домашки: Greenplum Lesson 01
 
 План самостоятельной работы на 60-90 минут. Его задача - закрепить первый урок и подготовить следующий: `Lesson 02: Partitioning, statistics and incremental loads in MPP`.
 
-Cross-links:
+Связанные материалы:
 
-- deck: [Greenplum theory deck](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-theory.pptx)
-- student prep: [student prep](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/student-prep.md)
-- workbook: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md)
-- homework: [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md)
-- simple runbook: [simple path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/simple-path.md)
-- deep-dive runbook: [deep-dive path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/deep-dive-path.md)
-- SQL examples: [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql)
-- partitioning strategy examples: [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql)
+- презентация: [теоретическая презентация Greenplum](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-theory.pptx)
+- подготовка ученика: [подготовка ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/student-prep.md)
+- рабочая тетрадь: [рабочая тетрадь ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md)
+- домашка: [домашка](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md)
+- упрощенный runbook: [упрощенный маршрут](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/simple-path.md)
+- расширенный runbook: [расширенный маршрут](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/deep-dive-path.md)
+- SQL-примеры: [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql)
+- SQL по стратегиям partitioning: [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql)
 
-## Stage 1: 00:00-10:00 - Прочитать Задание И Зафиксировать Grain
+## Этап 1: 00:00-10:00 - Прочитать Задание И Зафиксировать Grain
 
 Что говорит ментор перед выдачей:
 
@@ -37,7 +37,7 @@ python3 mentor-lab.py runbook greenplum simple
 
 > Какой факт самый большой и какой у него grain?
 
-Expected answer:
+Ожидаемый ответ:
 
 > Например, `fact_sales` на grain `one sold item/order line per sale_id` или явно выбранный daily aggregate grain. Главное - grain сформулирован до ключей.
 
@@ -49,7 +49,7 @@ Expected answer:
 
 Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql), [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql).
 
-## Stage 2: 10:00-35:00 - Distribution, Skew И EXPLAIN Evidence
+## Этап 2: 10:00-35:00 - Distribution, Skew И EXPLAIN Evidence
 
 Что говорит ментор:
 
@@ -83,7 +83,7 @@ python3 mentor-lab.py hint greenplum motion
 
 > Почему `status` плохой distribution key для большого факта?
 
-Expected answer:
+Ожидаемый ответ:
 
 > Низкая cardinality создает skew: мало разных значений, строки концентрируются на части сегментов, параллелизм теряется.
 
@@ -95,7 +95,7 @@ Expected answer:
 
 Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql), [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql).
 
-## Stage 3: 35:00-60:00 - Storage И Partitioning Intro
+## Этап 3: 35:00-60:00 - Storage И Partitioning Intro
 
 Что говорит ментор:
 
@@ -129,7 +129,7 @@ docker compose -f labs/greenplum/docker-compose.yml exec -T -u gpadmin greenplum
 
 > Почему partition key не равен distribution key?
 
-Expected answer:
+Ожидаемый ответ:
 
 > Partition key выбирается под фильтр/pruning/retention, например `sale_date`. Distribution key выбирается под равномерность и co-located joins, например `customer_id`.
 
@@ -144,7 +144,7 @@ Expected answer:
 
 Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql), [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql).
 
-## Stage 4: 60:00-90:00 - Optional Deep Tasks И Что Принести На Следующий Урок
+## Этап 4: 60:00-90:00 - Опциональные Deep Tasks И Что Принести На Следующий Урок
 
 Что говорит ментор:
 
@@ -173,20 +173,20 @@ python3 mentor-lab.py grade greenplum --dry-run
 
 > Что нужно принести на Lesson 02: Partitioning, statistics and incremental loads in MPP?
 
-Expected answer:
+Ожидаемый ответ:
 
 > DDL, grain/rationale, skew checks, EXPLAIN evidence, storage decision, partitioning questions, risks for late-arriving facts and statistics after load.
 
 Как проверяем:
 
-- Deliverables из [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md) заполнены.
+- Артефакты сдачи из [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md) заполнены.
 - Есть self-check commands.
 - Есть 3 риска и как они проверяются.
 - Есть список вопросов на следующий урок.
 
 Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql), [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql).
 
-## Acceptance Criteria
+## Критерии Приемки
 
 Домашка принимается, если:
 

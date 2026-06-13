@@ -1,14 +1,14 @@
-# Student Workbook
+# Рабочая Тетрадь Ученика
 
 Этот workbook связан с маршрутами ментора и домашкой:
 
-- student prep: [student prep](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/student-prep.md)
+- подготовка ученика: [подготовка ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/student-prep.md)
 - simple path: [simple path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/simple-path.md)
 - deep-dive path: [deep-dive path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/deep-dive-path.md)
-- homework plan: [homework plan](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/homework-plan.md)
-- homework: [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md)
+- план домашки: [план домашки](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/homework-plan.md)
+- домашка: [домашка](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md)
 - QD/QE/slices/gangs deep dive: [QD/QE/gang/slices explained](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md)
-- partitioning deep dive: [partitioning strategies](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md)
+- deep dive по partitioning: [partitioning strategies](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md)
 - cluster inspection: [cluster inspection SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-inspection.sql)
 - cluster monitoring: [cluster monitoring SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-monitoring.sql)
 - runnable storage/partitioning examples: [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql)
@@ -100,7 +100,7 @@ slice:
 Motion boundary:
 ```
 
-Expected answer:
+Ожидаемый ответ:
 
 - `QD` - query dispatcher на coordinator/master: принимает SQL, планирует, режет plan на slices и dispatch-ит работу;
 - `QE` - query executor на сегментах: исполняет slice на локальных данных;

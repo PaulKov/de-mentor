@@ -1,4 +1,4 @@
-# Mentor Guide
+# Гайд Ментора
 
 ## Главная Идея
 
@@ -8,15 +8,15 @@
 
 Используй [презентацию PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-theory.pptx) вместе с поминутным presenter guide:
 
-- deck source: [slides source](https://github.com/PaulKov/de-mentor/tree/master/decks/greenplum-theory/slides);
-- facilitator guide: [facilitator guide](https://github.com/PaulKov/de-mentor/blob/master/decks/greenplum-theory/facilitator-guide.md);
-- student prep: [student prep](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/student-prep.md);
-- simple path: [simple path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/simple-path.md);
-- deep-dive path: [deep-dive path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/deep-dive-path.md);
-- homework route: [homework plan](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/homework-plan.md);
+- исходники слайдов: [slides source](https://github.com/PaulKov/de-mentor/tree/master/decks/greenplum-theory/slides);
+- гайд ведущего: [гайд ведущего](https://github.com/PaulKov/de-mentor/blob/master/decks/greenplum-theory/facilitator-guide.md);
+- подготовка ученика: [подготовка ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/student-prep.md);
+- упрощенный маршрут: [упрощенный маршрут](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/simple-path.md);
+- расширенный маршрут: [расширенный маршрут](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/deep-dive-path.md);
+- маршрут домашки: [план домашки](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/homework-plan.md);
 - QD/QE/slices/gangs explained: [QD/QE/gang/slices explained](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md);
 - deep dive: [master/segment data path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/master-segment-data-path.md);
-- partitioning deep dive: [partitioning strategies](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md);
+- deep dive по partitioning: [partitioning strategies](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md);
 - практика ученика: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md);
 - домашка: [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md);
 - runnable SQL: [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql);

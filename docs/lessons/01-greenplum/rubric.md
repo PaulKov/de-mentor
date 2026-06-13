@@ -1,30 +1,29 @@
-# Rubric And Skill Matrix
+# Матрица Оценки И Навыков
 
-## Score Bands
+## Уровни Оценки
 
-| Score | Level | Meaning |
+| Баллы | Уровень | Что означает |
 |---:|---|---|
-| 90-100 | Production-ready | Can reason independently and explain trade-offs. |
-| 70-89 | Solid | Understands the core mechanics, needs more practice with edge cases. |
-| 50-69 | Developing | Can follow diagnostics, but misses architectural consequences. |
-| 0-49 | Needs practice | Needs guided repetition before independent work. |
+| 90-100 | Production-ready | Ученик рассуждает самостоятельно и объясняет trade-offs. |
+| 70-89 | Уверенный уровень | Понимает базовую механику, но требует практики на edge cases. |
+| 50-69 | В развитии | Может идти по диагностике, но пропускает архитектурные последствия. |
+| 0-49 | Нужна практика | Нужны повторения с ментором до самостоятельной работы. |
 
-## Skill Matrix
+## Матрица Навыков
 
-| Skill | Evidence |
+| Навык | Evidence |
 |---|---|
-| Environment readiness | Lab starts, schema exists, student can connect. |
-| Data setup | Seed data exists and can be reset. |
-| MPP diagnostics | Student measures skew with `gp_segment_id`. |
-| Distribution design | Student fixes distribution and validates balance. |
-| EXPLAIN literacy | Student finds Motion nodes and explains why they appear. |
-| Architecture communication | Student defends grain, distribution, partitioning, and risks. |
+| Готовность окружения | Стенд стартует, схема существует, ученик подключается к Greenplum. |
+| Подготовка данных | Seed data есть, стенд можно reset-нуть и воспроизвести. |
+| MPP-диагностика | Ученик измеряет skew через `gp_segment_id`. |
+| Distribution design | Ученик исправляет distribution и проверяет баланс. |
+| EXPLAIN literacy | Ученик находит `Motion` nodes и объясняет, почему они появились. |
+| Архитектурная коммуникация | Ученик защищает grain, distribution, partitioning, storage и риски. |
 
-## Mentor Questions
+## Вопросы Ментора
 
-- Why is `status` a tempting but bad distribution key?
-- What changes when fact and dimension are colocated?
-- Which query would your model optimize?
-- What query would your model make worse?
-- How would you validate the design before loading 10 TB?
-
+- Почему `status` выглядит удобным, но является плохим distribution key?
+- Что меняется, когда fact и dimension co-located?
+- Какой запрос твоя модель оптимизирует?
+- Какой запрос твоя модель сделает хуже?
+- Как проверить дизайн до загрузки 10 TB?
