@@ -541,6 +541,9 @@ python3 mentor-lab.py hint greenplum mpp-systems
 17. Query Plan Coach - объяснение `EXPLAIN` через root cause hypothesis и следующий SQL.
 18. Gold calibration sample - эталонный senior-level ответ для сравнения со своей сдачей.
 19. Lesson Replay Pack - debrief, learning loop и подготовка к Lesson 02 в одном файле.
+20. Dataset Generator Pro - deterministic SQL datasets с scale, skew, late facts и wide rows.
+21. Real SQL Autograder - проверка SQL submission по physical design и executable evidence.
+22. Greenplum Live Smoke - команда/CI workflow для проверки живого стенда.
 
 Команда подготовки окружения:
 
@@ -573,6 +576,12 @@ python3 mentor-lab.py observe greenplum start --output artifacts/greenplum-obser
 python3 mentor-lab.py coach-plan greenplum --query bad_customer_join --sample
 ```
 
+Команда для Dataset Generator Pro:
+
+```bash
+python3 mentor-lab.py dataset greenplum generate --scale small --seed 42 --skew high --late-facts --wide-rows --output artifacts/generated-enterprise.sql
+```
+
 Команда ментора для evidence pack:
 
 ```bash
@@ -589,6 +598,12 @@ python3 mentor-lab.py misconception greenplum diagnose --text "partition key э�
 
 ```bash
 python3 mentor-lab.py homework greenplum check --submission submissions/homework.md
+```
+
+Команда для Real SQL Autograder:
+
+```bash
+python3 mentor-lab.py autograde-sql greenplum --submission labs/greenplum/examples/student-solution-example.sql --output artifacts/sql-autograde.md
 ```
 
 Команда для калибровки ответа:
@@ -613,6 +628,12 @@ python3 mentor-lab.py learning-loop greenplum --pre 40 --post 85 --submission su
 
 ```bash
 python3 mentor-lab.py replay greenplum --student Иван --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/greenplum-replay.md
+```
+
+Команда для Greenplum Live Smoke:
+
+```bash
+python3 mentor-lab.py ci-smoke greenplum --dry-run
 ```
 
 Команды для macOS/Linux:

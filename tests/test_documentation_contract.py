@@ -331,6 +331,39 @@ def test_academy_pro_v3_commands_and_lesson02_scaffold_are_documented():
         assert "incremental loads" in content.lower()
 
 
+def test_academy_enterprise_v4_autograder_dataset_and_ci_are_documented():
+    overview_docs = [
+        ROOT / "README.md",
+        ROOT / "docs/lessons/01-greenplum/README.md",
+        ROOT / "docs/lessons/01-greenplum/academy-loop.md",
+        ROOT / "docs/lessons/01-greenplum/academy-v2.md",
+        ROOT / "docs/lessons/01-greenplum/mentor-guide.md",
+        ROOT / "docs/lessons/01-greenplum/student-workbook.md",
+        ROOT / "docs/lessons/01-greenplum/cheat-sheet.md",
+    ]
+    expected_commands = [
+        "mentor-lab.py autograde-sql greenplum --submission",
+        "mentor-lab.py dataset greenplum generate",
+        "mentor-lab.py ci-smoke greenplum --dry-run",
+    ]
+
+    for path in overview_docs:
+        content = path.read_text(encoding="utf-8")
+        for command in expected_commands:
+            assert command in content
+
+    workflow = ROOT / ".github/workflows/greenplum-smoke.yml"
+    sample_sql = ROOT / "labs/greenplum/examples/student-solution-example.sql"
+    assert workflow.exists()
+    assert sample_sql.exists()
+    assert "Greenplum Live Smoke" in workflow.read_text(encoding="utf-8")
+    sample = sample_sql.read_text(encoding="utf-8")
+    assert "DISTRIBUTED BY" in sample
+    assert "PARTITION BY RANGE" in sample
+    assert "EXPLAIN ANALYZE" in sample
+    assert "gp_segment_id" in sample
+
+
 def test_student_prep_runbook_has_cross_platform_environment_contract():
     prep = (ROOT / "docs/lessons/01-greenplum/runbooks/student-prep.md").read_text(
         encoding="utf-8"

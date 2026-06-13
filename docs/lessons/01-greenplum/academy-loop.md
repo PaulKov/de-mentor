@@ -16,13 +16,15 @@ flowchart LR
     H --> I["Runtime diagnostics"]
     I --> J["Random scenario"]
     J --> K["Evidence pack"]
-    K --> L["Misconception diagnosis"]
-    L --> M["Homework autograder"]
-    M --> N["Adaptive review"]
-    N --> O["Debrief"]
-    O --> P["Learning Loop report"]
-    P --> Q["Replay pack"]
-    Q --> R["Next challenge"]
+    K --> L["SQL autograder"]
+    L --> M["Misconception diagnosis"]
+    M --> N["Homework autograder"]
+    N --> O["Adaptive review"]
+    O --> P["Debrief"]
+    P --> Q["Learning Loop report"]
+    Q --> R["Replay pack"]
+    R --> S["Live smoke"]
+    S --> T["Next challenge"]
 ```
 
 ## Команды
@@ -42,9 +44,11 @@ python3 mentor-lab.py diagnostics greenplum list
 python3 mentor-lab.py observe greenplum start --output artifacts/greenplum-observe-checklist.md
 python3 mentor-lab.py incident start greenplum slow-product-analytics
 python3 mentor-lab.py scenario greenplum start --difficulty medium --seed 42 --dry-run
+python3 mentor-lab.py dataset greenplum generate --scale small --seed 42 --skew high --late-facts --wide-rows --output artifacts/generated-enterprise.sql
 python3 mentor-lab.py evidence greenplum collect redistribute-join --output submissions/redistribute-join.md
 python3 mentor-lab.py misconception greenplum diagnose --text "partition key это то же самое что distribution key"
 python3 mentor-lab.py homework greenplum check --submission submissions/homework.md
+python3 mentor-lab.py autograde-sql greenplum --submission labs/greenplum/examples/student-solution-example.sql --output artifacts/sql-autograde.md
 python3 mentor-lab.py calibration greenplum show senior
 python3 mentor-lab.py submit greenplum advanced-joins
 python3 mentor-lab.py review greenplum --submission submissions/advanced-joins.md
@@ -55,6 +59,7 @@ python3 mentor-lab.py debrief greenplum --student Иван --submission submissi
 python3 mentor-lab.py telemetry greenplum --pre 40 --post 85 --review 70
 python3 mentor-lab.py learning-loop greenplum --pre 40 --post 85 --submission submissions/advanced-joins.md --output artifacts/greenplum-learning-loop.md
 python3 mentor-lab.py replay greenplum --student Иван --submission submissions/advanced-joins.md --pre 40 --post 85 --output artifacts/greenplum-replay.md
+python3 mentor-lab.py ci-smoke greenplum --dry-run
 python3 mentor-lab.py certificate greenplum
 ```
 
@@ -72,8 +77,10 @@ python3 mentor-lab.py certificate greenplum
 - **Live Lab Observation**: создает checklist и report по evidence trail ученика.
 - **Scenario randomizer**: выдает replayable hidden scenario по difficulty и seed.
 - **Scenario Pack v2**: добавляет production-инциденты AOCO mutable dimension и coordinator result-set bottleneck.
+- **Dataset Generator Pro**: генерирует deterministic SQL datasets с scale, skew, late facts и wide rows.
 - **Hidden incidents**: новые сценарии без заранее очевидного ответа.
 - **Evidence capture**: создает submission-ready markdown pack с командами и секциями для RCA.
+- **Real SQL Autograder**: проверяет SQL submission по physical design и executable evidence.
 - **Misconception bank**: ловит типичные ошибки и дает вопрос, мини-эксперимент, hint и follow-up.
 - **Homework autograder**: проверяет домашку по физическому дизайну и evidence-first контракту.
 - **Calibration examples**: weak/solid/senior ответы для единых ожиданий качества.
@@ -83,6 +90,7 @@ python3 mentor-lab.py certificate greenplum
 - **Telemetry**: growth report по pre/post/review.
 - **Learning Loop**: итоговая карта навыков, gaps по evidence и интервальная практика на +1/+3/+7 дней.
 - **Replay pack**: объединяет debrief, learning loop и подготовку к Lesson 02.
+- **Greenplum Live Smoke**: фиксирует локальный и GitHub Actions контур живой проверки стенда.
 - **Certificate**: completion artifact с score, level и next challenge.
 
 Подробный v2-маршрут: [academy-v2.md](academy-v2.md).

@@ -1,0 +1,65 @@
+name: Greenplum Live Smoke
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "labs/greenplum/**"
+      - "src/mentor_lab/**"
+      - "mentor-lab.py"
+      - ".github/workflows/greenplum-smoke.yml"
+
+jobs:
+  greenplum-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Unit tests
+        run: python3 -m pytest tests -q
+
+      - name: Generate deterministic dataset
+        run: |
+          mkdir -p artifacts
+          python3 mentor-lab.py dataset greenplum generate \
+            --scale small \
+            --seed 42 \
+            --skew high \
+            --late-facts \
+            --wide-rows \
+            --output artifacts/generated-enterprise.sql
+
+      - name: Start Greenplum
+        run: python3 mentor-lab.py up greenplum
+
+      - name: Check Greenplum
+        run: python3 mentor-lab.py check greenplum
+
+      - name: Run storage demo SQL
+        run: |
+          docker compose -f labs/greenplum/docker-compose.yml exec -T -u gpadmin greenplum \
+            bash -lc ". /usr/local/greenplum-db/greenplum_path.sh && psql -U gpadmin -d mentor -v ON_ERROR_STOP=1 -f /mentor-lab/examples/storage-and-partitioning.sql"
+
+      - name: Run partitioning demo SQL
+        run: |
+          docker compose -f labs/greenplum/docker-compose.yml exec -T -u gpadmin greenplum \
+            bash -lc ". /usr/local/greenplum-db/greenplum_path.sh && psql -U gpadmin -d mentor -v ON_ERROR_STOP=1 -f /mentor-lab/examples/partitioning-strategies.sql"
+
+      - name: Autograde sample solution
+        run: |
+          python3 mentor-lab.py autograde-sql greenplum \
+            --submission labs/greenplum/examples/student-solution-example.sql \
+            --live \
+            --output artifacts/sql-autograde.md
+
+      - name: Stop Greenplum
+        if: always()
+        run: python3 mentor-lab.py down greenplum

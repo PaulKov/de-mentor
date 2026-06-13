@@ -17,8 +17,10 @@ from mentor_lab.calibration import CalibrationCatalog
 from mentor_lab.certificates import CertificateWriter
 from mentor_lab.checks import CheckStatus, GreenplumCheckSuite
 from mentor_lab.challenges import ChallengeCatalog
+from mentor_lab.ci_smoke import CiSmokePlanBuilder
 from mentor_lab.cockpit import MentorCockpit
 from mentor_lab.control_room import MentorControlRoom
+from mentor_lab.dataset_generator import DatasetGenerator, DatasetSpec
 from mentor_lab.debrief import DebriefGenerator
 from mentor_lab.diagnostics import DiagnosticsCatalog
 from mentor_lab.docker_compose import DockerComposeRunner
@@ -45,6 +47,7 @@ from mentor_lab.scenario_dsl import ScenarioDslCatalog
 from mentor_lab.scenario_engine import ScenarioRandomizer
 from mentor_lab.seed_profiles import SeedProfileCatalog
 from mentor_lab.sql_client import GreenplumSqlClient
+from mentor_lab.sql_autograder import SqlSubmissionGrader, build_transactional_sql
 from mentor_lab.solutions import SolutionCatalog
 from mentor_lab.submissions import SubmissionReviewer, SubmissionTemplate
 from mentor_lab.teaching import TeachingSessionBuilder
@@ -196,6 +199,16 @@ def _build_parser() -> argparse.ArgumentParser:
     review_parser.add_argument("lab_name")
     review_parser.add_argument("--submission", required=True)
     review_parser.set_defaults(handler=_handle_review)
+
+    autograde_parser = subparsers.add_parser(
+        "autograde-sql",
+        help="Grade a submitted SQL file with the Greenplum evidence contract.",
+    )
+    autograde_parser.add_argument("lab_name")
+    autograde_parser.add_argument("--submission", required=True)
+    autograde_parser.add_argument("--live", action="store_true")
+    autograde_parser.add_argument("--output")
+    autograde_parser.set_defaults(handler=_handle_autograde_sql)
 
     evidence_parser = subparsers.add_parser(
         "evidence",
@@ -405,6 +418,29 @@ def _build_parser() -> argparse.ArgumentParser:
     seed_parser.add_argument("--profile", default="skewed")
     seed_parser.add_argument("--dry-run", action="store_true")
     seed_parser.set_defaults(handler=_handle_seed)
+
+    dataset_parser = subparsers.add_parser(
+        "dataset",
+        help="Generate deterministic Greenplum datasets for live practice.",
+    )
+    dataset_parser.add_argument("lab_name")
+    dataset_parser.add_argument("dataset_command", choices=["manifest", "generate"])
+    dataset_parser.add_argument("--scale", choices=["small", "medium", "large"], default="small")
+    dataset_parser.add_argument("--seed", type=int, default=42)
+    dataset_parser.add_argument("--skew", choices=["none", "medium", "high"], default="medium")
+    dataset_parser.add_argument("--late-facts", action="store_true")
+    dataset_parser.add_argument("--wide-rows", action="store_true")
+    dataset_parser.add_argument("--output")
+    dataset_parser.set_defaults(handler=_handle_dataset)
+
+    ci_smoke_parser = subparsers.add_parser(
+        "ci-smoke",
+        help="Render a live Greenplum smoke plan for local CI and GitHub Actions.",
+    )
+    ci_smoke_parser.add_argument("lab_name")
+    ci_smoke_parser.add_argument("--dry-run", action="store_true")
+    ci_smoke_parser.add_argument("--output")
+    ci_smoke_parser.set_defaults(handler=_handle_ci_smoke)
 
     incident_parser = subparsers.add_parser(
         "incident",
@@ -746,6 +782,44 @@ def _handle_review(args: argparse.Namespace) -> int:
         return 1
     print(SubmissionReviewer.default().review(path).render(), end="")
     return 0
+
+
+def _handle_autograde_sql(args: argparse.Namespace) -> int:
+    lab = _lab_or_none(args.lab_name)
+    if lab is None:
+        return 1
+    submission_path = Path(args.submission)
+    if not submission_path.exists():
+        print(f"Submission file does not exist: {submission_path}")
+        return 1
+    submission_text = submission_path.read_text(encoding="utf-8")
+    live_output = ""
+    if args.live:
+        try:
+            live_output = _sql_client(lab).text(build_transactional_sql(submission_text))
+        except RuntimeError as exc:
+            print(f"Live SQL execution failed: {exc}")
+            return 1
+
+    try:
+        result = SqlSubmissionGrader.default().grade_text(
+            lab.name,
+            submission_text,
+            live_output=live_output,
+        )
+    except KeyError as exc:
+        print(str(exc))
+        return 1
+
+    rendered = result.render()
+    if args.output:
+        output = Path(args.output)
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(rendered, encoding="utf-8")
+        print(f"SQL autograde report written to {output}")
+    else:
+        print(rendered, end="")
+    return 0 if result.accepted else 1
 
 
 def _handle_evidence(args: argparse.Namespace) -> int:
@@ -1215,6 +1289,57 @@ def _handle_seed(args: argparse.Namespace) -> int:
         print(client.format_command(command))
         return 0
     return client.run_file(profile.container_path)
+
+
+def _handle_dataset(args: argparse.Namespace) -> int:
+    lab = _lab_or_none(args.lab_name)
+    if lab is None:
+        return 1
+    generator = DatasetGenerator()
+    try:
+        if args.dataset_command == "manifest":
+            print(generator.manifest(lab.name), end="")
+            return 0
+        generated = generator.generate(
+            DatasetSpec(
+                lab_name=lab.name,
+                scale=args.scale,
+                seed=args.seed,
+                skew=args.skew,
+                late_facts=args.late_facts,
+                wide_rows=args.wide_rows,
+            )
+        )
+    except KeyError as exc:
+        print(str(exc))
+        return 1
+
+    if args.output:
+        written = generated.write(Path(args.output))
+        print(f"Dataset SQL written to {written}")
+        return 0
+    print(generated.sql, end="")
+    return 0
+
+
+def _handle_ci_smoke(args: argparse.Namespace) -> int:
+    lab = _lab_or_none(args.lab_name)
+    if lab is None:
+        return 1
+    try:
+        plan = CiSmokePlanBuilder().build(lab.name)
+    except KeyError as exc:
+        print(str(exc))
+        return 1
+    rendered = plan.render()
+    if args.output:
+        output = Path(args.output)
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(rendered, encoding="utf-8")
+        print(f"CI smoke plan written to {output}")
+        return 0
+    print(rendered, end="")
+    return 0
 
 
 def _handle_incident_list(args: argparse.Namespace) -> int:

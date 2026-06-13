@@ -9,7 +9,7 @@
 ![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-3776AB)
 ![Docker Desktop](https://img.shields.io/badge/Docker-Desktop-2496ED)
 ![Greenplum](https://img.shields.io/badge/Module-Greenplum-2E7D32)
-![Tests](https://img.shields.io/badge/tests-111%20passing-0A7F3F)
+![Tests](https://img.shields.io/badge/tests-117%20passing-0A7F3F)
 
 </div>
 
@@ -87,6 +87,13 @@
 - Scenario Pack v2 с production-инцидентами про AOCO mutable dimension и coordinator bottleneck.
 - Gold submission calibration: слабый, уверенный и senior-level ответы для калибровки оценки.
 - Lesson Replay Pack: debrief, learning loop и подготовка к Lesson 02 в одном артефакте.
+
+### Academy Enterprise v4
+
+- Real SQL Autograder: проверяет SQL/evidence submission по `DISTRIBUTED BY`, `PARTITION BY`, AOCO, `EXPLAIN ANALYZE`, `gp_segment_id`, `ANALYZE` и validation.
+- Dataset Generator Pro: детерминированные seed SQL с scale, skew, late-arriving facts и wide rows.
+- Greenplum Live Smoke: локальный/GitHub Actions план, который поднимает стенд, выполняет SQL demos и прогоняет autograder.
+- Эталонный SQL submission для проверки живого контура.
 
 ## Быстрый старт
 
@@ -169,9 +176,11 @@ python3 mentor-lab.py visualize-plan greenplum --query product_join --sample --f
 python3 mentor-lab.py diagnostics greenplum list
 python3 mentor-lab.py scenario greenplum start --difficulty medium --seed 42 --dry-run
 python3 mentor-lab.py challenge greenplum start --difficulty hard --minutes 15 --seed 7
+python3 mentor-lab.py dataset greenplum generate --scale small --seed 42 --skew high --late-facts --wide-rows --output artifacts/generated-enterprise.sql
 python3 mentor-lab.py evidence greenplum collect redistribute-join --output submissions/redistribute-join.md
 python3 mentor-lab.py misconception greenplum diagnose --text "partition key это то же самое что distribution key"
 python3 mentor-lab.py calibration greenplum show senior
+python3 mentor-lab.py ci-smoke greenplum --dry-run
 ```
 
 После выполнения задания:
@@ -179,6 +188,7 @@ python3 mentor-lab.py calibration greenplum show senior
 ```bash
 python3 mentor-lab.py submit greenplum query-tuning
 python3 mentor-lab.py homework greenplum check --submission submissions/homework.md
+python3 mentor-lab.py autograde-sql greenplum --submission labs/greenplum/examples/student-solution-example.sql --output artifacts/sql-autograde.md
 python3 mentor-lab.py adaptive-review greenplum --submission submissions/query-tuning.md
 python3 mentor-lab.py debrief greenplum --student Иван --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/greenplum-debrief.md
 python3 mentor-lab.py telemetry greenplum --pre 40 --post 85 --review 70
@@ -240,6 +250,15 @@ python3 mentor-lab.py seed greenplum --profile bad-statistics
 python3 mentor-lab.py seed greenplum --profile bad-partitioning
 python3 mentor-lab.py seed greenplum --profile wide-aoco
 python3 mentor-lab.py seed greenplum --profile small-dimension-broadcast
+python3 mentor-lab.py dataset greenplum manifest
+python3 mentor-lab.py dataset greenplum generate --scale small --seed 42 --skew high --late-facts --wide-rows --output artifacts/generated-enterprise.sql
+```
+
+### Enterprise-проверки
+
+```bash
+python3 mentor-lab.py autograde-sql greenplum --submission labs/greenplum/examples/student-solution-example.sql --output artifacts/sql-autograde.md
+python3 mentor-lab.py ci-smoke greenplum --dry-run
 ```
 
 ### Эталонные решения
@@ -322,7 +341,7 @@ python3 mentor-lab.py grade greenplum
 На момент публикации:
 
 ```text
-111 tests passing
+117 tests passing
 Greenplum health checks passing
 30-slide Russian theory deck included
 ```

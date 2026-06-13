@@ -110,6 +110,9 @@ def test_student_portal_and_control_room_artifacts_are_written(tmp_path: Path):
     assert "mentor-lab.py readiness" in portal_html
     assert "mentor-lab.py coach-plan" in portal_html
     assert "mentor-lab.py replay" in portal_html
+    assert "mentor-lab.py dataset" in portal_html
+    assert "mentor-lab.py autograde-sql" in portal_html
+    assert "mentor-lab.py ci-smoke" in portal_html
     assert "Greenplum Mentor Control Room" in room_html
     assert "Timed challenge" in room_html
     assert "mentor-lab.py teach" in room_html
@@ -122,6 +125,9 @@ def test_student_portal_and_control_room_artifacts_are_written(tmp_path: Path):
     assert "mentor-lab.py observe" in room_html
     assert "mentor-lab.py calibration" in room_html
     assert "mentor-lab.py replay" in room_html
+    assert "mentor-lab.py dataset" in room_html
+    assert "mentor-lab.py autograde-sql" in room_html
+    assert "mentor-lab.py ci-smoke" in room_html
 
 
 def test_solution_catalog_contains_golden_and_anti_solution():
