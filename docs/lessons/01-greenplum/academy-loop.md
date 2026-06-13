@@ -92,6 +92,18 @@ python3 mentor-lab.py certificate greenplum
 - **Replay pack**: объединяет debrief, learning loop и подготовку к Lesson 02.
 - **Greenplum Live Smoke**: фиксирует локальный и GitHub Actions контур живой проверки стенда.
 - **Certificate**: completion artifact с score, level и next challenge.
+- **Academy Experience v5**: stateful session, Vue 3 + Nuxt 3 + Vite portal, timeline, skill graph и lesson-doctor pre-flight.
+
+## Academy Experience v5
+
+Новый основной маршрут запускает занятие как session, а не как набор разрозненных команд. `apps/academy-portal` читает `session.json`, показывает current stage, skill graph и copy-command кнопки, а ментор в конце получает session report.
+
+```bash
+python3 mentor-lab.py session greenplum start --student Иван --output artifacts/sessions/ivan
+MENTOR_LAB_SESSION=artifacts/sessions/ivan/session.json npm --prefix apps/academy-portal run dev
+python3 mentor-lab.py session greenplum report --session artifacts/sessions/ivan --output artifacts/greenplum-session-report.md
+python3 mentor-lab.py lesson-doctor greenplum --output artifacts/greenplum-lesson-doctor.md
+```
 
 Подробный v2-маршрут: [academy-v2.md](academy-v2.md).
 

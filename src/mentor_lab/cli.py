@@ -30,6 +30,7 @@ from mentor_lab.evidence import EvidenceCollector
 from mentor_lab.grading import GradeCalculator
 from mentor_lab.homework_review import HomeworkReviewer
 from mentor_lab.lesson_catalog import LessonCatalog, normalize_lesson_code
+from mentor_lab.lesson_doctor import LessonDoctor
 from mentor_lab.learning_loop import LearningLoopBuilder
 from mentor_lab.misconceptions import MisconceptionCatalog
 from mentor_lab.observation import ObservationBuilder
@@ -46,6 +47,7 @@ from mentor_lab.runbooks import RunbookCatalog
 from mentor_lab.scenario_dsl import ScenarioDslCatalog
 from mentor_lab.scenario_engine import ScenarioRandomizer
 from mentor_lab.seed_profiles import SeedProfileCatalog
+from mentor_lab.session_experience import PORTAL_PATH, SessionManager
 from mentor_lab.sql_client import GreenplumSqlClient
 from mentor_lab.sql_autograder import SqlSubmissionGrader, build_transactional_sql
 from mentor_lab.solutions import SolutionCatalog
@@ -123,6 +125,43 @@ def _build_parser() -> argparse.ArgumentParser:
     runbook_parser.add_argument("lab_name")
     runbook_parser.add_argument("route", choices=["prep", "simple", "deep", "homework"])
     runbook_parser.set_defaults(handler=_handle_runbook)
+
+    session_parser = subparsers.add_parser(
+        "session",
+        help="Create and update an Academy Experience v5 lesson session.",
+    )
+    session_parser.add_argument("lab_name")
+    session_subparsers = session_parser.add_subparsers(dest="session_command")
+    session_start = session_subparsers.add_parser(
+        "start",
+        help="Create session state for the Nuxt portal.",
+    )
+    session_start.add_argument("--student", required=True)
+    session_start.add_argument("--output")
+    session_start.set_defaults(handler=_handle_session_start)
+    session_event = session_subparsers.add_parser(
+        "event",
+        help="Record a live lesson event.",
+    )
+    session_event.add_argument("--session", required=True)
+    session_event.add_argument("--type", required=True)
+    session_event.add_argument("--note", required=True)
+    session_event.set_defaults(handler=_handle_session_event)
+    session_report = session_subparsers.add_parser(
+        "report",
+        help="Render a session report.",
+    )
+    session_report.add_argument("--session", required=True)
+    session_report.add_argument("--output")
+    session_report.set_defaults(handler=_handle_session_report)
+
+    lesson_doctor_parser = subparsers.add_parser(
+        "lesson-doctor",
+        help="Check lesson artifacts before a live class.",
+    )
+    lesson_doctor_parser.add_argument("lab_name")
+    lesson_doctor_parser.add_argument("--output")
+    lesson_doctor_parser.set_defaults(handler=_handle_lesson_doctor)
 
     teach_parser = subparsers.add_parser(
         "teach",
@@ -655,6 +694,80 @@ def _handle_runbook(args: argparse.Namespace) -> int:
         return 1
     print(runbook.render(), end="")
     return 0
+
+
+def _handle_session_start(args: argparse.Namespace) -> int:
+    lab = _lab_or_none(args.lab_name)
+    if lab is None:
+        return 1
+    output = Path(args.output) if args.output else None
+    session_dir = SessionManager().start(lab.name, args.student, output)
+    session_file = session_dir / "session.json"
+    portal_command = (
+        f"MENTOR_LAB_SESSION={session_file} "
+        f"npm --prefix {PORTAL_PATH} run dev"
+    )
+    print(f"Academy Experience v5 session started at {session_dir}")
+    print(f"Nuxt portal: {portal_command}")
+    print(f"Report: python3 mentor-lab.py session {lab.name} report --session {session_dir}")
+    return 0
+
+
+def _handle_session_event(args: argparse.Namespace) -> int:
+    lab = _lab_or_none(args.lab_name)
+    if lab is None:
+        return 1
+    try:
+        timeline = SessionManager().record_event(
+            Path(args.session),
+            event_type=args.type,
+            note=args.note,
+        )
+    except FileNotFoundError as exc:
+        print(str(exc))
+        return 1
+    print(f"Session event recorded in {timeline}")
+    return 0
+
+
+def _handle_session_report(args: argparse.Namespace) -> int:
+    lab = _lab_or_none(args.lab_name)
+    if lab is None:
+        return 1
+    manager = SessionManager()
+    session_dir = Path(args.session)
+    output = Path(args.output) if args.output else None
+    try:
+        rendered = manager.report(session_dir, output=output)
+    except FileNotFoundError as exc:
+        print(str(exc))
+        return 1
+    if output is not None:
+        print(f"Session report written to {output}")
+    else:
+        print(rendered, end="")
+    return 0
+
+
+def _handle_lesson_doctor(args: argparse.Namespace) -> int:
+    lab = _lab_or_none(args.lab_name)
+    if lab is None:
+        return 1
+    doctor = LessonDoctor(_project_root())
+    try:
+        report = doctor.build(lab.name)
+    except KeyError as exc:
+        print(str(exc))
+        return 1
+    rendered = report.render()
+    if args.output:
+        output = Path(args.output)
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(rendered, encoding="utf-8")
+        print(f"Lesson Doctor report written to {output}")
+    else:
+        print(rendered, end="")
+    return 0 if report.passed else 1
 
 
 def _handle_teach(args: argparse.Namespace) -> int:

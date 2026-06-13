@@ -31,6 +31,7 @@
 - итоговый Learning Loop report: карта навыков, missing evidence и план повторения после урока;
 - Academy Pro v3: readiness, live orchestrator, observation trail, plan coach, calibration и replay pack;
 - Academy Enterprise v4: SQL autograder, dataset generator и live Greenplum smoke.
+- Academy Experience v5: stateful session, Vue 3 + Nuxt 3 + Vite portal, skill graph и lesson-doctor pre-flight.
 
 Презентация должна занимать не весь час, а примерно половину урока: 33 минуты на theory framing, 12 минут на hands-on diagnostics, затем incident/capstone/review. Подробный тайминг по каждому слайду находится в [facilitator guide](https://github.com/PaulKov/de-mentor/blob/master/decks/greenplum-theory/facilitator-guide.md).
 
@@ -62,7 +63,13 @@ python3 mentor-lab.py debrief greenplum --student Иван --submission submissi
 python3 mentor-lab.py learning-loop greenplum --pre 40 --post 85 --submission submissions/query-tuning.md --output artifacts/greenplum-learning-loop.md
 python3 mentor-lab.py replay greenplum --student Иван --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/greenplum-replay.md
 python3 mentor-lab.py ci-smoke greenplum --dry-run
+python3 mentor-lab.py session greenplum start --student Иван --output artifacts/sessions/ivan
+MENTOR_LAB_SESSION=artifacts/sessions/ivan/session.json npm --prefix apps/academy-portal run dev
+python3 mentor-lab.py session greenplum report --session artifacts/sessions/ivan --output artifacts/greenplum-session-report.md
+python3 mentor-lab.py lesson-doctor greenplum --output artifacts/greenplum-lesson-doctor.md
 ```
+
+`apps/academy-portal` — основной интерфейс `Academy Experience v5` на Vue 3 + Nuxt 3 + Vite: current stage, timeline, skill graph, copy-command кнопки и handoff. Перед уроком запускай `lesson-doctor`, после урока записывай события через `session event` и собирай отчет через `session report`.
 
 Advanced track подключай только после базового цикла `skew -> EXPLAIN -> fix -> evidence`. Для сильного ученика используй appendix-слайды и четыре deep dive:
 

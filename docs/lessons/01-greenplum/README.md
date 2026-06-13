@@ -95,6 +95,19 @@ python3 mentor-lab.py ci-smoke greenplum --dry-run
 `replay` собирает debrief, learning loop и подготовку к Lesson 02 в один артефакт.
 `ci-smoke` показывает live smoke plan для локального запуска и GitHub Actions.
 
+## Academy Experience v5
+
+`Academy Experience v5` добавляет stateful-session слой поверх существующих workbook/runbook/autograder материалов. Основной интерфейс занятия теперь находится в `apps/academy-portal` и написан на Vue 3 + Nuxt 3 + Vite.
+
+```bash
+python3 mentor-lab.py session greenplum start --student Иван --output artifacts/sessions/ivan
+MENTOR_LAB_SESSION=artifacts/sessions/ivan/session.json npm --prefix apps/academy-portal run dev
+python3 mentor-lab.py session greenplum report --session artifacts/sessions/ivan --output artifacts/greenplum-session-report.md
+python3 mentor-lab.py lesson-doctor greenplum --output artifacts/greenplum-lesson-doctor.md
+```
+
+Портал показывает current stage, timeline, skill graph, copy-command кнопки, evidence checklist и итоговый handoff. `lesson-doctor` перед уроком проверяет презентацию, docs, SQL examples, workflow и Nuxt portal.
+
 Для incident mode:
 
 ```bash
