@@ -9,7 +9,7 @@
 ![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-3776AB)
 ![Docker Desktop](https://img.shields.io/badge/Docker-Desktop-2496ED)
 ![Greenplum](https://img.shields.io/badge/Module-Greenplum-2E7D32)
-![Tests](https://img.shields.io/badge/tests-117%20passing-0A7F3F)
+![Tests](https://img.shields.io/badge/tests-122%20passing-0A7F3F)
 
 </div>
 
@@ -95,6 +95,14 @@
 - Greenplum Live Smoke: локальный/GitHub Actions план, который поднимает стенд, выполняет SQL demos и прогоняет autograder.
 - Эталонный SQL submission для проверки живого контура.
 
+### Academy Experience v5
+
+- Stateful session: `mentor-lab.py session greenplum start` создает `session.json`, timeline, skill graph, mentor cockpit и student handoff.
+- Nuxt portal: `apps/academy-portal` — основной интерфейс занятия на Vue 3 + Nuxt 3 + Vite.
+- Lesson Doctor: `mentor-lab.py lesson-doctor greenplum` проверяет презентацию, docs, SQL examples, CI smoke и Nuxt portal перед уроком.
+- Единый runtime state: портал запускается командой `MENTOR_LAB_SESSION=artifacts/sessions/<name>/session.json npm --prefix apps/academy-portal run dev`.
+- Session report: `mentor-lab.py session greenplum report` собирает события, skill graph и next actions после урока.
+
 ## Быстрый старт
 
 ### Требования
@@ -156,6 +164,8 @@ python3 mentor-lab.py up greenplum
 Минимальный маршрут:
 
 ```bash
+python3 mentor-lab.py session greenplum start --student Иван --output artifacts/sessions/ivan
+MENTOR_LAB_SESSION=artifacts/sessions/ivan/session.json npm --prefix apps/academy-portal run dev
 python3 mentor-lab.py portal greenplum
 python3 mentor-lab.py assessment greenplum pre
 python3 mentor-lab.py teach greenplum simple --stage 1
@@ -180,6 +190,7 @@ python3 mentor-lab.py dataset greenplum generate --scale small --seed 42 --skew 
 python3 mentor-lab.py evidence greenplum collect redistribute-join --output submissions/redistribute-join.md
 python3 mentor-lab.py misconception greenplum diagnose --text "partition key это то же самое что distribution key"
 python3 mentor-lab.py calibration greenplum show senior
+python3 mentor-lab.py lesson-doctor greenplum --output artifacts/greenplum-lesson-doctor.md
 python3 mentor-lab.py ci-smoke greenplum --dry-run
 ```
 
@@ -194,10 +205,22 @@ python3 mentor-lab.py debrief greenplum --student Иван --submission submissi
 python3 mentor-lab.py telemetry greenplum --pre 40 --post 85 --review 70
 python3 mentor-lab.py learning-loop greenplum --pre 40 --post 85 --submission submissions/query-tuning.md --output artifacts/greenplum-learning-loop.md
 python3 mentor-lab.py replay greenplum --student Иван --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/greenplum-replay.md
+python3 mentor-lab.py session greenplum report --session artifacts/sessions/ivan --output artifacts/greenplum-session-report.md
 python3 mentor-lab.py certificate greenplum
 ```
 
 ## Интерфейсы ученика и ментора
+
+Основной интерфейс занятия в `Academy Experience v5`:
+
+```bash
+python3 mentor-lab.py session greenplum start --student Иван --output artifacts/sessions/ivan
+MENTOR_LAB_SESSION=artifacts/sessions/ivan/session.json npm --prefix apps/academy-portal run dev
+python3 mentor-lab.py session greenplum report --session artifacts/sessions/ivan --output artifacts/greenplum-session-report.md
+python3 mentor-lab.py lesson-doctor greenplum --output artifacts/greenplum-lesson-doctor.md
+```
+
+Портал в `apps/academy-portal` написан на Vue 3 + Nuxt 3 + Vite и показывает current stage, timeline, skill graph, copy-command кнопки, evidence checklist и handoff после урока.
 
 Сгенерировать локальный портал ученика:
 

@@ -112,3 +112,16 @@ python3 mentor-lab.py dsl greenplum show redistribute-join
 - **Learning Loop**: после review появляется карта навыков, missing evidence и план повторения на +1/+3/+7 дней.
 - **Lesson Replay Pack**: итоговый артефакт соединяет debrief, learning loop и подготовку к Lesson 02.
 - **Greenplum Live Smoke**: workflow поднимает стенд, выполняет SQL demos и прогоняет autograder.
+
+## Academy Experience v5
+
+`Academy Experience v5` заменяет ручную навигацию по portal/control-room артефактам единым session workflow. Портал в `apps/academy-portal` написан на Vue 3 + Nuxt 3 + Vite и читает состояние из `session.json`.
+
+```bash
+python3 mentor-lab.py session greenplum start --student Иван --output artifacts/sessions/ivan
+MENTOR_LAB_SESSION=artifacts/sessions/ivan/session.json npm --prefix apps/academy-portal run dev
+python3 mentor-lab.py session greenplum report --session artifacts/sessions/ivan --output artifacts/greenplum-session-report.md
+python3 mentor-lab.py lesson-doctor greenplum --output artifacts/greenplum-lesson-doctor.md
+```
+
+Что появляется поверх v2: current stage, timeline, skill graph, copy-command кнопки, evidence checklist, student handoff и pre-flight проверка урока через `lesson-doctor`.
