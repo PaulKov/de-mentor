@@ -14,7 +14,9 @@ flowchart LR
     F --> G["Random scenario"]
     G --> H["Submit evidence"]
     H --> I["Adaptive review"]
-    I --> J["Telemetry + next challenge"]
+    I --> J["Telemetry"]
+    J --> K["Learning Loop report"]
+    K --> L["Next challenge"]
 ```
 
 ## Команды
@@ -34,6 +36,7 @@ python3 mentor-lab.py adaptive-review greenplum --submission submissions/advance
 python3 mentor-lab.py cockpit greenplum
 python3 mentor-lab.py control-room greenplum
 python3 mentor-lab.py telemetry greenplum --pre 40 --post 85 --review 70
+python3 mentor-lab.py learning-loop greenplum --pre 40 --post 85 --submission submissions/advanced-joins.md --output artifacts/greenplum-learning-loop.md
 python3 mentor-lab.py certificate greenplum
 ```
 
@@ -49,6 +52,7 @@ python3 mentor-lab.py certificate greenplum
 - **Submit/adaptive review**: ученик сдает evidence, ментор получает score, missing evidence и next task.
 - **Cockpit / control room**: локальные HTML-страницы для ученика и ментора.
 - **Telemetry**: growth report по pre/post/review.
+- **Learning Loop**: итоговая карта навыков, gaps по evidence и интервальная практика на +1/+3/+7 дней.
 - **Certificate**: completion artifact с score, level и next challenge.
 
 Подробный v2-маршрут: [academy-v2.md](academy-v2.md).

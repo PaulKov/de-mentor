@@ -235,10 +235,27 @@ def test_workbook_has_end_of_lesson_student_handoff_pack():
         "py mentor-lab.py up greenplum",
         "py mentor-lab.py check greenplum",
         "py mentor-lab.py psql greenplum",
+        "python3 mentor-lab.py learning-loop greenplum",
     ]
 
     for marker in [*required_links, *required_commands]:
         assert marker in workbook
+
+
+def test_learning_loop_is_documented_as_end_of_lesson_artifact():
+    docs = [
+        ROOT / "README.md",
+        ROOT / "docs/lessons/01-greenplum/README.md",
+        ROOT / "docs/lessons/01-greenplum/academy-loop.md",
+        ROOT / "docs/lessons/01-greenplum/academy-v2.md",
+        ROOT / "docs/lessons/01-greenplum/mentor-guide.md",
+        ROOT / "docs/lessons/01-greenplum/student-workbook.md",
+    ]
+
+    for path in docs:
+        content = path.read_text(encoding="utf-8")
+        assert "mentor-lab.py learning-loop greenplum" in content
+        assert "Learning Loop" in content
 
 
 def test_student_prep_runbook_has_cross_platform_environment_contract():

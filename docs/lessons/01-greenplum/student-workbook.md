@@ -531,6 +531,13 @@ python3 mentor-lab.py hint greenplum mpp-systems
 7. [Cluster monitoring SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-monitoring.sql) - расширенная проверка `gp_segment_configuration`, `gp_toolkit.gp_disk_free`, `gp_segment_id`, pseudo/system columns и `gpstate -s` snippets.
 8. [Storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql) - runnable demo для Heap/AO/AOCO и partitioning intro.
 9. [Partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql) - runnable demo для partitioning strategies и catalog checks.
+10. Личный Learning Loop report - карта навыков, missing evidence и план повторения на +1/+3/+7 дней.
+
+Команда ментора для итогового Learning Loop report:
+
+```bash
+python3 mentor-lab.py learning-loop greenplum --pre 40 --post 85 --submission submissions/query-tuning.md --output artifacts/greenplum-learning-loop.md
+```
 
 Команды для macOS/Linux:
 

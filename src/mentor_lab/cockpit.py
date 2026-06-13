@@ -31,6 +31,7 @@ class MentorCockpit:
   <section><h2>Hidden incidents</h2><code>python3 mentor-lab.py incident list {lab_name}</code></section>
   <section><h2>Assessment</h2><code>python3 mentor-lab.py assessment {lab_name} pre</code></section>
   <section><h2>Review loop</h2><code>python3 mentor-lab.py submit {lab_name} advanced-joins</code></section>
+  <section><h2>Learning loop</h2><code>python3 mentor-lab.py learning-loop {lab_name} --pre 40 --post 85 --submission submissions/query-tuning.md --output artifacts/{lab_name}-learning-loop.md</code></section>
 </body>
 </html>
 """

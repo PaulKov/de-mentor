@@ -105,6 +105,7 @@ def test_student_portal_and_control_room_artifacts_are_written(tmp_path: Path):
     assert "mentor-lab.py visualize-plan" in portal_html
     assert "Greenplum Mentor Control Room" in room_html
     assert "Timed challenge" in room_html
+    assert "mentor-lab.py learning-loop" in room_html
 
 
 def test_solution_catalog_contains_golden_and_anti_solution():

@@ -9,7 +9,7 @@
 ![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-3776AB)
 ![Docker Desktop](https://img.shields.io/badge/Docker-Desktop-2496ED)
 ![Greenplum](https://img.shields.io/badge/Module-Greenplum-2E7D32)
-![Tests](https://img.shields.io/badge/tests-73%20passing-0A7F3F)
+![Tests](https://img.shields.io/badge/tests-92%20passing-0A7F3F)
 
 </div>
 
@@ -69,6 +69,7 @@
 - Adaptive review по evidence-first rubric.
 - Golden solutions и anti-solutions.
 - Lesson telemetry report.
+- Learning Loop report: карта навыков, gaps по evidence и план повторения на 1/3/7 дней.
 - Cross-engine Scenario DSL для будущих стендов.
 
 ## Быстрый старт
@@ -154,6 +155,7 @@ python3 mentor-lab.py challenge greenplum start --difficulty hard --minutes 15 -
 python3 mentor-lab.py submit greenplum query-tuning
 python3 mentor-lab.py adaptive-review greenplum --submission submissions/query-tuning.md
 python3 mentor-lab.py telemetry greenplum --pre 40 --post 85 --review 70
+python3 mentor-lab.py learning-loop greenplum --pre 40 --post 85 --submission submissions/query-tuning.md --output artifacts/greenplum-learning-loop.md
 python3 mentor-lab.py certificate greenplum
 ```
 

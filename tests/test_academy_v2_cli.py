@@ -133,3 +133,35 @@ def test_telemetry_and_dsl_commands_are_available():
     assert "Growth: +45" in telemetry.stdout
     assert dsl.returncode == 0
     assert "plan_contains" in dsl.stdout
+
+
+def test_learning_loop_command_generates_student_follow_up_report(tmp_path):
+    submission = tmp_path / "query-tuning.md"
+    output = tmp_path / "learning-loop.md"
+    submission.write_text(
+        "Redistribute Motion Hash Join gp_segment_id Physical cause distribution key "
+        "join key Change DISTRIBUTED BY Validation EXPLAIN ANALYZE Residual risk "
+        "Broadcast Motion",
+        encoding="utf-8",
+    )
+
+    result = run_cli(
+        "learning-loop",
+        "greenplum",
+        "--pre",
+        "40",
+        "--post",
+        "85",
+        "--submission",
+        str(submission),
+        "--output",
+        str(output),
+    )
+
+    assert result.returncode == 0
+    assert "Learning loop report written" in result.stdout
+    assert output.exists()
+    content = output.read_text(encoding="utf-8")
+    assert "Рост: +45" in content
+    assert "Карта Навыков" in content
+    assert "+1 день" in content

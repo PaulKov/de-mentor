@@ -24,6 +24,7 @@ from mentor_lab.domain import LabDefinition, UnknownLabError
 from mentor_lab.explain_analyzer import ExplainPlanAnalyzer
 from mentor_lab.grading import GradeCalculator
 from mentor_lab.lesson_catalog import LessonCatalog, normalize_lesson_code
+from mentor_lab.learning_loop import LearningLoopBuilder
 from mentor_lab.plan_visualizer import PlanVisualizer
 from mentor_lab.portal import StudentPortal
 from mentor_lab.query_tuning import QueryTuningCatalog
@@ -234,6 +235,22 @@ def _build_parser() -> argparse.ArgumentParser:
     telemetry_parser.add_argument("--review", type=int, required=True)
     telemetry_parser.add_argument("--output")
     telemetry_parser.set_defaults(handler=_handle_telemetry)
+
+    learning_loop_parser = subparsers.add_parser(
+        "learning-loop",
+        help="Generate a skill map, evidence feedback, and spaced follow-up plan.",
+    )
+    learning_loop_parser.add_argument("lab_name")
+    learning_loop_parser.add_argument("--pre", type=int, required=True)
+    learning_loop_parser.add_argument("--post", type=int, required=True)
+    learning_loop_parser.add_argument("--submission")
+    learning_loop_parser.add_argument(
+        "--review",
+        type=int,
+        help="Manual evidence score when a submission file is not available.",
+    )
+    learning_loop_parser.add_argument("--output")
+    learning_loop_parser.set_defaults(handler=_handle_learning_loop)
 
     challenge_parser = subparsers.add_parser(
         "challenge",
@@ -734,6 +751,38 @@ def _handle_telemetry(args: argparse.Namespace) -> int:
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(report, encoding="utf-8")
         print(f"Telemetry report written to {output}")
+        return 0
+    print(report, end="")
+    return 0
+
+
+def _handle_learning_loop(args: argparse.Namespace) -> int:
+    lab = _lab_or_none(args.lab_name)
+    if lab is None:
+        return 1
+
+    submission_path = Path(args.submission) if args.submission else None
+    if submission_path is not None and not submission_path.exists():
+        print(f"Submission file does not exist: {submission_path}")
+        return 1
+
+    try:
+        report = LearningLoopBuilder.default().build(
+            lab_name=lab.name,
+            pre_score=args.pre,
+            post_score=args.post,
+            submission_path=submission_path,
+            review_score=args.review,
+        ).render()
+    except (KeyError, ValueError) as exc:
+        print(str(exc))
+        return 1
+
+    if args.output:
+        output = Path(args.output)
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(report, encoding="utf-8")
+        print(f"Learning loop report written to {output}")
         return 0
     print(report, end="")
     return 0
