@@ -1,28 +1,28 @@
-# Incident: Skewed Distribution
+# Инцидент: Перекошенное Распределение
 
-## Title
+## Название
 
-Marketplace revenue report became slow.
+Отчет по выручке marketplace стал медленным.
 
-## Symptoms
+## Симптомы
 
-- Query by region became slower after a new fact table deployment.
-- `EXPLAIN` contains `Redistribute Motion`.
-- Segment distribution shows one segment doing most work.
-- The fact table was distributed by `status`.
+- Запрос по region стал медленнее после выкладки новой fact-таблицы.
+- В `EXPLAIN` появился `Redistribute Motion`.
+- Распределение строк показывает, что один segment делает большую часть работы.
+- Fact-таблица была распределена по `status`.
 
-## Mission
+## Миссия
 
-Find the root cause and produce a short RCA with evidence.
+Найди root cause и подготовь короткий RCA с evidence.
 
-## Setup
+## Подготовка
 
 ```bash
 python3 mentor-lab.py seed greenplum --profile skewed
 python3 mentor-lab.py check greenplum
 ```
 
-## Evidence To Collect
+## Evidence Для Сбора
 
 ```sql
 SELECT *
@@ -39,11 +39,10 @@ GROUP BY c.region
 ORDER BY revenue DESC;
 ```
 
-## Acceptance Criteria
+## Критерии Приемки
 
-- Show segment distribution for the bad fact table.
-- Identify `status` as low-cardinality distribution key.
-- Show `Redistribute Motion` in the plan.
-- Propose `customer_id` distribution for this join pattern.
-- Explain remaining risks and validation steps.
-
+- Показано распределение строк по segments для плохой fact-таблицы.
+- `status` определен как low-cardinality distribution key.
+- В плане показан `Redistribute Motion`.
+- Предложен `customer_id` как distribution key для этого join pattern.
+- Описаны остаточные риски и validation steps.

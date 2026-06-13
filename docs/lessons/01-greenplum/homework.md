@@ -56,7 +56,7 @@ Risks:
 Questions for Lesson 02:
 ```
 
-## Self-Check Commands
+## Команды Self-Check
 
 Запусти стенд:
 
@@ -113,7 +113,7 @@ WHERE schemaname = 'lesson01';
 
 В выводе найди `DEFAULT partition`, `leaf_partitions`, примеры `PARTITION BY RANGE`, `PARTITION BY LIST`, `PARTITION BY HASH`. Объясни, что будет с out-of-range INSERT без default partition, и где в maintenance пригодятся `ATTACH PARTITION` / `DETACH PARTITION`.
 
-## Optional Deep Tasks
+## Опциональные Deep Tasks
 
 - Заполни plan-reading ladder из [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md).
 - Сравни co-located join, Broadcast Motion и Redistribute Motion.

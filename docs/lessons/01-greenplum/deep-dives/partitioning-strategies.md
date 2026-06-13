@@ -63,7 +63,7 @@ CREATE TABLE lesson01.partition_range_demo_default
 
 > Почему `sale_date` хороший partition key, но не обязательно хороший distribution key?
 
-Expected answer:
+Ожидаемый ответ:
 
 > `sale_date` хорошо режет отчеты и retention. Но для join locality и равномерности чаще нужен `customer_id`, `order_id` или другой высококардинальный join key.
 

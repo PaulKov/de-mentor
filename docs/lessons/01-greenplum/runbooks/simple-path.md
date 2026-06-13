@@ -1,21 +1,21 @@
-# Simple Path: Greenplum Lesson 01
+# Упрощенный Маршрут: Greenplum Lesson 01
 
 Маршрут на 60 минут. Цель - не рассказать все про Greenplum, а научить новичка видеть MPP-физику: где лежит строка, кто ее обрабатывает, когда появляется Motion и как доказать исправление.
 
-Cross-links:
+Связанные материалы:
 
-- deck: [Greenplum theory deck](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-theory.pptx)
-- facilitator guide: [facilitator guide](https://github.com/PaulKov/de-mentor/blob/master/decks/greenplum-theory/facilitator-guide.md)
-- student prep: [student prep](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/student-prep.md)
-- workbook: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md)
-- homework: [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md)
-- homework plan: [homework plan](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/homework-plan.md)
-- cluster inspection SQL: [cluster inspection SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-inspection.sql)
-- cluster monitoring SQL: [cluster monitoring SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-monitoring.sql)
-- SQL examples: [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql)
-- partitioning strategy examples: [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql)
+- презентация: [теоретическая презентация Greenplum](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-theory.pptx)
+- гайд ведущего: [гайд ведущего](https://github.com/PaulKov/de-mentor/blob/master/decks/greenplum-theory/facilitator-guide.md)
+- подготовка ученика: [подготовка ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/student-prep.md)
+- рабочая тетрадь: [рабочая тетрадь ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md)
+- домашка: [домашка](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md)
+- план домашки: [план домашки](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/homework-plan.md)
+- SQL для паспорта кластера: [cluster inspection SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-inspection.sql)
+- SQL для мониторинга кластера: [cluster monitoring SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-monitoring.sql)
+- SQL-примеры: [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql)
+- SQL по стратегиям partitioning: [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql)
 
-## Stage 1: 00:00-10:00 - MPP И Роли Компонентов
+## Этап 1: 00:00-10:00 - MPP И Роли Компонентов
 
 Слайды: 1-6.
 
@@ -43,7 +43,7 @@ python3 mentor-lab.py psql greenplum
 
 > Что делает master/coordinator, а что делают segments?
 
-Expected answer:
+Ожидаемый ответ:
 
 > Master/coordinator принимает подключение, парсит SQL, планирует, делает dispatch и собирает финальный результат. Segments хранят данные, исполняют QE slices и обмениваются строками через interconnect.
 
@@ -58,7 +58,7 @@ Expected answer:
 
 Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [cluster inspection SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-inspection.sql), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql).
 
-## Stage 2: 10:00-24:00 - Execution, Lab Passport, Heap И AOCO
+## Этап 2: 10:00-24:00 - Execution, Паспорт Стенда, Heap И AOCO
 
 Слайды: 7-13.
 
@@ -115,7 +115,7 @@ gpstop -u
 
 > Сколько segment instances реально участвует в хранении данных на нашем Docker-стенде?
 
-Expected answer:
+Ожидаемый ответ:
 
 > Два primary segment instances (`content 0` и `content 1`) на одном segment host `greenplum`; master/coordinator - отдельная строка `content = -1`.
 
@@ -123,7 +123,7 @@ Expected answer:
 
 > Почему AOCO не спасает плохой distribution key?
 
-Expected answer:
+Ожидаемый ответ:
 
 > AOCO меняет формат хранения и scan/compression, но не размещение строк по сегментам. Если distribution key плохой, часть сегментов все равно простаивает.
 
@@ -135,7 +135,7 @@ Expected answer:
 
 Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [cluster inspection SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-inspection.sql), [cluster monitoring SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-monitoring.sql), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql), [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql).
 
-## Stage 3: 24:00-42:00 - Distribution, Skew, EXPLAIN И Motion
+## Этап 3: 24:00-42:00 - Distribution, Skew, EXPLAIN И Motion
 
 Слайды: 14-19.
 
@@ -177,7 +177,7 @@ python3 mentor-lab.py analyze-plan greenplum --query bad_customer_join --sample
 
 > Увидев `Redistribute Motion`, какой вопрос задаем первым?
 
-Expected answer:
+Ожидаемый ответ:
 
 > Почему данные нужно переложить: join key не совпал с distribution key, есть skew, нужна глобальная агрегация или финальный gather?
 
@@ -189,7 +189,7 @@ Expected answer:
 
 Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [cluster inspection SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-inspection.sql), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql).
 
-## Stage 4: 42:00-60:00 - Partitioning Intro, Incident И Homework
+## Этап 4: 42:00-60:00 - Partitioning Intro, Incident И Homework
 
 Слайды: 17, 20-24.
 
@@ -240,7 +240,7 @@ WHERE schemaname = 'lesson01';
 
 > Почему partition key не равен distribution key?
 
-Expected answer:
+Ожидаемый ответ:
 
 > Partition key выбирается под фильтры времени, pruning и lifecycle/retention. Distribution key выбирается под равномерность, join locality и параллельность.
 
@@ -248,7 +248,7 @@ Expected answer:
 
 > Когда выбрать RANGE / LIST / HASH?
 
-Expected answer:
+Ожидаемый ответ:
 
 > RANGE - для дат/числовых интервалов и retention, LIST - для конечных категорий, HASH - для bucketization. No default partitioning: partitions и `DEFAULT partition` нужно объявлять явно.
 

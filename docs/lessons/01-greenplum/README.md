@@ -74,30 +74,30 @@ python3 mentor-lab.py seed greenplum --profile skewed
 
 ## Материалы
 
-- [Mentor guide](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/mentor-guide.md) - подсказки для проведения урока.
-- [Student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md) - задания для ученика.
-- [Student prep](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/student-prep.md) - подготовка окружения ученика для macOS, Windows и Linux.
-- [Simple path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/simple-path.md) - 60-минутный маршрут: слайды, команды, вопросы, проверки.
-- [Deep-dive path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/deep-dive-path.md) - расширенный deep-dive маршрут.
-- [Homework plan](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/homework-plan.md) - план домашки на 60-90 минут.
-- [Cheat sheet](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/cheat-sheet.md) - команды и SQL-шпаргалка.
-- [Homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md) - домашняя работа.
-- [Case study](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/case-study.md) - сквозной профессиональный кейс.
-- [Architecture](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/architecture.md) - визуальная карта Greenplum.
-- [Rubric](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/rubric.md) - skill matrix и критерии оценки.
-- [Capstone](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/capstone.md) - финальная архитектурная задача.
-- [Academy loop](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/academy-loop.md) - professional loop: assessment, analyzer, hidden incidents, submit/review, certificate.
+- [Гайд ментора](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/mentor-guide.md) - подсказки для проведения урока.
+- [Workbook ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md) - задания для ученика.
+- [Подготовка ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/student-prep.md) - подготовка окружения ученика для macOS, Windows и Linux.
+- [Упрощенный маршрут](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/simple-path.md) - 60-минутный маршрут: слайды, команды, вопросы, проверки.
+- [Расширенный маршрут](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/deep-dive-path.md) - расширенный deep-dive маршрут.
+- [План домашки](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/homework-plan.md) - план домашки на 60-90 минут.
+- [Шпаргалка](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/cheat-sheet.md) - команды и SQL-шпаргалка.
+- [Домашка](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md) - домашняя работа.
+- [Сквозной кейс](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/case-study.md) - сквозной профессиональный кейс.
+- [Карта архитектуры](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/architecture.md) - визуальная карта Greenplum.
+- [Матрица оценки](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/rubric.md) - skill matrix и критерии оценки.
+- [Финальная задача](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/capstone.md) - финальная архитектурная задача.
+- [Контур Academy](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/academy-loop.md) - professional loop: assessment, analyzer, hidden incidents, submit/review, certificate.
 - [Academy v2](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/academy-v2.md) - interactive student portal, visualizer, diagnostics, scenario randomizer, adaptive review.
-- [Query tuning lab](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/query-tuning-lab.md) - усложненные задачи по query tuning.
+- [Лабораторная по query tuning](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/query-tuning-lab.md) - усложненные задачи по query tuning.
 - [QD/QE/gang/slices explained](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md) - цельное объяснение QD, QE, slices, gangs, Motion и того, как это видно в `EXPLAIN`.
 - [Master/segment data path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/master-segment-data-path.md) - глубокая техническая схема master/QD/QE, Motion, gpfdist и storage.
-- [EXPLAIN plan reading](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/explain-plan-reading.md) - как читать план и формулировать RCA по `EXPLAIN ANALYZE`.
-- [Physical joins in MPP](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/physical-joins-in-mpp.md) - физика joins в MPP: co-located, broadcast, redistribute.
-- [Partitioning strategies](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md) - RANGE / LIST / HASH, DEFAULT partition, no default partitioning, `pg_partition_tree`, `gp_toolkit.gp_partitions`, `leaf_partitions`, `ATTACH PARTITION`, `DETACH PARTITION` и out-of-range INSERT.
-- [MPP system taxonomy](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/mpp-system-taxonomy.md) - SMP, MPP, EPP, lakehouse, HTAP и цена каждой архитектуры.
-- [Greenplum theory deck](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-theory.pptx) - презентация урока.
-- [Greenplum lab README](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/README.md) - запуск стенда.
-- [Cluster inspection SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-inspection.sql) - runnable SQL для проверки topology, settings и disk free учебного Docker-кластера.
-- [Cluster monitoring SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-monitoring.sql) - расширенный monitoring SQL: `gp_segment_configuration`, `gp_toolkit.gp_disk_free`, `gp_segment_id`, `gpstate -s` snippets и segment health.
-- [Storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql) - runnable demo для Heap/AO/AOCO и partitioning intro.
-- [Partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql) - runnable drill по `PARTITION BY RANGE`, `PARTITION BY LIST`, `PARTITION BY HASH`, `DEFAULT partition` и подсчету partitions через `pg_partition_tree` / `gp_toolkit.gp_partitions`.
+- [Чтение EXPLAIN-плана](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/explain-plan-reading.md) - как читать план и формулировать RCA по `EXPLAIN ANALYZE`.
+- [Физические joins в MPP](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/physical-joins-in-mpp.md) - физика joins в MPP: co-located, broadcast, redistribute.
+- [Стратегии partitioning](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md) - RANGE / LIST / HASH, DEFAULT partition, no default partitioning, `pg_partition_tree`, `gp_toolkit.gp_partitions`, `leaf_partitions`, `ATTACH PARTITION`, `DETACH PARTITION` и out-of-range INSERT.
+- [Таксономия MPP-систем](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/mpp-system-taxonomy.md) - SMP, MPP, EPP, lakehouse, HTAP и цена каждой архитектуры.
+- [Теоретическая презентация Greenplum](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-theory.pptx) - презентация урока.
+- [README стенда Greenplum](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/README.md) - запуск стенда.
+- [SQL для паспорта кластера](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-inspection.sql) - runnable SQL для проверки topology, settings и disk free учебного Docker-кластера.
+- [SQL для мониторинга кластера](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-monitoring.sql) - расширенный monitoring SQL: `gp_segment_configuration`, `gp_toolkit.gp_disk_free`, `gp_segment_id`, `gpstate -s` snippets и segment health.
+- [SQL по storage и partitioning](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql) - runnable demo для Heap/AO/AOCO и partitioning intro.
+- [SQL по partitioning strategies](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql) - runnable drill по `PARTITION BY RANGE`, `PARTITION BY LIST`, `PARTITION BY HASH`, `DEFAULT partition` и подсчету partitions через `pg_partition_tree` / `gp_toolkit.gp_partitions`.

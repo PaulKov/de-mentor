@@ -1,8 +1,8 @@
-# Greenplum Academy Loop
+# Контур Greenplum Academy
 
 Этот контур превращает урок из набора материалов в повторяемый тренажер.
 
-## Flow
+## Поток Работы
 
 ```mermaid
 flowchart LR
@@ -17,7 +17,7 @@ flowchart LR
     I --> J["Telemetry + next challenge"]
 ```
 
-## Commands
+## Команды
 
 ```bash
 python3 mentor-lab.py assessment greenplum pre
@@ -37,7 +37,7 @@ python3 mentor-lab.py telemetry greenplum --pre 40 --post 85 --review 70
 python3 mentor-lab.py certificate greenplum
 ```
 
-## What It Automates
+## Что Автоматизируется
 
 - **Assessment**: быстрый pre/post с answer key и score.
 - **Adaptive hints**: можно показать все подсказки или конкретный уровень.

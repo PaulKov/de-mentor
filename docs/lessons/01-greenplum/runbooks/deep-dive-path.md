@@ -1,25 +1,25 @@
-# Deep-Dive Path: Greenplum Lesson 01
+# Расширенный Маршрут: Greenplum Lesson 01
 
 Маршрут на 90-120 минут или отдельная appendix-сессия после базового урока. Его цель - дать техническую глубину без перегруза основного маршрута: QD/QE internals, slices/gangs, Motion, physical joins, storage caveats и системную таксономию.
 
-Cross-links:
+Связанные материалы:
 
-- deck: [Greenplum theory deck](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-theory.pptx)
-- facilitator guide: [facilitator guide](https://github.com/PaulKov/de-mentor/blob/master/decks/greenplum-theory/facilitator-guide.md)
-- student prep: [student prep](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/student-prep.md)
-- workbook: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md)
-- homework: [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md)
-- homework plan: [homework plan](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/homework-plan.md)
-- SQL examples: [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql)
-- partitioning strategy examples: [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql)
-- cluster monitoring SQL: [cluster monitoring SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-monitoring.sql)
+- презентация: [теоретическая презентация Greenplum](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-theory.pptx)
+- гайд ведущего: [гайд ведущего](https://github.com/PaulKov/de-mentor/blob/master/decks/greenplum-theory/facilitator-guide.md)
+- подготовка ученика: [подготовка ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/student-prep.md)
+- рабочая тетрадь: [рабочая тетрадь ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md)
+- домашка: [домашка](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md)
+- план домашки: [план домашки](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/homework-plan.md)
+- SQL-примеры: [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql)
+- SQL по стратегиям partitioning: [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql)
+- SQL для мониторинга кластера: [cluster monitoring SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-monitoring.sql)
 - QD/QE/slices/gangs explained: [QD/QE/gang/slices explained](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md)
 - QD/QE deep dive: [master/segment data path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/master-segment-data-path.md)
-- joins deep dive: [physical joins in MPP](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/physical-joins-in-mpp.md)
-- partitioning deep dive: [partitioning strategies](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md)
-- EXPLAIN ladder: [EXPLAIN plan reading](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/explain-plan-reading.md)
+- deep dive по joins: [physical joins in MPP](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/physical-joins-in-mpp.md)
+- deep dive по partitioning: [partitioning strategies](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md)
+- ladder для EXPLAIN: [EXPLAIN plan reading](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/explain-plan-reading.md)
 
-## Stage 1: 00:00-15:00 - QD/QE, Gang, Slices
+## Этап 1: 00:00-15:00 - QD/QE, Gang, Slices
 
 Слайды: 1-8, затем appendix slide 28 при готовности ученика.
 
@@ -49,7 +49,7 @@ python3 mentor-lab.py analyze-plan greenplum --query bad_customer_join --sample
 
 > Почему slice часто появляется рядом с Motion?
 
-Expected answer:
+Ожидаемый ответ:
 
 > Motion соединяет producer и consumer части distributed plan. Эти части исполняются разными gangs/QE и логически становятся разными slices.
 
@@ -60,7 +60,7 @@ Expected answer:
 
 Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [QD/QE/gang/slices explained](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql), [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql).
 
-## Stage 2: 15:00-40:00 - Master/Coordinator Data Path И Bulk I/O
+## Этап 2: 15:00-40:00 - Data Path Master/Coordinator И Bulk I/O
 
 Слайды: 7-9, 28.
 
@@ -93,7 +93,7 @@ python3 mentor-lab.py check greenplum
 
 > Почему `gpfdist external table` лучше для больших загрузок, чем ручной поток через client/coordinator?
 
-Expected answer:
+Ожидаемый ответ:
 
 > Segments читают данные параллельно как HTTP clients, а coordinator управляет планом. Так throughput масштабируется сегментами, а master не становится центральной трубой.
 
@@ -104,7 +104,7 @@ Expected answer:
 
 Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql), [cluster monitoring SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-monitoring.sql), [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql).
 
-## Stage 3: 40:00-65:00 - Storage Internals, Defaults И Partitioning Strategies
+## Этап 3: 40:00-65:00 - Storage Internals, Defaults И Partitioning Strategies
 
 Слайды: 10-12, 16, 29.
 
@@ -162,7 +162,7 @@ gpstop -u
 
 > Почему partition key не равен distribution key, и когда выбрать `PARTITION BY RANGE`, `PARTITION BY LIST`, `PARTITION BY HASH`?
 
-Expected answer:
+Ожидаемый ответ:
 
 > Сначала grain и workload, затем distribution/join locality, затем partitioning для pruning/retention, затем storage/compression под scan pattern.
 
@@ -177,7 +177,7 @@ Expected answer:
 
 Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql), [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql), [partitioning strategies deep dive](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md).
 
-## Stage 4: 65:00-95:00 - EXPLAIN Ladder И Physical Joins In MPP
+## Этап 4: 65:00-95:00 - EXPLAIN Ladder И Physical Joins In MPP
 
 Слайды: 24-27.
 
@@ -212,7 +212,7 @@ python3 mentor-lab.py hint greenplum plan-reading
 
 > Когда Broadcast лучше Redistribute?
 
-Expected answer:
+Ожидаемый ответ:
 
 > Когда broadcast side мала после фильтров и дешевле разослать ее всем сегментам, чем перераскладывать большой fact. Для большой стороны Broadcast опасен.
 
@@ -224,7 +224,7 @@ Expected answer:
 
 Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql), [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql).
 
-## Stage 5: 95:00-120:00 - System Taxonomy, Caveats И Next Lesson
+## Этап 5: 95:00-120:00 - System Taxonomy, Caveats И Next Lesson
 
 Слайды: 30 и summary slide 23.
 
@@ -253,7 +253,7 @@ python3 mentor-lab.py grade greenplum --dry-run
 
 > Что принести на Lesson 02?
 
-Expected answer:
+Ожидаемый ответ:
 
 > DDL модели, distribution rationale, partitioning intro checks, skew checks, EXPLAIN evidence и вопросы по statistics/incremental loads/late-arriving facts.
 

@@ -331,7 +331,7 @@ Gang — кто исполняет slice.
 Motion — как данные переезжают между slice'ами.
 ```
 
-## Mini-Lab Для Ученика
+## Мини-Лабораторная Для Ученика
 
 1. Запусти bad join из workbook и найди `Redistribute Motion`.
 2. Выпиши `sliceN`, количество sender/receiver workers и тип Motion.
@@ -354,7 +354,7 @@ python3 mentor-lab.py visualize-plan greenplum --query bad_customer_join --sampl
 4. Когда `Gather Motion 48:1` нормален, а когда превращает coordinator в bottleneck?
 5. Что проверять первым: physical join algorithm или data movement?
 
-Expected answer: сначала объяснить locus/data movement (`co-located`, `Broadcast Motion`, `Redistribute Motion`, `Gather Motion`), затем локальный алгоритм (`Hash Join`, `Merge Join`, `Nested Loop`).
+Ожидаемый ответ: сначала объяснить locus/data movement (`co-located`, `Broadcast Motion`, `Redistribute Motion`, `Gather Motion`), затем локальный алгоритм (`Hash Join`, `Merge Join`, `Nested Loop`).
 
 ## Связанные Материалы
 
@@ -364,7 +364,7 @@ Expected answer: сначала объяснить locus/data movement (`co-loca
 - [EXPLAIN plan reading](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/explain-plan-reading.md) - ladder для чтения `EXPLAIN ANALYZE`.
 - [Physical joins in MPP](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/physical-joins-in-mpp.md) - как отделять local join algorithm от MPP data movement.
 
-## References
+## Источники
 
 - [Greenplum Database Docs: Parallel Query Processing](https://docs-cn.greenplum.org/v6/admin_guide/query/topics/parallel-proc.html)
 - [Broadcom Support: Understanding and Managing gp_max_slices](https://knowledge.broadcom.com/external/article/430557/understanding-and-managing-gpmaxslices.html)

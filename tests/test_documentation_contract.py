@@ -14,6 +14,24 @@ def _without_fenced_code(content: str) -> str:
     return re.sub(r"```.*?```", "", content, flags=re.DOTALL)
 
 
+PUBLIC_DOC_ROOTS = [
+    ROOT / "README.md",
+    ROOT / "decks/greenplum-theory",
+    ROOT / "docs/lessons/01-greenplum",
+    ROOT / "labs/greenplum",
+]
+
+
+def _public_markdown_docs() -> list[Path]:
+    docs = []
+    for root in PUBLIC_DOC_ROOTS:
+        if root.is_file():
+            docs.append(root)
+        elif root.exists():
+            docs.extend(root.rglob("*.md"))
+    return sorted(set(docs))
+
+
 def test_professional_lesson_artifacts_exist():
     expected = [
         "docs/lessons/01-greenplum/case-study.md",
@@ -58,6 +76,73 @@ def test_user_facing_docs_have_no_placeholders():
     assert offenders == []
 
 
+def test_dev_draft_docs_are_not_tracked_as_public_materials():
+    dev_docs = list((ROOT / "docs/superpowers").rglob("*.md"))
+    assert dev_docs == []
+
+
+def test_public_markdown_uses_russian_service_labels():
+    blacklist = [
+        "Expected answer",
+        "Cross-links",
+        "Source anchors",
+        "Presenter Notes",
+        "Acceptance Criteria",
+        "Data Profiles",
+        "Strong Answer Signals",
+        "Deliverables",
+        "Expected Submission",
+        "What It Automates",
+        "What Makes It Professional",
+        "Student Route",
+        "Mentor Route",
+        "Evidence Contract",
+        "Requirements",
+        "Quick start",
+        "Simple Path",
+        "Deep-Dive Path",
+    ]
+
+    offenders = []
+    for path in _public_markdown_docs():
+        prose = _without_fenced_code(path.read_text(encoding="utf-8"))
+        for marker in blacklist:
+            if marker in prose:
+                offenders.append(f"{path.relative_to(ROOT).as_posix()}: {marker}")
+
+    assert offenders == []
+
+
+def test_core_lesson_docs_have_russian_titles_and_terms():
+    expected = {
+        "docs/lessons/01-greenplum/architecture.md": [
+            "# Карта Архитектуры Greenplum",
+            "## Ментальная Модель MPP",
+            "## Что Смотреть В EXPLAIN",
+        ],
+        "docs/lessons/01-greenplum/capstone.md": [
+            "# Финальная Задача: Daily Marketplace Revenue Mart",
+            "## Сценарий",
+            "## Что Сдать",
+        ],
+        "docs/lessons/01-greenplum/rubric.md": [
+            "# Матрица Оценки И Навыков",
+            "## Уровни Оценки",
+            "## Вопросы Ментора",
+        ],
+        "docs/lessons/01-greenplum/incidents/skewed-distribution.md": [
+            "# Инцидент: Перекошенное Распределение",
+            "## Симптомы",
+            "## Критерии Приемки",
+        ],
+    }
+
+    for relative_path, markers in expected.items():
+        content = (ROOT / relative_path).read_text(encoding="utf-8")
+        for marker in markers:
+            assert marker in content
+
+
 def test_presentation_facilitator_guide_has_timing_and_system_taxonomy():
     guide = (ROOT / "decks/greenplum-theory/facilitator-guide.md").read_text(
         encoding="utf-8"
@@ -65,8 +150,8 @@ def test_presentation_facilitator_guide_has_timing_and_system_taxonomy():
 
     assert "00:00-02:00" in guide
     assert "57:00-60:00" in guide
-    assert "simple path" in guide.lower()
-    assert "deep-dive path" in guide.lower()
+    assert "упрощенный маршрут" in guide.lower()
+    assert "расширенный маршрут" in guide.lower()
     assert "SMP" in guide
     assert "MPP" in guide
     assert "EPP" in guide
@@ -86,10 +171,10 @@ def test_runbooks_have_commands_questions_checks_and_cross_links():
 
     for path in runbook_paths:
         content = path.read_text(encoding="utf-8")
-        assert "## Stage" in content
+        assert "## Этап" in content
         assert "Команды" in content
         assert "Что спрашиваем" in content
-        assert "Expected answer" in content
+        assert "Ожидаемый ответ" in content
         assert "Как проверяем" in content
         assert "student-workbook.md" in content
         assert "homework.md" in content

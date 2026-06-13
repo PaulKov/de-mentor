@@ -1,4 +1,4 @@
-# Query Tuning Lab
+# Лабораторная По Query Tuning
 
 Этот блок используется после базового урока или как домашний мини-экзамен. Цель - научить ученика объяснять план и выбирать фикс, а не угадывать DDL.
 
@@ -15,7 +15,7 @@ python3 mentor-lab.py submit greenplum query-tuning
 python3 mentor-lab.py adaptive-review greenplum --submission submissions/query-tuning.md
 ```
 
-## Tasks
+## Задачи
 
 | Task | Навык | Что доказать |
 |---|---|---|
@@ -25,7 +25,7 @@ python3 mentor-lab.py adaptive-review greenplum --submission submissions/query-t
 | `large-gather` | Coordinator bottleneck | Большой `Gather Motion` нужно уменьшать локальным aggregate/filter. |
 | `storage-model-choice` | Storage design | Heap/AO/AOCO выбирается по workload, не вместо distribution. |
 
-## Visual And Runtime Diagnostics
+## Визуальная И Runtime-Диагностика
 
 Для максимального вовлечения сначала проси ученика объяснить план текстом, затем показать тот же план визуально:
 
@@ -41,7 +41,7 @@ python3 mentor-lab.py diagnostics greenplum show table-statistics
 python3 mentor-lab.py diagnostics greenplum run segment-skew
 ```
 
-## Data Profiles
+## Профили Данных
 
 ```bash
 python3 mentor-lab.py seed greenplum --profile late-facts
@@ -51,7 +51,7 @@ python3 mentor-lab.py seed greenplum --profile wide-aoco
 python3 mentor-lab.py seed greenplum --profile small-dimension-broadcast
 ```
 
-## Expected Submission
+## Ожидаемый Формат Сдачи
 
 Ученик сдает markdown:
 

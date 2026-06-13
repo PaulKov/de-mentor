@@ -1,21 +1,23 @@
-# Capstone: Daily Marketplace Revenue Mart
+# Финальная Задача: Daily Marketplace Revenue Mart
 
-## Scenario
+## Сценарий
 
-You need to design a Greenplum mart for daily marketplace revenue analytics. The source events include orders, order items, customers, products, payments, and delivery events.
+Нужно спроектировать витрину Greenplum для ежедневной аналитики выручки marketplace. Источники: orders, order items, customers, products, payments и delivery events.
 
-## Deliverables
+Цель задачи - не написать максимум DDL, а защитить физический дизайн: grain, distribution, partitioning, storage и проверку через evidence.
 
-1. Fact and dimension list.
-2. Grain for each fact.
-3. Distribution key for each large table.
-4. Partition key for each fact.
-5. Three validation SQL queries.
-6. Risks and trade-offs.
+## Что Сдать
 
-## Required Defense
+1. Список fact-таблиц и dimensions.
+2. Grain для каждого факта.
+3. Distribution key для каждой большой таблицы.
+4. Partition key для каждого факта или объяснение, почему partitioning пока не нужен.
+5. Три validation SQL-запроса.
+6. Риски и trade-offs.
 
-Use this format:
+## Формат Защиты
+
+Используй такой шаблон:
 
 ```text
 Primary fact:
@@ -29,11 +31,12 @@ Validation SQL:
 Trade-offs:
 ```
 
-## Strong Answer Signals
+Поля в шаблоне оставлены на английском как рабочий evidence-формат: его удобно вставлять в issue, PR или review comment без перевода технических меток.
 
-- Grain is defined before keys.
-- Distribution is explained through join locality and cardinality.
-- Partitioning is explained through time pruning and maintenance.
-- Risks include skew, enterprise customers, late-arriving events, and stale stats.
-- `EXPLAIN` is part of validation, not an afterthought.
+## Признаки Сильного Ответа
 
+- Grain описан до выбора ключей.
+- Distribution объяснен через join locality и cardinality.
+- Partitioning объяснен через time pruning и maintenance.
+- Риски включают skew, enterprise customers, late-arriving events и stale stats.
+- `EXPLAIN` входит в validation, а не добавляется после решения.

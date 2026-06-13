@@ -2,7 +2,7 @@
 
 Academy v2 превращает первый урок в управляемый тренажер: ученик работает через локальный портал, ментор видит control room, а качество ответа проверяется evidence-first рубрикой.
 
-## Flow
+## Поток Работы
 
 ```mermaid
 flowchart LR
@@ -17,7 +17,7 @@ flowchart LR
     I --> J["Certificate / next module"]
 ```
 
-## Student Route
+## Маршрут Ученика
 
 ```bash
 python3 mentor-lab.py portal greenplum --output artifacts/greenplum-student-portal.html
@@ -29,7 +29,7 @@ python3 mentor-lab.py challenge greenplum start --difficulty hard --minutes 15 -
 python3 mentor-lab.py submit greenplum query-tuning
 ```
 
-## Mentor Route
+## Маршрут Ментора
 
 ```bash
 python3 mentor-lab.py control-room greenplum --output artifacts/greenplum-control-room.html
@@ -48,7 +48,7 @@ python3 mentor-lab.py dsl greenplum list
 python3 mentor-lab.py dsl greenplum show redistribute-join
 ```
 
-## Evidence Contract
+## Контракт Evidence
 
 Хорошая работа ученика должна содержать:
 
@@ -60,7 +60,7 @@ python3 mentor-lab.py dsl greenplum show redistribute-join
 - validation;
 - residual risk.
 
-## What Makes It Professional
+## Что Делает Это Профессиональным
 
 - **Interactive portal**: ученик видит маршрут урока и команды без ручного поиска по документации.
 - **EXPLAIN visualizer**: Motion, interconnect, coordinator path и join algorithm становятся визуальными.

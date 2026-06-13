@@ -1,4 +1,4 @@
-# Greenplum Lab
+# Лабораторный Стенд Greenplum
 
 Локальный Greenplum-стенд для первого урока по MPP, distribution key, skew и Motion nodes.
 
@@ -209,7 +209,7 @@ python3 mentor-lab.py up greenplum --dry-run
 python3 mentor-lab.py check greenplum
 ```
 
-## Data Profiles
+## Профили Данных
 
 ```bash
 python3 mentor-lab.py seed greenplum --profile skewed
