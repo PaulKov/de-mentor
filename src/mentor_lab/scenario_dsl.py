@@ -164,6 +164,50 @@ class ScenarioDslCatalog:
                             "Submission preserves distribution reasoning.",
                         ],
                     ),
+                    ScenarioDefinition(
+                        lab="greenplum",
+                        engine="greenplum",
+                        code="aoco-mutable-dimension",
+                        title="AOCO chosen for a small mutable dimension",
+                        difficulty="medium",
+                        seed_profile="wide-aoco",
+                        skills=["Storage model", "Mutable dimensions", "Operational trade-off"],
+                        checks=[
+                            ScenarioCheck("ddl_contains", "dimension", "orientation=column"),
+                            ScenarioCheck("reasoning", "workload", "mutable dimension"),
+                        ],
+                        tasks=[
+                            "Find the table whose workload is frequent small updates.",
+                            "Explain why AOCO is not automatically better for a mutable dimension.",
+                            "Choose heap or AO row and keep distribution reasoning separate.",
+                        ],
+                        acceptance_criteria=[
+                            "Submission explains the AOCO append/scan fit and update caveat.",
+                            "Submission names validation through `\\d+` and catalog checks.",
+                        ],
+                    ),
+                    ScenarioDefinition(
+                        lab="greenplum",
+                        engine="greenplum",
+                        code="coordinator-result-set",
+                        title="Large result set bottlenecks on the coordinator",
+                        difficulty="hard",
+                        seed_profile="enterprise",
+                        skills=["Coordinator bottleneck", "Gather Motion", "Result-set shaping"],
+                        checks=[
+                            ScenarioCheck("plan_contains", "wide_export_query", "Gather Motion"),
+                            ScenarioCheck("design_rule", "fix", "filter or aggregate before coordinator"),
+                        ],
+                        tasks=[
+                            "Find the Gather Motion and estimate final rows.",
+                            "Explain why QD/coordinator is not a segment worker.",
+                            "Push filters, aggregates, or export path before large coordinator flow.",
+                        ],
+                        acceptance_criteria=[
+                            "Submission names Gather Motion as a coordinator path.",
+                            "Submission reduces rows before the coordinator or proposes direct segment export.",
+                        ],
+                    ),
                 ]
             }
         )

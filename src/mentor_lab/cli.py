@@ -13,6 +13,7 @@ from typing import Callable, Optional, Sequence
 
 from mentor_lab.assessment import AssessmentCatalog
 from mentor_lab.adaptive_review import AdaptiveReviewer
+from mentor_lab.calibration import CalibrationCatalog
 from mentor_lab.certificates import CertificateWriter
 from mentor_lab.checks import CheckStatus, GreenplumCheckSuite
 from mentor_lab.challenges import ChallengeCatalog
@@ -29,9 +30,14 @@ from mentor_lab.homework_review import HomeworkReviewer
 from mentor_lab.lesson_catalog import LessonCatalog, normalize_lesson_code
 from mentor_lab.learning_loop import LearningLoopBuilder
 from mentor_lab.misconceptions import MisconceptionCatalog
+from mentor_lab.observation import ObservationBuilder
+from mentor_lab.orchestrator import LiveLessonOrchestrator
+from mentor_lab.plan_coach import PlanCoach
 from mentor_lab.plan_visualizer import PlanVisualizer
 from mentor_lab.portal import StudentPortal
 from mentor_lab.query_tuning import QueryTuningCatalog
+from mentor_lab.readiness import ReadinessDoctorPro
+from mentor_lab.replay import LessonReplayBuilder
 from mentor_lab.reports import MentorReport
 from mentor_lab.registry import create_default_registry
 from mentor_lab.runbooks import RunbookCatalog
@@ -87,6 +93,18 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     doctor_parser.set_defaults(handler=_handle_doctor)
 
+    readiness_parser = subparsers.add_parser(
+        "readiness",
+        help="Print platform-specific readiness guidance for a lab.",
+    )
+    readiness_parser.add_argument("lab_name")
+    readiness_parser.add_argument(
+        "--platform",
+        choices=["macos", "windows", "linux"],
+        default="macos",
+    )
+    readiness_parser.set_defaults(handler=_handle_readiness)
+
     lesson_parser = subparsers.add_parser(
         "lesson",
         help="Print an interactive lesson runner view.",
@@ -112,6 +130,20 @@ def _build_parser() -> argparse.ArgumentParser:
     teach_parser.add_argument("--stage", type=int)
     teach_parser.set_defaults(handler=_handle_teach)
 
+    orchestrate_parser = subparsers.add_parser(
+        "orchestrate",
+        help="Render a mode-aware live lesson orchestration stage.",
+    )
+    orchestrate_parser.add_argument("lab_name")
+    orchestrate_parser.add_argument("--route", choices=["simple", "deep"], default="simple")
+    orchestrate_parser.add_argument("--stage", type=int, default=1)
+    orchestrate_parser.add_argument(
+        "--mode",
+        choices=LiveLessonOrchestrator.modes(),
+        default="simple",
+    )
+    orchestrate_parser.set_defaults(handler=_handle_orchestrate)
+
     hint_parser = subparsers.add_parser(
         "hint",
         help="Show progressive hints for a lesson topic.",
@@ -129,6 +161,15 @@ def _build_parser() -> argparse.ArgumentParser:
     analyze_parser.add_argument("--query", default="bad_customer_join")
     analyze_parser.add_argument("--sample", action="store_true")
     analyze_parser.set_defaults(handler=_handle_analyze_plan)
+
+    coach_plan_parser = subparsers.add_parser(
+        "coach-plan",
+        help="Explain a Greenplum EXPLAIN plan as a mentor coach.",
+    )
+    coach_plan_parser.add_argument("lab_name")
+    coach_plan_parser.add_argument("--query", default="bad_customer_join")
+    coach_plan_parser.add_argument("--sample", action="store_true")
+    coach_plan_parser.set_defaults(handler=_handle_coach_plan)
 
     assessment_parser = subparsers.add_parser(
         "assessment",
@@ -165,6 +206,16 @@ def _build_parser() -> argparse.ArgumentParser:
     evidence_parser.add_argument("task_code")
     evidence_parser.add_argument("--output")
     evidence_parser.set_defaults(handler=_handle_evidence)
+
+    observe_parser = subparsers.add_parser(
+        "observe",
+        help="Create live observation checklists and evidence trail reports.",
+    )
+    observe_parser.add_argument("lab_name")
+    observe_parser.add_argument("observe_command", choices=["start", "report"])
+    observe_parser.add_argument("--commands")
+    observe_parser.add_argument("--output")
+    observe_parser.set_defaults(handler=_handle_observe)
 
     homework_parser = subparsers.add_parser(
         "homework",
@@ -273,6 +324,15 @@ def _build_parser() -> argparse.ArgumentParser:
     solutions_parser.add_argument("solution_code", nargs="?")
     solutions_parser.set_defaults(handler=_handle_solutions)
 
+    calibration_parser = subparsers.add_parser(
+        "calibration",
+        help="List or show gold submission calibration examples.",
+    )
+    calibration_parser.add_argument("lab_name")
+    calibration_parser.add_argument("calibration_command", choices=["list", "show"])
+    calibration_parser.add_argument("level", nargs="?")
+    calibration_parser.set_defaults(handler=_handle_calibration)
+
     telemetry_parser = subparsers.add_parser(
         "telemetry",
         help="Generate a lesson telemetry summary.",
@@ -378,6 +438,18 @@ def _build_parser() -> argparse.ArgumentParser:
     debrief_parser.add_argument("--post", type=int)
     debrief_parser.add_argument("--output")
     debrief_parser.set_defaults(handler=_handle_debrief)
+
+    replay_parser = subparsers.add_parser(
+        "replay",
+        help="Generate a post-lesson replay pack with debrief and next prep.",
+    )
+    replay_parser.add_argument("lab_name")
+    replay_parser.add_argument("--student", required=True)
+    replay_parser.add_argument("--submission", required=True)
+    replay_parser.add_argument("--pre", type=int, required=True)
+    replay_parser.add_argument("--post", type=int, required=True)
+    replay_parser.add_argument("--output")
+    replay_parser.set_defaults(handler=_handle_replay)
 
     certificate_parser = subparsers.add_parser(
         "certificate",
@@ -502,6 +574,18 @@ def _handle_doctor(args: argparse.Namespace) -> int:
     return 0
 
 
+def _handle_readiness(args: argparse.Namespace) -> int:
+    lab = _lab_or_none(args.lab_name)
+    if lab is None:
+        return 1
+    try:
+        print(ReadinessDoctorPro().render(lab.name, args.platform), end="")
+    except KeyError as exc:
+        print(str(exc))
+        return 1
+    return 0
+
+
 def _handle_lesson(args: argparse.Namespace) -> int:
     try:
         lesson = LessonCatalog.default().get(args.lesson_code)
@@ -554,6 +638,24 @@ def _handle_teach(args: argparse.Namespace) -> int:
     return 0
 
 
+def _handle_orchestrate(args: argparse.Namespace) -> int:
+    lab = _lab_or_none(args.lab_name)
+    if lab is None:
+        return 1
+    try:
+        stage = LiveLessonOrchestrator.default().build(
+            lab.name,
+            route=args.route,
+            stage_number=args.stage,
+            mode=args.mode,
+        )
+    except (KeyError, ValueError) as exc:
+        print(str(exc))
+        return 1
+    print(stage.render(), end="")
+    return 0
+
+
 def _handle_hint(args: argparse.Namespace) -> int:
     try:
         hints = LessonCatalog.default().hints(args.lesson_code, args.topic)
@@ -585,6 +687,24 @@ def _handle_analyze_plan(args: argparse.Namespace) -> int:
         return 1
 
     print(analyzer.render(analyzer.analyze(plan)))
+    return 0
+
+
+def _handle_coach_plan(args: argparse.Namespace) -> int:
+    lab = _lab_or_none(args.lab_name)
+    if lab is None:
+        return 1
+    analyzer = ExplainPlanAnalyzer()
+    try:
+        if args.sample:
+            plan = analyzer.sample_plan(args.query)
+        else:
+            plan = _sql_client(lab).text(f"EXPLAIN {analyzer.query_sql(args.query)}")
+        report = PlanCoach(analyzer).coach(lab.name, args.query, plan)
+    except (KeyError, RuntimeError) as exc:
+        print(str(exc))
+        return 1
+    print(report.render(), end="")
     return 0
 
 
@@ -644,6 +764,30 @@ def _handle_evidence(args: argparse.Namespace) -> int:
         output = Path("submissions") / f"{args.task_code}.md"
     written = packet.write(output)
     print(f"Evidence pack written to {written}")
+    return 0
+
+
+def _handle_observe(args: argparse.Namespace) -> int:
+    lab = _lab_or_none(args.lab_name)
+    if lab is None:
+        return 1
+    builder = ObservationBuilder()
+    if args.observe_command == "start":
+        output = Path(args.output) if args.output else Path("artifacts") / f"{lab.name}-observe-checklist.md"
+        written = builder.start(lab.name).write(output)
+        print(f"Observation checklist written to {written}")
+        return 0
+
+    if not args.commands:
+        print("Use --commands with `mentor-lab observe <lab> report`.")
+        return 1
+    commands_path = Path(args.commands)
+    if not commands_path.exists():
+        print(f"Commands log does not exist: {commands_path}")
+        return 1
+    output = Path(args.output) if args.output else Path("artifacts") / f"{lab.name}-observation-report.md"
+    written = builder.report(lab.name, commands_path).write(output)
+    print(f"Observation report written to {written}")
     return 0
 
 
@@ -880,6 +1024,26 @@ def _handle_solutions(args: argparse.Namespace) -> int:
             print("Use: mentor-lab solutions <lab> show <solution_code>")
             return 1
         print(catalog.get(lab.name, args.solution_code).render(), end="")
+    except KeyError as exc:
+        print(str(exc))
+        return 1
+    return 0
+
+
+def _handle_calibration(args: argparse.Namespace) -> int:
+    lab = _lab_or_none(args.lab_name)
+    if lab is None:
+        return 1
+    catalog = CalibrationCatalog.default()
+    try:
+        if args.calibration_command == "list":
+            for example in catalog.list(lab.name):
+                print(f"- {example.level}: {example.title} [{example.score_band}]")
+            return 0
+        if not args.level:
+            print("Use: mentor-lab calibration <lab> show <level>")
+            return 1
+        print(catalog.get(lab.name, args.level).render(), end="")
     except KeyError as exc:
         print(str(exc))
         return 1
@@ -1149,6 +1313,33 @@ def _handle_debrief(args: argparse.Namespace) -> int:
         print(f"Debrief written to {output}")
         return 0
     print(debrief, end="")
+    return 0
+
+
+def _handle_replay(args: argparse.Namespace) -> int:
+    lab = _lab_or_none(args.lab_name)
+    if lab is None:
+        return 1
+    submission_path = Path(args.submission)
+    if not submission_path.exists():
+        print(f"Submission file does not exist: {submission_path}")
+        return 1
+    try:
+        replay = LessonReplayBuilder.default().build(
+            lab_name=lab.name,
+            student_name=args.student,
+            submission_path=submission_path,
+            pre_score=args.pre,
+            post_score=args.post,
+        )
+    except (KeyError, ValueError) as exc:
+        print(str(exc))
+        return 1
+    if args.output:
+        written = replay.write(Path(args.output))
+        print(f"Lesson replay pack written to {written}")
+        return 0
+    print(replay.render(), end="")
     return 0
 
 
