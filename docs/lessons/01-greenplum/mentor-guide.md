@@ -25,7 +25,9 @@
 - автоматическая проверка: `python3 mentor-lab.py check greenplum`.
 - режим ведения урока через stage-oriented CLI;
 - сбор evidence в submission-ready markdown;
+- диагностика misconceptions через question, mini-experiment, hint и follow-up;
 - проверка домашки через evidence-first autograder;
+- генерация debrief после review;
 - итоговый Learning Loop report: карта навыков, missing evidence и план повторения после урока.
 
 Презентация должна занимать не весь час, а примерно половину урока: 33 минуты на theory framing, 12 минут на hands-on diagnostics, затем incident/capstone/review. Подробный тайминг по каждому слайду находится в [facilitator guide](https://github.com/PaulKov/de-mentor/blob/master/decks/greenplum-theory/facilitator-guide.md).
@@ -43,8 +45,11 @@ python3 mentor-lab.py runbook greenplum deep
 python3 mentor-lab.py runbook greenplum homework
 python3 mentor-lab.py runbook greenplum prep
 python3 mentor-lab.py teach greenplum simple --stage 1
+python3 mentor-lab.py portal greenplum --version v2 --output artifacts/greenplum-student-portal-v2.html
 python3 mentor-lab.py evidence greenplum collect redistribute-join --output submissions/redistribute-join.md
+python3 mentor-lab.py misconception greenplum diagnose --text "partition key это то же самое что distribution key"
 python3 mentor-lab.py homework greenplum check --submission submissions/homework.md
+python3 mentor-lab.py debrief greenplum --student Иван --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/greenplum-debrief.md
 python3 mentor-lab.py learning-loop greenplum --pre 40 --post 85 --submission submissions/query-tuning.md --output artifacts/greenplum-learning-loop.md
 ```
 

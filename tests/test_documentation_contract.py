@@ -235,8 +235,11 @@ def test_workbook_has_end_of_lesson_student_handoff_pack():
         "py mentor-lab.py up greenplum",
         "py mentor-lab.py check greenplum",
         "py mentor-lab.py psql greenplum",
+        "python3 mentor-lab.py portal greenplum --version v2",
         "python3 mentor-lab.py evidence greenplum collect redistribute-join",
+        "python3 mentor-lab.py misconception greenplum diagnose",
         "python3 mentor-lab.py homework greenplum check",
+        "python3 mentor-lab.py debrief greenplum",
         "python3 mentor-lab.py learning-loop greenplum",
     ]
 
@@ -272,8 +275,11 @@ def test_mentor_automation_commands_are_documented():
     ]
     expected_commands = [
         "mentor-lab.py teach greenplum simple",
+        "mentor-lab.py portal greenplum --version v2",
         "mentor-lab.py evidence greenplum collect redistribute-join",
+        "mentor-lab.py misconception greenplum diagnose",
         "mentor-lab.py homework greenplum check",
+        "mentor-lab.py debrief greenplum",
     ]
 
     for path in overview_docs:

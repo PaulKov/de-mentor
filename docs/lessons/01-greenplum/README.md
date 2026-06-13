@@ -56,7 +56,7 @@ python3 mentor-lab.py runbook greenplum simple
 python3 mentor-lab.py runbook greenplum deep
 python3 mentor-lab.py runbook greenplum homework
 python3 mentor-lab.py hint greenplum skew-investigation
-python3 mentor-lab.py portal greenplum
+python3 mentor-lab.py portal greenplum --version v2
 python3 mentor-lab.py visualize-plan greenplum --query product_join --sample --format mermaid
 python3 mentor-lab.py diagnostics greenplum list
 python3 mentor-lab.py scenario greenplum start --difficulty medium --seed 42 --dry-run
@@ -64,13 +64,17 @@ python3 mentor-lab.py check greenplum
 python3 mentor-lab.py grade greenplum
 python3 mentor-lab.py report greenplum
 python3 mentor-lab.py evidence greenplum collect redistribute-join --output submissions/redistribute-join.md
+python3 mentor-lab.py misconception greenplum diagnose --text "partition key это то же самое что distribution key"
 python3 mentor-lab.py homework greenplum check --submission submissions/homework.md
+python3 mentor-lab.py debrief greenplum --student Иван --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/greenplum-debrief.md
 python3 mentor-lab.py learning-loop greenplum --pre 40 --post 85 --submission submissions/query-tuning.md --output artifacts/greenplum-learning-loop.md
 ```
 
 `teach` ведет ментора по stage: слайды, что сказать, команды, вопрос, ожидаемый ответ и evidence checkpoint.
 `evidence collect` создает markdown pack для сдачи практики.
+`misconception diagnose` распознает типичные ошибки ученика и предлагает вопрос, мини-эксперимент, hint и follow-up.
 `homework check` проверяет домашку по evidence-first контракту: grain, distribution, partitioning, storage, catalog evidence, `EXPLAIN`, `gp_segment_id`, risks и readiness к Lesson 02.
+`debrief` генерирует персональную обратную связь ученику и private mentor notes.
 `learning-loop` генерирует Learning Loop report: карту навыков ученика, missing evidence и план повторения на +1/+3/+7 дней.
 
 Для incident mode:

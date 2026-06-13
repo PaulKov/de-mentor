@@ -14,11 +14,13 @@ flowchart LR
     F --> G["Runtime diagnostics"]
     G --> H["Random scenario"]
     H --> I["Evidence pack"]
-    I --> J["Homework autograder"]
-    J --> K["Adaptive review"]
-    K --> L["Telemetry"]
-    L --> M["Learning Loop report"]
-    M --> N["Next challenge"]
+    I --> J["Misconception diagnosis"]
+    J --> K["Homework autograder"]
+    K --> L["Adaptive review"]
+    L --> M["Debrief"]
+    M --> N["Telemetry"]
+    N --> O["Learning Loop report"]
+    O --> P["Next challenge"]
 ```
 
 ## Команды
@@ -27,6 +29,7 @@ flowchart LR
 python3 mentor-lab.py assessment greenplum pre
 python3 mentor-lab.py lesson greenplum
 python3 mentor-lab.py teach greenplum simple --stage 1
+python3 mentor-lab.py portal greenplum --version v2 --output artifacts/greenplum-student-portal-v2.html
 python3 mentor-lab.py hint greenplum physical-joins --level 2
 python3 mentor-lab.py analyze-plan greenplum --query bad_customer_join
 python3 mentor-lab.py visualize-plan greenplum --query product_join --sample --format html --output artifacts/product-plan.html
@@ -34,12 +37,14 @@ python3 mentor-lab.py diagnostics greenplum list
 python3 mentor-lab.py incident start greenplum slow-product-analytics
 python3 mentor-lab.py scenario greenplum start --difficulty medium --seed 42 --dry-run
 python3 mentor-lab.py evidence greenplum collect redistribute-join --output submissions/redistribute-join.md
+python3 mentor-lab.py misconception greenplum diagnose --text "partition key это то же самое что distribution key"
 python3 mentor-lab.py homework greenplum check --submission submissions/homework.md
 python3 mentor-lab.py submit greenplum advanced-joins
 python3 mentor-lab.py review greenplum --submission submissions/advanced-joins.md
 python3 mentor-lab.py adaptive-review greenplum --submission submissions/advanced-joins.md
 python3 mentor-lab.py cockpit greenplum
 python3 mentor-lab.py control-room greenplum
+python3 mentor-lab.py debrief greenplum --student Иван --submission submissions/advanced-joins.md --pre 40 --post 85 --output artifacts/greenplum-debrief.md
 python3 mentor-lab.py telemetry greenplum --pre 40 --post 85 --review 70
 python3 mentor-lab.py learning-loop greenplum --pre 40 --post 85 --submission submissions/advanced-joins.md --output artifacts/greenplum-learning-loop.md
 python3 mentor-lab.py certificate greenplum
@@ -56,8 +61,10 @@ python3 mentor-lab.py certificate greenplum
 - **Scenario randomizer**: выдает replayable hidden scenario по difficulty и seed.
 - **Hidden incidents**: новые сценарии без заранее очевидного ответа.
 - **Evidence capture**: создает submission-ready markdown pack с командами и секциями для RCA.
+- **Misconception bank**: ловит типичные ошибки и дает вопрос, мини-эксперимент, hint и follow-up.
 - **Homework autograder**: проверяет домашку по физическому дизайну и evidence-first контракту.
 - **Submit/adaptive review**: ученик сдает evidence, ментор получает score, missing evidence и next task.
+- **Debrief**: генерирует сообщение ученику, misconceptions и private mentor notes.
 - **Cockpit / control room**: локальные HTML-страницы для ученика и ментора.
 - **Telemetry**: growth report по pre/post/review.
 - **Learning Loop**: итоговая карта навыков, gaps по evidence и интервальная практика на +1/+3/+7 дней.
