@@ -23,6 +23,8 @@ class StudentPortal:
             f"python3 mentor-lab.py scenario {lab_name} start --difficulty medium --seed 42 --dry-run",
             f"python3 mentor-lab.py challenge {lab_name} start --difficulty hard --minutes 15 --seed 7",
             f"python3 mentor-lab.py submit {lab_name} query-tuning",
+            f"python3 mentor-lab.py evidence {lab_name} collect redistribute-join --output submissions/redistribute-join.md",
+            f"python3 mentor-lab.py homework {lab_name} check --submission submissions/homework.md",
         ]
         rows = "\n".join(
             f"<li><code>{escape(command)}</code></li>" for command in commands

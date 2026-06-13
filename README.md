@@ -9,7 +9,7 @@
 ![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-3776AB)
 ![Docker Desktop](https://img.shields.io/badge/Docker-Desktop-2496ED)
 ![Greenplum](https://img.shields.io/badge/Module-Greenplum-2E7D32)
-![Tests](https://img.shields.io/badge/tests-92%20passing-0A7F3F)
+![Tests](https://img.shields.io/badge/tests-99%20passing-0A7F3F)
 
 </div>
 
@@ -66,6 +66,9 @@
 - Runtime diagnostics pack.
 - Scenario randomizer.
 - Timed challenge mode.
+- One-Button Mentor Mode для ведения урока по stage.
+- Evidence Capture: submission-ready markdown pack для практических сценариев.
+- Homework Autograder для проверки физического дизайна и evidence.
 - Adaptive review по evidence-first rubric.
 - Golden solutions и anti-solutions.
 - Lesson telemetry report.
@@ -133,6 +136,7 @@ python3 mentor-lab.py up greenplum
 ```bash
 python3 mentor-lab.py portal greenplum
 python3 mentor-lab.py assessment greenplum pre
+python3 mentor-lab.py teach greenplum simple --stage 1
 python3 mentor-lab.py lesson greenplum
 python3 mentor-lab.py check greenplum
 python3 mentor-lab.py grade greenplum
@@ -147,12 +151,14 @@ python3 mentor-lab.py visualize-plan greenplum --query product_join --sample --f
 python3 mentor-lab.py diagnostics greenplum list
 python3 mentor-lab.py scenario greenplum start --difficulty medium --seed 42 --dry-run
 python3 mentor-lab.py challenge greenplum start --difficulty hard --minutes 15 --seed 7
+python3 mentor-lab.py evidence greenplum collect redistribute-join --output submissions/redistribute-join.md
 ```
 
 После выполнения задания:
 
 ```bash
 python3 mentor-lab.py submit greenplum query-tuning
+python3 mentor-lab.py homework greenplum check --submission submissions/homework.md
 python3 mentor-lab.py adaptive-review greenplum --submission submissions/query-tuning.md
 python3 mentor-lab.py telemetry greenplum --pre 40 --post 85 --review 70
 python3 mentor-lab.py learning-loop greenplum --pre 40 --post 85 --submission submissions/query-tuning.md --output artifacts/greenplum-learning-loop.md

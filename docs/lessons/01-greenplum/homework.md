@@ -66,6 +66,14 @@ python3 mentor-lab.py check greenplum
 python3 mentor-lab.py psql greenplum
 ```
 
+Проверь домашку evidence-first autograder:
+
+```bash
+python3 mentor-lab.py homework greenplum check --submission submissions/homework.md
+```
+
+Autograder смотрит не на объем текста, а на признаки инженерного ответа: facts/dimensions/grain, `DISTRIBUTED BY`, join pattern, cardinality, `PARTITION BY`, storage choice, `pg_partition_tree` / `gp_toolkit.gp_partitions`, `EXPLAIN`, `gp_segment_id`, validation, risks и вопросы к Lesson 02.
+
 Проверь skew:
 
 ```sql

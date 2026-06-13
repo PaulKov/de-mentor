@@ -17,6 +17,7 @@ class MentorControlRoom:
             (
                 "Readiness",
                 [
+                    f"python3 mentor-lab.py teach {lab_name} simple --stage 1",
                     f"python3 mentor-lab.py status {lab_name}",
                     f"python3 mentor-lab.py check {lab_name}",
                     f"python3 mentor-lab.py grade {lab_name}",
@@ -34,6 +35,8 @@ class MentorControlRoom:
                 "Timed challenge",
                 [
                     f"python3 mentor-lab.py challenge {lab_name} start --difficulty hard --minutes 15 --seed 7",
+                    f"python3 mentor-lab.py evidence {lab_name} collect redistribute-join --output submissions/redistribute-join.md",
+                    f"python3 mentor-lab.py homework {lab_name} check --submission submissions/homework.md",
                     f"python3 mentor-lab.py adaptive-review {lab_name} --submission submissions/query-tuning.md",
                     f"python3 mentor-lab.py telemetry {lab_name} --pre 40 --post 85 --review 70",
                     f"python3 mentor-lab.py learning-loop {lab_name} --pre 40 --post 85 --submission submissions/query-tuning.md --output artifacts/{lab_name}-learning-loop.md",

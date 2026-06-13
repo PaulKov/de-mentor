@@ -531,7 +531,27 @@ python3 mentor-lab.py hint greenplum mpp-systems
 7. [Cluster monitoring SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-monitoring.sql) - расширенная проверка `gp_segment_configuration`, `gp_toolkit.gp_disk_free`, `gp_segment_id`, pseudo/system columns и `gpstate -s` snippets.
 8. [Storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql) - runnable demo для Heap/AO/AOCO и partitioning intro.
 9. [Partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql) - runnable demo для partitioning strategies и catalog checks.
-10. Личный Learning Loop report - карта навыков, missing evidence и план повторения на +1/+3/+7 дней.
+10. Evidence pack - markdown-шаблон сдачи практики с командами для `EXPLAIN`, `gp_segment_id`, RCA и validation.
+11. Homework review - автопроверка домашки по physical-design evidence.
+12. Личный Learning Loop report - карта навыков, missing evidence и план повторения на +1/+3/+7 дней.
+
+Команда ментора для stage-oriented ведения урока:
+
+```bash
+python3 mentor-lab.py teach greenplum simple --stage 1
+```
+
+Команда ментора для evidence pack:
+
+```bash
+python3 mentor-lab.py evidence greenplum collect redistribute-join --output submissions/redistribute-join.md
+```
+
+Команда проверки домашки:
+
+```bash
+python3 mentor-lab.py homework greenplum check --submission submissions/homework.md
+```
 
 Команда ментора для итогового Learning Loop report:
 

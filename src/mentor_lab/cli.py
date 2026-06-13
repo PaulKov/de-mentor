@@ -22,7 +22,9 @@ from mentor_lab.diagnostics import DiagnosticsCatalog
 from mentor_lab.docker_compose import DockerComposeRunner
 from mentor_lab.domain import LabDefinition, UnknownLabError
 from mentor_lab.explain_analyzer import ExplainPlanAnalyzer
+from mentor_lab.evidence import EvidenceCollector
 from mentor_lab.grading import GradeCalculator
+from mentor_lab.homework_review import HomeworkReviewer
 from mentor_lab.lesson_catalog import LessonCatalog, normalize_lesson_code
 from mentor_lab.learning_loop import LearningLoopBuilder
 from mentor_lab.plan_visualizer import PlanVisualizer
@@ -37,6 +39,7 @@ from mentor_lab.seed_profiles import SeedProfileCatalog
 from mentor_lab.sql_client import GreenplumSqlClient
 from mentor_lab.solutions import SolutionCatalog
 from mentor_lab.submissions import SubmissionReviewer, SubmissionTemplate
+from mentor_lab.teaching import TeachingSessionBuilder
 from mentor_lab.telemetry import TelemetryReport
 
 
@@ -98,6 +101,15 @@ def _build_parser() -> argparse.ArgumentParser:
     runbook_parser.add_argument("route", choices=["prep", "simple", "deep", "homework"])
     runbook_parser.set_defaults(handler=_handle_runbook)
 
+    teach_parser = subparsers.add_parser(
+        "teach",
+        help="Run a one-button mentor facilitation view for a lesson route.",
+    )
+    teach_parser.add_argument("lab_name")
+    teach_parser.add_argument("route", choices=["prep", "simple", "deep", "homework"])
+    teach_parser.add_argument("--stage", type=int)
+    teach_parser.set_defaults(handler=_handle_teach)
+
     hint_parser = subparsers.add_parser(
         "hint",
         help="Show progressive hints for a lesson topic.",
@@ -141,6 +153,26 @@ def _build_parser() -> argparse.ArgumentParser:
     review_parser.add_argument("lab_name")
     review_parser.add_argument("--submission", required=True)
     review_parser.set_defaults(handler=_handle_review)
+
+    evidence_parser = subparsers.add_parser(
+        "evidence",
+        help="Create a submission-ready evidence pack for a scenario task.",
+    )
+    evidence_parser.add_argument("lab_name")
+    evidence_parser.add_argument("evidence_command", choices=["collect"])
+    evidence_parser.add_argument("task_code")
+    evidence_parser.add_argument("--output")
+    evidence_parser.set_defaults(handler=_handle_evidence)
+
+    homework_parser = subparsers.add_parser(
+        "homework",
+        help="Check a homework submission against the Greenplum evidence contract.",
+    )
+    homework_parser.add_argument("lab_name")
+    homework_parser.add_argument("homework_command", choices=["check"])
+    homework_parser.add_argument("--submission", required=True)
+    homework_parser.add_argument("--output")
+    homework_parser.set_defaults(handler=_handle_homework)
 
     tuning_parser = subparsers.add_parser(
         "tuning",
@@ -477,6 +509,23 @@ def _handle_runbook(args: argparse.Namespace) -> int:
     return 0
 
 
+def _handle_teach(args: argparse.Namespace) -> int:
+    lab = _lab_or_none(args.lab_name)
+    if lab is None:
+        return 1
+    try:
+        session = TeachingSessionBuilder.default().build(
+            lab.name,
+            args.route,
+            stage_number=args.stage,
+        )
+    except (KeyError, ValueError) as exc:
+        print(str(exc))
+        return 1
+    print(session.render(), end="")
+    return 0
+
+
 def _handle_hint(args: argparse.Namespace) -> int:
     try:
         hints = LessonCatalog.default().hints(args.lesson_code, args.topic)
@@ -549,6 +598,46 @@ def _handle_review(args: argparse.Namespace) -> int:
         return 1
     print(SubmissionReviewer.default().review(path).render(), end="")
     return 0
+
+
+def _handle_evidence(args: argparse.Namespace) -> int:
+    lab = _lab_or_none(args.lab_name)
+    if lab is None:
+        return 1
+    try:
+        packet = EvidenceCollector.default().collect(lab.name, args.task_code)
+    except KeyError as exc:
+        print(str(exc))
+        return 1
+
+    if args.output:
+        output = Path(args.output)
+    else:
+        output = Path("submissions") / f"{args.task_code}.md"
+    written = packet.write(output)
+    print(f"Evidence pack written to {written}")
+    return 0
+
+
+def _handle_homework(args: argparse.Namespace) -> int:
+    lab = _lab_or_none(args.lab_name)
+    if lab is None:
+        return 1
+    path = Path(args.submission)
+    if not path.exists():
+        print(f"Homework submission file does not exist: {path}")
+        return 1
+
+    review = HomeworkReviewer.default().review(path)
+    rendered = review.render()
+    if args.output:
+        output = Path(args.output)
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(rendered, encoding="utf-8")
+        print(f"Homework review written to {output}")
+    else:
+        print(rendered, end="")
+    return 0 if review.accepted else 1
 
 
 def _handle_tuning(args: argparse.Namespace) -> int:

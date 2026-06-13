@@ -6,6 +6,7 @@
 python3 mentor-lab.py list
 python3 mentor-lab.py info greenplum
 python3 mentor-lab.py lesson greenplum
+python3 mentor-lab.py teach greenplum simple --stage 1
 python3 mentor-lab.py hint greenplum skew-investigation
 python3 mentor-lab.py hint greenplum plan-reading
 python3 mentor-lab.py hint greenplum physical-joins
@@ -15,6 +16,8 @@ python3 mentor-lab.py assessment greenplum pre
 python3 mentor-lab.py analyze-plan greenplum --query bad_customer_join
 python3 mentor-lab.py tuning greenplum list
 python3 mentor-lab.py submit greenplum advanced-joins
+python3 mentor-lab.py evidence greenplum collect redistribute-join --output submissions/redistribute-join.md
+python3 mentor-lab.py homework greenplum check --submission submissions/homework.md
 python3 mentor-lab.py review greenplum --submission submissions/advanced-joins.md
 python3 mentor-lab.py cockpit greenplum
 python3 mentor-lab.py certificate greenplum

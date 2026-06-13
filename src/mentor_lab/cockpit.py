@@ -26,11 +26,14 @@ class MentorCockpit:
 </head>
 <body>
   <h1>Mentor Cockpit: {lab_name}</h1>
+  <section><h2>Teach mode</h2><code>python3 mentor-lab.py teach {lab_name} simple --stage 1</code></section>
   <section><h2>Run state</h2><code>{command}</code></section>
   <section><h2>EXPLAIN Analyzer</h2><code>python3 mentor-lab.py analyze-plan {lab_name} --query bad_customer_join</code></section>
   <section><h2>Hidden incidents</h2><code>python3 mentor-lab.py incident list {lab_name}</code></section>
   <section><h2>Assessment</h2><code>python3 mentor-lab.py assessment {lab_name} pre</code></section>
   <section><h2>Review loop</h2><code>python3 mentor-lab.py submit {lab_name} advanced-joins</code></section>
+  <section><h2>Evidence pack</h2><code>python3 mentor-lab.py evidence {lab_name} collect redistribute-join --output submissions/redistribute-join.md</code></section>
+  <section><h2>Homework check</h2><code>python3 mentor-lab.py homework {lab_name} check --submission submissions/homework.md</code></section>
   <section><h2>Learning loop</h2><code>python3 mentor-lab.py learning-loop {lab_name} --pre 40 --post 85 --submission submissions/query-tuning.md --output artifacts/{lab_name}-learning-loop.md</code></section>
 </body>
 </html>
