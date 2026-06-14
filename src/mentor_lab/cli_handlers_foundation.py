@@ -6,6 +6,7 @@ from pathlib import Path
 
 from mentor_lab.cli_context import _lab_or_none, _project_root, _registry, _sql_client
 from mentor_lab.explain_analyzer import ExplainPlanAnalyzer
+from mentor_lab.full_doctor import FullDoctorReport
 from mentor_lab.lesson_catalog import LessonCatalog
 from mentor_lab.lesson_doctor import LessonDoctor
 from mentor_lab.orchestrator import LiveLessonOrchestrator
@@ -58,7 +59,9 @@ def _handle_info(args: argparse.Namespace) -> int:
 
 
 def _handle_doctor(args: argparse.Namespace) -> int:
-    _ = args
+    if args.full:
+        print(FullDoctorReport().render(), end="")
+        return 0
     print("Required tools:")
     print("- Python 3.9+")
     print("- Docker Desktop")

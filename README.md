@@ -114,6 +114,19 @@ python3 mentor-lab.py portal greenplum export --session artifacts/sessions/ivan 
 python3 mentor-lab.py portal greenplum open --url http://127.0.0.1:3000 --dry-run
 ```
 
+### Academy Self-Service v1
+
+`Academy Self-Service v1` добавляет one-command маршрут для ментора и отдельный интерфейс команд для ученика.
+
+```bash
+python3 mentor-lab.py doctor --full
+python3 mentor-lab.py academy greenplum start --student Иван --dry-run
+python3 mentor-lab.py academy greenplum start --student Иван --skip-lab
+python3 mentor-lab.py student greenplum bootstrap --platform macos
+python3 mentor-lab.py student greenplum bootstrap --platform windows
+python3 mentor-lab.py student greenplum homework
+```
+
 ## Быстрый старт
 
 ### Требования
@@ -127,6 +140,7 @@ python3 mentor-lab.py portal greenplum open --url http://127.0.0.1:3000 --dry-ru
 
 ```bash
 python3 mentor-lab.py doctor
+python3 mentor-lab.py doctor --full
 python3 mentor-lab.py readiness greenplum --platform macos
 ```
 
@@ -134,6 +148,7 @@ python3 mentor-lab.py readiness greenplum --platform macos
 
 ```powershell
 py mentor-lab.py doctor
+py mentor-lab.py doctor --full
 py mentor-lab.py readiness greenplum --platform windows
 ```
 
@@ -172,7 +187,17 @@ python3 mentor-lab.py up greenplum
 
 ## Как пройти первый урок
 
-Минимальный маршрут:
+Рекомендуемый self-service маршрут:
+
+```bash
+python3 mentor-lab.py doctor --full
+python3 mentor-lab.py academy greenplum start --student Иван --dry-run
+python3 mentor-lab.py academy greenplum start --student Иван --skip-lab
+python3 mentor-lab.py student greenplum bootstrap --platform macos
+python3 mentor-lab.py student greenplum homework
+```
+
+Ручной минимальный маршрут:
 
 ```bash
 python3 mentor-lab.py session greenplum start --student Иван --output artifacts/sessions/ivan

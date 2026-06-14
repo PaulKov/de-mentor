@@ -43,6 +43,7 @@ def register_foundation_commands(subparsers: argparse._SubParsersAction) -> None
         "doctor",
         help="Print environment checks and the next action.",
     )
+    doctor_parser.add_argument("--full", action="store_true")
     doctor_parser.set_defaults(handler=_handle_doctor)
 
     readiness_parser = subparsers.add_parser(
