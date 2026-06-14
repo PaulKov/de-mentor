@@ -39,6 +39,18 @@ python3 mentor-lab.py reset greenplum
 python3 mentor-lab.py up greenplum
 ```
 
+## Academy Control Plane
+
+`Academy Control Plane` — это state внутри `session.json`, который ментор передает в портал занятия. Он связывает текущий этап, команды, workbook, домашку, вопросы и следующий урок.
+
+Если ментор дал тебе session directory, открыть portal можно так:
+
+```bash
+python3 mentor-lab.py portal greenplum start --session artifacts/sessions/ivan --portal-dir ../de-mentor-portal --dry-run
+python3 mentor-lab.py portal greenplum export --session artifacts/sessions/ivan --portal-dir ../de-mentor-portal
+python3 mentor-lab.py portal greenplum open --url http://127.0.0.1:3000 --dry-run
+```
+
 ## Задание 0: Greenplum vs Sharded PostgreSQL
 
 Сначала сформулируй разницу своими словами.

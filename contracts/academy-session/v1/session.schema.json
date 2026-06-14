@@ -61,6 +61,9 @@
         "$ref": "#/$defs/event"
       }
     },
+    "control_plane": {
+      "$ref": "#/$defs/controlPlane"
+    },
     "portal": {
       "type": "object",
       "additionalProperties": false,
@@ -163,6 +166,194 @@
           "type": "string"
         },
         "created_at": {
+          "type": "string"
+        }
+      }
+    },
+    "controlPlane": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "mentor_mode",
+        "student_mode",
+        "portal_actions",
+        "artifacts",
+        "next_lesson"
+      ],
+      "properties": {
+        "version": {
+          "const": "academy-control-plane/v1"
+        },
+        "mentor_mode": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "default_route",
+            "runbook_commands",
+            "slide_deck",
+            "stage_guides"
+          ],
+          "properties": {
+            "default_route": {
+              "type": "string"
+            },
+            "runbook_commands": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "slide_deck": {
+              "type": "string"
+            },
+            "stage_guides": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/stageGuide"
+              }
+            }
+          }
+        },
+        "student_mode": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "prep_runbook",
+            "workbook",
+            "homework",
+            "self_check_commands"
+          ],
+          "properties": {
+            "prep_runbook": {
+              "type": "string"
+            },
+            "workbook": {
+              "type": "string"
+            },
+            "homework": {
+              "type": "string"
+            },
+            "self_check_commands": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "portal_actions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "start_command",
+            "export_command",
+            "open_command"
+          ],
+          "properties": {
+            "start_command": {
+              "type": "string"
+            },
+            "export_command": {
+              "type": "string"
+            },
+            "open_command": {
+              "type": "string"
+            }
+          }
+        },
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/artifact"
+          }
+        },
+        "next_lesson": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "title",
+            "path"
+          ],
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "stageGuide": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stage_code",
+        "slides",
+        "mentor_script",
+        "show_commands",
+        "question",
+        "expected_answer",
+        "verification",
+        "workbook_ref",
+        "homework_ref"
+      ],
+      "properties": {
+        "stage_code": {
+          "type": "string"
+        },
+        "slides": {
+          "type": "string"
+        },
+        "mentor_script": {
+          "type": "string"
+        },
+        "show_commands": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "question": {
+          "type": "string"
+        },
+        "expected_answer": {
+          "type": "string"
+        },
+        "verification": {
+          "type": "string"
+        },
+        "workbook_ref": {
+          "type": "string"
+        },
+        "homework_ref": {
+          "type": "string"
+        }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "path",
+        "label"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "label": {
           "type": "string"
         }
       }

@@ -9,7 +9,7 @@
 ![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-3776AB)
 ![Docker Desktop](https://img.shields.io/badge/Docker-Desktop-2496ED)
 ![Greenplum](https://img.shields.io/badge/Module-Greenplum-2E7D32)
-![Tests](https://img.shields.io/badge/tests-124%20passing-0A7F3F)
+![Tests](https://img.shields.io/badge/tests-131%20passing-0A7F3F)
 
 </div>
 
@@ -103,6 +103,17 @@
 - Единый runtime state: портал запускается из отдельного repo командой `MENTOR_LAB_SESSION=/path/to/session.json npm run dev`.
 - Session report: `mentor-lab.py session greenplum report` собирает события, skill graph и next actions после урока.
 
+### Academy Control Plane
+
+`Academy Control Plane` связывает core repo и Nuxt portal через расширенный `session.json`: stage guides, slide anchors, workbook/homework links, portal actions и next lesson metadata. Ментор может подготовить session state, экспортировать его в portal repo и открыть интерфейс без ручного копирования файлов.
+
+```bash
+python3 mentor-lab.py session greenplum start --student Иван --output artifacts/sessions/ivan
+python3 mentor-lab.py portal greenplum start --session artifacts/sessions/ivan --portal-dir ../de-mentor-portal --dry-run
+python3 mentor-lab.py portal greenplum export --session artifacts/sessions/ivan --portal-dir ../de-mentor-portal
+python3 mentor-lab.py portal greenplum open --url http://127.0.0.1:3000 --dry-run
+```
+
 ## Быстрый старт
 
 ### Требования
@@ -165,9 +176,12 @@ python3 mentor-lab.py up greenplum
 
 ```bash
 python3 mentor-lab.py session greenplum start --student Иван --output artifacts/sessions/ivan
+python3 mentor-lab.py portal greenplum export --session artifacts/sessions/ivan --portal-dir ../de-mentor-portal
+python3 mentor-lab.py portal greenplum start --session artifacts/sessions/ivan --portal-dir ../de-mentor-portal --dry-run
 git clone https://github.com/PaulKov/de-mentor-portal.git
 cd de-mentor-portal
 MENTOR_LAB_SESSION=../de-mentor/artifacts/sessions/ivan/session.json npm run dev
+python3 ../de-mentor/mentor-lab.py portal greenplum open --url http://127.0.0.1:3000 --dry-run
 python3 mentor-lab.py portal greenplum
 python3 mentor-lab.py assessment greenplum pre
 python3 mentor-lab.py teach greenplum simple --stage 1
@@ -357,6 +371,18 @@ python3 -m pytest tests -q
 python3 -m compileall -q src mentor-lab.py
 ```
 
+Quality guard для разработки:
+
+```bash
+python3 -m pytest tests/test_quality_guards.py -q
+```
+
+Контракт guard:
+
+- любой Python-модуль в `src/mentor_lab` должен быть не больше `400` SLOC;
+- средний clustering coefficient внутреннего import-графа должен быть не больше `0.180`;
+- CLI остается тонким фасадом: parser registration, command context и handler-группы лежат в отдельных модулях.
+
 Проверка живого Greenplum-стенда:
 
 ```bash
@@ -368,7 +394,7 @@ python3 mentor-lab.py grade greenplum
 На момент публикации:
 
 ```text
-117 tests passing
+131 tests passing
 Greenplum health checks passing
 30-slide Russian theory deck included
 ```
