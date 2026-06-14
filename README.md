@@ -9,7 +9,7 @@
 ![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-3776AB)
 ![Docker Desktop](https://img.shields.io/badge/Docker-Desktop-2496ED)
 ![Greenplum](https://img.shields.io/badge/Module-Greenplum-2E7D32)
-![Tests](https://img.shields.io/badge/tests-156%20passing-0A7F3F)
+![Tests](https://img.shields.io/badge/tests-163%20passing-0A7F3F)
 
 </div>
 
@@ -53,6 +53,7 @@
 - План урока на 60 минут.
 - Русская презентация в спокойной светлой теме.
 - Каталог презентаций с Drive-таксономией `lessons/<direction>/<lesson>`.
+- Lesson Release Pipeline: manifest, preflight report и проверка Google Slides перед занятием.
 - Facilitator guide: когда показывать каждый слайд и что говорить.
 - Student workbook, homework, capstone, case study.
 - Deep dives по QD/QE, master/coordinator, Motion, joins, SMP/MPP/EPP.
@@ -139,6 +140,7 @@ python3 mentor-lab.py runbook greenplum-partitioning homework
 python3 mentor-lab.py student greenplum-partitioning bootstrap --platform macos
 python3 mentor-lab.py student greenplum-partitioning homework
 python3 mentor-lab.py academy greenplum-partitioning start --student Иван --dry-run
+python3 mentor-lab.py lesson-release greenplum-partitioning verify
 ```
 
 Основной SQL-lab:
@@ -148,12 +150,21 @@ python3 mentor-lab.py academy greenplum-partitioning start --student Иван --
 Материалы:
 
 - [Индекс Lesson 02](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/README.md)
+- [Manifest выпуска Lesson 02](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/lesson.yaml)
 - [Каталог презентаций и Drive-таксономия](https://github.com/PaulKov/de-mentor/blob/master/decks/README.md)
 - [Презентация Lesson 02 в Google Slides](https://docs.google.com/presentation/d/17Ae88PoniaFU34egsFPwC0PndAOoXMze4qV1pIKQkaI/edit?usp=sharing)
 - [Презентация Lesson 02 в PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-partitioning-theory.pptx)
 - [План ментора](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/mentor-guide.md)
 - [Workbook ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/student-workbook.md)
 - [Домашка](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/homework.md)
+
+Контур выпуска:
+
+```bash
+python3 mentor-lab.py lesson-release greenplum-partitioning verify
+python3 mentor-lab.py lesson-release greenplum-partitioning report --output artifacts/lesson02-release.md
+python3 mentor-lab.py lesson-release greenplum-partitioning publish-slides --dry-run --confirm-account pavelkov007@gmail.com
+```
 
 ## Быстрый старт
 
@@ -392,6 +403,7 @@ python3 mentor-lab.py dsl greenplum show redistribute-join
 | Презентация | [greenplum-theory.pptx](artifacts/greenplum-theory.pptx) |
 | Каталог презентаций | [decks/README.md](decks/README.md) |
 | Исходники презентации | [decks/greenplum-theory](decks/greenplum-theory/README.md) |
+| Manifest выпуска Lesson 02 | [lesson.yaml](docs/lessons/02-greenplum-partitioning/lesson.yaml) |
 | Стенд Greenplum | [labs/greenplum](labs/greenplum/README.md) |
 | SQL для паспорта кластера | [cluster-inspection.sql](labs/greenplum/examples/cluster-inspection.sql) |
 | SQL для мониторинга кластера | [cluster-monitoring.sql](labs/greenplum/examples/cluster-monitoring.sql) |

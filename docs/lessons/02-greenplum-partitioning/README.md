@@ -76,6 +76,7 @@ ROLLBACK;
 
 - [Презентация Lesson 02 в Google Slides](https://docs.google.com/presentation/d/17Ae88PoniaFU34egsFPwC0PndAOoXMze4qV1pIKQkaI/edit?usp=sharing)
 - [Презентация Lesson 02 в PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-partitioning-theory.pptx)
+- [Manifest выпуска Lesson 02](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/lesson.yaml)
 - [Исходники презентации](https://github.com/PaulKov/de-mentor/blob/master/decks/greenplum-partitioning-theory/README.md)
 - [Каталог презентаций и Drive-таксономия](https://github.com/PaulKov/de-mentor/blob/master/decks/README.md)
 - [План ментора](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/mentor-guide.md)
@@ -86,6 +87,38 @@ ROLLBACK;
 - [Упрощенный маршрут](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/runbooks/simple-path.md)
 - [Deep-dive маршрут](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/runbooks/deep-dive-path.md)
 - [План домашки](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/runbooks/homework-plan.md)
+
+## Контур Выпуска
+
+Перед занятием ментор запускает один preflight, который проверяет manifest, PPTX, Drive-таксономию, локальные docs, SQL examples, session control plane и guard от рабочего Google account.
+
+```bash
+python3 mentor-lab.py lesson-release greenplum-partitioning verify
+```
+
+Сохранить markdown-отчет:
+
+```bash
+python3 mentor-lab.py lesson-release greenplum-partitioning report \
+  --output artifacts/lesson02-release.md
+```
+
+Проверить публикацию Google Slides без записи в Drive:
+
+```bash
+python3 mentor-lab.py lesson-release greenplum-partitioning publish-slides \
+  --dry-run \
+  --confirm-account pavelkov007@gmail.com
+```
+
+Live-проверка Google Slides использует только личный аккаунт:
+
+```bash
+python3 mentor-lab.py lesson-release greenplum-partitioning verify \
+  --live-google-slides \
+  --confirm-account pavelkov007@gmail.com \
+  --oauth-client-json /Users/macbook/Documents/de-mentor-docs/google-service-account/client_secret_177388438371-pa06utp6g6j32furdm0k96iphfkdu1vr.apps.googleusercontent.com.json
+```
 
 ## Публикация В Google Slides
 
