@@ -77,7 +77,7 @@ def greenplum_partitioning_simple_runbook() -> Runbook:
             ),
             RunbookStage(
                 "55:00-60:00",
-                "15",
+                "15-16, 18",
                 "Домашка",
                 "Выдай mini-project: DDL, pruning evidence, stats policy, late facts и критерии приемки.",
                 [

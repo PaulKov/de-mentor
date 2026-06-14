@@ -147,6 +147,8 @@ python3 mentor-lab.py academy greenplum-partitioning start --student Иван --
 Материалы:
 
 - [Индекс Lesson 02](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/README.md)
+- [Презентация Lesson 02 в Google Slides](https://docs.google.com/presentation/d/17Ae88PoniaFU34egsFPwC0PndAOoXMze4qV1pIKQkaI/edit?usp=sharing)
+- [Презентация Lesson 02 в PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-partitioning-theory.pptx)
 - [План ментора](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/mentor-guide.md)
 - [Workbook ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/student-workbook.md)
 - [Домашка](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/homework.md)

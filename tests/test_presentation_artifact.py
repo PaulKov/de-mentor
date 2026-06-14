@@ -72,3 +72,53 @@ def test_greenplum_theory_deck_uses_russian_light_theme():
     assert "Что ученик должен унести с урока" in source
     assert "PostgreSQL mindset" not in source
     assert "Takeaways" not in source
+
+
+def test_greenplum_partitioning_deck_artifact_exists_and_has_18_slides():
+    deck = ROOT / "artifacts" / "greenplum-partitioning-theory.pptx"
+
+    assert deck.exists()
+    assert deck.stat().st_size > 50_000
+
+    with ZipFile(deck) as pptx:
+        slides = [
+            name
+            for name in pptx.namelist()
+            if name.startswith("ppt/slides/slide") and name.endswith(".xml")
+        ]
+
+    assert len(slides) == 18
+
+
+def test_greenplum_partitioning_deck_source_has_lesson_02_markers():
+    deck_dir = ROOT / "decks" / "greenplum-partitioning-theory"
+    source_files = sorted(deck_dir.rglob("*.md")) + sorted(deck_dir.rglob("*.mjs"))
+    source = "\n".join(path.read_text(encoding="utf-8") for path in source_files)
+
+    assert (deck_dir / "README.md").exists()
+    assert (deck_dir / "facilitator-guide.md").exists()
+    assert "#F7F7F4" in source
+    assert "Lesson 02: Partitioning, statistics and incremental loads" in source
+    assert "partition pruning" in source
+    assert "pg_partition_tree" in source
+    assert "gp_toolkit.gp_partitions" in source
+    assert "ANALYZE" in source
+    assert "late-arriving facts" in source
+    assert "idempotency" in source
+    assert "AOCO partitions" in source
+
+
+def test_greenplum_partitioning_google_slides_link_is_documented():
+    docs = [
+        ROOT / "README.md",
+        ROOT / "docs" / "lessons" / "02-greenplum-partitioning" / "README.md",
+        ROOT / "docs" / "lessons" / "02-greenplum-partitioning" / "mentor-guide.md",
+        ROOT / "decks" / "greenplum-partitioning-theory" / "README.md",
+    ]
+    link = (
+        "https://docs.google.com/presentation/d/"
+        "17Ae88PoniaFU34egsFPwC0PndAOoXMze4qV1pIKQkaI/edit?usp=sharing"
+    )
+
+    for doc in docs:
+        assert link in doc.read_text(encoding="utf-8")

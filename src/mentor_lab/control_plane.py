@@ -58,6 +58,7 @@ class AcademyControlPlane:
                     f"python3 mentor-lab.py runbook {route.name} homework",
                 ],
                 "slide_deck": route.deck_path,
+                "google_slides": route.google_slides_url,
                 "stage_guides": [guide.to_dict() for guide in self.stage_guides],
             },
             "student_mode": {
@@ -286,6 +287,15 @@ def _artifacts(route: LearningRoute) -> List[Dict[str, str]]:
         {"kind": "workbook", "path": route.workbook_path, "label": "Workbook ученика"},
         {"kind": "homework", "path": route.homework_path, "label": "Домашка и критерии"},
     ]
+    if route.google_slides_url:
+        artifacts.insert(
+            1,
+            {
+                "kind": "google_slides",
+                "path": route.google_slides_url,
+                "label": "Презентация Google Slides",
+            },
+        )
     artifacts.extend(
         {"kind": "sql", "path": path, "label": "SQL demo"} for path in route.sql_examples
     )

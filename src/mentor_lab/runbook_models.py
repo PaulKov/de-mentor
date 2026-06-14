@@ -51,6 +51,7 @@ class Runbook:
     description: str
     stages: List[RunbookStage]
     deck_path: str = "artifacts/greenplum-theory.pptx"
+    google_slides_url: Optional[str] = None
     workbook_path: str = "docs/lessons/01-greenplum/student-workbook.md"
     homework_path: str = "docs/lessons/01-greenplum/homework.md"
     sql_examples: Optional[List[str]] = None
@@ -64,9 +65,15 @@ class Runbook:
             self.description,
             "",
             f"Deck: {self.deck_path}",
-            f"Workbook: {self.workbook_path}",
-            f"Homework: {self.homework_path}",
         ]
+        if self.google_slides_url:
+            lines.append(f"Google Slides: {self.google_slides_url}")
+        lines.extend(
+            [
+                f"Workbook: {self.workbook_path}",
+                f"Homework: {self.homework_path}",
+            ]
+        )
         lines.extend(f"SQL example: {path}" for path in self._sql_examples())
         lines.append("")
         for index, stage in enumerate(self.stages, start=1):

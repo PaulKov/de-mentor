@@ -62,7 +62,7 @@ def greenplum_partitioning_deep_runbook() -> Runbook:
             ),
             RunbookStage(
                 "55:00-85:00",
-                "12-16",
+                "11-15",
                 "Incremental load algorithm",
                 "Пройди алгоритм: stage, validate, publish, analyze, audit, retry.",
                 [
@@ -77,7 +77,7 @@ def greenplum_partitioning_deep_runbook() -> Runbook:
             ),
             RunbookStage(
                 "85:00-105:00",
-                "17-19",
+                "9, 14-15",
                 "AOCO partitions и maintenance",
                 "Покажи AOCO DDL, leaf partition inspection и admin snippets для retention.",
                 [
@@ -92,7 +92,7 @@ def greenplum_partitioning_deep_runbook() -> Runbook:
             ),
             RunbookStage(
                 "105:00-120:00",
-                "20",
+                "17-18",
                 "Design review",
                 "Попроси ученика защитить DDL и load policy как production mini-RFC.",
                 [
