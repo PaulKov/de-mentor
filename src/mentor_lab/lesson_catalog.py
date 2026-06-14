@@ -8,6 +8,10 @@ _LESSON_ALIASES = {
     "greenplum": "lesson-01",
     "gp": "lesson-01",
     "greenplum-01": "lesson-01",
+    "greenplum-partitioning": "lesson-02",
+    "greenplum-02": "lesson-02",
+    "gp-partitioning": "lesson-02",
+    "partitioning": "lesson-02",
 }
 
 _HINT_TOPIC_ALIASES = {
@@ -27,6 +31,16 @@ _HINT_TOPIC_ALIASES = {
     "smp-mpp-epp": "mpp-systems",
     "design-review": "capstone",
     "mart-design": "capstone",
+    "pruning": "partition-pruning",
+    "partition": "partition-pruning",
+    "partitions": "partition-pruning",
+    "stats": "statistics",
+    "stale-statistics": "statistics",
+    "incremental": "incremental-loads",
+    "late-facts": "late-arriving-facts",
+    "late-arriving": "late-arriving-facts",
+    "maintenance": "aoco-maintenance",
+    "aoco": "aoco-maintenance",
 }
 
 _INCIDENT_ALIASES = {
@@ -88,6 +102,8 @@ class LessonCatalog:
 
     @classmethod
     def default(cls) -> "LessonCatalog":
+        from mentor_lab.lesson_catalog_lesson02 import lesson02, lesson02_hints
+
         return cls(
             lessons=[
                 Lesson(
@@ -205,7 +221,8 @@ class LessonCatalog:
                             "Student understands that every architecture moves the bottleneck somewhere.",
                         ),
                     ],
-                )
+                ),
+                lesson02(),
             ],
             hints={
                 "lesson-01": {
@@ -239,7 +256,8 @@ class LessonCatalog:
                         "MPP optimizes big scans and joins by splitting data and compute, but makes network part of the plan.",
                         "EPP and lakehouse systems improve elasticity and storage openness, but move the hard work to cost, metadata, and shuffle control.",
                     ],
-                }
+                },
+                "lesson-02": lesson02_hints(),
             },
             incidents=[
                 Incident(

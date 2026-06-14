@@ -1,105 +1,133 @@
-# Lesson 02 Simple Path: Partitioning, Statistics And Incremental Loads
+# Упрощенный Маршрут Lesson 02: 60 Минут
 
-## 0-10 Минут: Replay И Missing Evidence
+Фокус: partitioning, statistics and incremental loads без перегруза deep-dive деталями.
+
+## Этап 1: 00:00-10:00 - Replay Evidence
 
 Что говорит ментор:
 
-> Начинаем не с новой теории, а с replay прошлого урока. Если evidence слабый, новый partitioning design будет гаданием.
+> Начинаем не с нового DDL, а с качества evidence. Если в Lesson 01 не было `EXPLAIN`, `gp_segment_id` и validation, partitioning design будет гаданием.
 
-Что показать:
+Команды:
 
 ```bash
 python3 mentor-lab.py replay greenplum --student Иван --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/greenplum-replay.md
 python3 mentor-lab.py calibration greenplum show senior
 ```
 
-Вопрос ученику: какой missing marker из Lesson 01 сильнее всего мешает Lesson 02?
+Что спрашиваем: какой missing marker из прошлого урока сильнее всего мешает Lesson 02?
 
-Проверка: ученик называет конкретный evidence gap: `EXPLAIN`, `gp_segment_id`, root cause, validation или residual risk.
+Ожидаемый ответ: `EXPLAIN`, `gp_segment_id`, root cause, validation или residual risk.
 
-## 10-25 Минут: Partition Pruning
+Как проверяем: ученик называет конкретный evidence gap и объясняет, почему без него нельзя защищать physical design.
+
+Ссылки:
+
+- [Workbook ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/student-workbook.md)
+- [Домашка](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/homework.md)
+
+## Этап 2: 10:00-25:00 - Partition Pruning
 
 Что говорит ментор:
 
 > Partition key выбирают по фильтрам и retention. Distribution key выбирают по join locality и балансу. Это разные физические решения.
 
-Что показать:
-
-```bash
-python3 mentor-lab.py scenario greenplum show partition-pruning
-python3 mentor-lab.py misconception greenplum diagnose --text "partition key это то же самое что distribution key"
-```
-
-SQL для демонстрации:
+Команды:
 
 ```sql
+\i /mentor-lab/examples/lesson02-partitioning-statistics-loads.sql
+
 EXPLAIN
 SELECT sum(amount)
-FROM lesson01.sales_partition_good
-WHERE sale_date >= DATE '2024-01-01'
-  AND sale_date < DATE '2024-02-01';
+FROM lesson02.fact_sales_partitioned
+WHERE sale_date >= DATE '2026-02-01'
+  AND sale_date < DATE '2026-03-01';
 ```
 
-Вопрос ученику: почему `PARTITION BY RANGE (sale_date)` помогает этому фильтру, но не делает join co-located?
+Что спрашиваем: почему `PARTITION BY RANGE (sale_date)` помогает этому фильтру, но не делает join co-located?
 
-Проверка: ученик отдельно объясняет pruning и `DISTRIBUTED BY`.
+Ожидаемый ответ: `partition pruning` отсекает leaf partitions, а `DISTRIBUTED BY` размещает строки по segments.
 
-## 25-40 Минут: Statistics After Load
+Как проверяем: ученик отдельно объясняет pruning/retention и join locality/parallelism.
+
+Ссылки:
+
+- [SQL-lab](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/lesson02-partitioning-statistics-loads.sql)
+- [Шпаргалка](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/cheat-sheet.md)
+
+## Этап 3: 25:00-40:00 - Statistics After Load
 
 Что говорит ментор:
 
 > После incremental load optimizer должен видеть новые cardinality. В MPP stale statistics легко превращаются в плохой Broadcast или Redistribute.
 
-Что показать:
-
-```bash
-python3 mentor-lab.py diagnostics greenplum show table-statistics
-python3 mentor-lab.py scenario greenplum show stale-statistics
-```
-
-SQL для демонстрации:
+Команды:
 
 ```sql
-ANALYZE lesson01.fact_sales_good;
-
 SELECT schemaname, relname, n_live_tup, last_analyze
 FROM pg_stat_user_tables
-WHERE schemaname = 'lesson01'
+WHERE schemaname = 'lesson02'
 ORDER BY relname;
+
+ANALYZE lesson02.fact_sales_partitioned;
 ```
 
-Вопрос ученику: почему после load нельзя сразу доверять старому плану?
+Что спрашиваем: почему после load нельзя сразу доверять старому плану?
 
-Проверка: ученик говорит про estimates, `ANALYZE`, before/after `EXPLAIN`.
+Ожидаемый ответ: stale statistics ломают estimates и могут поменять join strategy, `Broadcast Motion` или `Redistribute Motion`.
 
-## 40-55 Минут: Incremental Loads
+Как проверяем: ученик говорит про before/after `EXPLAIN`, `ANALYZE` и `last_analyze`.
+
+Ссылки:
+
+- [Workbook: statistics](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/student-workbook.md)
+
+## Этап 4: 40:00-55:00 - Incremental Load И Late-Arriving Facts
 
 Что говорит ментор:
 
 > Incremental load в MPP - это не только `INSERT`. Нужно описать окно загрузки, late-arriving facts, idempotency, statistics и validation.
 
-Что показать:
+Команды:
 
-```bash
-python3 mentor-lab.py observe greenplum start --output artifacts/greenplum-observe-checklist.md
-python3 mentor-lab.py evidence greenplum collect redistribute-join --output submissions/lesson02-incremental-load.md
+```sql
+SELECT sale_date, count(*) AS rows_count, sum(amount) AS amount_sum
+FROM lesson02.fact_sales_stage
+GROUP BY sale_date
+ORDER BY sale_date;
+
+SELECT tableoid::regclass AS physical_partition, count(*)
+FROM lesson02.fact_sales_partitioned
+GROUP BY tableoid::regclass
+ORDER BY tableoid::regclass::text;
 ```
 
-Дизайн-вопрос: что делать, если факт за прошлый день приехал через три дня?
+Что спрашиваем: что делать, если факт за прошлый день приехал через три дня?
 
-Проверка: ученик предлагает bounded reload window, merge/upsert strategy или partition-level reload и обязательно validation.
+Ожидаемый ответ: bounded reload window, partition-level replace или идемпотентный merge/upsert, затем validation и `ANALYZE`.
 
-## 55-60 Минут: Домашка
+Как проверяем: ученик формулирует retry path без двойной загрузки фактов.
 
-Что дать:
+Ссылки:
 
-- спроектировать daily partitioned fact;
-- описать statistics policy после load;
-- описать late-arriving facts;
-- приложить `EXPLAIN`, catalog checks и validation.
+- [План домашки](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/runbooks/homework-plan.md)
 
-Что принести на следующий раз:
+## Этап 5: 55:00-60:00 - Домашка
 
-- один DDL вариант;
-- один before/after план;
-- один риск по retention или stale statistics.
+Команды:
+
+```bash
+python3 mentor-lab.py runbook greenplum-partitioning homework
+python3 mentor-lab.py student greenplum-partitioning homework
+```
+
+Что спрашиваем: что ученик принесет на следующий урок?
+
+Ожидаемый ответ: DDL, `EXPLAIN`, partition catalog checks, statistics policy, validation и residual risk.
+
+Как проверяем: ученик может назвать файл сдачи `submissions/lesson02-partitioning.md` и self-check команды.
+
+Ссылки:
+
+- [Домашка](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/homework.md)
+- [Матрица оценки](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/rubric.md)

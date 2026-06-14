@@ -8,6 +8,7 @@ from typing import Optional
 from mentor_lab.docker_compose import DockerComposeRunner
 from mentor_lab.domain import LabDefinition, UnknownLabError
 from mentor_lab.lesson_catalog import normalize_lesson_code
+from mentor_lab.lesson_routes import LearningRoute, UnknownLearningRouteError, resolve_learning_route
 from mentor_lab.registry import create_default_registry
 from mentor_lab.sql_client import GreenplumSqlClient
 
@@ -15,6 +16,14 @@ def _lab_or_none(name: str) -> Optional[LabDefinition]:
     try:
         return _registry().get(name)
     except UnknownLabError as exc:
+        print(str(exc))
+        return None
+
+
+def _learning_route_or_none(name: str) -> Optional[LearningRoute]:
+    try:
+        return resolve_learning_route(name)
+    except UnknownLearningRouteError as exc:
         print(str(exc))
         return None
 

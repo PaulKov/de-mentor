@@ -1,45 +1,90 @@
-# Lesson 02: Partitioning, Statistics And Incremental Loads In MPP
+# Lesson 02: Partitioning, statistics and incremental loads in MPP
 
-## Цель
+Второй урок продолжает Greenplum Academy после базового урока про MPP, `DISTRIBUTED BY`, `Motion`, `gp_segment_id`, Heap/AO/AOCO и первый `EXPLAIN`.
 
-Lesson 02 продолжает первый урок: ученик уже видел `DISTRIBUTED BY`, Motion, `gp_segment_id`, Heap/AO/AOCO и вводный `PARTITION BY RANGE`. Теперь задача - научиться проектировать partitioning под реальные фильтры, retention и incremental loads, а не считать partition key заменой distribution key.
+Главная идея: partitioning не заменяет distribution. Partitioning помогает `partition pruning`, retention и управляемости больших фактов. Distribution отвечает за размещение строк по segments, locality join и баланс параллельной работы.
 
-## Что Ученик Должен Понять
+## Результат Урока
 
-- partitioning отвечает за pruning, retention и manageability;
-- distribution отвечает за locality join, parallelism и баланс строк по segments;
-- statistics после load влияют на plan quality не меньше DDL;
-- incremental loads должны явно описывать late-arriving facts, idempotency и validation;
-- AOCO partitions полезны для append-heavy fact, но требуют аккуратного maintenance.
+После урока ученик должен уметь:
 
-## Каркас Урока
+- выбрать partition key под реальные фильтры, retention и SLA загрузки;
+- объяснить, почему partition key и distribution key решают разные задачи;
+- проверить partitions через `pg_partition_tree` и `gp_toolkit.gp_partitions`;
+- показать `EXPLAIN`, где виден эффект `partition pruning`;
+- включить AOCO для append-heavy fact и понимать ограничения maintenance;
+- описать incremental load: stage, publish, late-arriving facts, idempotency, `ANALYZE`, validation;
+- принести evidence, а не только “правильный DDL”.
 
-| Время | Блок | Практика |
-|---:|---|---|
-| 0-10 | Replay Lesson 01 | открыть replay pack и missing evidence |
-| 10-25 | Partition pruning | сравнить good/bad partition key |
-| 25-40 | Statistics after load | показать stale estimates и `ANALYZE` |
-| 40-55 | Incremental load design | разобрать daily load, late facts и idempotency |
-| 55-60 | Домашка | дать мини-проект с retention и validation |
+## Маршруты
 
-## Команды Старта
+| Маршрут | Когда Использовать | Команда |
+| --- | --- | --- |
+| Упрощенный 60 минут | основной урок после Lesson 01 | `python3 mentor-lab.py runbook greenplum-partitioning simple` |
+| Deep-dive 90-120 минут | сильный ученик или отдельная appendix-сессия | `python3 mentor-lab.py runbook greenplum-partitioning deep` |
+| Домашка 60-90 минут | самостоятельная работа ученика | `python3 mentor-lab.py runbook greenplum-partitioning homework` |
+
+Физический стенд остается тем же:
 
 ```bash
-python3 mentor-lab.py readiness greenplum --platform macos
-python3 mentor-lab.py replay greenplum --student Иван --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/greenplum-replay.md
-python3 mentor-lab.py diagnostics greenplum show table-statistics
-python3 mentor-lab.py scenario greenplum show partition-pruning
+python3 mentor-lab.py up greenplum
+python3 mentor-lab.py check greenplum
+python3 mentor-lab.py psql greenplum
 ```
 
-## Связь С Lesson 01
+Учебный маршрут отдельный:
 
-- Если ученик путает partition key и distribution key, начни с `python3 mentor-lab.py misconception greenplum diagnose --text "partition key это то же самое что distribution key"`.
-- Если ученик не умеет доказывать планом, начни с `python3 mentor-lab.py coach-plan greenplum --query bad_customer_join --sample`.
-- Если не хватает evidence, открой `artifacts/greenplum-replay.md` и выбери один missing marker.
+```bash
+python3 mentor-lab.py academy greenplum-partitioning start --student Иван --dry-run
+python3 mentor-lab.py student greenplum-partitioning bootstrap --platform macos
+python3 mentor-lab.py student greenplum-partitioning homework
+```
+
+## Практический SQL-Lab
+
+Основной runnable-файл:
+
+[lesson02-partitioning-statistics-loads.sql](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/lesson02-partitioning-statistics-loads.sql)
+
+Что он создает:
+
+- schema `lesson02`;
+- bad table `lesson02.fact_sales_bad_partition_key`, где `PARTITION BY RANGE (loaded_at)` не помогает типичному фильтру по `sale_date`;
+- good table `lesson02.fact_sales_partitioned` с `PARTITION BY RANGE (sale_date)`;
+- AOCO storage через `WITH (appendoptimized=true, orientation=column, compresstype=zstd, compresslevel=1)`;
+- stage table `lesson02.fact_sales_stage`;
+- late-arriving facts;
+- `ANALYZE` после load;
+- проверки через `gp_segment_id`, `tableoid`, `pg_partition_tree`, `gp_toolkit.gp_partitions`;
+- `EXPLAIN` для сравнения pruning.
+
+Запуск в psql:
+
+```sql
+\i /mentor-lab/examples/lesson02-partitioning-statistics-loads.sql
+```
+
+Безопасный smoke-check:
+
+```sql
+BEGIN;
+\i /mentor-lab/examples/lesson02-partitioning-statistics-loads.sql
+ROLLBACK;
+```
 
 ## Материалы
 
-- [Упрощенный маршрут Lesson 02](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/runbooks/simple-path.md)
-- [Workbook Lesson 02](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/student-workbook.md)
-- [Partitioning strategies deep dive](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md)
-- [Partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql)
+- [План ментора](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/mentor-guide.md)
+- [Workbook ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/student-workbook.md)
+- [Домашка](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/homework.md)
+- [Матрица оценки](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/rubric.md)
+- [Шпаргалка](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/cheat-sheet.md)
+- [Упрощенный маршрут](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/runbooks/simple-path.md)
+- [Deep-dive маршрут](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/runbooks/deep-dive-path.md)
+- [План домашки](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/runbooks/homework-plan.md)
+
+## Следующий Урок
+
+Lesson 03: Query tuning, workload management and production diagnostics.
+
+Фокус: читать production-планы глубже, связывать `Motion`, joins, statistics, skew и workload management с конкретным RCA.

@@ -4,9 +4,18 @@ from __future__ import annotations
 
 from typing import List
 
+from mentor_lab.lesson_routes import LearningRoute, resolve_learning_route
 from mentor_lab.session_model import SessionStage, SkillNode
 
 def _default_stages(lab_name: str) -> List[SessionStage]:
+    route = resolve_learning_route(lab_name)
+    if route.lesson_code == "lesson-02":
+        return _lesson02_stages(route)
+    return _lesson01_stages(route)
+
+
+def _lesson01_stages(route: LearningRoute) -> List[SessionStage]:
+    lab_name = route.physical_lab_name
     return [
         SessionStage(
             code="environment",
@@ -58,6 +67,52 @@ def _default_stages(lab_name: str) -> List[SessionStage]:
     ]
 
 
+def _lesson02_stages(route: LearningRoute) -> List[SessionStage]:
+    lab_name = route.physical_lab_name
+    return [
+        SessionStage(
+            code="replay",
+            title="Replay evidence из Lesson 01",
+            timebox="00:00-10:00",
+            mentor_focus="Понять, хватает ли EXPLAIN/skew/validation evidence для нового design.",
+            student_action="Назвать самый слабый evidence marker.",
+            command=f"python3 mentor-lab.py runbook {route.name} simple",
+        ),
+        SessionStage(
+            code="partition-pruning",
+            title="Partition pruning и retention",
+            timebox="10:00-25:00",
+            mentor_focus="Сравнить partition key и distribution key на SQL-lab.",
+            student_action="Доказать pruning через EXPLAIN и pg_partition_tree.",
+            command="psql -U gpadmin -d mentor -f /mentor-lab/examples/lesson02-partitioning-statistics-loads.sql",
+        ),
+        SessionStage(
+            code="statistics",
+            title="Statistics after load",
+            timebox="25:00-40:00",
+            mentor_focus="Показать ANALYZE как часть incremental load contract.",
+            student_action="Проверить last_analyze и before/after plan shape.",
+            command="ANALYZE lesson02.fact_sales_partitioned;",
+        ),
+        SessionStage(
+            code="incremental-load",
+            title="Incremental load и late facts",
+            timebox="40:00-55:00",
+            mentor_focus="Разобрать stage, publish, retry, validation и late-arriving facts.",
+            student_action="Сформулировать идемпотентный load algorithm.",
+            command=f"python3 mentor-lab.py check {lab_name}",
+        ),
+        SessionStage(
+            code="homework",
+            title="Домашка и handoff",
+            timebox="55:00-60:00",
+            mentor_focus="Выдать DDL/pruning/stats/load mini-project и self-check.",
+            student_action="Назвать deliverables следующей встречи.",
+            command=f"python3 mentor-lab.py student {route.name} homework",
+        ),
+    ]
+
+
 def _default_skill_graph() -> List[SkillNode]:
     return [
         SkillNode(
@@ -94,17 +149,19 @@ def _default_skill_graph() -> List[SkillNode]:
 
 
 def _default_commands(lab_name: str) -> List[str]:
+    route = resolve_learning_route(lab_name)
+    physical_lab = route.physical_lab_name
     return [
         "python3 mentor-lab.py doctor",
-        f"python3 mentor-lab.py readiness {lab_name} --platform macos",
-        f"python3 mentor-lab.py up {lab_name}",
-        f"python3 mentor-lab.py check {lab_name}",
-        f"python3 mentor-lab.py runbook {lab_name} simple",
-        f"python3 mentor-lab.py teach {lab_name} simple --stage 1",
-        f"python3 mentor-lab.py coach-plan {lab_name} --query bad_customer_join --sample",
-        f"python3 mentor-lab.py dataset {lab_name} generate --scale small --seed 42 --skew high --late-facts --wide-rows --output artifacts/generated-enterprise.sql",
-        f"python3 mentor-lab.py evidence {lab_name} collect redistribute-join --output submissions/redistribute-join.md",
-        f"python3 mentor-lab.py autograde-sql {lab_name} --submission labs/greenplum/examples/student-solution-example.sql --output artifacts/sql-autograde.md",
-        f"python3 mentor-lab.py session {lab_name} report --session <session-dir> --output artifacts/{lab_name}-session-report.md",
-        f"python3 mentor-lab.py ci-smoke {lab_name} --dry-run",
+        f"python3 mentor-lab.py readiness {physical_lab} --platform macos",
+        f"python3 mentor-lab.py up {physical_lab}",
+        f"python3 mentor-lab.py check {physical_lab}",
+        f"python3 mentor-lab.py runbook {route.name} simple",
+        f"python3 mentor-lab.py teach {route.name} simple --stage 1",
+        f"python3 mentor-lab.py coach-plan {physical_lab} --query bad_customer_join --sample",
+        f"python3 mentor-lab.py dataset {physical_lab} generate --scale small --seed 42 --skew high --late-facts --wide-rows --output artifacts/generated-enterprise.sql",
+        f"python3 mentor-lab.py evidence {physical_lab} collect redistribute-join --output submissions/redistribute-join.md",
+        f"python3 mentor-lab.py autograde-sql {physical_lab} --submission labs/greenplum/examples/student-solution-example.sql --output artifacts/sql-autograde.md",
+        f"python3 mentor-lab.py session {route.name} report --session <session-dir> --output artifacts/{route.name}-session-report.md",
+        f"python3 mentor-lab.py ci-smoke {physical_lab} --dry-run",
     ]

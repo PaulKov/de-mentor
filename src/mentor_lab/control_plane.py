@@ -5,10 +5,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Dict, List
 
+from mentor_lab.lesson_routes import LearningRoute, resolve_learning_route
+
 
 CONTROL_PLANE_VERSION = "academy-control-plane/v1"
-LESSON_01_ROOT = "docs/lessons/01-greenplum"
-LESSON_02_ROOT = "docs/lessons/02-greenplum-partitioning"
 
 
 @dataclass(frozen=True)
@@ -43,72 +43,52 @@ class StageGuide:
 class AcademyControlPlane:
     """Serializable rich payload consumed by the Nuxt portal."""
 
-    lab_name: str
+    route: LearningRoute
     stage_guides: List[StageGuide]
 
     def to_dict(self) -> Dict[str, Any]:
+        route = self.route
         return {
             "version": CONTROL_PLANE_VERSION,
             "mentor_mode": {
                 "default_route": "simple",
                 "runbook_commands": [
-                    f"python3 mentor-lab.py runbook {self.lab_name} simple",
-                    f"python3 mentor-lab.py runbook {self.lab_name} deep",
-                    f"python3 mentor-lab.py runbook {self.lab_name} homework",
+                    f"python3 mentor-lab.py runbook {route.name} simple",
+                    f"python3 mentor-lab.py runbook {route.name} deep",
+                    f"python3 mentor-lab.py runbook {route.name} homework",
                 ],
-                "slide_deck": "artifacts/greenplum-theory.pptx",
+                "slide_deck": route.deck_path,
                 "stage_guides": [guide.to_dict() for guide in self.stage_guides],
             },
             "student_mode": {
-                "prep_runbook": f"{LESSON_01_ROOT}/runbooks/student-prep.md",
-                "workbook": f"{LESSON_01_ROOT}/student-workbook.md",
-                "homework": f"{LESSON_01_ROOT}/homework.md",
+                "prep_runbook": route.prep_runbook_path,
+                "workbook": route.workbook_path,
+                "homework": route.homework_path,
                 "self_check_commands": [
                     f"python3 mentor-lab.py doctor",
-                    f"python3 mentor-lab.py check {self.lab_name} --dry-run",
-                    f"python3 mentor-lab.py homework {self.lab_name} check --submission submissions/homework.md",
+                    f"python3 mentor-lab.py check {route.physical_lab_name} --dry-run",
+                    f"python3 mentor-lab.py homework {route.physical_lab_name} check --submission submissions/homework.md",
                 ],
             },
             "portal_actions": {
                 "start_command": (
-                    f"python3 mentor-lab.py portal {self.lab_name} start "
+                    f"python3 mentor-lab.py portal {route.name} start "
                     "--session <session-dir> --portal-dir de-mentor-portal"
                 ),
                 "export_command": (
-                    f"python3 mentor-lab.py portal {self.lab_name} export "
+                    f"python3 mentor-lab.py portal {route.name} export "
                     "--session <session-dir> --portal-dir de-mentor-portal"
                 ),
                 "open_command": (
-                    f"python3 mentor-lab.py portal {self.lab_name} open "
+                    f"python3 mentor-lab.py portal {route.name} open "
                     "--url http://127.0.0.1:3000"
                 ),
             },
-            "artifacts": [
-                {
-                    "kind": "deck",
-                    "path": "artifacts/greenplum-theory.pptx",
-                    "label": "Презентация Greenplum theory",
-                },
-                {
-                    "kind": "runbook",
-                    "path": f"{LESSON_01_ROOT}/runbooks/simple-path.md",
-                    "label": "Маршрут 60 минут",
-                },
-                {
-                    "kind": "workbook",
-                    "path": f"{LESSON_01_ROOT}/student-workbook.md",
-                    "label": "Workbook ученика",
-                },
-                {
-                    "kind": "homework",
-                    "path": f"{LESSON_01_ROOT}/homework.md",
-                    "label": "Домашка и критерии",
-                },
-            ],
+            "artifacts": _artifacts(route),
             "next_lesson": {
-                "code": "02-greenplum-partitioning",
-                "title": "Partitioning, statistics and incremental loads in MPP",
-                "path": f"{LESSON_02_ROOT}/README.md",
+                "code": route.next_lesson.code,
+                "title": route.next_lesson.title,
+                "path": route.next_lesson.path,
             },
         }
 
@@ -117,15 +97,23 @@ class ControlPlaneBuilder:
     """Builds the default Academy Control Plane for a lab."""
 
     def build(self, lab_name: str) -> AcademyControlPlane:
+        route = resolve_learning_route(lab_name)
         return AcademyControlPlane(
-            lab_name=lab_name,
-            stage_guides=_stage_guides(lab_name),
+            route=route,
+            stage_guides=_stage_guides(route),
         )
 
 
-def _stage_guides(lab_name: str) -> List[StageGuide]:
-    workbook = f"{LESSON_01_ROOT}/student-workbook.md"
-    homework = f"{LESSON_01_ROOT}/homework.md"
+def _stage_guides(route: LearningRoute) -> List[StageGuide]:
+    if route.lesson_code == "lesson-02":
+        return _lesson02_stage_guides(route)
+    return _lesson01_stage_guides(route)
+
+
+def _lesson01_stage_guides(route: LearningRoute) -> List[StageGuide]:
+    lab_name = route.physical_lab_name
+    workbook = route.workbook_path
+    homework = route.homework_path
     return [
         StageGuide(
             stage_code="environment",
@@ -198,7 +186,7 @@ def _stage_guides(lab_name: str) -> List[StageGuide]:
             slides="22-23, 30",
             mentor_script="Закрой урок домашкой, критериями приемки и мостиком к Lesson 02.",
             show_commands=[
-                f"python3 mentor-lab.py session {lab_name} report --session <session-dir>",
+                f"python3 mentor-lab.py session {route.name} report --session <session-dir>",
                 f"python3 mentor-lab.py homework {lab_name} check --submission submissions/homework.md",
             ],
             question="Что ученик принесет на следующий урок?",
@@ -208,3 +196,97 @@ def _stage_guides(lab_name: str) -> List[StageGuide]:
             homework_ref=homework,
         ),
     ]
+
+
+def _lesson02_stage_guides(route: LearningRoute) -> List[StageGuide]:
+    workbook = route.workbook_path
+    homework = route.homework_path
+    sql_lab = "labs/greenplum/examples/lesson02-partitioning-statistics-loads.sql"
+    return [
+        StageGuide(
+            "replay",
+            "1-3",
+            "Начни с replay evidence: без EXPLAIN, gp_segment_id и validation partition design будет гаданием.",
+            [
+                "python3 mentor-lab.py replay greenplum --student Иван --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/greenplum-replay.md",
+            ],
+            "Какой missing marker мешает Lesson 02?",
+            "EXPLAIN, gp_segment_id, root cause, validation или residual risk.",
+            "Ученик называет один evidence gap и его влияние на partitioning decision.",
+            workbook,
+            homework,
+        ),
+        StageGuide(
+            "partition-pruning",
+            "4-7",
+            "Покажи bad/good partition key и объясни, что pruning/retention не заменяют DISTRIBUTED BY.",
+            [
+                "docker compose -f labs/greenplum/docker-compose.yml exec -T -u gpadmin greenplum bash -lc '. /usr/local/greenplum-db/greenplum_path.sh && psql -U gpadmin -d mentor -v ON_ERROR_STOP=1 -f /mentor-lab/examples/lesson02-partitioning-statistics-loads.sql'",
+                "SELECT * FROM pg_partition_tree('lesson02.fact_sales_partitioned'::regclass);",
+            ],
+            "Почему partition key не равен distribution key?",
+            "Partition key отсекает partitions; distribution key размещает строки по segments и влияет на joins.",
+            f"SQL-lab выполнен: {sql_lab}; ученик показывает EXPLAIN pruning.",
+            workbook,
+            homework,
+        ),
+        StageGuide(
+            "statistics",
+            "8-10",
+            "Свяжи incremental load с optimizer contract: touched data должна получить свежую статистику.",
+            [
+                "ANALYZE lesson02.fact_sales_partitioned;",
+                "SELECT schemaname, relname, n_live_tup, last_analyze FROM pg_stat_user_tables WHERE schemaname = 'lesson02' ORDER BY relname;",
+            ],
+            "Почему stale statistics опасны в MPP?",
+            "Плохие estimates могут выбрать не тот join/Motion pattern и раздуть network exchange.",
+            "Ученик показывает last_analyze и before/after EXPLAIN.",
+            workbook,
+            homework,
+        ),
+        StageGuide(
+            "incremental-load",
+            "11-14",
+            "Разбери stage table, bounded reload window, late-arriving facts, retry и validation.",
+            [
+                "SELECT sale_date, count(*), sum(amount) FROM lesson02.fact_sales_stage GROUP BY sale_date ORDER BY sale_date;",
+                "SELECT tableoid::regclass, count(*) FROM lesson02.fact_sales_partitioned GROUP BY tableoid::regclass ORDER BY 1;",
+            ],
+            "Как сделать load идемпотентным?",
+            "Через deterministic keys, stage dedup, bounded replace/merge и validation before publish.",
+            "Ответ содержит повторный запуск без двойной загрузки фактов.",
+            workbook,
+            homework,
+        ),
+        StageGuide(
+            "homework",
+            "15",
+            "Закрой mini-project: DDL, pruning evidence, ANALYZE policy, late facts и residual risk.",
+            [
+                "python3 mentor-lab.py runbook greenplum-partitioning homework",
+                "python3 mentor-lab.py student greenplum-partitioning homework",
+            ],
+            "Что принести на следующий урок?",
+            "DDL, EXPLAIN, partition catalog checks, statistics policy и validation.",
+            "Ученик понимает критерии приемки homework.",
+            workbook,
+            homework,
+        ),
+    ]
+
+
+def _artifacts(route: LearningRoute) -> List[Dict[str, str]]:
+    artifacts = [
+        {"kind": "deck", "path": route.deck_path, "label": "Презентация урока"},
+        {
+            "kind": "runbook",
+            "path": f"{route.docs_root}/runbooks/simple-path.md",
+            "label": "Маршрут 60 минут",
+        },
+        {"kind": "workbook", "path": route.workbook_path, "label": "Workbook ученика"},
+        {"kind": "homework", "path": route.homework_path, "label": "Домашка и критерии"},
+    ]
+    artifacts.extend(
+        {"kind": "sql", "path": path, "label": "SQL demo"} for path in route.sql_examples
+    )
+    return artifacts
