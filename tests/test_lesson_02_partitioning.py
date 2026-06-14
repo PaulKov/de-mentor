@@ -158,7 +158,8 @@ def test_lesson_02_session_control_plane_points_to_lesson_02_materials(tmp_path)
     state = json.loads((session_dir / "session.json").read_text(encoding="utf-8"))
     control_plane = state["control_plane"]
 
-    assert control_plane["mentor_mode"]["slide_deck"] == "artifacts/greenplum-partitioning-theory.pptx"
+    assert control_plane["mentor_mode"]["slide_deck"] == "artifacts/greenplum-theory.pptx"
+    assert (ROOT / control_plane["mentor_mode"]["slide_deck"]).exists()
     assert "python3 mentor-lab.py runbook greenplum-partitioning simple" in control_plane["mentor_mode"]["runbook_commands"]
     assert control_plane["student_mode"]["workbook"] == "docs/lessons/02-greenplum-partitioning/student-workbook.md"
     assert control_plane["student_mode"]["homework"] == "docs/lessons/02-greenplum-partitioning/homework.md"
