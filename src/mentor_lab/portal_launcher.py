@@ -48,8 +48,13 @@ class PortalLauncher:
         portal_dir: Path,
         host: str = "127.0.0.1",
         port: int = 3000,
+        require_existing: bool = True,
     ) -> PortalLaunchPlan:
-        session_file = self.resolve_session_file(session_path)
+        session_file = (
+            self.resolve_session_file(session_path)
+            if require_existing
+            else self.session_file_path(session_path)
+        )
         url = f"http://{host}:{port}"
         return PortalLaunchPlan(
             session_file=session_file,
@@ -85,7 +90,12 @@ class PortalLauncher:
         return opener(url)
 
     def resolve_session_file(self, session_path: Path) -> Path:
-        session_file = session_path / "session.json" if session_path.is_dir() else session_path
+        session_file = self.session_file_path(session_path)
         if not session_file.exists():
             raise FileNotFoundError(f"Session file does not exist: {session_file}")
         return session_file
+
+    def session_file_path(self, session_path: Path) -> Path:
+        if session_path.suffix == ".json":
+            return session_path
+        return session_path / "session.json"

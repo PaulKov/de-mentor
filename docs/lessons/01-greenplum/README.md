@@ -121,6 +121,21 @@ python3 mentor-lab.py portal greenplum export --session artifacts/sessions/ivan 
 python3 mentor-lab.py portal greenplum open --url http://127.0.0.1:3000 --dry-run
 ```
 
+## Academy Self-Service v1
+
+Рекомендуемый маршрут проведения урока теперь начинается с self-service preflight и одной команды подготовки занятия.
+
+```bash
+python3 mentor-lab.py doctor --full
+python3 mentor-lab.py academy greenplum start --student Иван --dry-run
+python3 mentor-lab.py academy greenplum start --student Иван --skip-lab
+python3 mentor-lab.py student greenplum bootstrap --platform macos
+python3 mentor-lab.py student greenplum bootstrap --platform windows
+python3 mentor-lab.py student greenplum homework
+```
+
+`academy start` создает session state, экспортирует его в Nuxt portal и печатает команды запуска урока. `--dry-run` показывает план без side effects, `--skip-lab` готовит session/portal state без запуска Docker.
+
 Для incident mode:
 
 ```bash
