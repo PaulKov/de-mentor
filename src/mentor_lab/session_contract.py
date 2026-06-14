@@ -96,6 +96,8 @@ class SessionContractValidator:
         _validate_string_list(payload.get("commands"), "commands", errors)
         _validate_skill_graph(payload.get("skill_graph"), errors)
         _validate_events(payload.get("events"), errors)
+        if "control_plane" in payload:
+            _validate_control_plane(payload.get("control_plane"), errors)
         _validate_portal(payload.get("portal"), errors)
         return ContractValidationResult(errors)
 
@@ -171,3 +173,91 @@ def _validate_portal(payload: Any, errors: List[str]) -> None:
     for key, value in expected.items():
         if payload.get(key) != value:
             errors.append(f"portal.{key} must be {value!r}")
+
+
+def _validate_control_plane(payload: Any, errors: List[str]) -> None:
+    _require_keys(
+        payload,
+        [
+            "version",
+            "mentor_mode",
+            "student_mode",
+            "portal_actions",
+            "artifacts",
+            "next_lesson",
+        ],
+        "control_plane",
+        errors,
+    )
+    if not isinstance(payload, dict):
+        return
+    if payload.get("version") != "academy-control-plane/v1":
+        errors.append("control_plane.version must be 'academy-control-plane/v1'")
+    mentor_mode = payload.get("mentor_mode")
+    _require_keys(
+        mentor_mode,
+        ["default_route", "runbook_commands", "slide_deck", "stage_guides"],
+        "control_plane.mentor_mode",
+        errors,
+    )
+    if isinstance(mentor_mode, dict):
+        _validate_string_list(
+            mentor_mode.get("runbook_commands"),
+            "control_plane.mentor_mode.runbook_commands",
+            errors,
+        )
+        stage_guides = mentor_mode.get("stage_guides")
+        if not isinstance(stage_guides, list) or not stage_guides:
+            errors.append("control_plane.mentor_mode.stage_guides must be a non-empty list")
+        elif isinstance(stage_guides, list):
+            for index, guide in enumerate(stage_guides):
+                _require_keys(
+                    guide,
+                    [
+                        "stage_code",
+                        "slides",
+                        "mentor_script",
+                        "show_commands",
+                        "question",
+                        "expected_answer",
+                        "verification",
+                        "workbook_ref",
+                        "homework_ref",
+                    ],
+                    f"control_plane.mentor_mode.stage_guides[{index}]",
+                    errors,
+                )
+                if isinstance(guide, dict):
+                    _validate_string_list(
+                        guide.get("show_commands"),
+                        f"control_plane.mentor_mode.stage_guides[{index}].show_commands",
+                        errors,
+                    )
+
+    student_mode = payload.get("student_mode")
+    _require_keys(
+        student_mode,
+        ["prep_runbook", "workbook", "homework", "self_check_commands"],
+        "control_plane.student_mode",
+        errors,
+    )
+    if isinstance(student_mode, dict):
+        _validate_string_list(
+            student_mode.get("self_check_commands"),
+            "control_plane.student_mode.self_check_commands",
+            errors,
+        )
+    _require_keys(
+        payload.get("portal_actions"),
+        ["start_command", "export_command", "open_command"],
+        "control_plane.portal_actions",
+        errors,
+    )
+    if not isinstance(payload.get("artifacts"), list):
+        errors.append("control_plane.artifacts must be a list")
+    _require_keys(
+        payload.get("next_lesson"),
+        ["code", "title", "path"],
+        "control_plane.next_lesson",
+        errors,
+    )

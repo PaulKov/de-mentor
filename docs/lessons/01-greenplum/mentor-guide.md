@@ -64,6 +64,9 @@ python3 mentor-lab.py learning-loop greenplum --pre 40 --post 85 --submission su
 python3 mentor-lab.py replay greenplum --student Иван --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/greenplum-replay.md
 python3 mentor-lab.py ci-smoke greenplum --dry-run
 python3 mentor-lab.py session greenplum start --student Иван --output artifacts/sessions/ivan
+python3 mentor-lab.py portal greenplum start --session artifacts/sessions/ivan --portal-dir ../de-mentor-portal --dry-run
+python3 mentor-lab.py portal greenplum export --session artifacts/sessions/ivan --portal-dir ../de-mentor-portal
+python3 mentor-lab.py portal greenplum open --url http://127.0.0.1:3000 --dry-run
 git clone https://github.com/PaulKov/de-mentor-portal.git
 cd de-mentor-portal
 MENTOR_LAB_SESSION=../de-mentor/artifacts/sessions/ivan/session.json npm run dev
@@ -72,6 +75,13 @@ python3 mentor-lab.py lesson-doctor greenplum --output artifacts/greenplum-lesso
 ```
 
 [de-mentor-portal](https://github.com/PaulKov/de-mentor-portal) — основной интерфейс `Academy Experience v5` на Vue 3 + Nuxt 3 + Vite: current stage, timeline, skill graph, copy-command кнопки и handoff. Перед уроком запускай `lesson-doctor`, после урока записывай события через `session event` и собирай отчет через `session report`.
+
+`Academy Control Plane` — это расширенный слой внутри `session.json`, который связывает stage guides, slide anchors, команды показа, вопросы, expected answers, workbook/homework ссылки и `de-mentor-portal`. Используй его как рабочий маршрут:
+
+1. `mentor-lab.py session greenplum start` создает session state с `control_plane`.
+2. `mentor-lab.py portal greenplum start` показывает launch plan для Nuxt portal.
+3. `mentor-lab.py portal greenplum export` копирует `session.json` в portal checkout и пишет `.env`.
+4. `mentor-lab.py portal greenplum open` открывает локальный URL или показывает dry-run команду.
 
 Advanced track подключай только после базового цикла `skew -> EXPLAIN -> fix -> evidence`. Для сильного ученика используй appendix-слайды и четыре deep dive:
 

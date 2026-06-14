@@ -110,6 +110,17 @@ python3 mentor-lab.py lesson-doctor greenplum --output artifacts/greenplum-lesso
 
 Портал показывает current stage, timeline, skill graph, copy-command кнопки, evidence checklist и итоговый handoff. `lesson-doctor` перед уроком проверяет презентацию, docs, SQL examples, workflow и Nuxt portal.
 
+## Academy Control Plane
+
+`Academy Control Plane` добавляет в `session.json` operational-слой для проведения урока: stage guides, slide anchors, вопросы, expected answers, команды показа, workbook/homework ссылки и portal actions. Он нужен, чтобы core repo и Nuxt portal работали как один учебный продукт.
+
+```bash
+python3 mentor-lab.py session greenplum start --student Иван --output artifacts/sessions/ivan
+python3 mentor-lab.py portal greenplum start --session artifacts/sessions/ivan --portal-dir ../de-mentor-portal --dry-run
+python3 mentor-lab.py portal greenplum export --session artifacts/sessions/ivan --portal-dir ../de-mentor-portal
+python3 mentor-lab.py portal greenplum open --url http://127.0.0.1:3000 --dry-run
+```
+
 Для incident mode:
 
 ```bash
