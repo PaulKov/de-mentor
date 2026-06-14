@@ -150,6 +150,8 @@ def test_ci_smoke_cli_and_workflow_are_available():
         content = handle.read()
     assert "Greenplum Live Smoke" in content
     assert "python3 -m pip install pytest" in content
+    assert "Wait for Greenplum" in content
+    assert "for attempt in {1..30}" in content
     assert "mentor-lab.py check greenplum" in content
     assert "mentor-lab.py dataset greenplum generate" in content
     assert "mentor-lab.py autograde-sql greenplum" in content

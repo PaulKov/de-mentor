@@ -43,8 +43,17 @@ jobs:
       - name: Start Greenplum
         run: python3 mentor-lab.py up greenplum
 
-      - name: Check Greenplum
-        run: python3 mentor-lab.py check greenplum
+      - name: Wait for Greenplum
+        run: |
+          for attempt in {1..30}; do
+            if python3 mentor-lab.py check greenplum; then
+              exit 0
+            fi
+            echo "Greenplum is not ready yet, attempt ${attempt}/30"
+            sleep 5
+          done
+          python3 mentor-lab.py logs greenplum --dry-run
+          exit 1
 
       - name: Run storage demo SQL
         run: |
