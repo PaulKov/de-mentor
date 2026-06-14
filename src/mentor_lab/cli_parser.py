@@ -7,6 +7,7 @@ import argparse
 from mentor_lab.cli_parser_foundation import register_foundation_commands
 from mentor_lab.cli_parser_operations import register_operations_commands
 from mentor_lab.cli_parser_practice import register_practice_commands
+from mentor_lab.cli_parser_release import register_release_commands
 from mentor_lab.cli_parser_self_service import register_self_service_commands
 from mentor_lab.cli_parser_slides import register_slides_commands
 
@@ -25,4 +26,5 @@ def build_parser() -> argparse.ArgumentParser:
     register_practice_commands(subparsers)
     register_operations_commands(subparsers)
     register_slides_commands(subparsers)
+    register_release_commands(subparsers)
     return parser
