@@ -9,7 +9,7 @@
 ![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-3776AB)
 ![Docker Desktop](https://img.shields.io/badge/Docker-Desktop-2496ED)
 ![Greenplum](https://img.shields.io/badge/Module-Greenplum-2E7D32)
-![Tests](https://img.shields.io/badge/tests-131%20passing-0A7F3F)
+![Tests](https://img.shields.io/badge/tests-145%20passing-0A7F3F)
 
 </div>
 
@@ -126,6 +126,30 @@ python3 mentor-lab.py student greenplum bootstrap --platform macos
 python3 mentor-lab.py student greenplum bootstrap --platform windows
 python3 mentor-lab.py student greenplum homework
 ```
+
+### Lesson 02: Partitioning, Statistics And Incremental Loads
+
+Второй урок вынесен в отдельный учебный route `greenplum-partitioning`, но использует тот же физический Docker-стенд `greenplum`.
+
+```bash
+python3 mentor-lab.py runbook greenplum-partitioning simple
+python3 mentor-lab.py runbook greenplum-partitioning deep
+python3 mentor-lab.py runbook greenplum-partitioning homework
+python3 mentor-lab.py student greenplum-partitioning bootstrap --platform macos
+python3 mentor-lab.py student greenplum-partitioning homework
+python3 mentor-lab.py academy greenplum-partitioning start --student Иван --dry-run
+```
+
+Основной SQL-lab:
+
+[lesson02-partitioning-statistics-loads.sql](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/lesson02-partitioning-statistics-loads.sql)
+
+Материалы:
+
+- [Индекс Lesson 02](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/README.md)
+- [План ментора](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/mentor-guide.md)
+- [Workbook ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/student-workbook.md)
+- [Домашка](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/homework.md)
 
 ## Быстрый старт
 

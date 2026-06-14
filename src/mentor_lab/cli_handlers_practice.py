@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from mentor_lab.assessment import AssessmentCatalog
-from mentor_lab.cli_context import _lab_or_none, _sql_client
+from mentor_lab.cli_context import _lab_or_none, _learning_route_or_none, _sql_client
 from mentor_lab.cockpit import MentorCockpit
 from mentor_lab.evidence import EvidenceCollector
 from mentor_lab.homework_review import HomeworkReviewer
@@ -192,7 +192,10 @@ def _handle_cockpit(args: argparse.Namespace) -> int:
 
 
 def _handle_portal(args: argparse.Namespace) -> int:
-    lab = _lab_or_none(args.lab_name)
+    route = _learning_route_or_none(args.lab_name)
+    if route is None:
+        return 1
+    lab = _lab_or_none(route.physical_lab_name)
     if lab is None:
         return 1
     if args.portal_command == "start":
@@ -203,7 +206,7 @@ def _handle_portal(args: argparse.Namespace) -> int:
         return _handle_portal_open(args)
 
     suffix = "student-portal-v2" if args.version == "v2" else "student-portal"
-    output = Path(args.output) if args.output else Path("artifacts") / f"{lab.name}-{suffix}.html"
+    output = Path(args.output) if args.output else Path("artifacts") / f"{route.name}-{suffix}.html"
     try:
         written = StudentPortal().write(output, lab.name, version=args.version)
     except ValueError as exc:

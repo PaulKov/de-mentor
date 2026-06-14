@@ -8,6 +8,7 @@ from typing import List, Optional
 
 from mentor_lab.docker_compose import DockerComposeRunner
 from mentor_lab.domain import LabDefinition
+from mentor_lab.lesson_routes import LearningRoute, LESSON_01_ROUTE
 from mentor_lab.portal_launcher import PortalLauncher
 from mentor_lab.session_experience import SessionManager
 
@@ -25,6 +26,7 @@ class AcademyStartOptions:
     port: int = 3000
     dry_run: bool = False
     skip_lab: bool = False
+    lesson_route: LearningRoute = LESSON_01_ROUTE
 
 
 @dataclass(frozen=True)
@@ -67,7 +69,7 @@ class AcademySelfService:
             )
 
         session_dir = self._session_manager.start(
-            lab.name,
+            options.lesson_route.name,
             options.student,
             options.session_dir,
         )
@@ -93,6 +95,7 @@ class AcademySelfService:
 
     def render_plan(self, lab: LabDefinition, options: AcademyStartOptions) -> str:
         session_file = options.session_dir / "session.json"
+        route = options.lesson_route
         portal_plan = self._portal_launcher.build_start_plan(
             session_file,
             options.portal_dir,
@@ -103,16 +106,17 @@ class AcademySelfService:
         lines = [
             "Academy self-service start plan",
             f"- Lab: {lab.name}",
+            f"- Lesson route: {route.name}",
             f"- Student: {options.student}",
             f"- Route: {options.route}",
             f"- Platform: {options.platform}",
             "",
             "Commands:",
             "  python3 mentor-lab.py doctor --full",
-            f"  python3 mentor-lab.py session {lab.name} start --student {options.student} --output {options.session_dir}",
+            f"  python3 mentor-lab.py session {route.name} start --student {options.student} --output {options.session_dir}",
             f"  python3 mentor-lab.py up {lab.name}",
-            f"  python3 mentor-lab.py portal {lab.name} export --session {options.session_dir} --portal-dir {options.portal_dir}",
-            f"  python3 mentor-lab.py runbook {lab.name} {options.route}",
+            f"  python3 mentor-lab.py portal {route.name} export --session {options.session_dir} --portal-dir {options.portal_dir}",
+            f"  python3 mentor-lab.py runbook {route.name} {options.route}",
             "",
             "Portal:",
         ]
@@ -121,8 +125,8 @@ class AcademySelfService:
             [
                 "",
                 "Student handoff:",
-                f"  python3 mentor-lab.py student {lab.name} bootstrap --platform {options.platform}",
-                f"  python3 mentor-lab.py student {lab.name} homework",
+                f"  python3 mentor-lab.py student {route.name} bootstrap --platform {options.platform}",
+                f"  python3 mentor-lab.py student {route.name} homework",
             ]
         )
         return "\n".join(lines)

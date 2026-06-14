@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from mentor_lab.domain import LabDefinition
+from mentor_lab.lesson_routes import LearningRoute
 
 
 @dataclass(frozen=True)
@@ -37,11 +38,12 @@ class StudentSelfServiceGuide:
         ),
     }
 
-    def bootstrap(self, lab: LabDefinition, platform: str) -> str:
+    def bootstrap(self, lab: LabDefinition, route: LearningRoute, platform: str) -> str:
         profile = self._PROFILES[platform]
         prefix = profile.python_command
         lines = [
-            f"Student bootstrap: {lab.name}",
+            f"Student bootstrap: {route.name}",
+            f"Physical lab: {lab.name}",
             f"Platform: {profile.label}",
             "",
             "Prepare:",
@@ -53,31 +55,44 @@ class StudentSelfServiceGuide:
                 "Commands:",
                 f"  {prefix} mentor-lab.py doctor --full",
                 f"  {prefix} mentor-lab.py readiness {lab.name} --platform {platform}",
-                f"  {prefix} mentor-lab.py runbook {lab.name} prep",
-                f"  {prefix} mentor-lab.py academy {lab.name} start --student <your-name>",
+                f"  {prefix} mentor-lab.py up {lab.name}",
+                f"  {prefix} mentor-lab.py check {lab.name}",
+                f"  {prefix} mentor-lab.py runbook {route.name} simple",
+                f"  {prefix} mentor-lab.py academy {route.name} start --student <your-name>",
                 "",
                 "Docs:",
-                "  docs/lessons/01-greenplum/runbooks/student-prep.md",
-                "  labs/greenplum/README.md",
+                f"  {route.prep_runbook_path}",
+                f"  {route.workbook_path}",
+                f"  {route.homework_path}",
+                f"  {lab.docs_path}",
             ]
         )
         return "\n".join(lines) + "\n"
 
-    def homework(self, lab: LabDefinition) -> str:
+    def homework(self, lab: LabDefinition, route: LearningRoute) -> str:
         lines = [
-            f"Student homework: {lab.name}",
+            f"Student homework: {route.name}",
+            f"Physical lab: {lab.name}",
             "",
             "Read:",
-            "  docs/lessons/01-greenplum/homework.md",
-            "  docs/lessons/01-greenplum/runbooks/homework-plan.md",
-            "  docs/lessons/01-greenplum/student-workbook.md",
+            f"  {route.homework_path}",
+            f"  {route.docs_root}/runbooks/homework-plan.md",
+            f"  {route.workbook_path}",
             "",
             "Self-check commands:",
-            f"  python3 mentor-lab.py runbook {lab.name} homework",
+            f"  python3 mentor-lab.py runbook {route.name} homework",
             f"  python3 mentor-lab.py check {lab.name}",
             f"  python3 mentor-lab.py grade {lab.name} --dry-run",
             "",
-            "Bring to Lesson 02:",
-            "  DDL, distribution rationale, partitioning rationale, skew checks, EXPLAIN evidence.",
+            f"Bring to {_lesson_label(route.next_lesson.code)}:",
+            "  DDL, EXPLAIN evidence, partition catalog checks, statistics policy, validation.",
         ]
         return "\n".join(lines) + "\n"
+
+
+def _lesson_label(code: str) -> str:
+    if code.startswith("02-"):
+        return "Lesson 02"
+    if code.startswith("03-"):
+        return "Lesson 03"
+    return code

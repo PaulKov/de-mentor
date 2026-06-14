@@ -4,7 +4,13 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from mentor_lab.cli_context import _lab_or_none, _project_root, _registry, _sql_client
+from mentor_lab.cli_context import (
+    _lab_or_none,
+    _learning_route_or_none,
+    _project_root,
+    _registry,
+    _sql_client,
+)
 from mentor_lab.explain_analyzer import ExplainPlanAnalyzer
 from mentor_lab.full_doctor import FullDoctorReport
 from mentor_lab.lesson_catalog import LessonCatalog
@@ -108,11 +114,11 @@ def _handle_lesson(args: argparse.Namespace) -> int:
 
 
 def _handle_runbook(args: argparse.Namespace) -> int:
-    lab = _lab_or_none(args.lab_name)
-    if lab is None:
+    route = _learning_route_or_none(args.lab_name)
+    if route is None:
         return 1
     try:
-        runbook = RunbookCatalog.default().get(lab.name, args.route)
+        runbook = RunbookCatalog.default().get(route.name, args.route)
     except KeyError as exc:
         print(str(exc))
         return 1
@@ -121,11 +127,11 @@ def _handle_runbook(args: argparse.Namespace) -> int:
 
 
 def _handle_session_start(args: argparse.Namespace) -> int:
-    lab = _lab_or_none(args.lab_name)
-    if lab is None:
+    route = _learning_route_or_none(args.lab_name)
+    if route is None:
         return 1
     output = Path(args.output) if args.output else None
-    session_dir = SessionManager().start(lab.name, args.student, output)
+    session_dir = SessionManager().start(route.name, args.student, output)
     session_file = session_dir / "session.json"
     portal_command = (
         f"cd {PORTAL_APP_PATH} && MENTOR_LAB_SESSION={session_file} npm run dev"
@@ -134,13 +140,13 @@ def _handle_session_start(args: argparse.Namespace) -> int:
     print(f"Nuxt portal repo: {PORTAL_REPOSITORY}")
     print(f"Clone: git clone {PORTAL_REPOSITORY}.git")
     print(f"Run: {portal_command}")
-    print(f"Report: python3 mentor-lab.py session {lab.name} report --session {session_dir}")
+    print(f"Report: python3 mentor-lab.py session {route.name} report --session {session_dir}")
     return 0
 
 
 def _handle_session_event(args: argparse.Namespace) -> int:
-    lab = _lab_or_none(args.lab_name)
-    if lab is None:
+    route = _learning_route_or_none(args.lab_name)
+    if route is None:
         return 1
     try:
         timeline = SessionManager().record_event(
@@ -156,8 +162,8 @@ def _handle_session_event(args: argparse.Namespace) -> int:
 
 
 def _handle_session_report(args: argparse.Namespace) -> int:
-    lab = _lab_or_none(args.lab_name)
-    if lab is None:
+    route = _learning_route_or_none(args.lab_name)
+    if route is None:
         return 1
     manager = SessionManager()
     session_dir = Path(args.session)
@@ -175,8 +181,8 @@ def _handle_session_report(args: argparse.Namespace) -> int:
 
 
 def _handle_session_validate(args: argparse.Namespace) -> int:
-    lab = _lab_or_none(args.lab_name)
-    if lab is None:
+    route = _learning_route_or_none(args.lab_name)
+    if route is None:
         return 1
     result = SessionContractValidator().validate_file(Path(args.session))
     print(result.render(), end="")
@@ -205,12 +211,12 @@ def _handle_lesson_doctor(args: argparse.Namespace) -> int:
 
 
 def _handle_teach(args: argparse.Namespace) -> int:
-    lab = _lab_or_none(args.lab_name)
-    if lab is None:
+    route = _learning_route_or_none(args.lab_name)
+    if route is None:
         return 1
     try:
         session = TeachingSessionBuilder.default().build(
-            lab.name,
+            route.name,
             args.route,
             stage_number=args.stage,
         )
@@ -222,12 +228,12 @@ def _handle_teach(args: argparse.Namespace) -> int:
 
 
 def _handle_orchestrate(args: argparse.Namespace) -> int:
-    lab = _lab_or_none(args.lab_name)
-    if lab is None:
+    route = _learning_route_or_none(args.lab_name)
+    if route is None:
         return 1
     try:
         stage = LiveLessonOrchestrator.default().build(
-            lab.name,
+            route.name,
             route=args.route,
             stage_number=args.stage,
             mode=args.mode,

@@ -14,3 +14,15 @@ def greenplum_common_links() -> List[str]:
         "labs/greenplum/examples/partitioning-strategies.sql",
         "docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md",
     ]
+
+
+def greenplum_partitioning_links() -> List[str]:
+    return [
+        "docs/lessons/02-greenplum-partitioning/README.md",
+        "docs/lessons/02-greenplum-partitioning/student-workbook.md",
+        "docs/lessons/02-greenplum-partitioning/homework.md",
+        "docs/lessons/02-greenplum-partitioning/runbooks/homework-plan.md",
+        "labs/greenplum/examples/lesson02-partitioning-statistics-loads.sql",
+        "labs/greenplum/examples/partitioning-strategies.sql",
+        "docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md",
+    ]
