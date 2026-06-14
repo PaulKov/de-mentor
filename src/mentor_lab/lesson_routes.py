@@ -80,7 +80,7 @@ LESSON_02_ROUTE = LearningRoute(
     physical_lab_name="greenplum",
     title="Partitioning, statistics and incremental loads in MPP",
     docs_root="docs/lessons/02-greenplum-partitioning",
-    deck_path="artifacts/greenplum-partitioning-theory.pptx",
+    deck_path="artifacts/greenplum-theory.pptx",
     sql_examples=(
         "labs/greenplum/examples/lesson02-partitioning-statistics-loads.sql",
         "labs/greenplum/examples/partitioning-strategies.sql",
