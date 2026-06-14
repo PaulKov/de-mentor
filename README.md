@@ -9,7 +9,7 @@
 ![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-3776AB)
 ![Docker Desktop](https://img.shields.io/badge/Docker-Desktop-2496ED)
 ![Greenplum](https://img.shields.io/badge/Module-Greenplum-2E7D32)
-![Tests](https://img.shields.io/badge/tests-145%20passing-0A7F3F)
+![Tests](https://img.shields.io/badge/tests-156%20passing-0A7F3F)
 
 </div>
 
@@ -52,6 +52,7 @@
 - Единый CLI `mentor-lab.py` для macOS и Windows.
 - План урока на 60 минут.
 - Русская презентация в спокойной светлой теме.
+- Каталог презентаций с Drive-таксономией `lessons/<direction>/<lesson>`.
 - Facilitator guide: когда показывать каждый слайд и что говорить.
 - Student workbook, homework, capstone, case study.
 - Deep dives по QD/QE, master/coordinator, Motion, joins, SMP/MPP/EPP.
@@ -147,6 +148,7 @@ python3 mentor-lab.py academy greenplum-partitioning start --student Иван --
 Материалы:
 
 - [Индекс Lesson 02](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/README.md)
+- [Каталог презентаций и Drive-таксономия](https://github.com/PaulKov/de-mentor/blob/master/decks/README.md)
 - [Презентация Lesson 02 в Google Slides](https://docs.google.com/presentation/d/17Ae88PoniaFU34egsFPwC0PndAOoXMze4qV1pIKQkaI/edit?usp=sharing)
 - [Презентация Lesson 02 в PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-partitioning-theory.pptx)
 - [План ментора](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/mentor-guide.md)
@@ -388,6 +390,7 @@ python3 mentor-lab.py dsl greenplum show redistribute-join
 | Финальная задача | [capstone.md](docs/lessons/01-greenplum/capstone.md) |
 | Сквозной кейс | [case-study.md](docs/lessons/01-greenplum/case-study.md) |
 | Презентация | [greenplum-theory.pptx](artifacts/greenplum-theory.pptx) |
+| Каталог презентаций | [decks/README.md](decks/README.md) |
 | Исходники презентации | [decks/greenplum-theory](decks/greenplum-theory/README.md) |
 | Стенд Greenplum | [labs/greenplum](labs/greenplum/README.md) |
 | SQL для паспорта кластера | [cluster-inspection.sql](labs/greenplum/examples/cluster-inspection.sql) |
@@ -400,7 +403,7 @@ python3 mentor-lab.py dsl greenplum show redistribute-join
 ```text
 .
 ├── artifacts/                 # готовые артефакты: PPTX, HTML, reports
-├── decks/greenplum-theory/     # исходники презентации и facilitator guide
+├── decks/                      # каталог презентаций и source decks
 ├── docs/lessons/01-greenplum/  # план урока, workbook, deep dives, academy loop
 ├── labs/greenplum/             # Docker Compose, init SQL, seed profiles
 ├── src/mentor_lab/             # CLI и доменные модули платформы
