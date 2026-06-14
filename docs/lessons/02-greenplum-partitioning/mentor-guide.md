@@ -23,6 +23,8 @@ ROLLBACK;
 
 Материалы:
 
+- [Презентация Lesson 02 в Google Slides](https://docs.google.com/presentation/d/17Ae88PoniaFU34egsFPwC0PndAOoXMze4qV1pIKQkaI/edit?usp=sharing)
+- [Презентация Lesson 02 в PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-partitioning-theory.pptx)
 - [Упрощенный маршрут](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/runbooks/simple-path.md)
 - [Deep-dive маршрут](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/runbooks/deep-dive-path.md)
 - [Workbook ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/student-workbook.md)

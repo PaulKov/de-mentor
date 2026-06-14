@@ -2,6 +2,7 @@ import json
 from contextlib import redirect_stdout
 from io import StringIO
 from pathlib import Path
+from zipfile import ZipFile
 
 from mentor_lab.cli import main
 from mentor_lab.lesson_catalog import LessonCatalog
@@ -11,6 +12,10 @@ from mentor_lab.runbooks import RunbookCatalog
 ROOT = Path(__file__).resolve().parents[1]
 LESSON_ROOT = ROOT / "docs" / "lessons" / "02-greenplum-partitioning"
 SQL_EXAMPLE = ROOT / "labs" / "greenplum" / "examples" / "lesson02-partitioning-statistics-loads.sql"
+GOOGLE_SLIDES_URL = (
+    "https://docs.google.com/presentation/d/"
+    "17Ae88PoniaFU34egsFPwC0PndAOoXMze4qV1pIKQkaI/edit?usp=sharing"
+)
 
 
 def invoke(args):
@@ -93,8 +98,46 @@ def test_lesson_02_runbook_cli_routes_are_available():
         assert exit_code == 0, output
         assert "Lesson 02" in output
         assert "lesson02-partitioning-statistics-loads.sql" in output
+        assert GOOGLE_SLIDES_URL in output
         assert "docs/lessons/02-greenplum-partitioning/student-workbook.md" in output
         assert "docs/lessons/02-greenplum-partitioning/homework.md" in output
+
+
+def test_lesson_02_runbook_slide_references_fit_the_standalone_deck():
+    deck_path = ROOT / "artifacts" / "greenplum-partitioning-theory.pptx"
+    with ZipFile(deck_path) as deck:
+        slide_count = len(
+            [
+                name
+                for name in deck.namelist()
+                if name.startswith("ppt/slides/slide") and name.endswith(".xml")
+            ]
+        )
+
+    catalog = RunbookCatalog.default()
+    for route in ["simple", "deep"]:
+        runbook = catalog.get("greenplum-partitioning", route)
+        for stage in runbook.stages:
+            referenced = _slide_numbers(stage.slides)
+            assert referenced
+            assert max(referenced) <= slide_count, (
+                route,
+                stage.title,
+                stage.slides,
+                slide_count,
+            )
+
+
+def _slide_numbers(slides: str) -> set[int]:
+    numbers: set[int] = set()
+    for part in slides.split(","):
+        normalized = part.strip()
+        if "-" in normalized:
+            start, end = normalized.split("-", maxsplit=1)
+            numbers.update(range(int(start), int(end) + 1))
+        elif normalized.isdigit():
+            numbers.add(int(normalized))
+    return numbers
 
 
 def test_lesson_02_student_self_service_uses_same_greenplum_stand():
@@ -158,7 +201,8 @@ def test_lesson_02_session_control_plane_points_to_lesson_02_materials(tmp_path)
     state = json.loads((session_dir / "session.json").read_text(encoding="utf-8"))
     control_plane = state["control_plane"]
 
-    assert control_plane["mentor_mode"]["slide_deck"] == "artifacts/greenplum-theory.pptx"
+    assert control_plane["mentor_mode"]["slide_deck"] == "artifacts/greenplum-partitioning-theory.pptx"
+    assert control_plane["mentor_mode"]["google_slides"] == GOOGLE_SLIDES_URL
     assert (ROOT / control_plane["mentor_mode"]["slide_deck"]).exists()
     assert "python3 mentor-lab.py runbook greenplum-partitioning simple" in control_plane["mentor_mode"]["runbook_commands"]
     assert control_plane["student_mode"]["workbook"] == "docs/lessons/02-greenplum-partitioning/student-workbook.md"
@@ -166,6 +210,7 @@ def test_lesson_02_session_control_plane_points_to_lesson_02_materials(tmp_path)
     assert "labs/greenplum/examples/lesson02-partitioning-statistics-loads.sql" in {
         artifact["path"] for artifact in control_plane["artifacts"]
     }
+    assert GOOGLE_SLIDES_URL in {artifact["path"] for artifact in control_plane["artifacts"]}
     assert control_plane["next_lesson"]["code"] == "03-greenplum-query-tuning"
     assert control_plane["mentor_mode"]["stage_guides"][0]["stage_code"] == "replay"
     assert "ANALYZE" in control_plane["mentor_mode"]["stage_guides"][2]["show_commands"][0]

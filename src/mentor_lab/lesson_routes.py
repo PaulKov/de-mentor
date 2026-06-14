@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Iterable
+from typing import Iterable, Optional
 
 
 @dataclass(frozen=True)
@@ -25,6 +25,7 @@ class LearningRoute:
     title: str
     docs_root: str
     deck_path: str
+    google_slides_url: Optional[str]
     sql_examples: tuple[str, ...]
     next_lesson: NextLesson
 
@@ -62,6 +63,7 @@ LESSON_01_ROUTE = LearningRoute(
     title="Greenplum MPP foundations",
     docs_root="docs/lessons/01-greenplum",
     deck_path="artifacts/greenplum-theory.pptx",
+    google_slides_url=None,
     sql_examples=(
         "labs/greenplum/examples/storage-and-partitioning.sql",
         "labs/greenplum/examples/partitioning-strategies.sql",
@@ -80,7 +82,11 @@ LESSON_02_ROUTE = LearningRoute(
     physical_lab_name="greenplum",
     title="Partitioning, statistics and incremental loads in MPP",
     docs_root="docs/lessons/02-greenplum-partitioning",
-    deck_path="artifacts/greenplum-theory.pptx",
+    deck_path="artifacts/greenplum-partitioning-theory.pptx",
+    google_slides_url=(
+        "https://docs.google.com/presentation/d/"
+        "17Ae88PoniaFU34egsFPwC0PndAOoXMze4qV1pIKQkaI/edit?usp=sharing"
+    ),
     sql_examples=(
         "labs/greenplum/examples/lesson02-partitioning-statistics-loads.sql",
         "labs/greenplum/examples/partitioning-strategies.sql",

@@ -8,6 +8,7 @@ def lesson02_runbook_paths() -> dict[str, object]:
 
     return {
         "deck_path": LESSON_02_ROUTE.deck_path,
+        "google_slides_url": LESSON_02_ROUTE.google_slides_url,
         "workbook_path": LESSON_02_ROUTE.workbook_path,
         "homework_path": LESSON_02_ROUTE.homework_path,
         "sql_examples": list(LESSON_02_ROUTE.sql_examples),
