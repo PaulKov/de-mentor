@@ -77,6 +77,7 @@ ROLLBACK;
 - [Презентация Lesson 02 в Google Slides](https://docs.google.com/presentation/d/17Ae88PoniaFU34egsFPwC0PndAOoXMze4qV1pIKQkaI/edit?usp=sharing)
 - [Презентация Lesson 02 в PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-partitioning-theory.pptx)
 - [Исходники презентации](https://github.com/PaulKov/de-mentor/blob/master/decks/greenplum-partitioning-theory/README.md)
+- [Каталог презентаций и Drive-таксономия](https://github.com/PaulKov/de-mentor/blob/master/decks/README.md)
 - [План ментора](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/mentor-guide.md)
 - [Workbook ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/student-workbook.md)
 - [Домашка](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/homework.md)
@@ -85,6 +86,30 @@ ROLLBACK;
 - [Упрощенный маршрут](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/runbooks/simple-path.md)
 - [Deep-dive маршрут](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/runbooks/deep-dive-path.md)
 - [План домашки](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/runbooks/homework-plan.md)
+
+## Публикация В Google Slides
+
+Drive-папка урока: `lessons/Greenplum/Lesson 02 - Partitioning, statistics and incremental loads`.
+
+Перед реальной публикацией всегда делаем dry-run:
+
+```bash
+python3 mentor-lab.py slides publish greenplum-partitioning \
+  --dry-run \
+  --confirm-account pavelkov007@gmail.com
+```
+
+Реальная публикация и проверка используют только личный аккаунт `pavelkov007@gmail.com`:
+
+```bash
+python3 mentor-lab.py slides publish greenplum-partitioning \
+  --confirm-account pavelkov007@gmail.com \
+  --oauth-client-json /Users/macbook/Documents/de-mentor-docs/google-service-account/client_secret_177388438371-pa06utp6g6j32furdm0k96iphfkdu1vr.apps.googleusercontent.com.json
+
+python3 mentor-lab.py slides verify greenplum-partitioning \
+  --confirm-account pavelkov007@gmail.com \
+  --oauth-client-json /Users/macbook/Documents/de-mentor-docs/google-service-account/client_secret_177388438371-pa06utp6g6j32furdm0k96iphfkdu1vr.apps.googleusercontent.com.json
+```
 
 ## Следующий Урок
 
