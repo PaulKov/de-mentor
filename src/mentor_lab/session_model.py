@@ -97,6 +97,7 @@ class AcademySession:
     events: List[SessionEvent] = field(default_factory=list)
     current_stage_code: str = "environment"
     control_plane: Dict[str, Any] = field(default_factory=dict)
+    homework_review: Optional[Dict[str, Any]] = None
 
     @property
     def current_stage(self) -> SessionStage:
@@ -110,7 +111,7 @@ class AcademySession:
             f"MENTOR_LAB_SESSION=/absolute/path/to/session.json "
             "npm run dev"
         )
-        return {
+        payload = {
             "contract_version": CONTRACT_VERSION,
             "academy_version": ACADEMY_VERSION,
             "lab_name": self.lab_name,
@@ -131,6 +132,9 @@ class AcademySession:
                 "dev_command": dev_command,
             },
         }
+        if self.homework_review is not None:
+            payload["homework_review"] = self.homework_review
+        return payload
 
     @classmethod
     def from_dict(cls, payload: Dict[str, Any]) -> "AcademySession":
@@ -169,6 +173,7 @@ class AcademySession:
                 for item in payload.get("events", [])
             ],
             control_plane=dict(payload.get("control_plane", {})),
+            homework_review=payload.get("homework_review"),
         )
 
 

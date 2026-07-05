@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import json
+from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
 from mentor_lab.control_plane import ControlPlaneBuilder
+from mentor_lab.homework_review_payload import HomeworkReviewPayloadBuilder
 from mentor_lab.session_contract import PORTAL_FRAMEWORK
 from mentor_lab.session_defaults import (
     _default_commands,
@@ -37,6 +39,8 @@ class SessionManager:
         lab_name: str,
         student_name: str,
         output_dir: Optional[Path] = None,
+        homework_review: Optional[str] = None,
+        submission_path: Optional[Path] = None,
     ) -> Path:
         session_dir = output_dir or Path("artifacts") / "sessions" / _session_slug(
             lab_name,
@@ -51,6 +55,7 @@ class SessionManager:
             skill_graph=_default_skill_graph(),
             commands=_default_commands(lab_name),
             control_plane=ControlPlaneBuilder().build(lab_name).to_dict(),
+            homework_review=_homework_review_payload(homework_review, submission_path),
             events=[
                 SessionEvent.create(
                     "session-start",
@@ -112,3 +117,12 @@ def _session_slug(lab_name: str, student_name: str) -> str:
         for char in student_name.strip()
     ).strip("-") or "student"
     return f"{lab_name}-{clean_student}-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
+
+
+def _homework_review_payload(
+    lesson_code: Optional[str],
+    submission_path: Optional[Path],
+) -> Optional[dict[str, object]]:
+    if lesson_code is None:
+        return None
+    return HomeworkReviewPayloadBuilder().build(lesson_code, submission_path)

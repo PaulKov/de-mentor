@@ -98,6 +98,8 @@ class SessionContractValidator:
         _validate_events(payload.get("events"), errors)
         if "control_plane" in payload:
             _validate_control_plane(payload.get("control_plane"), errors)
+        if "homework_review" in payload:
+            _validate_homework_review(payload.get("homework_review"), errors)
         _validate_portal(payload.get("portal"), errors)
         return ContractValidationResult(errors)
 
@@ -153,6 +155,74 @@ def _validate_events(payload: Any, errors: List[str]) -> None:
         return
     for index, item in enumerate(payload):
         _require_keys(item, ["event_type", "note", "created_at"], f"events[{index}]", errors)
+
+
+def _validate_homework_review(payload: Any, errors: List[str]) -> None:
+    _require_keys(
+        payload,
+        [
+            "lesson_code",
+            "title",
+            "submission_status",
+            "submission_path",
+            "score",
+            "accepted",
+            "rubric_items",
+            "missing_evidence",
+            "next_actions",
+            "live_checklist",
+            "sql_snippets",
+            "mentor_conclusion",
+            "next_lesson_plan",
+        ],
+        "homework_review",
+        errors,
+    )
+    if not isinstance(payload, dict):
+        return
+    if payload.get("submission_status") not in {"submitted", "not_submitted"}:
+        errors.append("homework_review.submission_status must be submitted or not_submitted")
+    if not isinstance(payload.get("score"), int):
+        errors.append("homework_review.score must be an integer")
+    if not isinstance(payload.get("accepted"), bool):
+        errors.append("homework_review.accepted must be a boolean")
+    _validate_object_list(payload.get("rubric_items"), "homework_review.rubric_items", errors)
+    _validate_object_list(payload.get("live_checklist"), "homework_review.live_checklist", errors)
+    _validate_object_list(payload.get("sql_snippets"), "homework_review.sql_snippets", errors)
+    _validate_string_list(payload.get("missing_evidence"), "homework_review.missing_evidence", errors)
+    _validate_string_list(payload.get("next_actions"), "homework_review.next_actions", errors)
+    _require_keys(
+        payload.get("mentor_conclusion"),
+        ["decision", "summary", "recommendation"],
+        "homework_review.mentor_conclusion",
+        errors,
+    )
+    _require_keys(
+        payload.get("next_lesson_plan"),
+        ["lesson_code", "title", "focus", "action_items", "commands"],
+        "homework_review.next_lesson_plan",
+        errors,
+    )
+    if isinstance(payload.get("next_lesson_plan"), dict):
+        _validate_string_list(
+            payload["next_lesson_plan"].get("action_items"),
+            "homework_review.next_lesson_plan.action_items",
+            errors,
+        )
+        _validate_string_list(
+            payload["next_lesson_plan"].get("commands"),
+            "homework_review.next_lesson_plan.commands",
+            errors,
+        )
+
+
+def _validate_object_list(payload: Any, label: str, errors: List[str]) -> None:
+    if not isinstance(payload, list):
+        errors.append(f"{label} must be a list")
+        return
+    for index, item in enumerate(payload):
+        if not isinstance(item, dict):
+            errors.append(f"{label}[{index}] must be an object")
 
 
 def _validate_portal(payload: Any, errors: List[str]) -> None:

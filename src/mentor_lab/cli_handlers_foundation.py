@@ -131,7 +131,17 @@ def _handle_session_start(args: argparse.Namespace) -> int:
     if route is None:
         return 1
     output = Path(args.output) if args.output else None
-    session_dir = SessionManager().start(route.name, args.student, output)
+    submission = Path(args.submission) if args.submission else None
+    if submission is not None and not submission.exists():
+        print(f"Homework submission file does not exist: {submission}")
+        return 1
+    session_dir = SessionManager().start(
+        route.name,
+        args.student,
+        output,
+        homework_review=args.homework_review,
+        submission_path=submission,
+    )
     session_file = session_dir / "session.json"
     portal_command = (
         f"cd {PORTAL_APP_PATH} && MENTOR_LAB_SESSION={session_file} npm run dev"
