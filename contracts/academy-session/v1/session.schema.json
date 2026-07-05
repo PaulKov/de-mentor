@@ -64,6 +64,9 @@
     "control_plane": {
       "$ref": "#/$defs/controlPlane"
     },
+    "homework_review": {
+      "$ref": "#/$defs/homeworkReview"
+    },
     "portal": {
       "type": "object",
       "additionalProperties": false,
@@ -335,6 +338,193 @@
         },
         "homework_ref": {
           "type": "string"
+        }
+      }
+    },
+    "homeworkReview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lesson_code",
+        "title",
+        "submission_status",
+        "submission_path",
+        "score",
+        "accepted",
+        "rubric_items",
+        "missing_evidence",
+        "next_actions",
+        "live_checklist",
+        "sql_snippets",
+        "mentor_conclusion",
+        "next_lesson_plan"
+      ],
+      "properties": {
+        "lesson_code": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "submission_status": {
+          "enum": ["submitted", "not_submitted"]
+        },
+        "submission_path": {
+          "type": "string"
+        },
+        "score": {
+          "type": "integer"
+        },
+        "accepted": {
+          "type": "boolean"
+        },
+        "rubric_items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/homeworkRubricItem"
+          }
+        },
+        "missing_evidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "next_actions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "live_checklist": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/homeworkChecklistItem"
+          }
+        },
+        "sql_snippets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/homeworkSqlSnippet"
+          }
+        },
+        "mentor_conclusion": {
+          "$ref": "#/$defs/homeworkMentorConclusion"
+        },
+        "next_lesson_plan": {
+          "$ref": "#/$defs/homeworkNextLessonPlan"
+        }
+      }
+    },
+    "homeworkRubricItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "title",
+        "score",
+        "passed",
+        "expected_evidence",
+        "mentor_prompt",
+        "conclusion_hint"
+      ],
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "score": {
+          "type": "integer"
+        },
+        "passed": {
+          "type": "boolean"
+        },
+        "expected_evidence": {
+          "type": "string"
+        },
+        "mentor_prompt": {
+          "type": "string"
+        },
+        "conclusion_hint": {
+          "type": "string"
+        }
+      }
+    },
+    "homeworkChecklistItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "label", "done"],
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "done": {
+          "type": "boolean"
+        }
+      }
+    },
+    "homeworkSqlSnippet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "command", "explanation"],
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "command": {
+          "type": "string"
+        },
+        "explanation": {
+          "type": "string"
+        }
+      }
+    },
+    "homeworkMentorConclusion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision", "summary", "recommendation"],
+      "properties": {
+        "decision": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "recommendation": {
+          "type": "string"
+        }
+      }
+    },
+    "homeworkNextLessonPlan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lesson_code", "title", "focus", "action_items", "commands"],
+      "properties": {
+        "lesson_code": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "focus": {
+          "type": "string"
+        },
+        "action_items": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "commands": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },

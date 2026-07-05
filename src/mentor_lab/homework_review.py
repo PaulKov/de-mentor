@@ -99,6 +99,11 @@ class HomeworkReviewer:
     def __init__(self, criteria: Iterable[HomeworkCriterion]) -> None:
         self._criteria = list(criteria)
 
+    def criteria(self) -> tuple[HomeworkCriterion, ...]:
+        """Return rubric criteria for portal walkthroughs."""
+
+        return tuple(self._criteria)
+
     def review(self, path: Path) -> HomeworkReview:
         return self.review_text(path.read_text(encoding="utf-8"))
 

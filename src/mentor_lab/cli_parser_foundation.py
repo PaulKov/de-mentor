@@ -86,6 +86,8 @@ def register_foundation_commands(subparsers: argparse._SubParsersAction) -> None
     )
     session_start.add_argument("--student", required=True)
     session_start.add_argument("--output")
+    session_start.add_argument("--homework-review", choices=["lesson-01"])
+    session_start.add_argument("--submission")
     session_start.set_defaults(handler=_handle_session_start)
     session_event = session_subparsers.add_parser(
         "event",
