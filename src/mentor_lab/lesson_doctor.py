@@ -133,7 +133,7 @@ def _greenplum_checks() -> Iterable[LessonDoctorCheck]:
     return [
         LessonDoctorCheck(
             "Презентация",
-            Path("artifacts/greenplum-theory/greenplum-theory.pptx"),
+            Path("artifacts/lesson-01/greenplum-theory.pptx"),
         ),
         LessonDoctorCheck(
             "Workbook",

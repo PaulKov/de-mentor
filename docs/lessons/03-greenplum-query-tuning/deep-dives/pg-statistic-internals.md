@@ -65,7 +65,7 @@ Selectivity для `BETWEEN lo AND hi`:
 histogram_bounds ≈ {1.67, 4.33, 6.67, 9.00, … }  -- 101 граница
 ```
 
-Артефакты: `artifacts/lesson03-plan-screens/stats-*.png`, `artifacts/lesson03-stats/`.
+Артефакты: `artifacts/lesson-03/plan-screens/stats-*.png`, `artifacts/lesson-03/stats/`.
 
 ## MCV: Пример
 

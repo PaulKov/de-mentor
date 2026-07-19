@@ -535,7 +535,7 @@ python3 mentor-lab.py hint greenplum mpp-systems
 Материалы:
 
 1. [Student prep](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/student-prep.md) - подготовка Docker, Python и базовая диагностика для macOS, Windows и Linux.
-2. [Презентация (PowerPoint)](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-theory/greenplum-theory.pptx) - теория урока.
+2. [Презентация (PowerPoint)](https://github.com/PaulKov/de-mentor/blob/master/artifacts/lesson-01/greenplum-theory.pptx) - теория урока.
 3. [Greenplum lab README](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/README.md) - как устроен Docker-стенд Greenplum и как его запустить.
 4. [Student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md) - задания урока и self-check по кластеру, skew, Motion, storage и partitioning intro.
 5. [Homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md) - что нужно сдать после урока.

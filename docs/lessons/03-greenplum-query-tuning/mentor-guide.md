@@ -23,7 +23,7 @@ GREENPLUM_625_IMAGE=andruche/greenplum:6.25.3-slim-amd64 \
 Открой материалы:
 
 - [Google Slides](https://docs.google.com/presentation/d/1e5vpqatw6ccgeZF0PWLLWMzIqkb4SODE-IwKxrSyqB8/edit?usp=sharing) (65 слайдов)
-- PPTX: `artifacts/greenplum-query-tuning-theory/greenplum-query-tuning-theory.pptx`
+- PPTX: `artifacts/lesson-03/greenplum-query-tuning-theory.pptx`
 - [Simple path](runbooks/simple-path.md) · [Deep path](runbooks/deep-dive-path.md)
 - [Workbook](student-workbook.md) · [Homework](homework.md) · [Cheat-sheet](cheat-sheet.md)
 - Deep-dives: [optimizer](deep-dives/optimizer-legacy-vs-orca.md), [stats](deep-dives/pg-statistic-internals.md), [TEMP/spill](deep-dives/temp-tables-and-spill.md), [storage](deep-dives/storage-physical-layout.md)
@@ -181,7 +181,7 @@ docker exec -u gpadmin greenplum-625-greenplum-625-1 bash -lc '
 '
 ```
 
-Готовые скрины: `artifacts/lesson03-temp-fs/`, `artifacts/lesson03-plan-screens/temp-*.png`, `spill-*.png`.
+Готовые скрины: `artifacts/lesson-03/temp-fs/`, `artifacts/lesson-03/plan-screens/temp-*.png`, `spill-*.png`.
 
 ---
 

@@ -32,7 +32,7 @@ def test_lesson_release_manifest_loads_lesson_02_contract():
     assert manifest.route == "greenplum-partitioning"
     assert manifest.lesson_code == "lesson-02"
     assert manifest.physical_lab == "greenplum"
-    assert manifest.deck_path == "artifacts/greenplum-partitioning-theory/greenplum-partitioning-theory.pptx"
+    assert manifest.deck_path == "artifacts/lesson-02/greenplum-partitioning-theory.pptx"
     assert manifest.google_slides_url == GOOGLE_SLIDES_URL
     assert manifest.expected_owner_email == "pavelkov007@gmail.com"
     assert manifest.expected_slide_count == 18

@@ -20,7 +20,7 @@ from pptx.util import Emu, Pt
 ROOT = Path(__file__).resolve().parents[1]
 DECK_DIR = ROOT / "decks" / "greenplum-query-tuning-theory"
 SLIDES_DIR = DECK_DIR / "slides"
-PPTX_PATH = ROOT / "artifacts" / "greenplum-query-tuning-theory" / "greenplum-query-tuning-theory.pptx"
+PPTX_PATH = ROOT / "artifacts" / "lesson-03" / "greenplum-query-tuning-theory.pptx"
 
 W, H = 12192000, 6858000  # 13.333" x 7.5" in EMUs
 C = {

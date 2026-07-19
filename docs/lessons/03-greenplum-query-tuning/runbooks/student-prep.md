@@ -52,4 +52,4 @@ py mentor-lab.py student greenplum-query-tuning homework
 Материалы:
 
 - Workbook: [student-workbook.md](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/03-greenplum-query-tuning/student-workbook.md)
-- Презентация: [greenplum-query-tuning-theory.pptx](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-query-tuning-theory/greenplum-query-tuning-theory.pptx)
+- Презентация: [greenplum-query-tuning-theory.pptx](https://github.com/PaulKov/de-mentor/blob/master/artifacts/lesson-03/greenplum-query-tuning-theory.pptx)

@@ -46,7 +46,7 @@ nspname=pg_temp_787  relname=tmp_fs_demo  filepath=base/12812/t_16465
 /data/data2/gpsne1/base/12812/t_16465     1212416 bytes
 ```
 
-Артефакты: `artifacts/lesson03-temp-fs/`, скрин `artifacts/lesson03-plan-screens/temp-relfilenode-fs.png`.
+Артефакты: `artifacts/lesson-03/temp-fs/`, скрин `artifacts/lesson-03/plan-screens/temp-relfilenode-fs.png`.
 `pgsql_tmp` при создании TEMP **пуст**.
 
 ## Spill / Workfiles
@@ -70,7 +70,7 @@ ORDER BY amount DESC, customer_id, product_id, sale_date;
 
 Рост FS (poll): `pgsql_tmp_Sort_*.0` ~0.4MB → ~17MB на сегмент, после query cleanup.
 
-Скрин: `artifacts/lesson03-plan-screens/spill-pgsql_tmp-growth.png`.
+Скрин: `artifacts/lesson-03/plan-screens/spill-pgsql_tmp-growth.png`.
 
 GUC: `statement_mem`, `max_statement_mem`, `gp_workfile_limit_*`, `gp_workfile_compression`. На GP6 `work_mem` deprecated.
 
