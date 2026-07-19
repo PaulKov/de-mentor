@@ -1,0 +1,12 @@
+A. NO STATS — Nested Loop, outer underestimated ===
+                                                                                                                                                                                                                                               QUERY PLAN
+ Gather Motion 1:1  (slice2; segments: 1)  (cost=0.00..437.00 rows=1 width=40) (actual time=0.809..170.715 rows=80000 loops=1)
+   ->  Nested Loop  (cost=0.00..437.00 rows=1 width=40) (actual time=0.443..154.623 rows=80000 loops=1)
+         ->  Result  (cost=0.00..431.00 rows=1 width=28) (actual time=0.336..18.485 rows=80000 loops=1)
+               ->  Broadcast Motion 2:1  (slice1; segments: 2)  (cost=0.00..431.00 rows=1 width=20) (actual time=0.333..7.685 rows=80000 loops=1)
+                     ->  Seq Scan on nlj_orders  (cost=0.00..431.00 rows=1 width=20) (actual time=0.042..26.463 rows=40060 loops=1)
+         ->  Index Scan using nlj_ref_customer_idx on nlj_ref  (cost=0.00..6.00 rows=1 width=12) (actual time=0.000..0.001 rows=1 loops=80000)
+ Planning time: 11.772 ms
+ Memory used:  131072kB
+ Optimizer: Pivotal Optimizer (GPORCA)
+ Execution time: 175.633 ms

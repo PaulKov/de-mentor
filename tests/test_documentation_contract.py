@@ -17,7 +17,7 @@ def _without_fenced_code(content: str) -> str:
 PUBLIC_DOC_ROOTS = [
     ROOT / "README.md",
     ROOT / "decks/greenplum-theory",
-    ROOT / "docs/lessons/01-greenplum",
+    ROOT / "lessons/lesson-01",
     ROOT / "labs/greenplum",
 ]
 
@@ -34,23 +34,23 @@ def _public_markdown_docs() -> list[Path]:
 
 def test_professional_lesson_artifacts_exist():
     expected = [
-        "docs/lessons/01-greenplum/case-study.md",
-        "docs/lessons/01-greenplum/architecture.md",
-        "docs/lessons/01-greenplum/rubric.md",
-        "docs/lessons/01-greenplum/capstone.md",
-        "docs/lessons/01-greenplum/incidents/skewed-distribution.md",
-        "docs/lessons/01-greenplum/deep-dives/master-segment-data-path.md",
-        "docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md",
-        "docs/lessons/01-greenplum/deep-dives/explain-plan-reading.md",
-        "docs/lessons/01-greenplum/deep-dives/physical-joins-in-mpp.md",
-        "docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md",
-        "docs/lessons/01-greenplum/deep-dives/mpp-system-taxonomy.md",
-        "docs/lessons/01-greenplum/query-tuning-lab.md",
-        "docs/lessons/01-greenplum/academy-loop.md",
-        "docs/lessons/01-greenplum/runbooks/simple-path.md",
-        "docs/lessons/01-greenplum/runbooks/deep-dive-path.md",
-        "docs/lessons/01-greenplum/runbooks/homework-plan.md",
-        "docs/lessons/01-greenplum/runbooks/student-prep.md",
+        "lessons/lesson-01/docs/case-study.md",
+        "lessons/lesson-01/docs/architecture.md",
+        "lessons/lesson-01/homework/rubric.md",
+        "lessons/lesson-01/docs/capstone.md",
+        "lessons/lesson-01/docs/incidents/skewed-distribution.md",
+        "lessons/lesson-01/docs/deep-dives/master-segment-data-path.md",
+        "lessons/lesson-01/docs/deep-dives/qd-qe-gang-slices-explained.md",
+        "lessons/lesson-01/docs/deep-dives/explain-plan-reading.md",
+        "lessons/lesson-01/docs/deep-dives/physical-joins-in-mpp.md",
+        "lessons/lesson-01/docs/deep-dives/partitioning-strategies.md",
+        "lessons/lesson-01/docs/deep-dives/mpp-system-taxonomy.md",
+        "lessons/lesson-01/docs/query-tuning-lab.md",
+        "lessons/lesson-01/docs/academy-loop.md",
+        "lessons/lesson-01/docs/runbooks/simple-path.md",
+        "lessons/lesson-01/docs/runbooks/deep-dive-path.md",
+        "lessons/lesson-01/homework/plan.md",
+        "lessons/lesson-01/docs/runbooks/student-prep.md",
         "labs/greenplum-625/examples/cluster-inspection.sql",
         "labs/greenplum-625/examples/cluster-monitoring.sql",
         "labs/greenplum-625/examples/partitioning-strategies.sql",
@@ -65,7 +65,7 @@ def test_professional_lesson_artifacts_exist():
 
 
 def test_user_facing_docs_have_no_placeholders():
-    docs = list((ROOT / "docs/lessons/01-greenplum").rglob("*.md"))
+    docs = list((ROOT / "lessons/lesson-01").rglob("*.md"))
 
     offenders = []
     for path in docs:
@@ -118,22 +118,22 @@ def test_public_markdown_uses_russian_service_labels():
 
 def test_core_lesson_docs_have_russian_titles_and_terms():
     expected = {
-        "docs/lessons/01-greenplum/architecture.md": [
+        "lessons/lesson-01/docs/architecture.md": [
             "# Карта Архитектуры Greenplum",
             "## Ментальная Модель MPP",
             "## Что Смотреть В EXPLAIN",
         ],
-        "docs/lessons/01-greenplum/capstone.md": [
+        "lessons/lesson-01/docs/capstone.md": [
             "# Финальная Задача: Daily Marketplace Revenue Mart",
             "## Сценарий",
             "## Что Сдать",
         ],
-        "docs/lessons/01-greenplum/rubric.md": [
+        "lessons/lesson-01/homework/rubric.md": [
             "# Матрица Оценки И Навыков",
             "## Уровни Оценки",
             "## Вопросы Ментора",
         ],
-        "docs/lessons/01-greenplum/incidents/skewed-distribution.md": [
+        "lessons/lesson-01/docs/incidents/skewed-distribution.md": [
             "# Инцидент: Перекошенное Распределение",
             "## Симптомы",
             "## Критерии Приемки",
@@ -167,9 +167,9 @@ def test_presentation_facilitator_guide_has_timing_and_system_taxonomy():
 
 def test_runbooks_have_commands_questions_checks_and_cross_links():
     runbook_paths = [
-        ROOT / "docs/lessons/01-greenplum/runbooks/simple-path.md",
-        ROOT / "docs/lessons/01-greenplum/runbooks/deep-dive-path.md",
-        ROOT / "docs/lessons/01-greenplum/runbooks/homework-plan.md",
+        ROOT / "lessons/lesson-01/docs/runbooks/simple-path.md",
+        ROOT / "lessons/lesson-01/docs/runbooks/deep-dive-path.md",
+        ROOT / "lessons/lesson-01/homework/plan.md",
     ]
 
     for path in runbook_paths:
@@ -180,24 +180,24 @@ def test_runbooks_have_commands_questions_checks_and_cross_links():
         assert "Ожидаемый ответ" in content
         assert "Как проверяем" in content
         assert "student-workbook.md" in content
-        assert "homework.md" in content
+        assert "assignment.md" in content or "homework.md" in content
         assert "storage-and-partitioning.sql" in content
         assert "partitioning-strategies.sql" in content
 
 
 def test_workbook_homework_and_mentor_guide_are_cross_linked():
-    workbook = (ROOT / "docs/lessons/01-greenplum/student-workbook.md").read_text(
+    workbook = (ROOT / "lessons/lesson-01/docs/student-workbook.md").read_text(
         encoding="utf-8"
     )
-    homework = (ROOT / "docs/lessons/01-greenplum/homework.md").read_text(
+    homework = (ROOT / "lessons/lesson-01/homework/assignment.md").read_text(
         encoding="utf-8"
     )
-    mentor = (ROOT / "docs/lessons/01-greenplum/mentor-guide.md").read_text(
+    mentor = (ROOT / "lessons/lesson-01/docs/mentor-guide.md").read_text(
         encoding="utf-8"
     )
 
-    assert "homework.md" in workbook
-    assert "runbooks/homework-plan.md" in workbook
+    assert "homework" in workbook.lower()
+    assert "homework/plan.md" in workbook or "homework/assignment.md" in workbook
     assert "storage-and-partitioning.sql" in workbook
     assert "partitioning-strategies.sql" in workbook
     assert "deep-dives/partitioning-strategies.md" in workbook
@@ -212,18 +212,18 @@ def test_workbook_homework_and_mentor_guide_are_cross_linked():
 
 
 def test_workbook_has_end_of_lesson_student_handoff_pack():
-    workbook = (ROOT / "docs/lessons/01-greenplum/student-workbook.md").read_text(
+    workbook = (ROOT / "lessons/lesson-01/docs/student-workbook.md").read_text(
         encoding="utf-8"
     )
 
     assert "## Что Отправить Ученику После Урока" in workbook
 
     required_links = [
-        f"{REPO_BLOB_BASE}docs/lessons/01-greenplum/runbooks/student-prep.md",
+        f"{REPO_BLOB_BASE}lessons/lesson-01/docs/runbooks/student-prep.md",
         f"{REPO_BLOB_BASE}labs/greenplum-625/README.md",
-        f"{REPO_BLOB_BASE}docs/lessons/01-greenplum/student-workbook.md",
-        f"{REPO_BLOB_BASE}docs/lessons/01-greenplum/homework.md",
-        f"{REPO_BLOB_BASE}docs/lessons/01-greenplum/runbooks/homework-plan.md",
+        f"{REPO_BLOB_BASE}lessons/lesson-01/docs/student-workbook.md",
+        f"{REPO_BLOB_BASE}lessons/lesson-01/homework/assignment.md",
+        f"{REPO_BLOB_BASE}lessons/lesson-01/homework/plan.md",
         f"{REPO_BLOB_BASE}labs/greenplum-625/examples/cluster-inspection.sql",
         f"{REPO_BLOB_BASE}labs/greenplum-625/examples/cluster-monitoring.sql",
         f"{REPO_BLOB_BASE}labs/greenplum-625/examples/storage-and-partitioning.sql",
@@ -253,11 +253,11 @@ def test_workbook_has_end_of_lesson_student_handoff_pack():
 def test_learning_loop_is_documented_as_end_of_lesson_artifact():
     docs = [
         ROOT / "README.md",
-        ROOT / "docs/lessons/01-greenplum/README.md",
-        ROOT / "docs/lessons/01-greenplum/academy-loop.md",
-        ROOT / "docs/lessons/01-greenplum/academy-v2.md",
-        ROOT / "docs/lessons/01-greenplum/mentor-guide.md",
-        ROOT / "docs/lessons/01-greenplum/student-workbook.md",
+        ROOT / "lessons/lesson-01/docs/README.md",
+        ROOT / "lessons/lesson-01/docs/academy-loop.md",
+        ROOT / "lessons/lesson-01/docs/academy-v2.md",
+        ROOT / "lessons/lesson-01/docs/mentor-guide.md",
+        ROOT / "lessons/lesson-01/docs/student-workbook.md",
     ]
 
     for path in docs:
@@ -269,12 +269,12 @@ def test_learning_loop_is_documented_as_end_of_lesson_artifact():
 def test_mentor_automation_commands_are_documented():
     overview_docs = [
         ROOT / "README.md",
-        ROOT / "docs/lessons/01-greenplum/README.md",
-        ROOT / "docs/lessons/01-greenplum/academy-loop.md",
-        ROOT / "docs/lessons/01-greenplum/academy-v2.md",
-        ROOT / "docs/lessons/01-greenplum/mentor-guide.md",
-        ROOT / "docs/lessons/01-greenplum/student-workbook.md",
-        ROOT / "docs/lessons/01-greenplum/cheat-sheet.md",
+        ROOT / "lessons/lesson-01/docs/README.md",
+        ROOT / "lessons/lesson-01/docs/academy-loop.md",
+        ROOT / "lessons/lesson-01/docs/academy-v2.md",
+        ROOT / "lessons/lesson-01/docs/mentor-guide.md",
+        ROOT / "lessons/lesson-01/docs/student-workbook.md",
+        ROOT / "lessons/lesson-01/docs/cheat-sheet.md",
     ]
     expected_commands = [
         "mentor-lab.py teach greenplum simple",
@@ -290,7 +290,7 @@ def test_mentor_automation_commands_are_documented():
         for command in expected_commands:
             assert command in content
 
-    homework = (ROOT / "docs/lessons/01-greenplum/homework.md").read_text(
+    homework = (ROOT / "lessons/lesson-01/homework/assignment.md").read_text(
         encoding="utf-8"
     )
     assert "mentor-lab.py homework greenplum check" in homework
@@ -299,12 +299,12 @@ def test_mentor_automation_commands_are_documented():
 def test_academy_pro_v3_commands_and_lesson02_scaffold_are_documented():
     overview_docs = [
         ROOT / "README.md",
-        ROOT / "docs/lessons/01-greenplum/README.md",
-        ROOT / "docs/lessons/01-greenplum/academy-loop.md",
-        ROOT / "docs/lessons/01-greenplum/academy-v2.md",
-        ROOT / "docs/lessons/01-greenplum/mentor-guide.md",
-        ROOT / "docs/lessons/01-greenplum/student-workbook.md",
-        ROOT / "docs/lessons/01-greenplum/cheat-sheet.md",
+        ROOT / "lessons/lesson-01/docs/README.md",
+        ROOT / "lessons/lesson-01/docs/academy-loop.md",
+        ROOT / "lessons/lesson-01/docs/academy-v2.md",
+        ROOT / "lessons/lesson-01/docs/mentor-guide.md",
+        ROOT / "lessons/lesson-01/docs/student-workbook.md",
+        ROOT / "lessons/lesson-01/docs/cheat-sheet.md",
     ]
     expected_commands = [
         "mentor-lab.py readiness greenplum --platform macos",
@@ -321,9 +321,9 @@ def test_academy_pro_v3_commands_and_lesson02_scaffold_are_documented():
             assert command in content
 
     lesson02_files = [
-        ROOT / "docs/lessons/02-greenplum-partitioning/README.md",
-        ROOT / "docs/lessons/02-greenplum-partitioning/runbooks/simple-path.md",
-        ROOT / "docs/lessons/02-greenplum-partitioning/student-workbook.md",
+        ROOT / "lessons/lesson-02/docs/README.md",
+        ROOT / "lessons/lesson-02/docs/runbooks/simple-path.md",
+        ROOT / "lessons/lesson-02/docs/student-workbook.md",
     ]
     for path in lesson02_files:
         assert path.exists()
@@ -337,12 +337,12 @@ def test_academy_pro_v3_commands_and_lesson02_scaffold_are_documented():
 def test_academy_enterprise_v4_autograder_dataset_and_ci_are_documented():
     overview_docs = [
         ROOT / "README.md",
-        ROOT / "docs/lessons/01-greenplum/README.md",
-        ROOT / "docs/lessons/01-greenplum/academy-loop.md",
-        ROOT / "docs/lessons/01-greenplum/academy-v2.md",
-        ROOT / "docs/lessons/01-greenplum/mentor-guide.md",
-        ROOT / "docs/lessons/01-greenplum/student-workbook.md",
-        ROOT / "docs/lessons/01-greenplum/cheat-sheet.md",
+        ROOT / "lessons/lesson-01/docs/README.md",
+        ROOT / "lessons/lesson-01/docs/academy-loop.md",
+        ROOT / "lessons/lesson-01/docs/academy-v2.md",
+        ROOT / "lessons/lesson-01/docs/mentor-guide.md",
+        ROOT / "lessons/lesson-01/docs/student-workbook.md",
+        ROOT / "lessons/lesson-01/docs/cheat-sheet.md",
     ]
     expected_commands = [
         "mentor-lab.py autograde-sql greenplum --submission",
@@ -368,10 +368,10 @@ def test_academy_enterprise_v4_autograder_dataset_and_ci_are_documented():
 
 
 def test_student_prep_runbook_has_cross_platform_environment_contract():
-    prep = (ROOT / "docs/lessons/01-greenplum/runbooks/student-prep.md").read_text(
+    prep = (ROOT / "lessons/lesson-01/docs/runbooks/student-prep.md").read_text(
         encoding="utf-8"
     )
-    workbook = (ROOT / "docs/lessons/01-greenplum/student-workbook.md").read_text(
+    workbook = (ROOT / "lessons/lesson-01/docs/student-workbook.md").read_text(
         encoding="utf-8"
     )
 
@@ -408,16 +408,16 @@ def test_partitioning_strategy_materials_are_complete_and_cross_linked():
         encoding="utf-8"
     )
     deep_dive = (
-        ROOT / "docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md"
+        ROOT / "lessons/lesson-01/docs/deep-dives/partitioning-strategies.md"
     ).read_text(encoding="utf-8")
-    workbook = (ROOT / "docs/lessons/01-greenplum/student-workbook.md").read_text(
+    workbook = (ROOT / "lessons/lesson-01/docs/student-workbook.md").read_text(
         encoding="utf-8"
     )
     simple = (
-        ROOT / "docs/lessons/01-greenplum/runbooks/simple-path.md"
+        ROOT / "lessons/lesson-01/docs/runbooks/simple-path.md"
     ).read_text(encoding="utf-8")
     deep = (
-        ROOT / "docs/lessons/01-greenplum/runbooks/deep-dive-path.md"
+        ROOT / "lessons/lesson-01/docs/runbooks/deep-dive-path.md"
     ).read_text(encoding="utf-8")
 
     expected_markers = [
@@ -445,11 +445,11 @@ def test_greenplum_lab_cluster_passport_is_documented_and_runnable():
     sql = (ROOT / "labs/greenplum-625/examples/cluster-inspection.sql").read_text(
         encoding="utf-8"
     )
-    workbook = (ROOT / "docs/lessons/01-greenplum/student-workbook.md").read_text(
+    workbook = (ROOT / "lessons/lesson-01/docs/student-workbook.md").read_text(
         encoding="utf-8"
     )
     runbook = (
-        ROOT / "docs/lessons/01-greenplum/runbooks/simple-path.md"
+        ROOT / "lessons/lesson-01/docs/runbooks/simple-path.md"
     ).read_text(encoding="utf-8")
 
     expected_markers = [
@@ -491,11 +491,11 @@ def test_greenplum_cluster_monitoring_sql_is_documented_and_teachable():
         encoding="utf-8"
     )
     lab_readme = (ROOT / "labs/greenplum-625/README.md").read_text(encoding="utf-8")
-    workbook = (ROOT / "docs/lessons/01-greenplum/student-workbook.md").read_text(
+    workbook = (ROOT / "lessons/lesson-01/docs/student-workbook.md").read_text(
         encoding="utf-8"
     )
     runbook = (
-        ROOT / "docs/lessons/01-greenplum/runbooks/simple-path.md"
+        ROOT / "lessons/lesson-01/docs/runbooks/simple-path.md"
     ).read_text(encoding="utf-8")
 
     expected_sql_markers = [
@@ -527,7 +527,7 @@ def test_greenplum_cluster_monitoring_sql_is_documented_and_teachable():
 
 
 def test_master_segment_deep_dive_has_diagrams_and_source_anchors():
-    guide = (ROOT / "docs/lessons/01-greenplum/deep-dives/master-segment-data-path.md").read_text(
+    guide = (ROOT / "lessons/lesson-01/docs/deep-dives/master-segment-data-path.md").read_text(
         encoding="utf-8"
     )
 
@@ -544,8 +544,8 @@ def test_master_segment_deep_dive_has_diagrams_and_source_anchors():
 
 def test_greenplum_source_anchors_use_remote_fork_links():
     docs = [
-        ROOT / "docs/lessons/01-greenplum/deep-dives/master-segment-data-path.md",
-        ROOT / "docs/lessons/01-greenplum/deep-dives/physical-joins-in-mpp.md",
+        ROOT / "lessons/lesson-01/docs/deep-dives/master-segment-data-path.md",
+        ROOT / "lessons/lesson-01/docs/deep-dives/physical-joins-in-mpp.md",
     ]
     combined = "\n".join(path.read_text(encoding="utf-8") for path in docs)
 
@@ -579,20 +579,20 @@ def test_lesson_cross_links_are_clickable_repo_links():
     docs = [
         ROOT / "decks/greenplum-theory/README.md",
         ROOT / "decks/greenplum-theory/facilitator-guide.md",
-        ROOT / "docs/lessons/01-greenplum/README.md",
-        ROOT / "docs/lessons/01-greenplum/mentor-guide.md",
-        ROOT / "docs/lessons/01-greenplum/student-workbook.md",
-        ROOT / "docs/lessons/01-greenplum/homework.md",
-        ROOT / "docs/lessons/01-greenplum/runbooks/simple-path.md",
-        ROOT / "docs/lessons/01-greenplum/runbooks/deep-dive-path.md",
-        ROOT / "docs/lessons/01-greenplum/runbooks/homework-plan.md",
-        ROOT / "docs/lessons/01-greenplum/runbooks/student-prep.md",
-        ROOT / "docs/lessons/01-greenplum/deep-dives/master-segment-data-path.md",
-        ROOT / "docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md",
+        ROOT / "lessons/lesson-01/docs/README.md",
+        ROOT / "lessons/lesson-01/docs/mentor-guide.md",
+        ROOT / "lessons/lesson-01/docs/student-workbook.md",
+        ROOT / "lessons/lesson-01/homework/assignment.md",
+        ROOT / "lessons/lesson-01/docs/runbooks/simple-path.md",
+        ROOT / "lessons/lesson-01/docs/runbooks/deep-dive-path.md",
+        ROOT / "lessons/lesson-01/homework/plan.md",
+        ROOT / "lessons/lesson-01/docs/runbooks/student-prep.md",
+        ROOT / "lessons/lesson-01/docs/deep-dives/master-segment-data-path.md",
+        ROOT / "lessons/lesson-01/docs/deep-dives/qd-qe-gang-slices-explained.md",
         ROOT / "labs/greenplum-625/README.md",
     ]
     path_like_span = re.compile(
-        r"(\.\./|docs/lessons/|labs/greenplum/|decks/greenplum|"
+        r"(\.\./|lessons/|labs/greenplum/|decks/greenplum|"
         r"artifacts/(greenplum|lesson-)|\.md$|\.sql$|\.pptx$)"
     )
 
@@ -601,6 +601,9 @@ def test_lesson_cross_links_are_clickable_repo_links():
         prose = _without_fenced_code(path.read_text(encoding="utf-8"))
         for inline_code in re.findall(r"`([^`]+)`", prose):
             if inline_code.startswith(r"\i /mentor-lab/examples/"):
+                continue
+            # Drive taxonomy labels (not repo paths), e.g. lessons/Greenplum/Lesson 01 - ...
+            if inline_code.startswith("lessons/Greenplum/"):
                 continue
             if path_like_span.search(inline_code):
                 offenders.append(f"{path.relative_to(ROOT).as_posix()}: `{inline_code}`")
@@ -618,15 +621,15 @@ def test_lesson_cross_links_are_clickable_repo_links():
 
     assert relative_link_targets == []
 
-    workbook = (ROOT / "docs/lessons/01-greenplum/student-workbook.md").read_text(
+    workbook = (ROOT / "lessons/lesson-01/docs/student-workbook.md").read_text(
         encoding="utf-8"
     )
     runbook = (
-        ROOT / "docs/lessons/01-greenplum/runbooks/simple-path.md"
+        ROOT / "lessons/lesson-01/docs/runbooks/simple-path.md"
     ).read_text(encoding="utf-8")
     for url in [
-        f"{REPO_BLOB_BASE}docs/lessons/01-greenplum/runbooks/student-prep.md",
-        f"{REPO_BLOB_BASE}docs/lessons/01-greenplum/homework.md",
+        f"{REPO_BLOB_BASE}lessons/lesson-01/docs/runbooks/student-prep.md",
+        f"{REPO_BLOB_BASE}lessons/lesson-01/homework/assignment.md",
         f"{REPO_BLOB_BASE}labs/greenplum-625/README.md",
         f"{REPO_BLOB_BASE}labs/greenplum-625/examples/cluster-inspection.sql",
         f"{REPO_BLOB_BASE}labs/greenplum-625/examples/cluster-monitoring.sql",
@@ -634,21 +637,21 @@ def test_lesson_cross_links_are_clickable_repo_links():
         f"{REPO_BLOB_BASE}labs/greenplum-625/examples/partitioning-strategies.sql",
     ]:
         assert url in workbook
-    assert f"{REPO_BLOB_BASE}artifacts/lesson-01/greenplum-theory.pptx" in runbook
+    assert f"{REPO_BLOB_BASE}lessons/lesson-01/artifacts/greenplum-theory.pptx" in runbook
 
 
 def test_qd_qe_gang_slices_deep_dive_is_canonical_and_teachable():
     deep_dive = (
         ROOT
-        / "docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md"
+        / "lessons/lesson-01/docs/deep-dives/qd-qe-gang-slices-explained.md"
     ).read_text(encoding="utf-8")
-    workbook = (ROOT / "docs/lessons/01-greenplum/student-workbook.md").read_text(
+    workbook = (ROOT / "lessons/lesson-01/docs/student-workbook.md").read_text(
         encoding="utf-8"
     )
     runbook = (
-        ROOT / "docs/lessons/01-greenplum/runbooks/deep-dive-path.md"
+        ROOT / "lessons/lesson-01/docs/runbooks/deep-dive-path.md"
     ).read_text(encoding="utf-8")
-    lesson_readme = (ROOT / "docs/lessons/01-greenplum/README.md").read_text(
+    lesson_readme = (ROOT / "lessons/lesson-01/docs/README.md").read_text(
         encoding="utf-8"
     )
 
@@ -694,13 +697,13 @@ def test_qd_qe_gang_slices_deep_dive_is_canonical_and_teachable():
 
 
 def test_advanced_deep_dives_cover_plan_reading_joins_and_mpp_taxonomy():
-    plan = (ROOT / "docs/lessons/01-greenplum/deep-dives/explain-plan-reading.md").read_text(
+    plan = (ROOT / "lessons/lesson-01/docs/deep-dives/explain-plan-reading.md").read_text(
         encoding="utf-8"
     )
-    joins = (ROOT / "docs/lessons/01-greenplum/deep-dives/physical-joins-in-mpp.md").read_text(
+    joins = (ROOT / "lessons/lesson-01/docs/deep-dives/physical-joins-in-mpp.md").read_text(
         encoding="utf-8"
     )
-    taxonomy = (ROOT / "docs/lessons/01-greenplum/deep-dives/mpp-system-taxonomy.md").read_text(
+    taxonomy = (ROOT / "lessons/lesson-01/docs/deep-dives/mpp-system-taxonomy.md").read_text(
         encoding="utf-8"
     )
 

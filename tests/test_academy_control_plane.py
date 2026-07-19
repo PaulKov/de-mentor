@@ -45,9 +45,9 @@ def test_session_state_contains_academy_control_plane(tmp_path):
     assert control_plane["version"] == "academy-control-plane/v1"
     assert control_plane["mentor_mode"]["default_route"] == "simple"
     assert "python3 mentor-lab.py runbook greenplum simple" in control_plane["mentor_mode"]["runbook_commands"]
-    assert control_plane["mentor_mode"]["slide_deck"] == "artifacts/lesson-01/greenplum-theory.pptx"
-    assert control_plane["student_mode"]["workbook"] == "docs/lessons/01-greenplum/student-workbook.md"
-    assert control_plane["student_mode"]["homework"] == "docs/lessons/01-greenplum/homework.md"
+    assert control_plane["mentor_mode"]["slide_deck"] == "lessons/lesson-01/artifacts/greenplum-theory.pptx"
+    assert control_plane["student_mode"]["workbook"] == "lessons/lesson-01/docs/student-workbook.md"
+    assert control_plane["student_mode"]["homework"] == "lessons/lesson-01/homework/assignment.md"
     assert control_plane["next_lesson"]["code"] == "02-greenplum-partitioning"
 
     environment_guide = control_plane["mentor_mode"]["stage_guides"][0]
@@ -58,8 +58,8 @@ def test_session_state_contains_academy_control_plane(tmp_path):
     assert environment_guide["question"]
     assert environment_guide["expected_answer"]
     assert environment_guide["verification"]
-    assert environment_guide["workbook_ref"] == "docs/lessons/01-greenplum/student-workbook.md"
-    assert environment_guide["homework_ref"] == "docs/lessons/01-greenplum/homework.md"
+    assert environment_guide["workbook_ref"] == "lessons/lesson-01/docs/student-workbook.md"
+    assert environment_guide["homework_ref"] == "lessons/lesson-01/homework/assignment.md"
 
     portal_actions = control_plane["portal_actions"]
     assert "mentor-lab.py portal greenplum start" in portal_actions["start_command"]
@@ -142,9 +142,9 @@ def test_portal_open_supports_dry_run_without_side_effects():
 def test_academy_control_plane_is_documented():
     docs = [
         ROOT / "README.md",
-        ROOT / "docs/lessons/01-greenplum/README.md",
-        ROOT / "docs/lessons/01-greenplum/mentor-guide.md",
-        ROOT / "docs/lessons/01-greenplum/student-workbook.md",
+        ROOT / "lessons/lesson-01/docs/README.md",
+        ROOT / "lessons/lesson-01/docs/mentor-guide.md",
+        ROOT / "lessons/lesson-01/docs/student-workbook.md",
     ]
     markers = [
         "Academy Control Plane",

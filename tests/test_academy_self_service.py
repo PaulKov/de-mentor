@@ -134,8 +134,8 @@ def test_student_homework_prints_self_check_route():
 
     assert exit_code == 0
     assert "Student homework: greenplum" in output
-    assert "docs/lessons/01-greenplum/homework.md" in output
-    assert "docs/lessons/01-greenplum/runbooks/homework-plan.md" in output
+    assert "lessons/lesson-01/homework/assignment.md" in output
+    assert "lessons/lesson-01/homework/plan.md" in output
     assert "python3 mentor-lab.py runbook greenplum homework" in output
     assert "python3 mentor-lab.py check greenplum" in output
     assert "Lesson 02" in output

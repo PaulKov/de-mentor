@@ -18,6 +18,7 @@
 - [Что это](#что-это)
 - [Для кого](#для-кого)
 - [Что уже готово](#что-уже-готово)
+- [Уроки (навигация)](#уроки-навигация)
 - [Быстрый старт](#быстрый-старт)
 - [Как пройти первый урок](#как-пройти-первый-урок)
 - [Интерфейсы ученика и ментора](#интерфейсы-ученика-и-ментора)
@@ -27,6 +28,16 @@
 - [Качество и проверки](#качество-и-проверки)
 - [Roadmap](#roadmap)
 - [Честный статус](#честный-статус)
+
+## Уроки (навигация)
+
+Всё по урокам — в [`lessons/`](lessons/README.md):
+
+| Урок | Docs | Homework | Artifacts | Submissions |
+| --- | --- | --- | --- | --- |
+| [01](lessons/lesson-01/) | [docs](lessons/lesson-01/docs/) | [homework](lessons/lesson-01/homework/) | [artifacts](lessons/lesson-01/artifacts/) | [submissions](lessons/lesson-01/submissions/) |
+| [02](lessons/lesson-02/) | [docs](lessons/lesson-02/docs/) | [homework](lessons/lesson-02/homework/) | [artifacts](lessons/lesson-02/artifacts/) | [submissions](lessons/lesson-02/submissions/) |
+| [03](lessons/lesson-03/) | [docs](lessons/lesson-03/docs/) | [homework](lessons/lesson-03/homework/) | [artifacts](lessons/lesson-03/artifacts/) | [submissions](lessons/lesson-03/submissions/) |
 
 ## Что это
 
@@ -149,14 +160,14 @@ python3 mentor-lab.py lesson-release greenplum-partitioning verify
 
 Материалы:
 
-- [Индекс Lesson 02](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/README.md)
-- [Manifest выпуска Lesson 02](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/lesson.yaml)
+- [Индекс Lesson 02](https://github.com/PaulKov/de-mentor/blob/master/lessons/lesson-02/docs/README.md)
+- [Manifest выпуска Lesson 02](https://github.com/PaulKov/de-mentor/blob/master/lessons/lesson-02/docs/lesson.yaml)
 - [Каталог презентаций и Drive-таксономия](https://github.com/PaulKov/de-mentor/blob/master/decks/README.md)
 - [Презентация Lesson 02 в Google Slides](https://docs.google.com/presentation/d/17Ae88PoniaFU34egsFPwC0PndAOoXMze4qV1pIKQkaI/edit?usp=sharing)
-- [Презентация Lesson 02 в PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/artifacts/lesson-02/greenplum-partitioning-theory.pptx)
-- [План ментора](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/mentor-guide.md)
-- [Workbook ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/student-workbook.md)
-- [Домашка](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/homework.md)
+- [Презентация Lesson 02 в PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/lessons/lesson-02/artifacts/greenplum-partitioning-theory.pptx)
+- [План ментора](https://github.com/PaulKov/de-mentor/blob/master/lessons/lesson-02/docs/mentor-guide.md)
+- [Workbook ученика](https://github.com/PaulKov/de-mentor/blob/master/lessons/lesson-02/docs/student-workbook.md)
+- [Домашка](https://github.com/PaulKov/de-mentor/blob/master/lessons/lesson-02/homework/assignment.md)
 
 Контур выпуска:
 
@@ -179,19 +190,19 @@ python3 mentor-lab.py student greenplum-query-tuning bootstrap --platform macos
 python3 mentor-lab.py academy greenplum-query-tuning start --student Иван --dry-run
 ```
 
-Основной SQL-lab:
+SQL для урока / homework:
 
-[lesson03-olap-decomposition-tuning.sql](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/lesson03-olap-decomposition-tuning.sql) · [legacy vs ORCA](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/lesson03-optimizer-legacy-vs-orca.sql)
+[homework seed](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/lesson03-homework-seed.sql) · [class demo](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/lesson03-class-demo.sql) · [legacy vs ORCA](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/lesson03-optimizer-legacy-vs-orca.sql)
 
 Материалы:
 
-- [Индекс Урока 03](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/03-greenplum-query-tuning/README.md)
-- [Manifest выпуска](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/03-greenplum-query-tuning/lesson.yaml)
-- [Презентация в PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/artifacts/lesson-03/greenplum-query-tuning-theory.pptx)
-- [Презентация в Google Slides](https://docs.google.com/presentation/d/1e5vpqatw6ccgeZF0PWLLWMzIqkb4SODE-IwKxrSyqB8/edit?usp=sharing)
-- [План ментора](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/03-greenplum-query-tuning/mentor-guide.md)
-- [Workbook ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/03-greenplum-query-tuning/student-workbook.md)
-- [Домашка](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/03-greenplum-query-tuning/homework.md)
+- [Индекс Урока 03](https://github.com/PaulKov/de-mentor/blob/master/lessons/lesson-03/docs/README.md)
+- [Manifest выпуска](https://github.com/PaulKov/de-mentor/blob/master/lessons/lesson-03/docs/lesson.yaml)
+- [Презентация в PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/lessons/lesson-03/artifacts/greenplum-query-tuning-theory.pptx)
+- [Презентация в Google Slides](https://docs.google.com/presentation/d/1pBIOaqt9WkubsHqCN_p5kxtAhCLjPs6rxFGH9s-_o3c/edit?usp=sharing)
+- [План ментора](https://github.com/PaulKov/de-mentor/blob/master/lessons/lesson-03/docs/mentor-guide.md)
+- [Workbook ученика](https://github.com/PaulKov/de-mentor/blob/master/lessons/lesson-03/docs/student-workbook.md)
+- [Домашка](https://github.com/PaulKov/de-mentor/blob/master/lessons/lesson-03/homework/assignment.md)
 
 Сборка PPTX из declarative sources:
 
@@ -311,7 +322,7 @@ python3 mentor-lab.py ci-smoke greenplum --dry-run
 
 ```bash
 python3 mentor-lab.py submit greenplum query-tuning
-python3 mentor-lab.py homework greenplum check --submission submissions/homework.md
+python3 mentor-lab.py homework greenplum check --submission lessons/lesson-01/submissions/homework.md
 python3 mentor-lab.py autograde-sql greenplum --submission labs/greenplum/examples/student-solution-example.sql --output artifacts/sql-autograde.md
 python3 mentor-lab.py adaptive-review greenplum --submission submissions/query-tuning.md
 python3 mentor-lab.py debrief greenplum --student Иван --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/greenplum-debrief.md
@@ -417,26 +428,26 @@ python3 mentor-lab.py dsl greenplum show redistribute-join
 
 | Материал | Ссылка |
 |---|---|
-| Главный план урока | [docs/lessons/01-greenplum/README.md](docs/lessons/01-greenplum/README.md) |
-| Дорожная карта | [roadmap.md](docs/lessons/01-greenplum/roadmap.md) |
-| Workbook ученика | [student-workbook.md](docs/lessons/01-greenplum/student-workbook.md) |
-| Гайд ментора | [mentor-guide.md](docs/lessons/01-greenplum/mentor-guide.md) |
-| Подготовка ученика | [student-prep.md](docs/lessons/01-greenplum/runbooks/student-prep.md) |
-| Упрощенный runbook | [simple-path.md](docs/lessons/01-greenplum/runbooks/simple-path.md) |
-| Расширенный runbook | [deep-dive-path.md](docs/lessons/01-greenplum/runbooks/deep-dive-path.md) |
-| План домашки | [homework-plan.md](docs/lessons/01-greenplum/runbooks/homework-plan.md) |
-| Шпаргалка | [cheat-sheet.md](docs/lessons/01-greenplum/cheat-sheet.md) |
-| Контур Academy | [academy-loop.md](docs/lessons/01-greenplum/academy-loop.md) |
-| Academy v2 | [academy-v2.md](docs/lessons/01-greenplum/academy-v2.md) |
-| Лабораторная по query tuning | [query-tuning-lab.md](docs/lessons/01-greenplum/query-tuning-lab.md) |
-| Deep dive по QD/QE/slices/gangs | [qd-qe-gang-slices-explained.md](docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md) |
-| Матрица оценки | [rubric.md](docs/lessons/01-greenplum/rubric.md) |
-| Финальная задача | [capstone.md](docs/lessons/01-greenplum/capstone.md) |
-| Сквозной кейс | [case-study.md](docs/lessons/01-greenplum/case-study.md) |
-| Презентация | [greenplum-theory.pptx](artifacts/lesson-01/greenplum-theory.pptx) |
+| Главный план урока | [lessons/lesson-01/docs/README.md](lessons/lesson-01/docs/README.md) |
+| Дорожная карта | [roadmap.md](lessons/lesson-01/docs/roadmap.md) |
+| Workbook ученика | [student-workbook.md](lessons/lesson-01/docs/student-workbook.md) |
+| Гайд ментора | [mentor-guide.md](lessons/lesson-01/docs/mentor-guide.md) |
+| Подготовка ученика | [student-prep.md](lessons/lesson-01/docs/runbooks/student-prep.md) |
+| Упрощенный runbook | [simple-path.md](lessons/lesson-01/docs/runbooks/simple-path.md) |
+| Расширенный runbook | [deep-dive-path.md](lessons/lesson-01/docs/runbooks/deep-dive-path.md) |
+| План домашки | [homework-plan.md](lessons/lesson-01/homework/plan.md) |
+| Шпаргалка | [cheat-sheet.md](lessons/lesson-01/docs/cheat-sheet.md) |
+| Контур Academy | [academy-loop.md](lessons/lesson-01/docs/academy-loop.md) |
+| Academy v2 | [academy-v2.md](lessons/lesson-01/docs/academy-v2.md) |
+| Лабораторная по query tuning | [query-tuning-lab.md](lessons/lesson-01/docs/query-tuning-lab.md) |
+| Deep dive по QD/QE/slices/gangs | [qd-qe-gang-slices-explained.md](lessons/lesson-01/docs/deep-dives/qd-qe-gang-slices-explained.md) |
+| Матрица оценки | [rubric.md](lessons/lesson-01/homework/rubric.md) |
+| Финальная задача | [capstone.md](lessons/lesson-01/docs/capstone.md) |
+| Сквозной кейс | [case-study.md](lessons/lesson-01/docs/case-study.md) |
+| Презентация | [greenplum-theory.pptx](lessons/lesson-01/artifacts/greenplum-theory.pptx) |
 | Каталог презентаций | [decks/README.md](decks/README.md) |
 | Исходники презентации | [decks/greenplum-theory](decks/greenplum-theory/README.md) |
-| Manifest выпуска Lesson 02 | [lesson.yaml](docs/lessons/02-greenplum-partitioning/lesson.yaml) |
+| Manifest выпуска Lesson 02 | [lesson.yaml](lessons/lesson-02/docs/lesson.yaml) |
 | Стенд Greenplum | [labs/greenplum](labs/greenplum/README.md) |
 | SQL для паспорта кластера | [cluster-inspection.sql](labs/greenplum/examples/cluster-inspection.sql) |
 | SQL для мониторинга кластера | [cluster-monitoring.sql](labs/greenplum/examples/cluster-monitoring.sql) |
@@ -447,13 +458,19 @@ python3 mentor-lab.py dsl greenplum show redistribute-join
 
 ```text
 .
-├── artifacts/                 # готовые артефакты: PPTX, HTML, reports
-├── decks/                      # каталог презентаций и source decks
-├── docs/lessons/01-greenplum/  # план урока, workbook, deep dives, academy loop
-├── labs/greenplum/             # Docker Compose, init SQL, seed profiles
-├── src/mentor_lab/             # CLI и доменные модули платформы
-├── tests/                      # unit/integration тесты CLI и учебного домена
-└── mentor-lab.py               # entrypoint без установки пакета
+├── lessons/                    # ← канон: один урок = одна папка
+│   ├── README.md               # оглавление всех уроков
+│   └── lesson-0N/
+│       ├── docs/               # теория, workbook, runbooks
+│       ├── homework/           # assignment, plan, rubric, templates
+│       ├── artifacts/          # PPTX, screens, case metrics
+│       └── submissions/        # сдача ученика
+├── decks/                      # исходники слайдов (build input)
+├── labs/                       # Docker-стенды (shared)
+├── artifacts/                  # redirect + session/runtime outputs
+├── src/mentor_lab/             # CLI и доменные модули
+├── tests/
+└── mentor-lab.py
 ```
 
 ## Качество и проверки

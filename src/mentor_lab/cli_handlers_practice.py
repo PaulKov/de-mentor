@@ -9,6 +9,7 @@ from mentor_lab.cli_context import _lab_or_none, _learning_route_or_none, _sql_c
 from mentor_lab.cockpit import MentorCockpit
 from mentor_lab.evidence import EvidenceCollector
 from mentor_lab.homework_review import HomeworkReviewer
+from mentor_lab.homework_review_lesson03 import Lesson03HomeworkReviewer
 from mentor_lab.observation import ObservationBuilder
 from mentor_lab.portal import StudentPortal
 from mentor_lab.portal_launcher import PortalLauncher
@@ -143,10 +144,22 @@ def _handle_homework(args: argparse.Namespace) -> int:
         return 1
     path = Path(args.submission)
     if not path.exists():
-        print(f"Homework submission file does not exist: {path}")
+        print(f"Homework submission does not exist: {path}")
         return 1
 
-    review = HomeworkReviewer.default().review(path)
+    # Lesson 03 (greenplum-625): directory pack + mechanical gates.
+    # Lessons 01/02 keep the markdown HomeworkReviewer unchanged.
+    if lab.name == "greenplum-625":
+        review = Lesson03HomeworkReviewer().review(path)
+    else:
+        if path.is_dir():
+            print(
+                "Lesson 01/02 homework expects a markdown file, "
+                f"not a directory: {path}"
+            )
+            return 1
+        review = HomeworkReviewer.default().review(path)
+
     rendered = review.render()
     if args.output:
         output = Path(args.output)

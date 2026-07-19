@@ -1,11 +1,11 @@
-# Artifacts
+# Artifacts → перенесено
 
-Артефакты уроков лежат по папкам:
+Презентации и evidence теперь лежат внутри уроков:
 
-| Папка | Урок |
+→ **[`lessons/`](../lessons/README.md)**
+
+| Было | Стало |
 | --- | --- |
-| [lesson-01/](lesson-01/) | MPP foundations |
-| [lesson-02/](lesson-02/) | Partitioning, statistics, incremental loads |
-| [lesson-03/](lesson-03/) | Query tuning / OLAP decomposition |
-
-Внутри каждой папки — презентация и связанные evidence-файлы этого урока.
+| `artifacts/lesson-01/` | [`lessons/lesson-01/artifacts/`](../lessons/lesson-01/artifacts/) |
+| `artifacts/lesson-02/` | [`lessons/lesson-02/artifacts/`](../lessons/lesson-02/artifacts/) |
+| `artifacts/lesson-03/` | [`lessons/lesson-03/artifacts/`](../lessons/lesson-03/artifacts/) |

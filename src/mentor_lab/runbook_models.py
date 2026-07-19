@@ -50,10 +50,10 @@ class Runbook:
     title: str
     description: str
     stages: List[RunbookStage]
-    deck_path: str = "artifacts/lesson-01/greenplum-theory.pptx"
+    deck_path: str = "lessons/lesson-01/artifacts/greenplum-theory.pptx"
     google_slides_url: Optional[str] = None
-    workbook_path: str = "docs/lessons/01-greenplum/student-workbook.md"
-    homework_path: str = "docs/lessons/01-greenplum/homework.md"
+    workbook_path: str = "lessons/lesson-01/docs/student-workbook.md"
+    homework_path: str = "lessons/lesson-01/homework/assignment.md"
     sql_examples: Optional[List[str]] = None
 
     def render(self) -> str:

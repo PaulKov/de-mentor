@@ -38,9 +38,9 @@ def greenplum_prep_runbook() -> Runbook:
                                 ),
                                 "Команды версий выполняются без ошибок, `doctor` печатает next action.",
                                 [
-                                    "docs/lessons/01-greenplum/runbooks/student-prep.md",
-                                    "docs/lessons/01-greenplum/student-workbook.md",
-                                    "docs/lessons/01-greenplum/homework.md",
+                                    "lessons/lesson-01/docs/runbooks/student-prep.md",
+                                    "lessons/lesson-01/docs/student-workbook.md",
+                                    "lessons/lesson-01/homework/assignment.md",
                                 ],
                             ),
                             RunbookStage(
@@ -64,8 +64,8 @@ def greenplum_prep_runbook() -> Runbook:
                                 "Запустить Docker Desktop, дождаться running state и повторить `docker compose version`.",
                                 "`check greenplum` показывает PASS, `psql` открывается внутри контейнера.",
                                 [
-                                    "docs/lessons/01-greenplum/runbooks/student-prep.md",
-                                    "docs/lessons/01-greenplum/student-workbook.md",
+                                    "lessons/lesson-01/docs/runbooks/student-prep.md",
+                                    "lessons/lesson-01/docs/student-workbook.md",
                                     "labs/greenplum-625/README.md",
                                 ],
                             ),
@@ -94,8 +94,8 @@ def greenplum_prep_runbook() -> Runbook:
                                 ),
                                 "`py mentor-lab.py check greenplum` проходит, порт 15436 не занят.",
                                 [
-                                    "docs/lessons/01-greenplum/runbooks/student-prep.md",
-                                    "docs/lessons/01-greenplum/student-workbook.md",
+                                    "lessons/lesson-01/docs/runbooks/student-prep.md",
+                                    "lessons/lesson-01/docs/student-workbook.md",
                                     "labs/greenplum-625/README.md",
                                 ],
                             ),
@@ -122,8 +122,8 @@ def greenplum_prep_runbook() -> Runbook:
                                 "CLI вызывает `docker compose`; если Docker требует `sudo`, self-service команды ученика будут спотыкаться.",
                                 "`docker compose version` и `check greenplum` проходят от обычного пользователя.",
                                 [
-                                    "docs/lessons/01-greenplum/runbooks/student-prep.md",
-                                    "docs/lessons/01-greenplum/student-workbook.md",
+                                    "lessons/lesson-01/docs/runbooks/student-prep.md",
+                                    "lessons/lesson-01/docs/student-workbook.md",
                                     "labs/greenplum-625/README.md",
                                 ],
                             ),
@@ -145,7 +145,7 @@ def greenplum_prep_runbook() -> Runbook:
                                 "Что делать, если image pull не проходит?",
                                 "Проверить интернет, VPN/proxy, доступ к Docker Hub и повторить до урока.",
                                 "Есть PASS output или понятный вопрос с ошибкой для ментора.",
-                                common_links + ["docs/lessons/01-greenplum/runbooks/student-prep.md"],
+                                common_links + ["lessons/lesson-01/docs/runbooks/student-prep.md"],
                             ),
                         ],
                     )

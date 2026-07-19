@@ -57,7 +57,7 @@ class TeachingSession:
             self.runbook.description,
             "",
             "Команды завершения урока:",
-            f"- `python3 mentor-lab.py homework {self.runbook.lab_name} check --submission submissions/homework.md`",
+            f"- `python3 mentor-lab.py homework {self.runbook.lab_name} check --submission lessons/lesson-01/submissions/homework.md`",
             f"- `python3 mentor-lab.py learning-loop {self.runbook.lab_name} --pre 40 --post 85 --submission submissions/query-tuning.md --output artifacts/{self.runbook.lab_name}-learning-loop.md`",
             "",
         ]

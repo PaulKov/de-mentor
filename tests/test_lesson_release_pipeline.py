@@ -9,7 +9,7 @@ from mentor_lab.lesson_release_manifest import LessonReleaseManifestLoader
 
 
 ROOT = Path(__file__).resolve().parents[1]
-MANIFEST = ROOT / "docs" / "lessons" / "02-greenplum-partitioning" / "lesson.yaml"
+MANIFEST = ROOT / "lessons" / "lesson-02" / "docs" / "lesson.yaml"
 GOOGLE_SLIDES_URL = (
     "https://docs.google.com/presentation/d/"
     "17Ae88PoniaFU34egsFPwC0PndAOoXMze4qV1pIKQkaI/edit?usp=sharing"
@@ -32,7 +32,7 @@ def test_lesson_release_manifest_loads_lesson_02_contract():
     assert manifest.route == "greenplum-partitioning"
     assert manifest.lesson_code == "lesson-02"
     assert manifest.physical_lab == "greenplum"
-    assert manifest.deck_path == "artifacts/lesson-02/greenplum-partitioning-theory.pptx"
+    assert manifest.deck_path == "lessons/lesson-02/artifacts/greenplum-partitioning-theory.pptx"
     assert manifest.google_slides_url == GOOGLE_SLIDES_URL
     assert manifest.expected_owner_email == "pavelkov007@gmail.com"
     assert manifest.expected_slide_count == 18
@@ -40,7 +40,7 @@ def test_lesson_release_manifest_loads_lesson_02_contract():
         "lessons/Greenplum/"
         "Lesson 02 - Partitioning, statistics and incremental loads"
     )
-    assert "docs/lessons/02-greenplum-partitioning/student-workbook.md" in manifest.docs
+    assert "lessons/lesson-02/docs/student-workbook.md" in manifest.docs
     assert "labs/greenplum-625/examples/lesson02-partitioning-statistics-loads.sql" in manifest.sql_examples
     assert "python3 mentor-lab.py runbook greenplum-partitioning simple" in manifest.safe_cli_commands
 
@@ -76,7 +76,7 @@ def test_lesson_release_report_command_writes_markdown(tmp_path):
     assert f"Lesson release report written to {output_path}" in output
     report = output_path.read_text(encoding="utf-8")
     assert "Lesson Release Report: greenplum-partitioning" in report
-    assert "docs/lessons/02-greenplum-partitioning/homework.md" in report
+    assert "lessons/lesson-02/homework/assignment.md" in report
 
 
 def test_lesson_release_publish_slides_dry_run_uses_personal_drive_guard():
@@ -122,11 +122,11 @@ def test_lesson_release_manifest_never_mentions_work_google_account():
 def test_release_pipeline_is_documented_in_readme_and_lesson_index():
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     lesson_index = (
-        ROOT / "docs" / "lessons" / "02-greenplum-partitioning" / "README.md"
+        ROOT / "lessons" / "lesson-02" / "docs" / "README.md"
     ).read_text(encoding="utf-8")
 
     for content in [readme, lesson_index]:
         assert "mentor-lab.py lesson-release greenplum-partitioning verify" in content
         assert "mentor-lab.py lesson-release greenplum-partitioning report" in content
         assert "mentor-lab.py lesson-release greenplum-partitioning publish-slides" in content
-        assert "docs/lessons/02-greenplum-partitioning/lesson.yaml" in content
+        assert "lessons/lesson-02/docs/lesson.yaml" in content

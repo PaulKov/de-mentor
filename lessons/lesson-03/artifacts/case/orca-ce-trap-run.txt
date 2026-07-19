@@ -1,0 +1,110 @@
+=== 0. Setup ORCA case (autostats off) ===
+SET
+SET
+SET
+ optimizer 
+-----------
+ on
+(1 row)
+
+ gp_autostats_mode 
+-------------------
+ none
+(1 row)
+
+NOTICE:  table "orca_orders" does not exist, skipping
+DROP TABLE
+NOTICE:  table "orca_ref" does not exist, skipping
+DROP TABLE
+CREATE TABLE
+CREATE TABLE
+INSERT 0 80000
+INSERT 0 8000
+CREATE INDEX
+SET
+DELETE 0
+UPDATE 2
+SET
+   relname   | reltuples | stat_rows 
+-------------+-----------+-----------
+ orca_orders |         0 |         0
+ orca_ref    |         0 |         0
+(2 rows)
+
+=== A. ORCA / NO STATS — Nested Loop (est << actual) ===
+                                                                                                                                                                                                                                               QUERY PLAN                                                                                                                                                                                                                                                
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Gather Motion 1:1  (slice2; segments: 1)  (cost=0.00..437.00 rows=1 width=40) (actual time=1.320..132.774 rows=80000 loops=1)
+   ->  Nested Loop  (cost=0.00..437.00 rows=1 width=40) (actual time=0.931..90.345 rows=80000 loops=1)
+         Join Filter: true
+         ->  Result  (cost=0.00..431.00 rows=1 width=28) (actual time=0.531..15.140 rows=80000 loops=1)
+               ->  Broadcast Motion 2:1  (slice1; segments: 2)  (cost=0.00..431.00 rows=1 width=20) (actual time=0.528..5.904 rows=80000 loops=1)
+                     ->  Seq Scan on orca_orders  (cost=0.00..431.00 rows=1 width=20) (actual time=0.134..21.582 rows=40060 loops=1)
+                           Filter: ((upper(COALESCE(note, ''::text)) !~~ '%ZZZNEVER%'::text) AND ((amount * 1.0) >= '0'::numeric) AND ((mod(customer_id, 97) >= 0) OR (NOT (product_id IS NULL))) AND (NOT (order_date IS NULL)) AND (COALESCE(channel, ''::text) <> 'IMPOSSIBLE_CHANNEL'::text) AND (length(COALESCE(note, ''::text)) >= 0) AND (NOT (amount IS NULL)) AND ((order_date >= '2025-01-01'::date) OR (order_date IS NULL)) AND (lower(channel) = ANY ('{web,app,store,partner}'::text[])))
+         ->  Index Scan using orca_ref_customer_idx on orca_ref  (cost=0.00..6.00 rows=1 width=12) (actual time=0.000..0.001 rows=1 loops=80000)
+               Index Cond: (customer_id = orca_orders.customer_id)
+               Filter: (score >= 0)
+ Planning time: 11.742 ms
+   (slice0)    Executor memory: 184K bytes.
+   (slice1)    Executor memory: 139K bytes avg x 2 workers, 139K bytes max (seg0).
+   (slice2)    Executor memory: 128K bytes (seg1).
+   (slice3)    
+ Memory used:  131072kB
+ Optimizer: Pivotal Optimizer (GPORCA)
+ Execution time: 137.033 ms
+(18 rows)
+
+=== B. ANALYZE all, reload fact WITHOUT ANALYZE (stale CE) ===
+ANALYZE
+ANALYZE
+TRUNCATE TABLE
+INSERT 0 80000
+                                                                                                                                                                                                                                               QUERY PLAN                                                                                                                                                                                                                                                
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Gather Motion 1:1  (slice2; segments: 1)  (cost=0.00..437.00 rows=1 width=39) (actual time=0.552..130.167 rows=80000 loops=1)
+   ->  Nested Loop  (cost=0.00..437.00 rows=1 width=39) (actual time=0.243..120.664 rows=80000 loops=1)
+         Join Filter: true
+         ->  Result  (cost=0.00..431.00 rows=1 width=28) (actual time=0.231..14.289 rows=80000 loops=1)
+               ->  Broadcast Motion 2:1  (slice1; segments: 2)  (cost=0.00..431.00 rows=1 width=17) (actual time=0.229..5.422 rows=80000 loops=1)
+                     ->  Seq Scan on orca_orders  (cost=0.00..431.00 rows=1 width=17) (actual time=0.025..20.780 rows=40060 loops=1)
+                           Filter: ((upper(COALESCE(note, ''::text)) !~~ '%ZZZNEVER%'::text) AND ((amount * 1.0) >= '0'::numeric) AND ((mod(customer_id, 97) >= 0) OR (NOT (product_id IS NULL))) AND (NOT (order_date IS NULL)) AND (COALESCE(channel, ''::text) <> 'IMPOSSIBLE_CHANNEL'::text) AND (length(COALESCE(note, ''::text)) >= 0) AND (NOT (amount IS NULL)) AND ((order_date >= '2025-01-01'::date) OR (order_date IS NULL)) AND (lower(channel) = ANY ('{web,app,store,partner}'::text[])))
+         ->  Index Scan using orca_ref_customer_idx on orca_ref  (cost=0.00..6.00 rows=1 width=11) (actual time=0.000..0.001 rows=1 loops=80000)
+               Index Cond: (customer_id = orca_orders.customer_id)
+               Filter: (score >= 0)
+ Planning time: 22.850 ms
+   (slice0)    Executor memory: 184K bytes.
+   (slice1)    Executor memory: 139K bytes avg x 2 workers, 139K bytes max (seg0).
+   (slice2)    Executor memory: 128K bytes (seg1).
+   (slice3)    
+ Memory used:  131072kB
+ Optimizer: Pivotal Optimizer (GPORCA)
+ Execution time: 132.273 ms
+(18 rows)
+
+=== C. TEMP + ANALYZE → Hash Join ===
+SELECT 80000
+ANALYZE
+        rel        | est_rows | actual_rows 
+-------------------+----------+-------------
+ tmp_orca_enriched |    80000 |       80000
+(1 row)
+
+                                                            QUERY PLAN                                                             
+-----------------------------------------------------------------------------------------------------------------------------------
+ Gather Motion 2:1  (slice1; segments: 2)  (cost=0.00..892.51 rows=79901 width=32) (actual time=1.945..19.629 rows=80000 loops=1)
+   ->  Hash Join  (cost=0.00..881.03 rows=39951 width=32) (actual time=1.761..16.093 rows=40060 loops=1)
+         Hash Cond: (tmp_orca_enriched.customer_id = orca_ref.customer_id)
+         Extra Text: (seg0)   Hash chain length 1.0 avg, 2 max, using 7941 of 524288 buckets.
+         ->  Seq Scan on tmp_orca_enriched  (cost=0.00..432.32 rows=40000 width=21) (actual time=0.002..10.119 rows=40060 loops=1)
+         ->  Hash  (cost=431.68..431.68 rows=8000 width=15) (actual time=1.377..1.377 rows=8000 loops=1)
+               ->  Seq Scan on orca_ref  (cost=0.00..431.68 rows=8000 width=15) (actual time=0.005..0.477 rows=8000 loops=1)
+                     Filter: (score >= 0)
+ Planning time: 13.295 ms
+   (slice0)    Executor memory: 87K bytes.
+   (slice1)    Executor memory: 5196K bytes avg x 2 workers, 5196K bytes max (seg0).  Work_mem: 313K bytes max.
+ Memory used:  131072kB
+ Optimizer: Pivotal Optimizer (GPORCA)
+ Execution time: 21.388 ms
+(14 rows)
+
+Done ORCA case. Expect Nested Loop in A/B, Hash Join in C.

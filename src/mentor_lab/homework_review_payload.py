@@ -103,7 +103,7 @@ def _sql_snippets() -> list[SqlSnippet]:
     return [
         SqlSnippet(
             "Проверить домашку CLI",
-            "python3 mentor-lab.py homework greenplum check --submission submissions/homework.md",
+            "python3 mentor-lab.py homework greenplum check --submission lessons/lesson-01/submissions/homework.md",
             "Показывает score, missing evidence и Lesson 02 readiness.",
         ),
         SqlSnippet(

@@ -1,0 +1,126 @@
+=== 0. Setup SCD2-like fact (composite distribution) ===
+SET
+SET
+SET
+ optimizer 
+-----------
+ on
+(1 row)
+
+DROP TABLE
+DROP TABLE
+NOTICE:  table "t_join_int" does not exist, skipping
+DROP TABLE
+NOTICE:  table "t_join_int8" does not exist, skipping
+DROP TABLE
+CREATE TABLE
+INSERT 0 240000
+ANALYZE
+=== A. BAD — CTE max(version) join (expect Redistribute Motion) ===
+                                                                                   QUERY PLAN                                                                                    
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Gather Motion 2:1  (slice3; segments: 2)  (cost=0.00..962.52 rows=80220 width=17) (actual time=29.319..88.517 rows=80000 loops=1)
+   ->  Hash Join  (cost=0.00..956.40 rows=40110 width=17) (actual time=29.079..67.331 rows=40058 loops=1)
+         Hash Cond: ((scd2_events.biz_key = scd2_events_1.biz_key) AND (scd2_events.version_id = (max(scd2_events_1.version_id))))
+         Extra Text: (seg0)   Hash chain length 1.0 avg, 3 max, using 38578 of 524288 buckets.Hash chain length 4.9 avg, 16 max, using 8127 of 8192 buckets; total 8 expansions.
+ 
+         ->  Redistribute Motion 2:2  (slice1; segments: 2)  (cost=0.00..443.23 rows=120000 width=17) (actual time=0.015..8.758 rows=120174 loops=1)
+               Hash Key: scd2_events.biz_key
+               ->  Seq Scan on scd2_events  (cost=0.00..433.05 rows=120000 width=17) (actual time=0.363..8.823 rows=120257 loops=1)
+         ->  Hash  (cost=452.52..452.52 rows=40110 width=8) (actual time=28.905..28.905 rows=40058 loops=1)
+               ->  HashAggregate  (cost=0.00..452.52 rows=40110 width=8) (actual time=21.638..24.174 rows=40058 loops=1)
+                     Group Key: scd2_events_1.biz_key
+                     Extra Text: (seg0)   Hash chain length 4.9 avg, 16 max, using 8127 of 8192 buckets; total 8 expansions.
+ 
+                     ->  Redistribute Motion 2:2  (slice2; segments: 2)  (cost=0.00..437.84 rows=120000 width=8) (actual time=0.600..9.813 rows=120174 loops=1)
+                           Hash Key: scd2_events_1.biz_key
+                           ->  Seq Scan on scd2_events scd2_events_1  (cost=0.00..433.05 rows=120000 width=8) (actual time=0.190..6.705 rows=120257 loops=1)
+ Planning time: 11.348 ms
+   (slice0)    Executor memory: 760K bytes.
+   (slice1)    Executor memory: 640K bytes avg x 2 workers, 640K bytes max (seg0).
+   (slice2)    Executor memory: 348K bytes avg x 2 workers, 348K bytes max (seg0).
+   (slice3)    Executor memory: 8705K bytes avg x 2 workers, 8705K bytes max (seg0).  Work_mem: 1252K bytes max.
+ Memory used:  262144kB
+ Optimizer: Pivotal Optimizer (GPORCA)
+ Execution time: 94.804 ms
+(24 rows)
+
+=== B. TEMP of latest keys only — Redistribute of FACT remains ===
+SELECT 80000
+ANALYZE
+                                                                     QUERY PLAN                                                                      
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+ Gather Motion 2:1  (slice2; segments: 2)  (cost=0.00..948.53 rows=138186 width=17) (actual time=8.597..73.401 rows=80000 loops=1)
+   ->  Hash Join  (cost=0.00..937.99 rows=69093 width=17) (actual time=8.257..60.776 rows=40058 loops=1)
+         Hash Cond: ((scd2_events.biz_key = tmp_scd2_latest.biz_key) AND (scd2_events.version_id = tmp_scd2_latest.version_id))
+         Extra Text: (seg0)   Hash chain length 1.0 avg, 3 max, using 39298 of 1048576 buckets.
+         ->  Redistribute Motion 2:2  (slice1; segments: 2)  (cost=0.00..443.23 rows=120000 width=17) (actual time=0.011..9.167 rows=120174 loops=1)
+               Hash Key: scd2_events.biz_key
+               ->  Seq Scan on scd2_events  (cost=0.00..433.05 rows=120000 width=17) (actual time=0.287..8.979 rows=120257 loops=1)
+         ->  Hash  (cost=431.84..431.84 rows=40000 width=8) (actual time=6.513..6.513 rows=40058 loops=1)
+               ->  Seq Scan on tmp_scd2_latest  (cost=0.00..431.84 rows=40000 width=8) (actual time=0.006..1.459 rows=40058 loops=1)
+ Planning time: 11.292 ms
+   (slice0)    Executor memory: 552K bytes.
+   (slice1)    Executor memory: 636K bytes avg x 2 workers, 636K bytes max (seg0).
+   (slice2)    Executor memory: 10360K bytes avg x 2 workers, 10360K bytes max (seg0).  Work_mem: 1252K bytes max.
+ Memory used:  262144kB
+ Optimizer: Pivotal Optimizer (GPORCA)
+ Execution time: 75.424 ms
+(16 rows)
+
+=== C. GOOD — fact DISTRIBUTED BY (biz_key): no Redistribute on join ===
+CREATE TABLE
+INSERT 0 240000
+ANALYZE
+                                                                                   QUERY PLAN                                                                                    
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Gather Motion 2:1  (slice1; segments: 2)  (cost=0.00..953.37 rows=81017 width=17) (actual time=30.715..118.580 rows=80000 loops=1)
+   ->  Hash Join  (cost=0.00..947.18 rows=40509 width=17) (actual time=30.325..115.466 rows=40058 loops=1)
+         Hash Cond: ((scd2_events_by_key.biz_key = scd2_events_by_key_1.biz_key) AND (scd2_events_by_key.version_id = (max(scd2_events_by_key_1.version_id))))
+         Extra Text: (seg0)   Hash chain length 1.0 avg, 3 max, using 38578 of 524288 buckets.Hash chain length 4.9 avg, 16 max, using 8127 of 8192 buckets; total 8 expansions.
+ 
+         ->  Seq Scan on scd2_events_by_key  (cost=0.00..433.05 rows=120000 width=17) (actual time=0.265..8.272 rows=120174 loops=1)
+         ->  Hash  (cost=449.52..449.52 rows=40509 width=8) (actual time=29.948..29.948 rows=40058 loops=1)
+               ->  HashAggregate  (cost=0.00..449.52 rows=40509 width=8) (actual time=15.013..17.203 rows=40058 loops=1)
+                     Group Key: scd2_events_by_key_1.biz_key
+                     Extra Text: (seg0)   Hash chain length 4.9 avg, 16 max, using 8127 of 8192 buckets; total 8 expansions.
+ 
+                     ->  Seq Scan on scd2_events_by_key scd2_events_by_key_1  (cost=0.00..433.05 rows=120000 width=8) (actual time=0.147..6.134 rows=120174 loops=1)
+ Planning time: 10.289 ms
+   (slice0)    Executor memory: 760K bytes.
+   (slice1)    Executor memory: 9382K bytes avg x 2 workers, 9382K bytes max (seg0).  Work_mem: 1252K bytes max.
+ Memory used:  262144kB
+ Optimizer: Pivotal Optimizer (GPORCA)
+ Execution time: 120.422 ms
+(18 rows)
+
+=== D. BONUS erudition — int vs int8 "same" DISTRIBUTED BY (id) ===
+CREATE TABLE
+CREATE TABLE
+INSERT 0 50000
+INSERT 0 50000
+ANALYZE
+ANALYZE
+                                                                             QUERY PLAN                                                                             
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=0.00..873.19 rows=1 width=8) (actual time=13.512..13.512 rows=1 loops=1)
+   ->  Gather Motion 2:1  (slice2; segments: 2)  (cost=0.00..873.19 rows=1 width=8) (actual time=13.154..13.507 rows=2 loops=1)
+         ->  Aggregate  (cost=0.00..873.19 rows=1 width=8) (actual time=13.371..13.371 rows=1 loops=1)
+               ->  Hash Join  (cost=0.00..873.19 rows=25000 width=1) (actual time=6.998..12.602 rows=25017 loops=1)
+                     Hash Cond: (t_join_int8.id = (t_join_int.id)::bigint)
+                     Extra Text: (seg0)   Hash chain length 1.0 avg, 3 max, using 24723 of 1048576 buckets.
+                     ->  Seq Scan on t_join_int8  (cost=0.00..431.52 rows=25000 width=8) (actual time=0.005..0.972 rows=25017 loops=1)
+                     ->  Hash  (cost=431.97..431.97 rows=25000 width=4) (actual time=6.714..6.714 rows=25017 loops=1)
+                           ->  Redistribute Motion 2:2  (slice1; segments: 2)  (cost=0.00..431.97 rows=25000 width=4) (actual time=1.469..2.966 rows=25017 loops=1)
+                                 Hash Key: (t_join_int.id)::bigint
+                                 ->  Seq Scan on t_join_int  (cost=0.00..431.47 rows=25000 width=4) (actual time=0.011..0.922 rows=25017 loops=1)
+ Planning time: 9.671 ms
+   (slice0)    Executor memory: 123K bytes.
+   (slice1)    Executor memory: 58K bytes avg x 2 workers, 58K bytes max (seg0).
+   (slice2)    Executor memory: 10424K bytes avg x 2 workers, 10424K bytes max (seg0).  Work_mem: 587K bytes max.
+ Memory used:  262144kB
+ Optimizer: Pivotal Optimizer (GPORCA)
+ Execution time: 13.739 ms
+(18 rows)
+
+Done. A: Redistribute×2. B: Redistribute fact remains. C: no Redistribute. D: Redistribute + ::bigint cast.

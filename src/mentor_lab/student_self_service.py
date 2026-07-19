@@ -69,7 +69,8 @@ class StudentSelfServiceGuide:
                 f"  {prefix} mentor-lab.py runbook {route.name} simple",
                 f"  {prefix} mentor-lab.py academy {route.name} start --student <your-name>",
                 "",
-                "Docs:",
+                "Lesson pack:",
+                f"  {route.lesson_root}/README.md",
                 f"  {route.prep_runbook_path}",
                 f"  {route.workbook_path}",
                 f"  {route.homework_path}",
@@ -80,25 +81,50 @@ class StudentSelfServiceGuide:
         return "\n".join(lines) + "\n"
 
     def homework(self, lab: LabDefinition, route: LearningRoute) -> str:
-        bring = (
-            "  rewrite.sql, before/after EXPLAIN (fixed optimizer), pg_stats autopsy, "
-            "ORCA/Legacy matrix, TEMP FS/spill, reconciliation, residual risk."
-            if route.name == "greenplum-query-tuning"
-            else "  DDL, EXPLAIN evidence, partition catalog checks, statistics policy, validation."
-        )
+        read_extra: list[str] = []
+        if route.lesson_code == "lesson-03":
+            bring = (
+                "  Senior core: rewrite.sql (0–3 stages), evidence.md (e2e + decision), "
+                "reconcile.sql (two-way EXCEPT ALL), residual risks. "
+                "Principal extension (matrix/FS/policy) optional."
+            )
+            read_extra = [
+                f"  {route.homework_dir}/templates/evidence.md",
+                f"  {route.homework_dir}/templates/reconcile.sql",
+            ]
+        elif route.lesson_code == "lesson-02":
+            bring = (
+                "  DDL, EXPLAIN evidence, partition catalog checks, "
+                "statistics policy, validation."
+            )
+        else:
+            bring = (
+                "  facts/dimensions/grain, distribution, partitioning, storage, "
+                "catalog evidence, EXPLAIN, risks, Lesson 02 questions."
+            )
+
         lines = [
             f"Student homework: {route.name}",
             f"Physical lab: {lab.name}",
             f"Database: {lab.default_database or '(n/a)'}",
+            f"Lesson pack: {route.lesson_root}/",
+            f"Submission: {route.submission_path}",
             "",
             "Read:",
+            f"  {route.lesson_root}/README.md",
             f"  {route.homework_path}",
-            f"  {route.docs_root}/runbooks/homework-plan.md",
+            f"  {route.homework_plan_path}",
+            f"  {route.rubric_path}",
             f"  {route.workbook_path}",
+            *read_extra,
             "",
             "Self-check commands:",
             f"  python3 mentor-lab.py runbook {route.name} homework",
             f"  python3 mentor-lab.py check {lab.name}",
+            (
+                f"  python3 mentor-lab.py homework {lab.name} check "
+                f"--submission {route.submission_path}"
+            ),
             f"  python3 mentor-lab.py grade {lab.name} --dry-run",
             "",
             f"Bring to {_lesson_label(route.next_lesson.code)}:",
@@ -112,4 +138,6 @@ def _lesson_label(code: str) -> str:
         return "Lesson 02"
     if code.startswith("03-"):
         return "Lesson 03"
+    if code.startswith("04-"):
+        return "Lesson 04"
     return code

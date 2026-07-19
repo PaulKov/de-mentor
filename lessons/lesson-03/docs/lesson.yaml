@@ -1,0 +1,63 @@
+route: greenplum-query-tuning
+lesson_code: lesson-03
+physical_lab: greenplum-625
+title: Декомпозиция и тюнинг тяжёлых запросов в MPP
+deck_path: lessons/lesson-03/artifacts/greenplum-query-tuning-theory.pptx
+google_slides_url: https://docs.google.com/presentation/d/1pBIOaqt9WkubsHqCN_p5kxtAhCLjPs6rxFGH9s-_o3c/edit?usp=sharing
+expected_owner_email: pavelkov007@gmail.com
+expected_slide_count: 439
+drive_folder: lessons/Greenplum/Lesson 03 - Decomposition and tuning of heavy MPP queries
+portal_repo: https://github.com/PaulKov/de-mentor-portal
+docs:
+  - lessons/lesson-03/docs/README.md
+  - lessons/lesson-03/docs/mentor-guide.md
+  - lessons/lesson-03/docs/student-workbook.md
+  - lessons/lesson-03/homework/assignment.md
+  - lessons/lesson-03/homework/rubric.md
+  - lessons/lesson-03/docs/cheat-sheet.md
+runbooks:
+  - lessons/lesson-03/docs/runbooks/facilitator-skip-map.md
+  - lessons/lesson-03/docs/runbooks/simple-path.md
+  - lessons/lesson-03/docs/runbooks/deep-dive-path.md
+  - lessons/lesson-03/homework/plan.md
+  - lessons/lesson-03/docs/runbooks/student-prep.md
+sql_examples:
+  - labs/greenplum-625/examples/lesson03-homework-seed.sql
+  - labs/greenplum-625/examples/lesson03-class-demo.sql
+  - labs/greenplum-625/examples/lesson03-olap-decomposition-tuning.sql
+  - labs/greenplum-625/examples/lesson03-optimizer-legacy-vs-orca.sql
+  - labs/greenplum-625/examples/lesson03-cardinality-histogram-demo.sql
+  - labs/greenplum-625/examples/lesson03-temp-on-commit-lifecycle.sql
+  - labs/greenplum-625/examples/lesson03-stats-analyze-lifecycle.sql
+  - labs/greenplum-625/examples/lesson03-e2e-case-metrics.sql
+  - labs/greenplum-625/examples/lesson03-storage-heap-ao-aoco.sql
+  - labs/greenplum-625/examples/lesson03-nlj-cte-temp-case.sql
+  - labs/greenplum-625/examples/lesson03-orca-ce-trap.sql
+  - labs/greenplum-625/examples/lesson03-legacy-ce-trap.sql
+  - labs/greenplum-625/examples/lesson03-principal-scd2-locus.sql
+  - labs/greenplum-625/examples/lesson03-secret18-not-in-broadcast.sql
+  - labs/greenplum-625/examples/lesson03-secret14-window-partition-skew.sql
+  - labs/greenplum-625/examples/lesson03-secret29-values-params-broadcast.sql
+  - labs/greenplum-625/examples/lesson03-secret42-distinct-by-segment.sql
+  - labs/greenplum-625/examples/lesson03-secret41-autostats-partitions.sql
+  - labs/greenplum-625/examples/lesson03-secret38-median-gather-qd.sql
+student_handoff:
+  - lessons/lesson-03/docs/runbooks/student-prep.md
+  - lessons/lesson-03/docs/student-workbook.md
+  - lessons/lesson-03/homework/assignment.md
+  - lessons/lesson-03/homework/plan.md
+  - labs/greenplum-625/examples/lesson03-homework-seed.sql
+  - labs/greenplum-625/examples/lesson03-class-demo.sql
+  - lessons/lesson-03/homework/templates/evidence.md
+  - lessons/lesson-03/homework/templates/reconcile.sql
+safe_cli_commands:
+  - python3 mentor-lab.py up greenplum-625
+  - python3 mentor-lab.py seed greenplum-625 --profile lesson03
+  - python3 mentor-lab.py check greenplum-625
+  - python3 mentor-lab.py runbook greenplum-query-tuning simple
+  - python3 mentor-lab.py runbook greenplum-query-tuning deep
+  - python3 mentor-lab.py runbook greenplum-query-tuning homework
+  - python3 mentor-lab.py student greenplum-query-tuning homework
+  - python3 mentor-lab.py academy greenplum-query-tuning start --student Иван --dry-run
+  - python3 mentor-lab.py lesson-release greenplum-query-tuning publish-slides --dry-run --confirm-account pavelkov007@gmail.com
+  - python3 mentor-lab.py slides publish greenplum-query-tuning --dry-run --confirm-account pavelkov007@gmail.com

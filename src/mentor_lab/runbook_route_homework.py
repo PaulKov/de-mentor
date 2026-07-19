@@ -68,7 +68,7 @@ def greenplum_homework_runbook() -> Runbook:
                                     "Домашка проходит criteria из homework.md и содержит "
                                     "вопросы к Lesson 02."
                                 ),
-                                common_links + ["docs/lessons/01-greenplum/runbooks/homework-plan.md"],
+                                common_links + ["lessons/lesson-01/homework/plan.md"],
                             ),
                         ],
                     )

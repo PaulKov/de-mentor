@@ -1,0 +1,40 @@
+route: greenplum-partitioning
+lesson_code: lesson-02
+physical_lab: greenplum
+title: Partitioning, statistics and incremental loads in MPP
+deck_path: lessons/lesson-02/artifacts/greenplum-partitioning-theory.pptx
+google_slides_url: https://docs.google.com/presentation/d/17Ae88PoniaFU34egsFPwC0PndAOoXMze4qV1pIKQkaI/edit?usp=sharing
+expected_owner_email: pavelkov007@gmail.com
+expected_slide_count: 18
+drive_folder: lessons/Greenplum/Lesson 02 - Partitioning, statistics and incremental loads
+portal_repo: https://github.com/PaulKov/de-mentor-portal
+docs:
+  - lessons/lesson-02/docs/README.md
+  - lessons/lesson-02/docs/mentor-guide.md
+  - lessons/lesson-02/docs/student-workbook.md
+  - lessons/lesson-02/homework/assignment.md
+  - lessons/lesson-02/homework/rubric.md
+  - lessons/lesson-02/docs/cheat-sheet.md
+runbooks:
+  - lessons/lesson-02/docs/runbooks/simple-path.md
+  - lessons/lesson-02/docs/runbooks/deep-dive-path.md
+  - lessons/lesson-02/homework/plan.md
+  - lessons/lesson-02/docs/runbooks/student-prep.md
+sql_examples:
+  - labs/greenplum-625/examples/lesson02-partitioning-statistics-loads.sql
+  - labs/greenplum-625/examples/partitioning-strategies.sql
+  - labs/greenplum-625/examples/cluster-monitoring.sql
+student_handoff:
+  - lessons/lesson-02/docs/runbooks/student-prep.md
+  - lessons/lesson-02/docs/student-workbook.md
+  - lessons/lesson-02/homework/assignment.md
+  - lessons/lesson-02/homework/plan.md
+  - labs/greenplum-625/examples/lesson02-partitioning-statistics-loads.sql
+safe_cli_commands:
+  - python3 mentor-lab.py runbook greenplum-partitioning simple
+  - python3 mentor-lab.py runbook greenplum-partitioning deep
+  - python3 mentor-lab.py runbook greenplum-partitioning homework
+  - python3 mentor-lab.py student greenplum-partitioning homework
+  - python3 mentor-lab.py academy greenplum-partitioning start --student Иван --dry-run
+  - python3 mentor-lab.py lesson-release greenplum-partitioning publish-slides --dry-run --confirm-account pavelkov007@gmail.com
+  - python3 mentor-lab.py slides publish greenplum-partitioning --dry-run --confirm-account pavelkov007@gmail.com
