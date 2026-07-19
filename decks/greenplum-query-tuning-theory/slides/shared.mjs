@@ -139,7 +139,10 @@ export function twoColumn(ctx, slide, left, right) {
 
 export function renderContentSlide(presentation, ctx, spec) {
   const slide = slideBase(presentation, ctx, spec.kicker, spec.title, spec.subtitle);
-  if (spec.type === "code") {
+  if (spec.type === "image") {
+    codeBlock(ctx, slide, 84, 260, 1060, 310,
+      "Скрин EXPLAIN (см. PPTX / artifacts):\n" + (spec.image || ""));
+  } else if (spec.type === "code") {
     codeBlock(ctx, slide, 84, 260, 1060, 310, spec.code);
   } else if (spec.type === "two") {
     twoColumn(

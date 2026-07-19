@@ -12,29 +12,30 @@ def greenplum_query_tuning_deep_runbook() -> Runbook:
         route="deep",
         title="Урок 03 deep-dive: internals статистики, storage и TEMP",
         description=(
-            "90-120 минут: layered plans, pg_statistic slots, physical layout, "
-            "TEMP/spill и design review rewrite."
+            "90-120 минут: glossary→code map→plan trees, pg_statistic slots, "
+            "physical layout, TEMP/spill и design review rewrite."
         ),
         stages=[
             RunbookStage(
-                "00:00-20:00",
-                "1-7",
-                "Case и layered plans",
-                "Пройди monolith и layered EXPLAIN до разговора про catalog internals.",
+                "00:00-25:00",
+                "1-22",
+                "Glossary, code map, plan trees",
+                "Расшифруй GUC/QD/QE, пройди gpdb 6X_STABLE якоря и сравни скрины ORCA/Legacy.",
                 [
                     "python3 mentor-lab.py check greenplum-625",
+                    "\\i /mentor-lab/examples/lesson03-optimizer-legacy-vs-orca.sql",
                     "EXPLAIN SELECT * FROM lesson03.v_heavy_olap_monolith;",
                 ],
                 "Какие слои плана обязательны в Senior readout?",
-                "Motion, join shape, estimates/actuals, scan/storage.",
-                "Ученик даёт полный layered readout.",
+                "Optimizer marker, Motion/slices, join shape, estimates/actuals, scan/storage.",
+                "Ученик даёт полный layered readout со ссылкой на код.",
                 links,
             ),
             RunbookStage(
-                "20:00-45:00",
-                "8-11",
+                "25:00-50:00",
+                "23-33",
                 "pg_statistic internals",
-                "Разбери stakind/stavalues и путь ANALYZE → catalog → planner.",
+                "Разбери stakind/stavalues и путь ANALYZE → catalog → planner/ORCA.",
                 [
                     "SELECT starelid::regclass, staattnum, stakind1, stanumbers1, stavalues1 FROM pg_statistic WHERE starelid = 'lesson03.fact_sales'::regclass LIMIT 20;",
                 ],
@@ -44,8 +45,8 @@ def greenplum_query_tuning_deep_runbook() -> Runbook:
                 links,
             ),
             RunbookStage(
-                "45:00-70:00",
-                "12-14",
+                "50:00-75:00",
+                "34-36",
                 "Physical storage",
                 "Свяжи Heap/AO/AOCO с типами данных и projection.",
                 [
@@ -59,8 +60,8 @@ def greenplum_query_tuning_deep_runbook() -> Runbook:
                 links,
             ),
             RunbookStage(
-                "70:00-100:00",
-                "15-18",
+                "75:00-100:00",
+                "37-39",
                 "TEMP и spill",
                 "Разбери pg_temp, файлы сегментов и отличие spill files от TEMP TABLE.",
                 [
@@ -74,14 +75,14 @@ def greenplum_query_tuning_deep_runbook() -> Runbook:
             ),
             RunbookStage(
                 "100:00-120:00",
-                "19-22",
+                "40-43",
                 "Design review",
-                "Попроси защитить rewrite как production mini-RFC.",
+                "Попроси защитить rewrite как production mini-RFC при фиксированном GUC optimizer.",
                 [
                     "python3 mentor-lab.py runbook greenplum-query-tuning homework",
                 ],
                 "Какие три доказательства нужны для приёмки rewrite?",
-                "Before/after plan, stats/ANALYZE evidence, residual business risk.",
+                "Before/after plan при том же GUC, stats/ANALYZE evidence, residual business risk.",
                 "Ответ звучит как production review, не как учебный SQL.",
                 links,
             ),

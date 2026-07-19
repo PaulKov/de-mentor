@@ -46,412 +46,12 @@ def inch(value: float) -> int:
     return int(value * 914400)
 
 
-SLIDES = [
-    {
-        "kicker": "Урок 03",
-        "title": "Декомпозиция и тюнинг тяжёлых запросов в MPP",
-        "subtitle": "Greenplum 6.25: планы, GPORCA vs Legacy, статистика, storage, TEMP.",
-        "type": "cards",
-        "cards": [
-            ["Цель", "Понять оптимизацию Greenplum по косточкам и доказывать rewrite планом.", "green"],
-            ["Стенд", "labs/greenplum-625 (GP 6.25.3): seed, check, ORCA/Legacy demo.", "blue"],
-            ["Итог", "Ученик выбирает optimizer и physical stage осознанно, не по привычке.", "green"],
-        ],
-    },
-    {
-        "kicker": "Lab",
-        "title": "Self-service стенд Урока 03 — Greenplum 6.25",
-        "subtitle": "Отдельный lab greenplum-625, чтобы демо ORCA/Legacy было воспроизводимо.",
-        "type": "code",
-        "code": (
-            "python3 mentor-lab.py up greenplum-625\n"
-            "python3 mentor-lab.py check greenplum-625\n"
-            "python3 mentor-lab.py seed greenplum-625 --profile lesson03\n"
-            "python3 mentor-lab.py psql greenplum-625\n\n"
-            "# x86_64:\n"
-            "GREENPLUM_625_IMAGE=andruche/greenplum:6.25.3-slim-amd64 \\\n"
-            "  python3 mentor-lab.py up greenplum-625"
-        ),
-    },
-    {
-        "kicker": "Mental model",
-        "title": "Тяжёлый OLAP = данные + сеть + оценки + выбор оптимизатора",
-        "subtitle": "SQL — вход; план — контракт на CPU, IO и interconnect.",
-        "type": "two",
-        "left": [
-            "Что дорого",
-            "Лишний Motion, плохой join order, stale stats, spill, широкая projection.",
-            "red",
-        ],
-        "right": [
-            "Рычаги",
-            "optimizer on/off, ANALYZE, TEMP stages, DISTRIBUTED BY, Heap/AO/AOCO.",
-            "green",
-        ],
-    },
-    {
-        "kicker": "Pipeline",
-        "title": "Как Greenplum оптимизирует запрос: стадии",
-        "subtitle": "QD строит план; QE исполняют slices. Ошибка на стадии optimize = дорогая сеть.",
-        "type": "flow",
-        "flow": [
-            ["Parse", "SQL → parse tree.", "green"],
-            ["Rewrite", "views/rules → query tree.", "blue"],
-            ["Optimize", "Legacy или GPORCA → plan.", "amber"],
-            ["Dispatch", "QD → gangs/slices.", "green"],
-            ["Execute", "QE + Motion + gather.", "blue"],
-        ],
-    },
-    {
-        "kicker": "Optimize stage",
-        "title": "Стадия Optimize — развилка Legacy vs GPORCA",
-        "subtitle": "GUC optimizer управляет, кто строит распределённый plan.",
-        "type": "code",
-        "code": (
-            "SHOW optimizer;              -- on | off\n"
-            "SET optimizer = on;           -- GPORCA (Pivotal Optimizer)\n"
-            "SET optimizer = off;          -- legacy Postgres-based planner\n\n"
-            "-- В EXPLAIN ищите маркер оптимизатора:\n"
-            "-- Settings: ... optimizer=on\n"
-            "-- Optimizer status: PQO version ..."
-        ),
-    },
-    {
-        "kicker": "Legacy",
-        "title": "Legacy Postgres planner: как думает",
-        "subtitle": "Динамическое программирование / жадные эвристики вокруг path trees PostgreSQL + GP Motion hooks.",
-        "type": "cards",
-        "cards": [
-            ["Корни", "path/joinpath, costsize, selfuncs + cdbpath Motion.", "green"],
-            ["Сильная сторона", "Простые/средние запросы, предсказуемый fallback.", "blue"],
-            ["Слабость", "Взрыв пространства при многих joins; слабее глобальный reorder.", "amber"],
-            ["Практика", "Часто хорош на 2–3 joins и локальных agg.", "green"],
-        ],
-    },
-    {
-        "kicker": "GPORCA",
-        "title": "GPORCA: memo, transformations, cost-based search",
-        "subtitle": "Cascades-style optimizer: исследование эквивалентных планов в memo-структуре.",
-        "type": "cards",
-        "cards": [
-            ["Memo", "Groups альтернативных выражений одного logical result.", "green"],
-            ["Xforms", "Join reorder, aggregate pull-up/push-down, distribution enforcers.", "blue"],
-            ["Cost", "Учитывает Motion/distribution как first-class cost.", "amber"],
-            ["Сильная сторона", "Сложные star/snowflake, много joins, CTE-heavy SQL.", "green"],
-        ],
-    },
-    {
-        "kicker": "Compare",
-        "title": "Где ORCA обычно выигрывает, а где Legacy",
-        "subtitle": "Не религия: измеряйте EXPLAIN/EXPLAIN ANALYZE на вашем workload.",
-        "type": "two",
-        "left": [
-            "ORCA лучше",
-            "Много joins, сложный star, partition-heavy, когда нужен глубокий reorder и distribution-aware cost.",
-            "green",
-        ],
-        "right": [
-            "Legacy лучше / безопаснее",
-            "Простые запросы; ORCA fallback/features gaps; отладка «странного» ORCA plan; иногда ниже planning time.",
-            "amber",
-        ],
-    },
-    {
-        "kicker": "Demo SQL",
-        "title": "Демо на стенде: один SQL — два оптимизатора",
-        "subtitle": "lesson03.v_star_join_orca_case специально перегружен joins.",
-        "type": "code",
-        "code": (
-            "\\i /mentor-lab/examples/lesson03-optimizer-legacy-vs-orca.sql\n\n"
-            "SET optimizer = on;\n"
-            "EXPLAIN SELECT * FROM lesson03.v_star_join_orca_case\n"
-            "ORDER BY revenue DESC LIMIT 20;\n\n"
-            "SET optimizer = off;\n"
-            "EXPLAIN SELECT * FROM lesson03.v_star_join_orca_case\n"
-            "ORDER BY revenue DESC LIMIT 20;"
-        ),
-    },
-    {
-        "kicker": "ORCA+ / Legacy−",
-        "title": "Кейс: ORCA эффективен, Legacy проседает",
-        "subtitle": "Многоjoin star: Legacy залипает в плохом порядке → лишний Redistribute.",
-        "type": "cards",
-        "cards": [
-            ["Симптом", "Большой Redistribute до фильтров/agg; странный join order.", "red"],
-            ["ORCA", "Находит порядок с меньшей shuffle cost через memo search.", "green"],
-            ["Evidence", "Сравнить Settings/Optimizer status и Motion bytes/rows.", "blue"],
-            ["Не путать", "Выигрыш ORCA ≠ повод не делать TEMP/ANALYZE.", "amber"],
-        ],
-    },
-    {
-        "kicker": "Legacy+ / ORCA−",
-        "title": "Кейс: Legacy достаточен, ORCA избыточен",
-        "subtitle": "Простой aggregate по dimension: planning overhead ORCA не окупается.",
-        "type": "code",
-        "code": (
-            "SET optimizer = off;\n"
-            "EXPLAIN SELECT region, count(*)\n"
-            "FROM lesson03.dim_customer\n"
-            "GROUP BY region;\n\n"
-            "-- Здесь оба плана близки; смотрите planning time\n"
-            "-- и стабильность, а не «модный» optimizer=on."
-        ),
-    },
-    {
-        "kicker": "Pros/Cons",
-        "title": "Плюсы и минусы: Legacy planner",
-        "subtitle": "Честный trade-off для Senior review.",
-        "type": "two",
-        "left": [
-            "Плюсы",
-            "Проще ментальная модель; быстрый planning на простых SQL; зрелый fallback; легче объяснить path tree.",
-            "green",
-        ],
-        "right": [
-            "Минусы",
-            "Слабее на many-join; меньше глобальных transform; чаще локально-оптимальный join order.",
-            "red",
-        ],
-    },
-    {
-        "kicker": "Pros/Cons",
-        "title": "Плюсы и минусы: GPORCA",
-        "subtitle": "Мощный search space имеет цену.",
-        "type": "two",
-        "left": [
-            "Плюсы",
-            "Глубокий join reorder; distribution-aware costing; сильнее на сложном OLAP/CTE.",
-            "green",
-        ],
-        "right": [
-            "Минусы",
-            "Дороже planning; feature gaps → fallback; сложнее debug; иногда неожиданный plan shape.",
-            "red",
-        ],
-    },
-    {
-        "kicker": "Fallback",
-        "title": "ORCA fallback и minidump — обязательная грамотность",
-        "subtitle": "Если ORCA не может оптимизировать, Greenplum уходит в Legacy.",
-        "type": "cards",
-        "cards": [
-            ["Признак", "В EXPLAIN: Optimizer status / fallback reason.", "amber"],
-            ["GUC", "optimizer_minidump=onerror для диагностики.", "blue"],
-            ["Практика", "Не «чините SQL вслепую» — сначала читайте reason.", "green"],
-            ["Prod", "Фиксируйте optimizer setting в session/role policy.", "green"],
-        ],
-    },
-    {
-        "kicker": "Case",
-        "title": "Сквозной case: месячный OLAP по продажам и клиентам",
-        "subtitle": "Монолит для layered EXPLAIN + сравнения optimizer.",
-        "type": "code",
-        "code": (
-            "-- lesson03.v_heavy_olap_monolith\n"
-            "SELECT c.region, d.category,\n"
-            "       sum(f.amount) AS revenue,\n"
-            "       rank() OVER (PARTITION BY c.region ORDER BY sum(f.amount) DESC)\n"
-            "FROM lesson03.fact_sales f\n"
-            "JOIN lesson03.dim_customer c ON c.customer_id = f.customer_id\n"
-            "JOIN lesson03.dim_product  d ON d.product_id  = f.product_id\n"
-            "WHERE f.sale_date >= DATE '2026-02-01'\n"
-            "  AND f.sale_date <  DATE '2026-03-01'\n"
-            "  AND c.segment <> 'test'\n"
-            "GROUP BY c.region, d.category;"
-        ),
-    },
-    {
-        "kicker": "Decomposition",
-        "title": "Декомпозиция: сужаем → соединяем → считаем → доказываем",
-        "subtitle": "Каждый этап должен уменьшать cardinality или убирать Motion.",
-        "type": "flow",
-        "flow": [
-            ["Filter", "Окно и anti-test.", "green"],
-            ["Shape", "TEMP grain.", "blue"],
-            ["Join", "Узкий set.", "amber"],
-            ["Agg", "Локально где можно.", "green"],
-            ["Prove", "EXPLAIN до/после.", "blue"],
-        ],
-    },
-    {
-        "kicker": "EXPLAIN",
-        "title": "Сложный план: слои Senior readout",
-        "subtitle": "0) Optimizer. 1) Motion. 2) Join order. 3) Estimates. 4) Scan/storage.",
-        "type": "cards",
-        "cards": [
-            ["Optimizer", "on/off, fallback, PQO version.", "green"],
-            ["Motion", "Redistribute/Broadcast/Gather и ключ.", "blue"],
-            ["Estimates", "rows vs actual; selectivity traps.", "amber"],
-            ["Scan", "partition pruning / AOCO projection.", "green"],
-        ],
-    },
-    {
-        "kicker": "Estimates",
-        "title": "Если rows врут — тюнинг SQL почти бессмысленен",
-        "subtitle": "Плохая selectivity ломает и Legacy, и ORCA — но по-разному.",
-        "type": "code",
-        "code": (
-            "EXPLAIN ANALYZE\n"
-            "SELECT ...;\n\n"
-            "-- Ищем:\n"
-            "--   rows vs actual rows\n"
-            "--   расхождение x10–x100 на join input\n"
-            "-- Затем: pg_stats / ANALYZE, и только потом rewrite."
-        ),
-    },
-    {
-        "kicker": "Motion",
-        "title": "Платим сетью: цель — перенести Motion на меньший set",
-        "subtitle": "ORCA может выбрать другой enforcer; TEMP фиксирует ваш контракт.",
-        "type": "two",
-        "left": ["До", "Redistribute широкого fact; Broadcast раздутой dim.", "red"],
-        "right": ["После", "TEMP окна + ANALYZE → меньше shuffle bytes.", "green"],
-    },
-    {
-        "kicker": "Statistics",
-        "title": "Оптимизатор питается MCV, histogram, n_distinct",
-        "subtitle": "И Legacy, и ORCA читают pg_statistic; мусор на входе = мусор в plan.",
-        "type": "cards",
-        "cards": [
-            ["n_distinct", "Кардинальность; ломается на skew.", "green"],
-            ["MCV", "Частые значения для equality/IN.", "blue"],
-            ["Histogram", "Range predicates.", "amber"],
-            ["correlation", "Physical order vs logical.", "green"],
-        ],
-    },
-    {
-        "kicker": "Catalog",
-        "title": "pg_stats → pg_statistic → слоты на диске",
-        "subtitle": "Читаем статистику как plan: сначала human view, затем raw slots.",
-        "type": "code",
-        "code": (
-            "SELECT attname, n_distinct, most_common_vals, histogram_bounds\n"
-            "FROM pg_stats\n"
-            "WHERE schemaname='lesson03' AND tablename='fact_sales';\n\n"
-            "SELECT staattnum, stakind1, stanumbers1, stavalues1\n"
-            "FROM pg_statistic\n"
-            "WHERE starelid='lesson03.fact_sales'::regclass;"
-        ),
-    },
-    {
-        "kicker": "Engine",
-        "title": "ANALYZE path в коде Greenplum 6.25",
-        "subtitle": "sample → compute_stats → catalog heap tuple (возможно TOAST).",
-        "type": "cards",
-        "cards": [
-            ["analyze.c", "Sampling и расчёт MCV/histogram.", "green"],
-            ["selfuncs.c", "Selectivity functions для costing.", "blue"],
-            ["pg_statistic", "Источник истины planner/ORCA metadata.", "amber"],
-            ["QD/QE", "План на QD; данные и файлы на segments.", "green"],
-        ],
-    },
-    {
-        "kicker": "Storage",
-        "title": "Heap / AO / AOCO на GP 6.25",
-        "subtitle": "В 6.x синтаксис: appendonly=true (не appendoptimized).",
-        "type": "cards",
-        "cards": [
-            ["Heap", "Dims, updates, staging.", "green"],
-            ["AO row", "Bulk append row-oriented.", "blue"],
-            ["AOCO", "Scan-heavy fact + projection.", "amber"],
-            ["Не лечит", "Плохой optimizer choice / Motion / skew.", "red"],
-        ],
-    },
-    {
-        "kicker": "AOCO GP6",
-        "title": "Физическая раскладка AOCO и типы данных",
-        "subtitle": "Column files + compression; text/numeric varlena; широкий payload не читается зря.",
-        "type": "code",
-        "code": (
-            "CREATE TABLE lesson03.fact_sales (...)\n"
-            "WITH (\n"
-            "  appendonly=true,\n"
-            "  orientation=column,\n"
-            "  compresstype=zstd,\n"
-            "  compresslevel=1\n"
-            ")\n"
-            "DISTRIBUTED BY (customer_id)\n"
-            "PARTITION BY RANGE (sale_date) (...);"
-        ),
-    },
-    {
-        "kicker": "TEMP",
-        "title": "TEMP — physical stage с ANALYZE и distribution",
-        "subtitle": "Фиксируем промежуточный контракт, который optimizer пересчитывает заново.",
-        "type": "cards",
-        "cards": [
-            ["Зачем", "Новый grain + новый plan.", "green"],
-            ["ANALYZE", "Обязателен после наполнения.", "blue"],
-            ["Distribution", "Под следующий join key.", "amber"],
-            ["Риск", "TEMP без фильтра увеличивает стоимость.", "red"],
-        ],
-    },
-    {
-        "kicker": "TEMP internals",
-        "title": "pg_temp, файлы сегментов, spill ≠ TEMP TABLE",
-        "subtitle": "Явная TEMP relation и hash/sort spill files — разные механизмы.",
-        "type": "cards",
-        "cards": [
-            ["Namespace", "pg_temp_NNN session-local.", "green"],
-            ["Файлы", "Temporary relfilenode на segments.", "blue"],
-            ["Spill", "work_mem miss → temp files исполнителей.", "amber"],
-            ["GPDB", "QD координирует, данные на QE.", "green"],
-        ],
-    },
-    {
-        "kicker": "Rewrite",
-        "title": "Паттерн rewrite + проверка optimizer",
-        "subtitle": "Before/after при фиксированном SET optimizer.",
-        "type": "code",
-        "code": (
-            "SET optimizer = on;  -- зафиксировали\n"
-            "CREATE TEMP TABLE tmp_sales_feb AS\n"
-            "SELECT customer_id, product_id, amount\n"
-            "FROM lesson03.fact_sales\n"
-            "WHERE sale_date >= DATE '2026-02-01'\n"
-            "  AND sale_date <  DATE '2026-03-01'\n"
-            "DISTRIBUTED BY (customer_id);\n"
-            "ANALYZE tmp_sales_feb;\n"
-            "EXPLAIN ..."
-        ),
-    },
-    {
-        "kicker": "Simple path",
-        "title": "60 минут на GP 6.25",
-        "subtitle": "Case → optimizer → EXPLAIN → stats → TEMP → proof.",
-        "type": "flow",
-        "flow": [
-            ["Up/seed", "greenplum-625", "green"],
-            ["ORCA", "on vs off", "blue"],
-            ["Plan", "слои", "amber"],
-            ["TEMP", "rewrite", "green"],
-            ["Proof", "evidence", "blue"],
-        ],
-    },
-    {
-        "kicker": "Deep route",
-        "title": "Deep-dive Principal: internals end-to-end",
-        "subtitle": "ORCA memo/xforms, pg_statistic slots, AOCO files, TEMP spill, design review.",
-        "type": "cards",
-        "cards": [
-            ["ORCA", "fallback, minidump, join_order GUCs.", "green"],
-            ["Stats files", "stakind/stavalues/TOAST.", "blue"],
-            ["Storage", "appendonly column layout.", "amber"],
-            ["RFC", "rewrite + optimizer policy.", "green"],
-        ],
-    },
-    {
-        "kicker": "Summary",
-        "title": "Что унести с Урока 03",
-        "subtitle": "Оптимизация Greenplum — это pipeline + два optimizer + физика данных.",
-        "type": "cards",
-        "cards": [
-            ["Стадии", "parse → rewrite → optimize → dispatch → execute.", "green"],
-            ["Выбор", "ORCA vs Legacy измерять, не верить.", "blue"],
-            ["Физика", "stats/storage/TEMP — вход оптимизатора.", "amber"],
-        ],
-    },
-]
+import sys
+
+_SCRIPTS_DIR = Path(__file__).resolve().parent
+if str(_SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(_SCRIPTS_DIR))
+from lesson03_slide_specs import SLIDES
 
 
 def _set_run(paragraph, text, *, size=18, bold=False, color=None, font="Calibri"):
@@ -489,11 +89,20 @@ def _add_text(slide, x, y, w, h, text, *, size=18, bold=False, color=None, align
     return box
 
 
-def _card(slide, x, y, w, h, title, body, color_key):
+def _card(slide, x, y, w, h, title, body, color_key, *, body_size: int = 13):
     _add_round(slide, x, y, w, h, C["panel"])
     _add_rect(slide, x + inch(0.2), y + inch(0.2), inch(0.45), inch(0.05), C[color_key])
     _add_text(slide, x + inch(0.22), y + inch(0.35), w - inch(0.4), inch(0.45), title, size=18, bold=True)
-    _add_text(slide, x + inch(0.22), y + inch(0.85), w - inch(0.4), h - inch(1.05), body, size=13, color=C["muted"])
+    _add_text(
+        slide,
+        x + inch(0.22),
+        y + inch(0.85),
+        w - inch(0.4),
+        h - inch(1.05),
+        body,
+        size=body_size,
+        color=C["muted"],
+    )
 
 
 def _slide_base(prs, spec):
@@ -512,22 +121,39 @@ def _slide_base(prs, spec):
 def render_slide(prs, spec):
     slide = _slide_base(prs, spec)
     if spec["type"] == "code":
-        _add_round(slide, inch(0.7), inch(2.7), inch(11.9), inch(3.7), C["panel"])
-        _add_text(slide, inch(0.95), inch(2.9), inch(2), inch(0.3), "SQL", size=12, bold=True, color=C["green"])
+        label = "PLAN" if "Plan" in spec.get("kicker", "") or "Phases" in spec.get("kicker", "") else "SQL"
+        font_size = 11 if len(spec["code"]) > 420 else 12
+        _add_round(slide, inch(0.7), inch(2.55), inch(11.9), inch(4.0), C["panel"])
+        _add_text(slide, inch(0.95), inch(2.7), inch(2), inch(0.3), label, size=12, bold=True, color=C["green"])
         _add_text(
             slide,
             inch(0.95),
-            inch(3.25),
+            inch(3.05),
             inch(11.4),
-            inch(2.9),
+            inch(3.2),
             spec["code"],
-            size=12,
+            size=font_size,
             font="Consolas",
         )
+    elif spec["type"] == "image":
+        image_path = ROOT / spec["image"]
+        if not image_path.is_file():
+            raise FileNotFoundError(f"Missing plan screenshot: {image_path}")
+        # Fit screenshot into content band under subtitle.
+        left, top = inch(0.7), inch(2.5)
+        max_w, max_h = inch(11.9), inch(4.2)
+        slide.shapes.add_picture(str(image_path), left, top, width=max_w)
+        # Cap height if the picture is taller than the band (python-pptx sets height proportionally).
+        pic = slide.shapes[-1]
+        if pic.height > max_h:
+            ratio = max_h / pic.height
+            pic.height = max_h
+            pic.width = int(pic.width * ratio)
+            pic.left = int((W - pic.width) / 2)
     elif spec["type"] == "two":
         left, right = spec["left"], spec["right"]
-        _card(slide, inch(0.6), inch(2.7), inch(5.8), inch(3.5), left[0], left[1], left[2])
-        _card(slide, inch(6.8), inch(2.7), inch(5.8), inch(3.5), right[0], right[1], right[2])
+        _card(slide, inch(0.6), inch(2.7), inch(5.8), inch(3.5), left[0], left[1], left[2], body_size=12)
+        _card(slide, inch(6.8), inch(2.7), inch(5.8), inch(3.5), right[0], right[1], right[2], body_size=12)
     elif spec["type"] == "flow":
         width = inch(2.05)
         gap = inch(0.25)
@@ -539,20 +165,32 @@ def render_slide(prs, spec):
                 _add_rect(slide, x + width + inch(0.05), y + inch(1.5), gap - inch(0.1), inch(0.04), C["line"])
     else:
         positions = [
-            (inch(0.6), inch(2.7)),
-            (inch(6.8), inch(2.7)),
+            (inch(0.6), inch(2.55)),
+            (inch(6.8), inch(2.55)),
             (inch(0.6), inch(4.55)),
             (inch(6.8), inch(4.55)),
         ]
+        long_bodies = any(len(body) > 90 for _, body, _ in spec["cards"])
+        card_h = inch(1.85) if long_bodies else inch(1.65)
+        body_size = 11 if long_bodies else 13
         for index, (title, body, color_key) in enumerate(spec["cards"]):
             x, y = positions[index]
-            _card(slide, x, y, inch(5.8), inch(1.65), title, body, color_key)
+            _card(slide, x, y, inch(5.8), card_h, title, body, color_key, body_size=body_size)
     return slide
 
 
 def write_shared_mjs() -> None:
     shared = (ROOT / "decks" / "greenplum-partitioning-theory" / "slides" / "shared.mjs").read_text(encoding="utf-8")
     shared = shared.replace("Урок 02", "Урок 03")
+    # Image slides are PPTX-primary; web deck falls back to a path caption.
+    shared = shared.replace(
+        '  if (spec.type === "code") {\n    codeBlock(ctx, slide, 84, 260, 1060, 310, spec.code);',
+        '  if (spec.type === "image") {\n'
+        '    codeBlock(ctx, slide, 84, 260, 1060, 310,\n'
+        '      "Скрин EXPLAIN (см. PPTX / artifacts):\\n" + (spec.image || ""));\n'
+        '  } else if (spec.type === "code") {\n'
+        '    codeBlock(ctx, slide, 84, 260, 1060, 310, spec.code);',
+    )
     SLIDES_DIR.mkdir(parents=True, exist_ok=True)
     (SLIDES_DIR / "shared.mjs").write_text(shared, encoding="utf-8")
 
@@ -570,6 +208,8 @@ def write_content_mjs() -> None:
         chunks.append(f'    type: {json.dumps(spec["type"], ensure_ascii=False)},')
         if spec["type"] == "code":
             chunks.append(f'    code: {json.dumps(spec["code"], ensure_ascii=False)},')
+        elif spec["type"] == "image":
+            chunks.append(f'    image: {json.dumps(spec["image"], ensure_ascii=False)},')
         elif spec["type"] == "two":
             left = spec["left"]
             right = spec["right"]
@@ -600,6 +240,9 @@ def write_content_mjs() -> None:
 
 
 def write_slide_modules() -> None:
+    SLIDES_DIR.mkdir(parents=True, exist_ok=True)
+    for stale in SLIDES_DIR.glob("slide-*.mjs"):
+        stale.unlink()
     for index in range(1, len(SLIDES) + 1):
         name = f"slide-{index:02d}.mjs"
         fn = f"slide{index:02d}"

@@ -1,0 +1,15 @@
+QUERY PLAN                                               
+-------------------------------------------------------------------------------------------------------
+ Gather Motion 2:1  (slice2; segments: 2)  (cost=0.00..431.41 rows=4 width=12)
+   ->  GroupAggregate  (cost=0.00..431.41 rows=2 width=12)
+         Group Key: region
+         ->  Sort  (cost=0.00..431.41 rows=2 width=12)
+               Sort Key: region
+               ->  Redistribute Motion 2:2  (slice1; segments: 2)  (cost=0.00..431.41 rows=2 width=12)
+                     Hash Key: region
+                     ->  Result  (cost=0.00..431.41 rows=2 width=12)
+                           ->  HashAggregate  (cost=0.00..431.41 rows=2 width=12)
+                                 Group Key: region
+                                 ->  Seq Scan on dim_customer  (cost=0.00..431.08 rows=2500 width=4)
+ Optimizer: Pivotal Optimizer (GPORCA)
+(12 rows)

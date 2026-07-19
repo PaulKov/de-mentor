@@ -1,0 +1,35 @@
+QUERY PLAN                                                                              
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Gather Motion 2:1  (slice4; segments: 2)  (cost=0.00..1312.47 rows=9 width=32)
+   ->  WindowAgg  (cost=0.00..1312.47 rows=5 width=32)
+         Partition By: dim_customer.region
+         Order By: (pg_catalog.sum((sum(fact_sales.amount))))
+         ->  Sort  (cost=0.00..1312.47 rows=5 width=20)
+               Sort Key: dim_customer.region, (pg_catalog.sum((sum(fact_sales.amount))))
+               ->  Redistribute Motion 2:2  (slice3; segments: 2)  (cost=0.00..1312.47 rows=5 width=20)
+                     Hash Key: dim_customer.region
+                     ->  Result  (cost=0.00..1312.47 rows=5 width=20)
+                           ->  HashAggregate  (cost=0.00..1312.47 rows=5 width=20)
+                                 Group Key: dim_customer.region, dim_product.category
+                                 ->  Redistribute Motion 2:2  (slice2; segments: 2)  (cost=0.00..1312.46 rows=5 width=20)
+                                       Hash Key: dim_customer.region, dim_product.category
+                                       ->  Result  (cost=0.00..1312.46 rows=5 width=20)
+                                             ->  HashAggregate  (cost=0.00..1312.46 rows=5 width=20)
+                                                   Group Key: dim_customer.region, dim_product.category
+                                                   ->  Hash Join  (cost=0.00..1307.21 rows=21009 width=18)
+                                                         Hash Cond: (fact_sales.product_id = dim_product.product_id)
+                                                         ->  Hash Join  (cost=0.00..870.47 rows=21062 width=14)
+                                                               Hash Cond: (fact_sales.customer_id = dim_customer.customer_id)
+                                                               ->  Sequence  (cost=0.00..433.47 rows=22400 width=18)
+                                                                     ->  Partition Selector for fact_sales (dynamic scan id: 1)  (cost=10.00..100.00 rows=50 width=4)
+                                                                           Partitions selected: 2 (out of 4)
+                                                                     ->  Dynamic Seq Scan on fact_sales (dynamic scan id: 1)  (cost=0.00..433.47 rows=22400 width=18)
+                                                                           Filter: ((sale_date >= '2026-02-01'::date) AND (sale_date < '2026-03-01'::date))
+                                                               ->  Hash  (cost=431.22..431.22 rows=2353 width=8)
+                                                                     ->  Seq Scan on dim_customer  (cost=0.00..431.22 rows=2353 width=8)
+                                                                           Filter: (segment <> 'test'::text)
+                                                         ->  Hash  (cost=431.27..431.27 rows=800 width=12)
+                                                               ->  Broadcast Motion 2:2  (slice1; segments: 2)  (cost=0.00..431.27 rows=800 width=12)
+                                                                     ->  Seq Scan on dim_product  (cost=0.00..431.01 rows=400 width=12)
+ Optimizer: Pivotal Optimizer (GPORCA)
+(32 rows)

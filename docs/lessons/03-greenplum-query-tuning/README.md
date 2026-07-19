@@ -4,11 +4,14 @@
 
 Главная идея: Senior/Principal разбирает оптимизацию Greenplum по стадиям, сравнивает два оптимизатора, читает статистику до catalog/файлов, выбирает storage и декомпозирует тяжёлый OLAP через `TEMP`.
 
+**GUC** (*Grand Unified Configuration*) — параметр сервера PostgreSQL/Greenplum. GUC `optimizer` выбирает, кто строит распределённый plan: `on` → GPORCA, `off` → Legacy. Полный словарь — в начале презентации и в [deep-dive](deep-dives/optimizer-legacy-vs-orca.md).
+
 ## Результат Урока
 
 После урока ученик должен уметь:
 
-- объяснить pipeline `parse → rewrite → optimize → dispatch → execute`;
+- расшифровывать GUC / QD / QE / Motion / ORCA до чтения плана;
+- объяснить pipeline `parse → rewrite → optimize → dispatch → execute` на дереве EXPLAIN;
 - сравнить **Legacy Postgres planner** и **GPORCA**: плюсы/минусы, где какой эффективен;
 - разобрать сложный `EXPLAIN` слоями: optimizer → Motion → join → estimates → scan;
 - читать `pg_stats` / `pg_statistic` и связать slots со selectivity;
@@ -63,7 +66,7 @@ SET optimizer = off;  -- Legacy
 
 ## Материалы
 
-- [Презентация в Google Slides](https://docs.google.com/presentation/d/1PMJJ8_EB65GfS0Ndj0hUSudCPwWyKEMt__GAz5rEGPU/edit?usp=sharing)
+- [Презентация в Google Slides](https://docs.google.com/presentation/d/1DGUBklnANac9jKpW85fTCPQ0MEiM7zEs9VnF3rN7aEA/edit?usp=sharing)
 - [PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-query-tuning-theory.pptx)
 - [Manifest](lesson.yaml)
 - [Deep-dive: Legacy vs GPORCA](deep-dives/optimizer-legacy-vs-orca.md)

@@ -12,30 +12,48 @@ def greenplum_query_tuning_simple_runbook() -> Runbook:
         route="simple",
         title="Урок 03 simple path: декомпозиция и тюнинг тяжёлых запросов",
         description=(
-            "60 минут: монолитный OLAP, layered EXPLAIN, статистика, TEMP rewrite и proof."
+            "60 минут: glossary, pipeline Optimize (GUC), plan trees ORCA/Legacy, "
+            "TEMP rewrite и proof."
         ),
         stages=[
             RunbookStage(
                 "00:00-08:00",
-                "1-3",
-                "Сквозной case",
-                "Покажи monolith OLAP и зафиксируй, что цена = данные + сеть + estimates.",
+                "1-7",
+                "Glossary + pipeline",
+                "Расшифруй GUC/QD/QE/Motion и покажи стадии parse→execute на стенде GP 6.25.",
                 [
                     "python3 mentor-lab.py check greenplum-625",
                     "python3 mentor-lab.py seed greenplum-625 --profile lesson03",
+                    "SHOW optimizer;",
                 ],
-                "Что в этом запросе может быть дороже самого join?",
-                "Redistribute/Broadcast большого set, плохие estimates, широкая projection, spill.",
-                "Ученик называет distributed cost factors до rewrite.",
+                "Что такое GUC optimizer и кто строит plan при on/off?",
+                "GUC = Grand Unified Configuration; on → GPORCA, off → Legacy Postgres planner на QD.",
+                "Ученик расшифровывает аббревиатуры до чтения EXPLAIN.",
                 links,
             ),
             RunbookStage(
-                "08:00-20:00",
-                "4-7",
-                "Layered EXPLAIN",
-                "Разбери план слоями: Motion → join shape → estimates → scan.",
+                "08:00-22:00",
+                "8-22",
+                "Optimize deep + plan trees",
+                "Пройди code map gpdb 6X_STABLE и сравни деревья/скрины ORCA vs Legacy.",
+                [
+                    "\\i /mentor-lab/examples/lesson03-optimizer-legacy-vs-orca.sql",
+                    "SET optimizer = on; EXPLAIN SELECT * FROM lesson03.v_star_join_orca_case ORDER BY revenue DESC LIMIT 5;",
+                    "SET optimizer = off; EXPLAIN SELECT * FROM lesson03.v_star_join_orca_case ORDER BY revenue DESC LIMIT 5;",
+                ],
+                "Какой маркер в EXPLAIN отличает GPORCA от Legacy?",
+                "Optimizer: Pivotal Optimizer (GPORCA) vs Optimizer: Postgres query optimizer.",
+                "Ученик сравнивает join order и Redistribute на одном SQL.",
+                links,
+            ),
+            RunbookStage(
+                "22:00-35:00",
+                "23-33",
+                "Case + layered EXPLAIN + stats",
+                "Разбери monolith слоями и свяжи selectivity с pg_stats / pg_statistic.",
                 [
                     "EXPLAIN SELECT * FROM lesson03.v_heavy_olap_monolith;",
+                    "SELECT attname, null_frac, n_distinct, most_common_vals, histogram_bounds FROM pg_stats WHERE schemaname = 'lesson03' AND tablename = 'fact_sales' ORDER BY attname;",
                 ],
                 "Какой Motion переносит больше всего строк по смыслу плана?",
                 "Тот, что стоит над самым широким промежуточным set до сужения фильтра/agg.",
@@ -43,24 +61,10 @@ def greenplum_query_tuning_simple_runbook() -> Runbook:
                 links,
             ),
             RunbookStage(
-                "20:00-32:00",
-                "8-11",
-                "Статистика",
-                "Свяжи selectivity с pg_stats и слотами pg_statistic.",
-                [
-                    "SELECT attname, null_frac, n_distinct, most_common_vals, histogram_bounds FROM pg_stats WHERE schemaname = 'lesson03' AND tablename = 'fact_sales' ORDER BY attname;",
-                    "SELECT c.relname, s.staattnum, s.stakind1, s.stanumbers1 FROM pg_statistic s JOIN pg_class c ON c.oid = s.starelid JOIN pg_namespace n ON n.oid = c.relnamespace WHERE n.nspname = 'lesson03' ORDER BY 1, 2 LIMIT 20;",
-                ],
-                "Какой slot объясняет range-фильтр по sale_date?",
-                "Histogram bounds (и связанные stanumbers/stavalues) для range selectivity.",
-                "Ученик связывает catalog stats с plan rows.",
-                links,
-            ),
-            RunbookStage(
-                "32:00-48:00",
-                "12-18",
+                "35:00-50:00",
+                "34-39",
                 "Storage и TEMP rewrite",
-                "Сравни Heap/AO/AOCO и пройди TEMP декомпозицию с ANALYZE.",
+                "Сравни Heap/AO/AOCO и пройди TEMP декомпозицию с ANALYZE при фиксированном GUC.",
                 [
                     "EXPLAIN SELECT region, category, revenue, rank() OVER (PARTITION BY region ORDER BY revenue DESC) FROM tmp_lesson03_sales_shaped;",
                     "SELECT c.relname, pg_size_pretty(pg_relation_size(c.oid)) FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace WHERE n.nspname = 'lesson03' ORDER BY pg_relation_size(c.oid) DESC;",
@@ -71,8 +75,8 @@ def greenplum_query_tuning_simple_runbook() -> Runbook:
                 links,
             ),
             RunbookStage(
-                "48:00-60:00",
-                "19-22",
+                "50:00-60:00",
+                "40-43",
                 "Homework handoff",
                 "Закрой evidence checklist и мост к WLM уроку.",
                 [
@@ -80,7 +84,7 @@ def greenplum_query_tuning_simple_runbook() -> Runbook:
                     "python3 mentor-lab.py student greenplum-query-tuning homework",
                 ],
                 "Какие артефакты обязательны в домашке?",
-                "Before/after EXPLAIN, stats snippet, storage rationale, residual risk.",
+                "Before/after EXPLAIN при фиксированном GUC optimizer, stats snippet, storage rationale, residual risk.",
                 "Ученик повторяет deliverables своими словами.",
                 links,
             ),

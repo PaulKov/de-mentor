@@ -31,4 +31,4 @@ EXPLAIN SELECT * FROM lesson03.v_heavy_olap_monolith;
 
 ## Слайды
 
-1–14 (lab + optimizer), 15–21 (case/plan/stats), 25–28 (TEMP/proof).
+1–3 (glossary), 4–22 (pipeline + plan trees/скрины), 23–30 (case/EXPLAIN), 31–43 (stats/TEMP/proof).

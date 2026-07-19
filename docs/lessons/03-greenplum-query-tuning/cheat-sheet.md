@@ -1,11 +1,20 @@
 # Шпаргалка: Урок 03
 
+## Словарь
+
+| | |
+|---|---|
+| **GUC** | Grand Unified Configuration — параметр сервера (`SHOW`/`SET`). |
+| **optimizer** | GUC выбора движка плана: `on` = GPORCA, `off` = Legacy. |
+| **QD / QE** | Query Dispatcher / Query Executor. |
+| **Motion** | Redistribute / Broadcast / Gather между сегментами. |
+
 ## Optimizer (GP 6.25)
 
 ```sql
-SHOW optimizer;
-SET optimizer = on;   -- GPORCA
-SET optimizer = off;  -- Legacy
+SHOW optimizer;           -- GUC
+SET optimizer = on;       -- GPORCA
+SET optimizer = off;      -- Legacy
 ```
 
 | Когда | Выбор |

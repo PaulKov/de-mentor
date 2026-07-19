@@ -111,7 +111,7 @@ LESSON_03_ROUTE = LearningRoute(
     deck_path="artifacts/greenplum-query-tuning-theory.pptx",
     google_slides_url=(
         "https://docs.google.com/presentation/d/"
-        "1PMJJ8_EB65GfS0Ndj0hUSudCPwWyKEMt__GAz5rEGPU/edit?usp=sharing"
+        "1DGUBklnANac9jKpW85fTCPQ0MEiM7zEs9VnF3rN7aEA/edit?usp=sharing"
     ),
     sql_examples=(
         "labs/greenplum-625/examples/lesson03-olap-decomposition-tuning.sql",
