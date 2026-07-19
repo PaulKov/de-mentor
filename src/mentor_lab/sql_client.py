@@ -1,9 +1,11 @@
 """SQL execution helpers for Greenplum running in Docker Compose."""
 
+from __future__ import annotations
+
 import shlex
 import subprocess
 from pathlib import Path
-from typing import Sequence
+from typing import Optional, Sequence
 
 from mentor_lab.domain import LabDefinition
 
@@ -36,6 +38,29 @@ class GreenplumSqlClient:
         self._project_root = project_root
         self._lab = lab
 
+    def ensure_database(self) -> None:
+        """Create lab.default_database via bootstrap_database when configured."""
+
+        bootstrap = self._lab.bootstrap_database
+        target = self._lab.default_database
+        if not bootstrap or not target or bootstrap == target:
+            return
+        exists = self._execute(
+            (
+                "SELECT 1 FROM pg_database "
+                f"WHERE datname = {self._sql_literal(target)}"
+            ),
+            ["-At"],
+            database=bootstrap,
+        )
+        if exists.strip() == "1":
+            return
+        self._execute(
+            f"CREATE DATABASE {self._sql_ident(target)}",
+            [],
+            database=bootstrap,
+        )
+
     def scalar(self, sql: str) -> str:
         return self._execute(self._resolve(sql), ["-At"])
 
@@ -52,14 +77,20 @@ class GreenplumSqlClient:
         return self._compose_exec_prefix() + ["bash", "-lc", shell]
 
     def run_file(self, container_path: str) -> int:
+        self.ensure_database()
         completed = subprocess.run(self.build_file_command(container_path), check=False)
         return completed.returncode
 
     def format_command(self, command: Sequence[str]) -> str:
         return shlex.join(command)
 
-    def _execute(self, sql: str, psql_flags: Sequence[str]) -> str:
-        command = self._build_sql_command(sql, psql_flags)
+    def _execute(
+        self,
+        sql: str,
+        psql_flags: Sequence[str],
+        database: Optional[str] = None,
+    ) -> str:
+        command = self._build_sql_command(sql, psql_flags, database=database)
         completed = subprocess.run(
             command,
             check=False,
@@ -71,15 +102,31 @@ class GreenplumSqlClient:
             raise RuntimeError(message)
         return completed.stdout.strip()
 
-    def _build_sql_command(self, sql: str, psql_flags: Sequence[str]) -> Sequence[str]:
+    def _build_sql_command(
+        self,
+        sql: str,
+        psql_flags: Sequence[str],
+        database: Optional[str] = None,
+    ) -> Sequence[str]:
         flags = " ".join(psql_flags)
+        db_name = database or self._lab.default_database
         shell = (
             f"{self._lab.env_script} && "
             f"psql {flags} -U {shlex.quote(self._lab.default_user)} "
-            f"-d {shlex.quote(self._lab.default_database)} "
+            f"-d {shlex.quote(db_name)} "
             f"-c {shlex.quote(sql)}"
         )
         return self._compose_exec_prefix() + ["bash", "-lc", shell]
+
+    @staticmethod
+    def _sql_literal(value: str) -> str:
+        return "'" + value.replace("'", "''") + "'"
+
+    @staticmethod
+    def _sql_ident(value: str) -> str:
+        if not value.replace("_", "").isalnum():
+            raise ValueError(f"Unsafe SQL identifier: {value!r}")
+        return value
 
     def _compose_exec_prefix(self) -> Sequence[str]:
         return [

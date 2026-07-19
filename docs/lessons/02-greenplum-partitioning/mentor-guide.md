@@ -29,13 +29,13 @@ ROLLBACK;
 - [Deep-dive маршрут](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/runbooks/deep-dive-path.md)
 - [Workbook ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/student-workbook.md)
 - [Домашка](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/homework.md)
-- [SQL-lab](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/lesson02-partitioning-statistics-loads.sql)
+- [SQL-lab](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/lesson02-partitioning-statistics-loads.sql)
 
 ## Главная Линия Объяснения
 
 1. Сначала workload: какие фильтры, retention, SLA загрузки, late-arriving facts.
 2. Потом физика: partition key для pruning/retention, `DISTRIBUTED BY` для segment placement.
-3. Потом evidence: `EXPLAIN`, `pg_partition_tree`, `gp_toolkit.gp_partitions`, `gp_segment_id`, `last_analyze`.
+3. Потом evidence: `EXPLAIN`, `pg_partitions`, `pg_partitions`, `gp_segment_id`, `last_analyze`.
 4. Потом operation contract: stage, publish, `ANALYZE`, validation, retry, residual risk.
 
 ## Что Показать В Greenplum
@@ -66,10 +66,14 @@ Catalog checks:
 
 ```sql
 SELECT *
-FROM pg_partition_tree('lesson02.fact_sales_partitioned'::regclass);
+-- catalog: pg_partitions (GP6)
+SELECT schemaname, tablename, partitiontablename, partitionboundary
+FROM pg_partitions
+WHERE schemaname = 'lesson02' AND tablename = 'fact_sales_partitioned'
+ORDER BY partitionrank, partitiontablename;
 
 SELECT *
-FROM gp_toolkit.gp_partitions
+FROM pg_partitions
 WHERE schemaname = 'lesson02'
 ORDER BY partitiontablename;
 ```
@@ -122,7 +126,7 @@ ORDER BY sale_id;
 - Partitioning отсекает leaf partitions и помогает retention.
 - Distribution размещает строки по segments и влияет на locality join.
 - `EXPLAIN` должен показать, что читаются только нужные partitions.
-- `pg_partition_tree` и `gp_toolkit.gp_partitions` показывают структуру partitioned table.
+- `pg_partitions` и `pg_partitions` показывают структуру partitioned table.
 - `ANALYZE` обновляет statistics, без которых optimizer может выбрать плохой `Broadcast Motion` или `Redistribute Motion`.
 - Late-arriving facts требуют bounded reload window, partition-level replace или идемпотентного merge/upsert.
 
@@ -132,7 +136,7 @@ ORDER BY sale_id;
 
 - не смешивает partition key и distribution key;
 - показывает `EXPLAIN`, а не только рассказывает DDL;
-- использует `pg_partition_tree` или `gp_toolkit.gp_partitions`;
+- использует `pg_partitions`;
 - говорит про `ANALYZE` как часть load pipeline;
 - формулирует validation before/after;
 - называет residual risk.

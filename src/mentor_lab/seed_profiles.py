@@ -14,6 +14,97 @@ class SeedProfile:
     container_path: str
 
 
+def _gp625_profiles(base: Path) -> List[SeedProfile]:
+    """Profiles for the shared Greenplum 6.25 academy stand."""
+
+    return [
+        SeedProfile(
+            "academy",
+            "Full academy (lessons 01–03)",
+            "Loads mentor.lesson01 + lesson02 + lesson03 on Greenplum 6.25.",
+            base / "academy.sql",
+            "/mentor-lab/seed/academy.sql",
+        ),
+        SeedProfile(
+            "lesson01",
+            "Lesson 01 core dataset",
+            "Skewed/good facts, dims and Motion views in mentor.lesson01.",
+            base / "lesson01.sql",
+            "/mentor-lab/seed/lesson01.sql",
+        ),
+        SeedProfile(
+            "lesson02",
+            "Lesson 02 partitioning lab",
+            "Partitioned facts, stage, late facts and ANALYZE in mentor.lesson02.",
+            base / "lesson02.sql",
+            "/mentor-lab/seed/lesson02.sql",
+        ),
+        SeedProfile(
+            "lesson03",
+            "Lesson 03 OLAP + optimizer dataset",
+            "Loads mentor.lesson03 schema, AOCO fact, star-join ORCA case and TEMP stages.",
+            base / "lesson03.sql",
+            "/mentor-lab/seed/lesson03.sql",
+        ),
+        SeedProfile(
+            "balanced",
+            "Balanced warehouse",
+            "Even distribution for baseline plan comparisons.",
+            base / "balanced.sql",
+            "/mentor-lab/seed/balanced.sql",
+        ),
+        SeedProfile(
+            "skewed",
+            "Skewed incident",
+            "Reloads lesson01 core (includes skewed status distribution).",
+            base / "lesson01.sql",
+            "/mentor-lab/seed/lesson01.sql",
+        ),
+        SeedProfile(
+            "enterprise",
+            "Enterprise-heavy marketplace",
+            "A few large customers dominate revenue while rows stay distributed.",
+            base / "enterprise.sql",
+            "/mentor-lab/seed/enterprise.sql",
+        ),
+        SeedProfile(
+            "late-facts",
+            "Late arriving facts",
+            "Adds late facts to discuss incremental loads and partition hygiene.",
+            base / "late-facts.sql",
+            "/mentor-lab/seed/late-facts.sql",
+        ),
+        SeedProfile(
+            "bad-statistics",
+            "Stale statistics drill",
+            "Creates changed data without ANALYZE so estimates can be questioned.",
+            base / "bad-statistics.sql",
+            "/mentor-lab/seed/bad-statistics.sql",
+        ),
+        SeedProfile(
+            "bad-partitioning",
+            "Partitioning mismatch drill",
+            "Creates a mart shaped for pruning discussion.",
+            base / "bad-partitioning.sql",
+            "/mentor-lab/seed/bad-partitioning.sql",
+        ),
+        SeedProfile(
+            "wide-aoco",
+            "Wide AOCO fact drill",
+            "Creates a column-oriented table for heap versus AOCO discussion.",
+            base / "wide-aoco.sql",
+            "/mentor-lab/seed/wide-aoco.sql",
+        ),
+        SeedProfile(
+            "small-dimension-broadcast",
+            "Broadcast dimension drill",
+            "Creates a small filtered dimension for Broadcast Motion analysis.",
+            base / "small-dimension-broadcast.sql",
+            "/mentor-lab/seed/small-dimension-broadcast.sql",
+        ),
+    ]
+
+
 class SeedProfileCatalog:
     """Catalog of seed profiles by lab."""
 
@@ -22,77 +113,13 @@ class SeedProfileCatalog:
 
     @classmethod
     def default(cls, project_root: Path) -> "SeedProfileCatalog":
-        base = project_root / "labs" / "greenplum" / "seed"
         base_625 = project_root / "labs" / "greenplum-625" / "seed"
+        profiles = _gp625_profiles(base_625)
+        # Both CLI lab names share the same Greenplum 6.25 stand.
         return cls(
             {
-                "greenplum-625": [
-                    SeedProfile(
-                        "lesson03",
-                        "Lesson 03 OLAP + optimizer dataset",
-                        "Loads lesson03 schema, AOCO fact, star-join ORCA case and TEMP stages.",
-                        base_625 / "lesson03.sql",
-                        "/mentor-lab/seed/lesson03.sql",
-                    ),
-                ],
-                "greenplum": [
-                    SeedProfile(
-                        "balanced",
-                        "Balanced warehouse",
-                        "Even distribution for baseline plan comparisons.",
-                        base / "balanced.sql",
-                        "/mentor-lab/seed/balanced.sql",
-                    ),
-                    SeedProfile(
-                        "skewed",
-                        "Skewed incident",
-                        "Low-cardinality status distribution for diagnostics.",
-                        base / "skewed.sql",
-                        "/mentor-lab/seed/skewed.sql",
-                    ),
-                    SeedProfile(
-                        "enterprise",
-                        "Enterprise-heavy marketplace",
-                        "A few large customers dominate revenue while rows stay distributed.",
-                        base / "enterprise.sql",
-                        "/mentor-lab/seed/enterprise.sql",
-                    ),
-                    SeedProfile(
-                        "late-facts",
-                        "Late arriving facts",
-                        "Adds late facts to discuss incremental loads and partition hygiene.",
-                        base / "late-facts.sql",
-                        "/mentor-lab/seed/late-facts.sql",
-                    ),
-                    SeedProfile(
-                        "bad-statistics",
-                        "Stale statistics drill",
-                        "Creates changed data without ANALYZE so estimates can be questioned.",
-                        base / "bad-statistics.sql",
-                        "/mentor-lab/seed/bad-statistics.sql",
-                    ),
-                    SeedProfile(
-                        "bad-partitioning",
-                        "Partitioning mismatch drill",
-                        "Creates a mart shaped for pruning discussion.",
-                        base / "bad-partitioning.sql",
-                        "/mentor-lab/seed/bad-partitioning.sql",
-                    ),
-                    SeedProfile(
-                        "wide-aoco",
-                        "Wide AOCO fact drill",
-                        "Creates a column-oriented table for heap versus AOCO discussion.",
-                        base / "wide-aoco.sql",
-                        "/mentor-lab/seed/wide-aoco.sql",
-                    ),
-                    SeedProfile(
-                        "small-dimension-broadcast",
-                        "Broadcast dimension drill",
-                        "Creates a small filtered dimension for Broadcast Motion analysis.",
-                        base / "small-dimension-broadcast.sql",
-                        "/mentor-lab/seed/small-dimension-broadcast.sql",
-                    ),
-                ]
+                "greenplum-625": profiles,
+                "greenplum": profiles,
             }
         )
 

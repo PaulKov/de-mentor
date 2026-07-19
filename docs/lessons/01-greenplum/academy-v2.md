@@ -55,7 +55,7 @@ python3 mentor-lab.py diagnostics greenplum show segment-skew
 python3 mentor-lab.py solutions greenplum show redistribute-join
 python3 mentor-lab.py calibration greenplum show senior
 python3 mentor-lab.py homework greenplum check --submission submissions/homework.md
-python3 mentor-lab.py autograde-sql greenplum --submission labs/greenplum/examples/student-solution-example.sql --output artifacts/sql-autograde.md
+python3 mentor-lab.py autograde-sql greenplum --submission labs/greenplum-625/examples/student-solution-example.sql --output artifacts/sql-autograde.md
 python3 mentor-lab.py adaptive-review greenplum --submission submissions/query-tuning.md
 python3 mentor-lab.py debrief greenplum --student Иван --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/greenplum-debrief.md
 python3 mentor-lab.py telemetry greenplum --pre 40 --post 85 --review 70

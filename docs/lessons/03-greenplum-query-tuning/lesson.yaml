@@ -31,8 +31,8 @@ student_handoff:
   - labs/greenplum-625/examples/lesson03-olap-decomposition-tuning.sql
 safe_cli_commands:
   - python3 mentor-lab.py up greenplum-625
-  - python3 mentor-lab.py check greenplum-625
   - python3 mentor-lab.py seed greenplum-625 --profile lesson03
+  - python3 mentor-lab.py check greenplum-625
   - python3 mentor-lab.py runbook greenplum-query-tuning simple
   - python3 mentor-lab.py runbook greenplum-query-tuning deep
   - python3 mentor-lab.py runbook greenplum-query-tuning homework

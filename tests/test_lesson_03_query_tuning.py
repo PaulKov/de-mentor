@@ -69,6 +69,7 @@ def test_lesson_03_documents_and_sql_lab_exist_with_contract_markers():
         LESSON_ROOT / "runbooks" / "simple-path.md",
         LESSON_ROOT / "runbooks" / "deep-dive-path.md",
         LESSON_ROOT / "runbooks" / "homework-plan.md",
+        LESSON_ROOT / "runbooks" / "student-prep.md",
         LESSON_ROOT / "deep-dives" / "pg-statistic-internals.md",
         LESSON_ROOT / "deep-dives" / "storage-physical-layout.md",
         LESSON_ROOT / "deep-dives" / "temp-tables-and-spill.md",
@@ -86,13 +87,16 @@ def test_lesson_03_documents_and_sql_lab_exist_with_contract_markers():
         "AOCO",
         "GPORCA",
         "greenplum-625",
+        "mentor",
         "lesson03-olap-decomposition-tuning.sql",
         "homework",
+        "Principal",
     ]:
         assert marker in joined_docs
 
     sql = SQL_EXAMPLE.read_text(encoding="utf-8")
     for marker in [
+        "Database: mentor",
         "CREATE SCHEMA IF NOT EXISTS lesson03",
         "CREATE TABLE lesson03.fact_sales",
         "appendonly = true",

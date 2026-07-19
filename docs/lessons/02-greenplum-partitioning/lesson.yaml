@@ -21,15 +21,15 @@ runbooks:
   - docs/lessons/02-greenplum-partitioning/runbooks/homework-plan.md
   - docs/lessons/02-greenplum-partitioning/runbooks/student-prep.md
 sql_examples:
-  - labs/greenplum/examples/lesson02-partitioning-statistics-loads.sql
-  - labs/greenplum/examples/partitioning-strategies.sql
-  - labs/greenplum/examples/cluster-monitoring.sql
+  - labs/greenplum-625/examples/lesson02-partitioning-statistics-loads.sql
+  - labs/greenplum-625/examples/partitioning-strategies.sql
+  - labs/greenplum-625/examples/cluster-monitoring.sql
 student_handoff:
   - docs/lessons/02-greenplum-partitioning/runbooks/student-prep.md
   - docs/lessons/02-greenplum-partitioning/student-workbook.md
   - docs/lessons/02-greenplum-partitioning/homework.md
   - docs/lessons/02-greenplum-partitioning/runbooks/homework-plan.md
-  - labs/greenplum/examples/lesson02-partitioning-statistics-loads.sql
+  - labs/greenplum-625/examples/lesson02-partitioning-statistics-loads.sql
 safe_cli_commands:
   - python3 mentor-lab.py runbook greenplum-partitioning simple
   - python3 mentor-lab.py runbook greenplum-partitioning deep

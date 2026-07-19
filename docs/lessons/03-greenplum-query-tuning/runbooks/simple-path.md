@@ -2,16 +2,16 @@
 
 ## Цель
 
-Провести ученика от стенда GP 6.25 к сравнению ORCA/Legacy и TEMP-декомпозиции с evidence.
+Провести ученика от стенда GP 6.25 (БД **`mentor`**) к сравнению ORCA/Legacy и TEMP-декомпозиции с evidence.
 
 ## Шаги
 
-1. `up` + `seed` стенда `greenplum-625`.
-2. `SHOW optimizer`; прогнать `lesson03-optimizer-legacy-vs-orca.sql`.
+1. `up` + `seed` стенда `greenplum-625` → БД `mentor`, схема `lesson03`.
+2. `\conninfo`; `SHOW optimizer`; прогнать `lesson03-optimizer-legacy-vs-orca.sql`.
 3. Layered EXPLAIN монолита (слайды pipeline/EXPLAIN).
 4. `pg_stats` / `pg_statistic`.
 5. TEMP rewrite + before/after при фиксированном optimizer.
-6. Homework checklist.
+6. Homework checklist (Principal 90м).
 
 ## Команды
 
@@ -24,6 +24,7 @@ python3 mentor-lab.py psql greenplum-625
 ```
 
 ```sql
+\conninfo
 \i /mentor-lab/examples/lesson03-olap-decomposition-tuning.sql
 \i /mentor-lab/examples/lesson03-optimizer-legacy-vs-orca.sql
 EXPLAIN SELECT * FROM lesson03.v_heavy_olap_monolith;

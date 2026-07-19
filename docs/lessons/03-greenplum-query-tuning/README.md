@@ -1,6 +1,6 @@
 # Урок 03: Декомпозиция и тюнинг тяжёлых запросов в MPP
 
-Третий урок Greenplum Academy. Стенд — **Greenplum 6.25.3** (`greenplum-625`), чтобы демо Legacy planner vs GPORCA было воспроизводимо.
+Третий урок Greenplum Academy. Стенд — **Greenplum 6.25.3** (`greenplum-625`), БД **`mentor`** (как в Уроках 01–02), схема `lesson03`. Демо Legacy planner vs GPORCA воспроизводимо на GP 6.25.
 
 Главная идея: Senior/Principal разбирает оптимизацию Greenplum по стадиям, сравнивает два оптимизатора, читает статистику до catalog/файлов, выбирает storage и декомпозирует тяжёлый OLAP через `TEMP`.
 
@@ -24,10 +24,12 @@
 
 ```bash
 python3 mentor-lab.py up greenplum-625
-python3 mentor-lab.py check greenplum-625
 python3 mentor-lab.py seed greenplum-625 --profile lesson03
+python3 mentor-lab.py check greenplum-625
 python3 mentor-lab.py psql greenplum-625
 ```
+
+CLI создаёт БД `mentor` при `seed` / `check` / `psql` (образ boot'ится в maintenance DB `postgres`).
 
 x86_64:
 
@@ -42,7 +44,7 @@ GREENPLUM_625_IMAGE=andruche/greenplum:6.25.3-slim-amd64 \
 | --- | --- | --- |
 | Упрощённый 60 минут | основной урок | `python3 mentor-lab.py runbook greenplum-query-tuning simple` |
 | Deep-dive 90-120 минут | Principal internals | `python3 mentor-lab.py runbook greenplum-query-tuning deep` |
-| Домашка 60-90 минут | самостоятельная работа | `python3 mentor-lab.py runbook greenplum-query-tuning homework` |
+| Домашка Principal 90 минут | самостоятельная оптимизация | `python3 mentor-lab.py runbook greenplum-query-tuning homework` |
 
 Учебный маршрут:
 

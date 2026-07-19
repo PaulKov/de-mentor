@@ -10,9 +10,9 @@
 - рабочая тетрадь: [рабочая тетрадь ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md)
 - домашка: [домашка](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md)
 - план домашки: [план домашки](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/homework-plan.md)
-- SQL-примеры: [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql)
-- SQL по стратегиям partitioning: [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql)
-- SQL для мониторинга кластера: [cluster monitoring SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-monitoring.sql)
+- SQL-примеры: [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/storage-and-partitioning.sql)
+- SQL по стратегиям partitioning: [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/partitioning-strategies.sql)
+- SQL для мониторинга кластера: [cluster monitoring SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/cluster-monitoring.sql)
 - QD/QE/slices/gangs explained: [QD/QE/gang/slices explained](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md)
 - QD/QE deep dive: [master/segment data path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/master-segment-data-path.md)
 - deep dive по joins: [physical joins in MPP](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/physical-joins-in-mpp.md)
@@ -58,7 +58,7 @@ python3 mentor-lab.py analyze-plan greenplum --query bad_customer_join --sample
 - Ученик объясняет `QD`, `QE`, `gang`, `slice` сначала простыми словами.
 - Ученик может технически сказать: plan режется на slices, slice исполняется gang-процессами на сегментах, а `QueryDispatchDesc` создается на QD и отправляется на QE.
 
-Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [QD/QE/gang/slices explained](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql), [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql).
+Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [QD/QE/gang/slices explained](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/storage-and-partitioning.sql), [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/partitioning-strategies.sql).
 
 ## Этап 2: 15:00-40:00 - Data Path Master/Coordinator И Bulk I/O
 
@@ -102,7 +102,7 @@ python3 mentor-lab.py check greenplum
 - Ученик отличает result gather от parallel external table read.
 - Ученик не говорит, что Redistribute Motion гоняет все строки через master.
 
-Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql), [cluster monitoring SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-monitoring.sql), [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql).
+Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/storage-and-partitioning.sql), [cluster monitoring SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/cluster-monitoring.sql), [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/partitioning-strategies.sql).
 
 ## Этап 3: 40:00-65:00 - Storage Internals, Defaults И Partitioning Strategies
 
@@ -128,7 +128,7 @@ WHERE n.nspname = 'lesson01'
 ORDER BY c.relname;
 
 SELECT *
-FROM pg_partition_tree('lesson01.partition_range_demo'::regclass);
+FROM gp_toolkit.gp_partitions('lesson01.partition_range_demo'::regclass);
 
 SELECT *
 FROM gp_toolkit.gp_partitions
@@ -149,7 +149,7 @@ SHOW gp_default_storage_options;
 
 ```bash
 gpconfig -c gp_default_storage_options \
-  -v "'appendoptimized=true, orientation=column, compresstype=zstd, compresslevel=1'"
+  -v "'appendonly=true, orientation=column, compresstype=zstd, compresslevel=1'"
 gpconfig -s gp_default_storage_options
 gpstop -u
 ```
@@ -168,14 +168,14 @@ gpstop -u
 
 Как проверяем:
 
-- Ученик видит `appendoptimized=true`, `orientation=column`, column `ENCODING`.
+- Ученик видит `appendonly=true`, `orientation=column`, column `ENCODING`.
 - Ученик объясняет precedence: table `WITH/ENCODING` сильнее role/database/cluster defaults.
 - Ученик не путает `PARTITION BY RANGE (sale_date)` с `DISTRIBUTED BY (customer_id)`.
 - Ученик выбирает RANGE / LIST / HASH по workload, понимает `DEFAULT partition`, no default partitioning и out-of-range INSERT.
-- Ученик считает `leaf_partitions` через `pg_partition_tree` и знает compatibility view `gp_toolkit.gp_partitions`.
+- Ученик считает `leaf_partitions` через `gp_toolkit.gp_partitions` и знает compatibility view `gp_toolkit.gp_partitions`.
 - Ученик узнает maintenance snippets: `ATTACH PARTITION`, `DETACH PARTITION`, retention `DROP TABLE`.
 
-Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql), [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql), [partitioning strategies deep dive](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md).
+Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/storage-and-partitioning.sql), [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/partitioning-strategies.sql), [partitioning strategies deep dive](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md).
 
 ## Этап 4: 65:00-95:00 - EXPLAIN Ladder И Physical Joins In MPP
 
@@ -222,7 +222,7 @@ python3 mentor-lab.py hint greenplum plan-reading
 - Ученик отличает co-located join от Broadcast/Redistribute join.
 - Ученик понимает, почему один distribution key не оптимизирует все joins.
 
-Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql), [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql).
+Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/storage-and-partitioning.sql), [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/partitioning-strategies.sql).
 
 ## Этап 5: 95:00-120:00 - System Taxonomy, Caveats И Next Lesson
 
@@ -263,4 +263,4 @@ python3 mentor-lab.py grade greenplum --dry-run
 - Ученик называет caveat: ALTER TABLE storage changes требуют понимания rewrite/maintenance и не являются бесплатной кнопкой.
 - Ученик забирает [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md) и [homework plan](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/homework-plan.md).
 
-Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql), [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql).
+Ссылки: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md), [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md), [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/storage-and-partitioning.sql), [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/partitioning-strategies.sql).

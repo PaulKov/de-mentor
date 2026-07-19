@@ -75,7 +75,8 @@ class GreenplumCheckSuite:
             "Greenplum connection",
             value.strip() == "1",
             f"SELECT 1 returned {value!r}.",
-            "Start the lab with `python3 mentor-lab.py up greenplum`.",
+            "Start the lab with `python3 mentor-lab.py up greenplum` "
+            "(alias of greenplum-625, port 15436).",
         )
 
     def _check_schema(self) -> CheckResult:
@@ -85,7 +86,8 @@ class GreenplumCheckSuite:
             "lesson01 schema exists",
             value.strip() == "1",
             f"lesson01 schema count is {value}.",
-            "Reset and initialize the lab so the lesson01 schema is created.",
+            "Run `python3 mentor-lab.py seed greenplum --profile lesson01` "
+            "(or `--profile academy`).",
         )
 
     def _check_seed_data(self) -> CheckResult:
@@ -95,7 +97,7 @@ class GreenplumCheckSuite:
             "Seed data loaded",
             rows >= 50000,
             f"fact_sales_bad has {rows} rows.",
-            "Run `python3 mentor-lab.py seed greenplum --profile skewed`.",
+            "Run `python3 mentor-lab.py seed greenplum --profile lesson01`.",
         )
 
     def _check_bad_skew(self) -> CheckResult:
@@ -140,6 +142,7 @@ class Greenplum625CheckSuite:
     def documented_check_codes() -> List[str]:
         return [
             "greenplum625_connection",
+            "greenplum625_database",
             "greenplum625_version",
             "lesson03_schema",
             "lesson03_fact_rows",
@@ -163,6 +166,7 @@ class Greenplum625CheckSuite:
     def run(self) -> List[CheckResult]:
         return [
             self._check_connection(),
+            self._check_database(),
             self._check_version(),
             self._check_schema(),
             self._check_fact_rows(),
@@ -178,6 +182,16 @@ class Greenplum625CheckSuite:
             value.strip() == "1",
             f"SELECT 1 returned {value!r}.",
             "Start the lab with `python3 mentor-lab.py up greenplum-625`.",
+        )
+
+    def _check_database(self) -> CheckResult:
+        value = self._sql.scalar("SELECT current_database()")
+        return _result(
+            "greenplum625_database",
+            "Connected to mentor database",
+            value.strip() == "mentor",
+            f"current_database()={value!r}",
+            "Lab default_database must be mentor; rerun seed/check so CLI creates it.",
         )
 
     def _check_version(self) -> CheckResult:
@@ -254,6 +268,79 @@ class Greenplum625CheckSuite:
             marker,
             "Plan contains optimizer/Motion markers." if marker else "No recognizable plan markers.",
             "Run examples/lesson03-optimizer-legacy-vs-orca.sql in psql (one session).",
+        )
+
+
+class SharedAcademyCheckSuite:
+    """Infra + Lessons 01–03 readiness on the shared Greenplum 6.25 stand."""
+
+    def __init__(self, sql_client: SqlClient) -> None:
+        self._sql = sql_client
+        self._lesson01 = GreenplumCheckSuite(sql_client)
+        self._lesson03 = Greenplum625CheckSuite(sql_client)
+
+    @staticmethod
+    def documented_check_codes() -> List[str]:
+        return [
+            "greenplum625_connection",
+            "greenplum625_database",
+            "greenplum625_version",
+            "lesson_schema",
+            "seed_data",
+            "bad_distribution_skew",
+            "good_distribution_balance",
+            "motion_plan",
+            "lesson02_schema",
+            "lesson03_schema",
+            "lesson03_fact_rows",
+            "optimizer_guc_available",
+            "orca_plan_marker",
+        ]
+
+    @staticmethod
+    def documented_success_results() -> List[CheckResult]:
+        return [
+            CheckResult(
+                code,
+                code.replace("_", " ").title(),
+                CheckStatus.PASS,
+                "Documented dry-run success.",
+                "",
+            )
+            for code in SharedAcademyCheckSuite.documented_check_codes()
+        ]
+
+    def run(self) -> List[CheckResult]:
+        lesson01_by_code = {item.code: item for item in self._lesson01.run()}
+        lesson03_by_code = {item.code: item for item in self._lesson03.run()}
+        return [
+            lesson03_by_code["greenplum625_connection"],
+            lesson03_by_code["greenplum625_database"],
+            lesson03_by_code["greenplum625_version"],
+            lesson01_by_code["lesson_schema"],
+            lesson01_by_code["seed_data"],
+            lesson01_by_code["bad_distribution_skew"],
+            lesson01_by_code["good_distribution_balance"],
+            lesson01_by_code["motion_plan"],
+            self._check_lesson02_schema(),
+            lesson03_by_code["lesson03_schema"],
+            lesson03_by_code["lesson03_fact_rows"],
+            lesson03_by_code["optimizer_guc_available"],
+            lesson03_by_code["orca_plan_marker"],
+        ]
+
+    def _check_lesson02_schema(self) -> CheckResult:
+        value = self._sql.scalar(
+            "SELECT count(*) FROM information_schema.schemata "
+            "WHERE schema_name = 'lesson02'"
+        )
+        return _result(
+            "lesson02_schema",
+            "lesson02 schema exists",
+            value.strip() == "1",
+            f"lesson02 schema count is {value}.",
+            "Run `python3 mentor-lab.py seed greenplum --profile lesson02` "
+            "(or `--profile academy`).",
         )
 
 

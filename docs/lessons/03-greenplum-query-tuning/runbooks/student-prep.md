@@ -1,14 +1,27 @@
-# Student Prep: Урок 03 (Greenplum 6.25)
+# Подготовка Ученика К Lesson 03
 
-## До Занятия
+## Что Установить
 
-1. Docker Desktop запущен.
-2. Поднять стенд Урока 03:
+- Docker Desktop на macOS/Windows или Docker Engine на Linux.
+- Git.
+- Python 3.9+.
+- Репозиторий `de-mentor`.
+
+## Проверка macOS/Linux
 
 ```bash
+python3 mentor-lab.py doctor --full
+python3 mentor-lab.py readiness greenplum-625 --platform macos
 python3 mentor-lab.py up greenplum-625
-python3 mentor-lab.py check greenplum-625
 python3 mentor-lab.py seed greenplum-625 --profile lesson03
+python3 mentor-lab.py check greenplum-625
+python3 mentor-lab.py student greenplum-query-tuning homework
+```
+
+Для Linux замени platform:
+
+```bash
+python3 mentor-lab.py readiness greenplum-625 --platform linux
 ```
 
 На x86_64:
@@ -18,19 +31,22 @@ GREENPLUM_625_IMAGE=andruche/greenplum:6.25.3-slim-amd64 \
   python3 mentor-lab.py up greenplum-625
 ```
 
-3. Открыть workbook и презентацию.
+## Проверка Windows
 
-## Self-Service Команды
-
-```bash
-python3 mentor-lab.py student greenplum-query-tuning bootstrap --platform macos
-python3 mentor-lab.py runbook greenplum-query-tuning simple
-python3 mentor-lab.py academy greenplum-query-tuning start --student <имя> --dry-run
-python3 mentor-lab.py psql greenplum-625
+```powershell
+py mentor-lab.py doctor --full
+py mentor-lab.py readiness greenplum-625 --platform windows
+py mentor-lab.py up greenplum-625
+py mentor-lab.py seed greenplum-625 --profile lesson03
+py mentor-lab.py check greenplum-625
+py mentor-lab.py student greenplum-query-tuning homework
 ```
 
-## Что Иметь Под Рукой
+## Что Принести
 
-- терминал;
-- psql к `greenplum-625`;
-- место под before/after EXPLAIN (включая `SET optimizer`).
+- результат `check greenplum-625` (БД `mentor`, схема `lesson03`);
+- вопрос по `SET optimizer` (session scope) или ORCA vs Legacy;
+- вопрос по `pg_stats` / estimate fail;
+- если есть домашка Lesson 02 — файл с pruning/`ANALYZE` evidence.
+
+Workbook: [student-workbook.md](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/03-greenplum-query-tuning/student-workbook.md).

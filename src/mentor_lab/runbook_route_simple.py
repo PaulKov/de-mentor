@@ -46,7 +46,7 @@ def greenplum_simple_runbook() -> Runbook:
                                 ),
                                 [
                                     "\\i /mentor-lab/examples/cluster-monitoring.sql",
-                                    "docker compose -f labs/greenplum/docker-compose.yml exec -T -u gpadmin greenplum bash -lc '. /usr/local/greenplum-db/greenplum_path.sh && psql -U gpadmin -d mentor -v ON_ERROR_STOP=1 -f /mentor-lab/examples/storage-and-partitioning.sql'",
+                                    "docker compose -f labs/greenplum-625/docker-compose.yml exec -T -u gpadmin greenplum-625 bash -lc '. /usr/local/gpdb/greenplum_path.sh && psql -U gpadmin -d mentor -v ON_ERROR_STOP=1 -f /mentor-lab/examples/storage-and-partitioning.sql'",
                                     "\\d+ lesson01.storage_aoco_demo",
                                     "SELECT c.relname, am.amname AS access_method FROM pg_class c LEFT JOIN pg_am am ON am.oid = c.relam JOIN pg_namespace n ON n.oid = c.relnamespace WHERE n.nspname = 'lesson01' AND c.relname LIKE 'storage_%_demo' ORDER BY c.relname;",
                                 ],

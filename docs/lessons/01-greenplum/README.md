@@ -71,7 +71,7 @@ python3 mentor-lab.py report greenplum
 python3 mentor-lab.py evidence greenplum collect redistribute-join --output submissions/redistribute-join.md
 python3 mentor-lab.py misconception greenplum diagnose --text "partition key это то же самое что distribution key"
 python3 mentor-lab.py homework greenplum check --submission submissions/homework.md
-python3 mentor-lab.py autograde-sql greenplum --submission labs/greenplum/examples/student-solution-example.sql --output artifacts/sql-autograde.md
+python3 mentor-lab.py autograde-sql greenplum --submission labs/greenplum-625/examples/student-solution-example.sql --output artifacts/sql-autograde.md
 python3 mentor-lab.py calibration greenplum show senior
 python3 mentor-lab.py debrief greenplum --student Иван --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/greenplum-debrief.md
 python3 mentor-lab.py learning-loop greenplum --pre 40 --post 85 --submission submissions/query-tuning.md --output artifacts/greenplum-learning-loop.md
@@ -165,12 +165,12 @@ python3 mentor-lab.py seed greenplum --profile skewed
 - [Master/segment data path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/master-segment-data-path.md) - глубокая техническая схема master/QD/QE, Motion, gpfdist и storage.
 - [Чтение EXPLAIN-плана](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/explain-plan-reading.md) - как читать план и формулировать RCA по `EXPLAIN ANALYZE`.
 - [Физические joins в MPP](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/physical-joins-in-mpp.md) - физика joins в MPP: co-located, broadcast, redistribute.
-- [Стратегии partitioning](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md) - RANGE / LIST / HASH, DEFAULT partition, no default partitioning, `pg_partition_tree`, `gp_toolkit.gp_partitions`, `leaf_partitions`, `ATTACH PARTITION`, `DETACH PARTITION` и out-of-range INSERT.
+- [Стратегии partitioning](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md) - RANGE / LIST / HASH, DEFAULT partition, no default partitioning, `gp_toolkit.gp_partitions`, `gp_toolkit.gp_partitions`, `leaf_partitions`, `ATTACH PARTITION`, `DETACH PARTITION` и out-of-range INSERT.
 - [Таксономия MPP-систем](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/mpp-system-taxonomy.md) - SMP, MPP, EPP, lakehouse, HTAP и цена каждой архитектуры.
 - [Теоретическая презентация Greenplum (PowerPoint)](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-theory.pptx) - презентация урока.
 - [Теоретическая презентация Greenplum (Google Slides)](https://docs.google.com/presentation/d/1VFm7GG3_SO1h7AabgYyEt0_TANzI1OZiAQnoZpU6fO0/edit?usp=sharing) - папка Drive: `lessons/Greenplum/Lesson 01 - MPP foundations`.
-- [README стенда Greenplum](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/README.md) - запуск стенда.
-- [SQL для паспорта кластера](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-inspection.sql) - runnable SQL для проверки topology, settings и disk free учебного Docker-кластера.
-- [SQL для мониторинга кластера](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-monitoring.sql) - расширенный monitoring SQL: `gp_segment_configuration`, `gp_toolkit.gp_disk_free`, `gp_segment_id`, `gpstate -s` snippets и segment health.
-- [SQL по storage и partitioning](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql) - runnable demo для Heap/AO/AOCO и partitioning intro.
-- [SQL по partitioning strategies](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql) - runnable drill по `PARTITION BY RANGE`, `PARTITION BY LIST`, `PARTITION BY HASH`, `DEFAULT partition` и подсчету partitions через `pg_partition_tree` / `gp_toolkit.gp_partitions`.
+- [README стенда Greenplum](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/README.md) - запуск стенда.
+- [SQL для паспорта кластера](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/cluster-inspection.sql) - runnable SQL для проверки topology, settings и disk free учебного Docker-кластера.
+- [SQL для мониторинга кластера](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/cluster-monitoring.sql) - расширенный monitoring SQL: `gp_segment_configuration`, `gp_toolkit.gp_disk_free`, `gp_segment_id`, `gpstate -s` snippets и segment health.
+- [SQL по storage и partitioning](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/storage-and-partitioning.sql) - runnable demo для Heap/AO/AOCO и partitioning intro.
+- [SQL по partitioning strategies](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/partitioning-strategies.sql) - runnable drill по `PARTITION BY RANGE`, `PARTITION BY LIST`, `PARTITION BY HASH`, `DEFAULT partition` и подсчету partitions через `gp_toolkit.gp_partitions` / `gp_toolkit.gp_partitions`.

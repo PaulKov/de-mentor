@@ -41,7 +41,7 @@ def test_lesson_release_manifest_loads_lesson_02_contract():
         "Lesson 02 - Partitioning, statistics and incremental loads"
     )
     assert "docs/lessons/02-greenplum-partitioning/student-workbook.md" in manifest.docs
-    assert "labs/greenplum/examples/lesson02-partitioning-statistics-loads.sql" in manifest.sql_examples
+    assert "labs/greenplum-625/examples/lesson02-partitioning-statistics-loads.sql" in manifest.sql_examples
     assert "python3 mentor-lab.py runbook greenplum-partitioning simple" in manifest.safe_cli_commands
 
 

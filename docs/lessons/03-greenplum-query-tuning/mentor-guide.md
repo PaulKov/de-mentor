@@ -8,8 +8,8 @@
 cd ~/Projects/de-mentor   # или ваш clone
 
 python3 mentor-lab.py up greenplum-625
-python3 mentor-lab.py check greenplum-625
 python3 mentor-lab.py seed greenplum-625 --profile lesson03
+python3 mentor-lab.py check greenplum-625
 python3 mentor-lab.py runbook greenplum-query-tuning simple
 ```
 
@@ -37,7 +37,8 @@ GREENPLUM_625_IMAGE=andruche/greenplum:6.25.3-slim-amd64 \
 | Lab | `greenplum-625` |
 | Host port | **15436** → container `5432` |
 | User | `gpadmin` |
-| Database | `postgres` |
+| Database | **`mentor`** (как Lessons 01/02; CLI создаёт при seed/check/psql) |
+| Schema | `lesson03` |
 | Password | обычно не нужна для local peer/trust в этом образе; если клиент спросит — пустая / смотри образ |
 | Container | `greenplum-625-greenplum-625-1` (имя от compose) |
 
@@ -50,7 +51,7 @@ python3 mentor-lab.py psql greenplum-625
 ### Способ B — psql с хоста
 
 ```bash
-psql "host=127.0.0.1 port=15436 dbname=postgres user=gpadmin"
+psql "host=127.0.0.1 port=15436 dbname=mentor user=gpadmin"
 ```
 
 ### Способ C — shell внутри контейнера
@@ -61,7 +62,7 @@ docker ps --format '{{.Names}}' | grep greenplum-625
 docker exec -it -u gpadmin greenplum-625-greenplum-625-1 bash -lc '
   source /usr/local/gpdb/greenplum_path.sh
   export USER=gpadmin
-  psql -d postgres
+  psql -d mentor
 '
 ```
 
@@ -120,7 +121,7 @@ FROM gp_dist_random('gp_id');
 docker exec -u gpadmin greenplum-625-greenplum-625-1 bash -lc '
   source /usr/local/gpdb/greenplum_path.sh
   export USER=gpadmin
-  psql -d postgres -c "SELECT content, datadir FROM gp_segment_configuration ORDER BY 1;"
+  psql -d mentor -c "SELECT content, datadir FROM gp_segment_configuration ORDER BY 1;"
   echo "=== example fact_sales files (подставьте свой relfilenode) ==="
   # типичный вид: /data/data1/gpsne0/base/<dboid>/<filenode>
   find /data/data1/gpsne0/base /data/data2/gpsne1/base -maxdepth 2 -type f 2>/dev/null | head

@@ -9,6 +9,8 @@ services:
     volumes:
       - ./examples:/mentor-lab/examples
       - ./seed:/mentor-lab/seed
+    # Healthcheck uses maintenance DB `postgres` (image default).
+    # Lesson data lives in DB `mentor` (created by mentor-lab seed/check/psql).
     healthcheck:
       test:
         - CMD-SHELL

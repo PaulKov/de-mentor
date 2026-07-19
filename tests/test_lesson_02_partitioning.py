@@ -68,8 +68,7 @@ def test_lesson_02_documents_and_sql_lab_exist_with_contract_markers():
         "incremental load",
         "ANALYZE",
         "AOCO",
-        "pg_partition_tree",
-        "gp_toolkit.gp_partitions",
+                "pg_partitions",
         "lesson02-partitioning-statistics-loads.sql",
         "docs/lessons/02-greenplum-partitioning/homework.md",
     ]:
@@ -79,13 +78,12 @@ def test_lesson_02_documents_and_sql_lab_exist_with_contract_markers():
     for marker in [
         "CREATE SCHEMA IF NOT EXISTS lesson02",
         "CREATE TABLE lesson02.fact_sales_partitioned",
-        "WITH (appendoptimized=true, orientation=column",
+        "WITH (appendonly=true, orientation=column",
         "PARTITION BY RANGE (sale_date)",
         "CREATE TABLE lesson02.fact_sales_stage",
         "late-arriving",
         "ANALYZE lesson02.fact_sales_partitioned",
-        "pg_partition_tree",
-        "gp_toolkit.gp_partitions",
+                "pg_partitions",
         "EXPLAIN",
     ]:
         assert marker in sql
@@ -207,7 +205,7 @@ def test_lesson_02_session_control_plane_points_to_lesson_02_materials(tmp_path)
     assert "python3 mentor-lab.py runbook greenplum-partitioning simple" in control_plane["mentor_mode"]["runbook_commands"]
     assert control_plane["student_mode"]["workbook"] == "docs/lessons/02-greenplum-partitioning/student-workbook.md"
     assert control_plane["student_mode"]["homework"] == "docs/lessons/02-greenplum-partitioning/homework.md"
-    assert "labs/greenplum/examples/lesson02-partitioning-statistics-loads.sql" in {
+    assert "labs/greenplum-625/examples/lesson02-partitioning-statistics-loads.sql" in {
         artifact["path"] for artifact in control_plane["artifacts"]
     }
     assert GOOGLE_SLIDES_URL in {artifact["path"] for artifact in control_plane["artifacts"]}

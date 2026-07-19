@@ -34,7 +34,7 @@ python3 mentor-lab.py check greenplum
 
 - [Домашка](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/homework.md)
 - [План домашки](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/runbooks/homework-plan.md)
-- [SQL-lab](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/lesson02-partitioning-statistics-loads.sql)
+- [SQL-lab](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/lesson02-partitioning-statistics-loads.sql)
 - [Шпаргалка](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/cheat-sheet.md)
 
 ## Упражнение 1: Partition Key Не Равен Distribution Key
@@ -78,9 +78,7 @@ Self-check:
 ## Упражнение 2: Как Смотреть Partitions
 
 ```sql
-SELECT *
-FROM pg_partition_tree('lesson02.fact_sales_partitioned'::regclass);
-
+-- catalog: pg_partitions (GP6 classic)
 SELECT
     schemaname,
     tablename,
@@ -88,9 +86,10 @@ SELECT
     partitionlevel,
     partitionrank,
     partitionboundary
-FROM gp_toolkit.gp_partitions
+FROM pg_partitions
 WHERE schemaname = 'lesson02'
-ORDER BY tablename, partitionlevel, partitionrank, partitiontablename;
+  AND tablename = 'fact_sales_partitioned'
+ORDER BY partitionlevel, partitionrank, partitiontablename;
 ```
 
 Ответь:
@@ -185,7 +184,7 @@ Residual risk:
 
 ```sql
 CREATE TABLE lesson02.fact_sales_partitioned (...)
-WITH (appendoptimized=true, orientation=column, compresstype=zstd, compresslevel=1)
+WITH (appendonly=true, orientation=column, compresstype=zstd, compresslevel=1)
 DISTRIBUTED BY (customer_id)
 PARTITION BY RANGE (sale_date);
 ```
@@ -209,7 +208,7 @@ PARTITION BY RANGE (sale_date);
 - DDL sketch для partitioned fact;
 - объяснение partition key и distribution key;
 - `EXPLAIN` для pruning;
-- вывод `pg_partition_tree` или `gp_toolkit.gp_partitions`;
+- вывод `pg_partitions`;
 - statistics policy после incremental load;
 - late-arriving facts policy;
 - validation и residual risk.

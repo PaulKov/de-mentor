@@ -84,7 +84,7 @@ class LessonDoctorReport:
                 f"git clone {PORTAL_REPOSITORY}.git",
                 "cd de-mentor-portal",
                 "MENTOR_LAB_SESSION=../de-mentor/artifacts/sessions/<name>/session.json npm run dev",
-                "python3 mentor-lab.py autograde-sql greenplum --submission labs/greenplum/examples/student-solution-example.sql --output artifacts/sql-autograde.md",
+                "python3 mentor-lab.py autograde-sql greenplum --submission labs/greenplum-625/examples/student-solution-example.sql --output artifacts/sql-autograde.md",
                 "python3 mentor-lab.py ci-smoke greenplum --dry-run",
                 "```",
                 "",
@@ -152,17 +152,17 @@ def _greenplum_checks() -> Iterable[LessonDoctorCheck]:
         ),
         LessonDoctorCheck(
             "Storage SQL",
-            Path("labs/greenplum/examples/storage-and-partitioning.sql"),
+            Path("labs/greenplum-625/examples/storage-and-partitioning.sql"),
             ("appendoptimized=true", "orientation=column", "PARTITION BY RANGE"),
         ),
         LessonDoctorCheck(
             "Partitioning SQL",
-            Path("labs/greenplum/examples/partitioning-strategies.sql"),
+            Path("labs/greenplum-625/examples/partitioning-strategies.sql"),
             ("PARTITION BY RANGE", "PARTITION BY LIST", "PARTITION BY HASH"),
         ),
         LessonDoctorCheck(
             "Sample submission",
-            Path("labs/greenplum/examples/student-solution-example.sql"),
+            Path("labs/greenplum-625/examples/student-solution-example.sql"),
             ("EXPLAIN ANALYZE", "gp_segment_id", "DISTRIBUTED BY"),
         ),
         LessonDoctorCheck(

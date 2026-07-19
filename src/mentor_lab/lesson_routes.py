@@ -68,9 +68,9 @@ LESSON_01_ROUTE = LearningRoute(
         "1VFm7GG3_SO1h7AabgYyEt0_TANzI1OZiAQnoZpU6fO0/edit?usp=sharing"
     ),
     sql_examples=(
-        "labs/greenplum/examples/storage-and-partitioning.sql",
-        "labs/greenplum/examples/partitioning-strategies.sql",
-        "labs/greenplum/examples/cluster-monitoring.sql",
+        "labs/greenplum-625/examples/storage-and-partitioning.sql",
+        "labs/greenplum-625/examples/partitioning-strategies.sql",
+        "labs/greenplum-625/examples/cluster-monitoring.sql",
     ),
     next_lesson=NextLesson(
         code="02-greenplum-partitioning",
@@ -91,9 +91,9 @@ LESSON_02_ROUTE = LearningRoute(
         "17Ae88PoniaFU34egsFPwC0PndAOoXMze4qV1pIKQkaI/edit?usp=sharing"
     ),
     sql_examples=(
-        "labs/greenplum/examples/lesson02-partitioning-statistics-loads.sql",
-        "labs/greenplum/examples/partitioning-strategies.sql",
-        "labs/greenplum/examples/cluster-monitoring.sql",
+        "labs/greenplum-625/examples/lesson02-partitioning-statistics-loads.sql",
+        "labs/greenplum-625/examples/partitioning-strategies.sql",
+        "labs/greenplum-625/examples/cluster-monitoring.sql",
     ),
     next_lesson=NextLesson(
         code="03-greenplum-query-tuning",

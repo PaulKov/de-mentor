@@ -146,7 +146,7 @@ def _lesson01_stage_guides(route: LearningRoute) -> List[StageGuide]:
                 "orientation=column с аналитическим scan pattern."
             ),
             show_commands=[
-                "docker compose -f labs/greenplum/docker-compose.yml exec -T -u gpadmin greenplum "
+                "docker compose -f labs/greenplum-625/docker-compose.yml exec -T -u gpadmin greenplum "
                 "psql -U gpadmin -d mentor -f /mentor-lab/examples/storage-and-partitioning.sql",
             ],
             question="Где включается column-store в Greenplum?",
@@ -176,7 +176,7 @@ def _lesson01_stage_guides(route: LearningRoute) -> List[StageGuide]:
             slides="18-21",
             mentor_script="Переведи разговор в evidence: симптом, план, skew, фикс, проверка до/после.",
             show_commands=[
-                f"python3 mentor-lab.py autograde-sql {lab_name} --submission labs/greenplum/examples/student-solution-example.sql",
+                f"python3 mentor-lab.py autograde-sql {lab_name} --submission labs/greenplum-625/examples/student-solution-example.sql",
             ],
             question="Как доказать, что фикс помог, а не просто случайно ускорился запрос?",
             expected_answer="Нужны before/after EXPLAIN ANALYZE, gp_segment_id/skew evidence и одинаковый workload context.",
@@ -204,7 +204,7 @@ def _lesson01_stage_guides(route: LearningRoute) -> List[StageGuide]:
 def _lesson02_stage_guides(route: LearningRoute) -> List[StageGuide]:
     workbook = route.workbook_path
     homework = route.homework_path
-    sql_lab = "labs/greenplum/examples/lesson02-partitioning-statistics-loads.sql"
+    sql_lab = "labs/greenplum-625/examples/lesson02-partitioning-statistics-loads.sql"
     return [
         StageGuide(
             "replay",
@@ -224,7 +224,7 @@ def _lesson02_stage_guides(route: LearningRoute) -> List[StageGuide]:
             "4-7",
             "Покажи bad/good partition key и объясни, что pruning/retention не заменяют DISTRIBUTED BY.",
             [
-                "docker compose -f labs/greenplum/docker-compose.yml exec -T -u gpadmin greenplum bash -lc '. /usr/local/greenplum-db/greenplum_path.sh && psql -U gpadmin -d mentor -v ON_ERROR_STOP=1 -f /mentor-lab/examples/lesson02-partitioning-statistics-loads.sql'",
+                "docker compose -f labs/greenplum-625/docker-compose.yml exec -T -u gpadmin greenplum-625 bash -lc '. /usr/local/gpdb/greenplum_path.sh && psql -U gpadmin -d mentor -v ON_ERROR_STOP=1 -f /mentor-lab/examples/lesson02-partitioning-statistics-loads.sql'",
                 "SELECT * FROM pg_partition_tree('lesson02.fact_sales_partitioned'::regclass);",
             ],
             "Почему partition key не равен distribution key?",

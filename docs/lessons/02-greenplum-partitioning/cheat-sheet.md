@@ -18,7 +18,7 @@ CREATE TABLE lesson02.fact_sales_partitioned (
     sale_date date,
     amount numeric(12, 2)
 )
-WITH (appendoptimized=true, orientation=column, compresstype=zstd, compresslevel=1)
+WITH (appendonly=true, orientation=column, compresstype=zstd, compresslevel=1)
 DISTRIBUTED BY (customer_id)
 PARTITION BY RANGE (sale_date);
 ```
@@ -27,10 +27,14 @@ PARTITION BY RANGE (sale_date);
 
 ```sql
 SELECT *
-FROM pg_partition_tree('lesson02.fact_sales_partitioned'::regclass);
+-- catalog: pg_partitions (GP6)
+SELECT schemaname, tablename, partitiontablename, partitionboundary
+FROM pg_partitions
+WHERE schemaname = 'lesson02' AND tablename = 'fact_sales_partitioned'
+ORDER BY partitionrank, partitiontablename;
 
 SELECT *
-FROM gp_toolkit.gp_partitions
+FROM pg_partitions
 WHERE schemaname = 'lesson02'
 ORDER BY partitiontablename;
 ```
@@ -96,4 +100,4 @@ WHERE sale_date >= DATE '2026-02-01'
 - делать massive `DELETE` вместо retention by partition boundary;
 - считать AOCO решением skew или bad join locality.
 
-SQL-lab: [lesson02-partitioning-statistics-loads.sql](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/lesson02-partitioning-statistics-loads.sql).
+SQL-lab: [lesson02-partitioning-statistics-loads.sql](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/lesson02-partitioning-statistics-loads.sql).

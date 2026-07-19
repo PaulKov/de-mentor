@@ -52,7 +52,7 @@ WHERE sale_date >= DATE '2026-02-01'
 
 Ссылки:
 
-- [SQL-lab](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/lesson02-partitioning-statistics-loads.sql)
+- [SQL-lab](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/lesson02-partitioning-statistics-loads.sql)
 - [Шпаргалка](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/cheat-sheet.md)
 
 ## Этап 3: 25:00-40:00 - Statistics After Load

@@ -38,7 +38,7 @@ def greenplum_partitioning_simple_runbook() -> Runbook:
                 [
                     "python3 mentor-lab.py scenario greenplum show partition-pruning",
                     "python3 mentor-lab.py misconception greenplum diagnose --text \"partition key это то же самое что distribution key\"",
-                    "docker compose -f labs/greenplum/docker-compose.yml exec -T -u gpadmin greenplum bash -lc '. /usr/local/greenplum-db/greenplum_path.sh && psql -U gpadmin -d mentor -v ON_ERROR_STOP=1 -f /mentor-lab/examples/lesson02-partitioning-statistics-loads.sql'",
+                    "docker compose -f labs/greenplum-625/docker-compose.yml exec -T -u gpadmin greenplum-625 bash -lc '. /usr/local/gpdb/greenplum_path.sh && psql -U gpadmin -d mentor -v ON_ERROR_STOP=1 -f /mentor-lab/examples/lesson02-partitioning-statistics-loads.sql'",
                 ],
                 "Почему PARTITION BY RANGE (sale_date) не делает join co-located?",
                 "Partition pruning отсекает leaf partitions, а distribution key размещает строки по segments.",

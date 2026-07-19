@@ -1,6 +1,7 @@
 -- Greenplum 6.25 Lesson 03: декомпозиция OLAP + Legacy planner vs GPORCA.
 --
 -- Stand: labs/greenplum-625 (andruche/greenplum:6.25.3)
+-- Database: mentor (как Lessons 01/02). Schema: lesson03.
 -- Safe pattern:
 --   BEGIN;
 --   \i /mentor-lab/examples/lesson03-olap-decomposition-tuning.sql

@@ -22,13 +22,14 @@ def greenplum_query_tuning_simple_runbook() -> Runbook:
                 "Glossary + pipeline",
                 "Расшифруй GUC/QD/QE/Motion и покажи стадии parse→execute на стенде GP 6.25.",
                 [
-                    "python3 mentor-lab.py check greenplum-625",
                     "python3 mentor-lab.py seed greenplum-625 --profile lesson03",
+                    "python3 mentor-lab.py check greenplum-625",
+                    "\\conninfo",
                     "SHOW optimizer;",
                 ],
-                "Что такое GUC optimizer и кто строит plan при on/off?",
-                "GUC = Grand Unified Configuration; on → GPORCA, off → Legacy Postgres planner на QD.",
-                "Ученик расшифровывает аббревиатуры до чтения EXPLAIN.",
+                "В какой БД живут данные Урока 03 и что такое GUC optimizer?",
+                "БД mentor / schema lesson03; GUC optimizer: on → GPORCA, off → Legacy на QD.",
+                "Ученик видит dbname=mentor и расшифровывает аббревиатуры до EXPLAIN.",
                 links,
             ),
             RunbookStage(

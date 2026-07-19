@@ -13,6 +13,7 @@
 python3 mentor-lab.py doctor --full
 python3 mentor-lab.py readiness greenplum --platform macos
 python3 mentor-lab.py up greenplum
+python3 mentor-lab.py seed greenplum --profile academy
 python3 mentor-lab.py check greenplum
 python3 mentor-lab.py student greenplum-partitioning homework
 ```
@@ -29,6 +30,7 @@ python3 mentor-lab.py readiness greenplum --platform linux
 py mentor-lab.py doctor --full
 py mentor-lab.py readiness greenplum --platform windows
 py mentor-lab.py up greenplum
+py mentor-lab.py seed greenplum --profile academy
 py mentor-lab.py check greenplum
 py mentor-lab.py student greenplum-partitioning homework
 ```
