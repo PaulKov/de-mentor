@@ -59,7 +59,7 @@ class LessonReleaseManifestLoader:
             physical_lab=_required(payload, "physical_lab"),
             title=_required(payload, "title"),
             deck_path=_required(payload, "deck_path"),
-            google_slides_url=_required(payload, "google_slides_url"),
+            google_slides_url=_optional_url(payload, "google_slides_url"),
             expected_owner_email=_required(payload, "expected_owner_email"),
             expected_slide_count=int(_required(payload, "expected_slide_count")),
             drive_folder=_required(payload, "drive_folder"),
@@ -112,6 +112,20 @@ def _required(payload: dict[str, Any], key: str) -> str:
     if not isinstance(value, str) or not value:
         raise ValueError(f"Missing required manifest field: {key}")
     return value
+
+
+def _optional_url(payload: dict[str, Any], key: str) -> str:
+    """Allow pending Google Slides publish via null/empty URL."""
+
+    value = payload.get(key)
+    if value is None:
+        return ""
+    if not isinstance(value, str):
+        raise ValueError(f"Manifest field must be a string: {key}")
+    cleaned = value.strip()
+    if cleaned.lower() in {"", "null", "none", "~"}:
+        return ""
+    return cleaned
 
 
 def _required_list(payload: dict[str, Any], key: str) -> tuple[str, ...]:

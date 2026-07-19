@@ -7,7 +7,7 @@ from typing import Callable, Sequence
 
 from mentor_lab.certificates import CertificateWriter
 from mentor_lab.challenges import ChallengeCatalog
-from mentor_lab.checks import CheckStatus, GreenplumCheckSuite
+from mentor_lab.checks import CheckStatus, Greenplum625CheckSuite, GreenplumCheckSuite
 from mentor_lab.ci_smoke import CiSmokePlanBuilder
 from mentor_lab.cli_context import (
     _lab_or_none,
@@ -129,14 +129,17 @@ def _handle_check(args: argparse.Namespace) -> int:
     lab = _lab_or_none(args.lab_name)
     if lab is None:
         return 1
+    suite_cls = (
+        Greenplum625CheckSuite if lab.name == "greenplum-625" else GreenplumCheckSuite
+    )
     if args.dry_run:
         print("Checks that would run:")
-        for code in GreenplumCheckSuite.documented_check_codes():
+        for code in suite_cls.documented_check_codes():
             print(f"- {code}")
         return 0
 
     try:
-        checks = GreenplumCheckSuite(_sql_client(lab)).run()
+        checks = suite_cls(_sql_client(lab)).run()
     except RuntimeError as exc:
         print(f"Check execution failed: {exc}")
         return 1

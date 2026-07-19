@@ -23,8 +23,18 @@ class SeedProfileCatalog:
     @classmethod
     def default(cls, project_root: Path) -> "SeedProfileCatalog":
         base = project_root / "labs" / "greenplum" / "seed"
+        base_625 = project_root / "labs" / "greenplum-625" / "seed"
         return cls(
             {
+                "greenplum-625": [
+                    SeedProfile(
+                        "lesson03",
+                        "Lesson 03 OLAP + optimizer dataset",
+                        "Loads lesson03 schema, AOCO fact, star-join ORCA case and TEMP stages.",
+                        base_625 / "lesson03.sql",
+                        "/mentor-lab/seed/lesson03.sql",
+                    ),
+                ],
                 "greenplum": [
                     SeedProfile(
                         "balanced",

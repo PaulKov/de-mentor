@@ -23,6 +23,7 @@ class LabDefinition:
     default_database: str
     port: int
     docs_path: Path
+    env_script: str = ". /usr/local/greenplum-db/greenplum_path.sh"
 
     def compose_path(self, project_root: Path) -> Path:
         """Return the absolute Docker Compose file path for this lab."""

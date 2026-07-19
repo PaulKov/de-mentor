@@ -11,8 +11,6 @@ from mentor_lab.domain import LabDefinition
 class GreenplumSqlClient:
     """Executes SQL in the Greenplum container as gpadmin."""
 
-    _ENV_SCRIPT = ". /usr/local/greenplum-db/greenplum_path.sh"
-
     _ALIASES = {
         "SCHEMA_EXISTS": (
             "SELECT count(*) FROM information_schema.schemata "
@@ -46,7 +44,7 @@ class GreenplumSqlClient:
 
     def build_file_command(self, container_path: str) -> Sequence[str]:
         shell = (
-            f"{self._ENV_SCRIPT} && "
+            f"{self._lab.env_script} && "
             f"psql -U {shlex.quote(self._lab.default_user)} "
             f"-d {shlex.quote(self._lab.default_database)} "
             f"-v ON_ERROR_STOP=1 -f {shlex.quote(container_path)}"
@@ -76,7 +74,7 @@ class GreenplumSqlClient:
     def _build_sql_command(self, sql: str, psql_flags: Sequence[str]) -> Sequence[str]:
         flags = " ".join(psql_flags)
         shell = (
-            f"{self._ENV_SCRIPT} && "
+            f"{self._lab.env_script} && "
             f"psql {flags} -U {shlex.quote(self._lab.default_user)} "
             f"-d {shlex.quote(self._lab.default_database)} "
             f"-c {shlex.quote(sql)}"

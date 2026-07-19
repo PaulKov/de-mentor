@@ -106,6 +106,8 @@ class ControlPlaneBuilder:
 
 
 def _stage_guides(route: LearningRoute) -> List[StageGuide]:
+    if route.lesson_code == "lesson-03":
+        return _lesson03_stage_guides(route)
     if route.lesson_code == "lesson-02":
         return _lesson02_stage_guides(route)
     return _lesson01_stage_guides(route)
@@ -270,6 +272,84 @@ def _lesson02_stage_guides(route: LearningRoute) -> List[StageGuide]:
             "Что принести на следующий урок?",
             "DDL, EXPLAIN, partition catalog checks, statistics policy и validation.",
             "Ученик понимает критерии приемки homework.",
+            workbook,
+            homework,
+        ),
+    ]
+
+
+def _lesson03_stage_guides(route: LearningRoute) -> List[StageGuide]:
+    workbook = route.workbook_path
+    homework = route.homework_path
+    sql_lab = "labs/greenplum-625/examples/lesson03-olap-decomposition-tuning.sql"
+    return [
+        StageGuide(
+            "lab-optimizer",
+            "1-14",
+            "Подними greenplum-625 и сравни Legacy vs GPORCA на одном SQL.",
+            [
+                "python3 mentor-lab.py up greenplum-625",
+                "python3 mentor-lab.py seed greenplum-625 --profile lesson03",
+                "python3 mentor-lab.py check greenplum-625",
+                "\\i /mentor-lab/examples/lesson03-optimizer-legacy-vs-orca.sql",
+            ],
+            "Когда ORCA обычно лучше Legacy?",
+            "На many-join OLAP, где distribution-aware search уменьшает Motion cost.",
+            f"SQL-lab выполнен: {sql_lab}; ученик показывает optimizer=on/off EXPLAIN.",
+            workbook,
+            homework,
+        ),
+        StageGuide(
+            "plan-reading",
+            "15-19",
+            "Разбери EXPLAIN слоями: optimizer → Motion → join → estimates → scan.",
+            [
+                "EXPLAIN SELECT * FROM lesson03.v_heavy_olap_monolith;",
+            ],
+            "Какой Motion выглядит самым дорогим?",
+            "Тот, что переносит самый широкий промежуточный set до сужения.",
+            "Ученик даёт layered readout плана с маркером optimizer.",
+            workbook,
+            homework,
+        ),
+        StageGuide(
+            "statistics",
+            "20-22",
+            "Свяжи selectivity с pg_stats и слотами pg_statistic.",
+            [
+                "SELECT attname, n_distinct, most_common_vals, histogram_bounds FROM pg_stats WHERE schemaname = 'lesson03' AND tablename = 'fact_sales';",
+                "SELECT staattnum, stakind1, stanumbers1 FROM pg_statistic WHERE starelid = 'lesson03.fact_sales'::regclass LIMIT 20;",
+            ],
+            "Почему stale statistics опасны и для Legacy, и для ORCA?",
+            "Оба читают pg_statistic; мусор на входе ломает join/Motion choices.",
+            "Ученик показывает catalog evidence статистики.",
+            workbook,
+            homework,
+        ),
+        StageGuide(
+            "storage-temp",
+            "23-27",
+            "Сравни Heap/AO/AOCO (appendonly) и TEMP-декомпозицию с ANALYZE.",
+            [
+                "EXPLAIN SELECT region, category, revenue, rank() OVER (PARTITION BY region ORDER BY revenue DESC) FROM tmp_lesson03_sales_shaped;",
+            ],
+            "Зачем ANALYZE на TEMP при фиксированном optimizer?",
+            "Чтобы следующий этап планировался по реальной cardinality этапа.",
+            "Ученик сравнивает before/after на TEMP stages.",
+            workbook,
+            homework,
+        ),
+        StageGuide(
+            "homework",
+            "28-30",
+            "Закрой evidence pack: rewrite + optimizer policy + residual risk.",
+            [
+                "python3 mentor-lab.py runbook greenplum-query-tuning homework",
+                "python3 mentor-lab.py student greenplum-query-tuning homework",
+            ],
+            "Что принести на следующий урок?",
+            "Rewrite SQL, before/after EXPLAIN при фиксированном optimizer, stats snippet, residual risk.",
+            "Ученик понимает критерии приёмки homework.",
             workbook,
             homework,
         ),

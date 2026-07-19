@@ -1,5 +1,45 @@
 # Release Notes
 
+## Урок 03: Декомпозиция и тюнинг тяжёлых запросов в MPP
+
+Этот релиз добавляет третий урок Greenplum Academy как отдельный учебный маршрут `greenplum-query-tuning` на physical lab `greenplum-625` (Greenplum 6.25.3).
+
+### Новые команды
+
+```bash
+python3 mentor-lab.py up greenplum-625
+python3 mentor-lab.py seed greenplum-625 --profile lesson03
+python3 mentor-lab.py check greenplum-625
+python3 mentor-lab.py lesson greenplum-query-tuning
+python3 mentor-lab.py runbook greenplum-query-tuning simple
+python3 mentor-lab.py runbook greenplum-query-tuning deep
+python3 mentor-lab.py runbook greenplum-query-tuning homework
+python3 mentor-lab.py student greenplum-query-tuning bootstrap --platform macos
+python3 mentor-lab.py student greenplum-query-tuning homework
+python3 mentor-lab.py academy greenplum-query-tuning start --student Иван --dry-run
+python3 scripts/build_lesson03_pptx.py
+```
+
+### Что Добавлено
+
+- Каталог Урока 03: стадии оптимизатора, Legacy vs GPORCA, layered EXPLAIN, pg_statistic internals, Heap/AO/AOCO, TEMP/spill, OLAP rewrite.
+- Markdown runbooks: simple, deep-dive, homework.
+- Workbook, mentor guide, homework, rubric, cheat-sheet и 3 deep-dive документа.
+- Отдельный physical lab `greenplum-625` на Greenplum 6.25.3 (`andruche/greenplum`).
+- SQL-lab `labs/greenplum-625/examples/lesson03-olap-decomposition-tuning.sql`.
+- Demo Legacy vs GPORCA: `labs/greenplum-625/examples/lesson03-optimizer-legacy-vs-orca.sql`.
+- PPTX `artifacts/greenplum-query-tuning-theory.pptx` (30 слайдов) + declarative sources.
+- Academy Control Plane и Lesson Release Manifest для Урока 03.
+- Deep-dive `optimizer-legacy-vs-orca.md`.
+
+### Как Проверять
+
+```bash
+python3 -m pytest tests/test_lesson_03_query_tuning.py tests/test_presentation_artifact.py -q
+python3 mentor-lab.py runbook greenplum-query-tuning simple
+python3 mentor-lab.py lesson-release greenplum-query-tuning verify
+```
+
 ## Lesson 02 MVP: Partitioning, Statistics And Incremental Loads
 
 Этот релиз добавляет второй урок Greenplum Academy как отдельный учебный маршрут `greenplum-partitioning` поверх того же Docker-стенда `greenplum`.

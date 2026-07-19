@@ -1,0 +1,42 @@
+route: greenplum-query-tuning
+lesson_code: lesson-03
+physical_lab: greenplum-625
+title: Декомпозиция и тюнинг тяжёлых запросов в MPP
+deck_path: artifacts/greenplum-query-tuning-theory.pptx
+google_slides_url: https://docs.google.com/presentation/d/1PMJJ8_EB65GfS0Ndj0hUSudCPwWyKEMt__GAz5rEGPU/edit?usp=sharing
+expected_owner_email: pavelkov007@gmail.com
+expected_slide_count: 30
+drive_folder: lessons/Greenplum/Lesson 03 - Decomposition and tuning of heavy MPP queries
+portal_repo: https://github.com/PaulKov/de-mentor-portal
+docs:
+  - docs/lessons/03-greenplum-query-tuning/README.md
+  - docs/lessons/03-greenplum-query-tuning/mentor-guide.md
+  - docs/lessons/03-greenplum-query-tuning/student-workbook.md
+  - docs/lessons/03-greenplum-query-tuning/homework.md
+  - docs/lessons/03-greenplum-query-tuning/rubric.md
+  - docs/lessons/03-greenplum-query-tuning/cheat-sheet.md
+runbooks:
+  - docs/lessons/03-greenplum-query-tuning/runbooks/simple-path.md
+  - docs/lessons/03-greenplum-query-tuning/runbooks/deep-dive-path.md
+  - docs/lessons/03-greenplum-query-tuning/runbooks/homework-plan.md
+  - docs/lessons/03-greenplum-query-tuning/runbooks/student-prep.md
+sql_examples:
+  - labs/greenplum-625/examples/lesson03-olap-decomposition-tuning.sql
+  - labs/greenplum-625/examples/lesson03-optimizer-legacy-vs-orca.sql
+student_handoff:
+  - docs/lessons/03-greenplum-query-tuning/runbooks/student-prep.md
+  - docs/lessons/03-greenplum-query-tuning/student-workbook.md
+  - docs/lessons/03-greenplum-query-tuning/homework.md
+  - docs/lessons/03-greenplum-query-tuning/runbooks/homework-plan.md
+  - labs/greenplum-625/examples/lesson03-olap-decomposition-tuning.sql
+safe_cli_commands:
+  - python3 mentor-lab.py up greenplum-625
+  - python3 mentor-lab.py check greenplum-625
+  - python3 mentor-lab.py seed greenplum-625 --profile lesson03
+  - python3 mentor-lab.py runbook greenplum-query-tuning simple
+  - python3 mentor-lab.py runbook greenplum-query-tuning deep
+  - python3 mentor-lab.py runbook greenplum-query-tuning homework
+  - python3 mentor-lab.py student greenplum-query-tuning homework
+  - python3 mentor-lab.py academy greenplum-query-tuning start --student Иван --dry-run
+  - python3 mentor-lab.py lesson-release greenplum-query-tuning publish-slides --dry-run --confirm-account pavelkov007@gmail.com
+  - python3 mentor-lab.py slides publish greenplum-query-tuning --dry-run --confirm-account pavelkov007@gmail.com

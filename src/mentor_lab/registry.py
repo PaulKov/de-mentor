@@ -31,6 +31,22 @@ def create_default_registry(project_root: Path) -> LabRegistry:
                 docs_path=Path("labs/greenplum/README.md"),
             ),
             LabDefinition(
+                name="greenplum-625",
+                title="Greenplum 6.25 query optimization lab",
+                description=(
+                    "Greenplum 6.25.3 stand for Lesson 03: OLAP decomposition, "
+                    "Legacy planner vs GPORCA, statistics and TEMP stages."
+                ),
+                status="ready",
+                compose_file=Path("labs/greenplum-625/docker-compose.yml"),
+                service_name="greenplum-625",
+                default_user="gpadmin",
+                default_database="postgres",
+                port=15436,
+                docs_path=Path("labs/greenplum-625/README.md"),
+                env_script=". /usr/local/gpdb/greenplum_path.sh",
+            ),
+            LabDefinition(
                 name="postgres",
                 title="PostgreSQL foundations",
                 description="Planned OLTP and SQL baseline lab.",

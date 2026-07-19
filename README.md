@@ -166,6 +166,39 @@ python3 mentor-lab.py lesson-release greenplum-partitioning report --output arti
 python3 mentor-lab.py lesson-release greenplum-partitioning publish-slides --dry-run --confirm-account pavelkov007@gmail.com
 ```
 
+### Урок 03: Декомпозиция и тюнинг тяжёлых запросов в MPP
+
+Третий урок — route `greenplum-query-tuning` на отдельном стенде **Greenplum 6.25** (`greenplum-625`). Фокус: стадии оптимизатора, Legacy vs GPORCA, layered `EXPLAIN`, статистика, storage, TEMP. WLM → Урок 04.
+
+```bash
+python3 mentor-lab.py up greenplum-625
+python3 mentor-lab.py seed greenplum-625 --profile lesson03
+python3 mentor-lab.py check greenplum-625
+python3 mentor-lab.py runbook greenplum-query-tuning simple
+python3 mentor-lab.py student greenplum-query-tuning bootstrap --platform macos
+python3 mentor-lab.py academy greenplum-query-tuning start --student Иван --dry-run
+```
+
+Основной SQL-lab:
+
+[lesson03-olap-decomposition-tuning.sql](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/lesson03-olap-decomposition-tuning.sql) · [legacy vs ORCA](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/lesson03-optimizer-legacy-vs-orca.sql)
+
+Материалы:
+
+- [Индекс Урока 03](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/03-greenplum-query-tuning/README.md)
+- [Manifest выпуска](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/03-greenplum-query-tuning/lesson.yaml)
+- [Презентация в PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-query-tuning-theory.pptx)
+- [Презентация в Google Slides](https://docs.google.com/presentation/d/1PMJJ8_EB65GfS0Ndj0hUSudCPwWyKEMt__GAz5rEGPU/edit?usp=sharing)
+- [План ментора](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/03-greenplum-query-tuning/mentor-guide.md)
+- [Workbook ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/03-greenplum-query-tuning/student-workbook.md)
+- [Домашка](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/03-greenplum-query-tuning/homework.md)
+
+Сборка PPTX из declarative sources:
+
+```bash
+python3 scripts/build_lesson03_pptx.py
+```
+
 ## Быстрый старт
 
 ### Требования

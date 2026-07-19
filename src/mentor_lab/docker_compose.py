@@ -14,8 +14,6 @@ CommandExecutor = Callable[[Sequence[str]], int]
 class DockerComposeRunner:
     """Build and run Docker Compose commands for a lab definition."""
 
-    _GREENPLUM_ENV_SCRIPT = ". /usr/local/greenplum-db/greenplum_path.sh"
-
     def __init__(
         self,
         project_root: Path,
@@ -98,7 +96,7 @@ class DockerComposeRunner:
         ]
         if extra_args:
             args.extend(extra_args)
-        return f"{self._GREENPLUM_ENV_SCRIPT} && {shlex.join(args)}"
+        return f"{lab.env_script} && {shlex.join(args)}"
 
     @staticmethod
     def _run_subprocess(command: Sequence[str]) -> int:

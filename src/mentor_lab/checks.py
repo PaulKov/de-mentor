@@ -130,6 +130,133 @@ class GreenplumCheckSuite:
         )
 
 
+class Greenplum625CheckSuite:
+    """Checks for the Lesson 03 Greenplum 6.25 optimization lab."""
+
+    def __init__(self, sql_client: SqlClient) -> None:
+        self._sql = sql_client
+
+    @staticmethod
+    def documented_check_codes() -> List[str]:
+        return [
+            "greenplum625_connection",
+            "greenplum625_version",
+            "lesson03_schema",
+            "lesson03_fact_rows",
+            "optimizer_guc_available",
+            "orca_plan_marker",
+        ]
+
+    @staticmethod
+    def documented_success_results() -> List[CheckResult]:
+        return [
+            CheckResult(
+                code,
+                code.replace("_", " ").title(),
+                CheckStatus.PASS,
+                "Documented dry-run success.",
+                "",
+            )
+            for code in Greenplum625CheckSuite.documented_check_codes()
+        ]
+
+    def run(self) -> List[CheckResult]:
+        return [
+            self._check_connection(),
+            self._check_version(),
+            self._check_schema(),
+            self._check_fact_rows(),
+            self._check_optimizer_guc(),
+            self._check_orca_plan(),
+        ]
+
+    def _check_connection(self) -> CheckResult:
+        value = self._sql.scalar("SELECT 1")
+        return _result(
+            "greenplum625_connection",
+            "Greenplum 6.25 connection",
+            value.strip() == "1",
+            f"SELECT 1 returned {value!r}.",
+            "Start the lab with `python3 mentor-lab.py up greenplum-625`.",
+        )
+
+    def _check_version(self) -> CheckResult:
+        version = self._sql.scalar("SELECT version()")
+        ok = "Greenplum Database 6.25" in version
+        return _result(
+            "greenplum625_version",
+            "Greenplum 6.25 version",
+            ok,
+            version.split(" on ")[0] if version else "empty version",
+            "Use image andruche/greenplum:6.25.3-slim-arm64 (or amd64).",
+        )
+
+    def _check_schema(self) -> CheckResult:
+        value = self._sql.scalar(
+            "SELECT count(*) FROM information_schema.schemata WHERE schema_name = 'lesson03'"
+        )
+        return _result(
+            "lesson03_schema",
+            "lesson03 schema exists",
+            value.strip() == "1",
+            f"lesson03 schema count is {value}.",
+            "Run `python3 mentor-lab.py seed greenplum-625 --profile lesson03`.",
+        )
+
+    def _check_fact_rows(self) -> CheckResult:
+        try:
+            rows = int(float(self._sql.scalar("SELECT count(*) FROM lesson03.fact_sales").strip()))
+        except RuntimeError:
+            rows = 0
+        return _result(
+            "lesson03_fact_rows",
+            "Lesson 03 fact rows loaded",
+            rows >= 100000,
+            f"lesson03.fact_sales has {rows} rows.",
+            "Run `python3 mentor-lab.py seed greenplum-625 --profile lesson03`.",
+        )
+
+    def _check_optimizer_guc(self) -> CheckResult:
+        value = self._sql.scalar("SHOW optimizer")
+        ok = value.strip().lower() in {"on", "off"}
+        return _result(
+            "optimizer_guc_available",
+            "optimizer GUC available",
+            ok,
+            f"optimizer={value!r}",
+            "Confirm GPORCA build: SHOW optimizer should return on/off.",
+        )
+
+    def _check_orca_plan(self) -> CheckResult:
+        try:
+            # One psql invocation so SET applies to EXPLAIN in the same session.
+            plan = self._sql.text(
+                "SET optimizer = on; "
+                "EXPLAIN SELECT * FROM lesson03.v_star_join_orca_case LIMIT 5"
+            )
+        except RuntimeError as exc:
+            return _result(
+                "orca_plan_marker",
+                "ORCA plan explailable",
+                False,
+                str(exc),
+                "Seed lesson03 data, then rerun check.",
+            )
+        marker = (
+            "Optimizer: Pivotal Optimizer" in plan
+            or "Optimizer status" in plan
+            or "Motion" in plan
+            or "Dynamic Seq Scan" in plan
+        )
+        return _result(
+            "orca_plan_marker",
+            "ORCA/Legacy plan readable",
+            marker,
+            "Plan contains optimizer/Motion markers." if marker else "No recognizable plan markers.",
+            "Run examples/lesson03-optimizer-legacy-vs-orca.sql in psql (one session).",
+        )
+
+
 def _result(
     code: str,
     title: str,

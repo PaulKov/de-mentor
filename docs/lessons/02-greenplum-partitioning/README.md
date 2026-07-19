@@ -146,6 +146,6 @@ python3 mentor-lab.py slides verify greenplum-partitioning \
 
 ## Следующий Урок
 
-Lesson 03: Query tuning, workload management and production diagnostics.
+Урок 03: Декомпозиция и тюнинг тяжёлых запросов в MPP.
 
-Фокус: читать production-планы глубже, связывать `Motion`, joins, statistics, skew и workload management с конкретным RCA.
+Фокус: layered `EXPLAIN`, статистика до `pg_statistic`, физическое хранение Heap/AO/AOCO и TEMP-декомпозиция тяжёлого OLAP. WLM/RCA — уже Урок 04.
