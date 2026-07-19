@@ -3,7 +3,7 @@
 Status: READY_WITH_WARNINGS
 Lesson: Декомпозиция и тюнинг тяжёлых запросов в MPP
 Physical lab: greenplum-625
-Google Slides: https://docs.google.com/presentation/d/1DGUBklnANac9jKpW85fTCPQ0MEiM7zEs9VnF3rN7aEA/edit?usp=sharing
+Google Slides: https://docs.google.com/presentation/d/1FtZysVPcsq5BUmAhJ6FqaIt8fpIhPXd9cKC_C6TMdwM/edit?usp=sharing
 Drive folder: lessons/Greenplum/Lesson 03 - Decomposition and tuning of heavy MPP queries
 
 ## Проверки

@@ -13,7 +13,7 @@ def greenplum_query_tuning_simple_runbook() -> Runbook:
         title="Урок 03 simple path: декомпозиция и тюнинг тяжёлых запросов",
         description=(
             "60 минут: glossary, pipeline Optimize (GUC), plan trees ORCA/Legacy, "
-            "TEMP rewrite и proof."
+            "TEMP FS/spill и proof."
         ),
         stages=[
             RunbookStage(
@@ -61,22 +61,23 @@ def greenplum_query_tuning_simple_runbook() -> Runbook:
                 links,
             ),
             RunbookStage(
-                "35:00-50:00",
-                "34-39",
-                "Storage и TEMP rewrite",
-                "Сравни Heap/AO/AOCO и пройди TEMP декомпозицию с ANALYZE при фиксированном GUC.",
+                "35:00-52:00",
+                "34-48",
+                "TEMP FS + spill + rewrite",
+                "Раздели TEMP TABLE (t_* на QE) и spill (pgsql_tmp_Sort_*); пройди rewrite с ANALYZE.",
                 [
+                    "CREATE TEMP TABLE tmp_fs_demo AS SELECT customer_id, product_id, amount FROM lesson03.fact_sales WHERE sale_date >= DATE '2026-02-01' AND sale_date < DATE '2026-03-01' DISTRIBUTED BY (customer_id);",
+                    "SELECT n.nspname, c.relname, pg_relation_filepath(c.oid), pg_size_pretty(pg_total_relation_size(c.oid)) FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace WHERE c.relname = 'tmp_fs_demo';",
                     "EXPLAIN SELECT region, category, revenue, rank() OVER (PARTITION BY region ORDER BY revenue DESC) FROM tmp_lesson03_sales_shaped;",
-                    "SELECT c.relname, pg_size_pretty(pg_relation_size(c.oid)) FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace WHERE n.nspname = 'lesson03' ORDER BY pg_relation_size(c.oid) DESC;",
                 ],
-                "Зачем ANALYZE на TEMP после наполнения?",
-                "Чтобы следующий join/Motion планировался по реальной cardinality этапа.",
-                "Ученик показывает before/after мышление на TEMP stages.",
+                "Где на диске лежит TEMP TABLE и где spill Sort?",
+                "TEMP → base/<dboid>/t_<relfilenode> на QE; spill → base/pgsql_tmp/pgsql_tmp_Sort_* при external merge.",
+                "Ученик разделяет TEMP relation и workfiles и показывает before/after rewrite.",
                 links,
             ),
             RunbookStage(
-                "50:00-60:00",
-                "40-43",
+                "52:00-60:00",
+                "49-52",
                 "Homework handoff",
                 "Закрой evidence checklist и мост к WLM уроку.",
                 [
@@ -84,7 +85,7 @@ def greenplum_query_tuning_simple_runbook() -> Runbook:
                     "python3 mentor-lab.py student greenplum-query-tuning homework",
                 ],
                 "Какие артефакты обязательны в домашке?",
-                "Before/after EXPLAIN при фиксированном GUC optimizer, stats snippet, storage rationale, residual risk.",
+                "Before/after EXPLAIN при фиксированном GUC optimizer, stats snippet, TEMP/distribution rationale, residual risk.",
                 "Ученик повторяет deliverables своими словами.",
                 links,
             ),

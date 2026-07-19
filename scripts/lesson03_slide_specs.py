@@ -583,45 +583,105 @@ SLIDES = [
         ),
     },
     {
-        "kicker": "TEMP",
-        "title": "TEMP — physical stage с ANALYZE и distribution",
-        "subtitle": "Фиксируем промежуточный контракт, который optimizer пересчитывает заново.",
-        "type": "cards",
+        "kicker": 'TEMP trio',
+        "title": 'Три разных «временных» механизма — не путать',
+        "subtitle": 'CTE, TEMP TABLE и spill/workfiles живут в разных слоях стека.',
+        "type": 'cards',
         "cards": [
-            ["Зачем", "Новый grain + новый plan.", "green"],
-            ["ANALYZE", "Обязателен после наполнения.", "blue"],
-            ["Distribution", "Под следующий join key.", "amber"],
-            ["Риск", "TEMP без фильтра увеличивает стоимость.", "red"],
+            ['CTE / WITH', 'Логическая подзапросная форма. Optimizer может инлайнить — нет гарантированного physical stage, stats, DISTRIBUTED BY.', 'amber'],
+            ['TEMP TABLE', 'Явная relation в pg_temp_NNN. Catalog + relfilenode t_* на QE. Можно ANALYZE и задать distribution.', 'green'],
+            ['Spill / workfiles', 'Файлы исполнителей Sort/Hash при нехватке statement_mem. Путь: <datadir>/base/pgsql_tmp/pgsql_tmp_Sort_*. Не relation.', 'red'],
+            ['Правило', '«Не было CREATE TEMP ⇒ не было диска» — ложь. Spill пишется и без TEMP TABLE.', 'blue'],
         ],
     },
     {
-        "kicker": "TEMP internals",
-        "title": "pg_temp, файлы сегментов, spill ≠ TEMP TABLE",
-        "subtitle": "Явная TEMP relation и hash/sort spill files — разные механизмы.",
-        "type": "cards",
+        "kicker": 'TEMP create',
+        "title": 'Как создаётся TEMP: SQL-контракт сессии',
+        "subtitle": 'Lifecycle = сессия (или ON COMMIT). Другие сессии объект не видят.',
+        "type": 'code',
+        "code": "CREATE TEMP TABLE tmp_stage AS\nSELECT customer_id, product_id, amount\nFROM lesson03.fact_sales\nWHERE sale_date >= DATE '2026-02-01'\n  AND sale_date <  DATE '2026-03-01'\nDISTRIBUTED BY (customer_id);   -- обязательный контракт в GP\nANALYZE tmp_stage;               -- иначе следующий plan врёт\n\n-- Варианты lifecycle:\n-- CREATE TEMP TABLE ... ON COMMIT PRESERVE ROWS;  -- default\n-- CREATE TEMP TABLE ... ON COMMIT DROP;\n-- CREATE TEMP TABLE ... ON COMMIT DELETE ROWS;\n\n-- Каталог: nspname = pg_temp_<backend>, relpersistence = 't'",
+    },
+    {
+        "kicker": 'TEMP where',
+        "title": 'Где живёт TEMP в Greenplum MPP',
+        "subtitle": 'Не отдельный tempdb: та же БД, временный schema, данные на сегментах.',
+        "type": 'cards',
         "cards": [
-            ["Namespace", "pg_temp_NNN session-local.", "green"],
-            ["Файлы", "Temporary relfilenode на segments.", "blue"],
-            ["Spill", "work_mem miss → temp files исполнителей.", "amber"],
-            ["GPDB", "QD координирует, данные на QE.", "green"],
+            ['Namespace', 'pg_temp_NNN (+ pg_toast_temp_NNN). Session-local; после disconnect schema исчезает.', 'green'],
+            ['Catalog', "Обычные pg_class/pg_attribute во временном namespace. relpersistence='t', filepath base/<dboid>/t_<relfilenode>.", 'blue'],
+            ['QD vs QE', 'QD координирует DDL/план. Данные TEMP лежат на QE (master часто держит 0-byte placeholder).', 'amber'],
+            ['Distribution', 'TEMP — распределённая таблица. Неверный DISTRIBUTED BY ⇒ лишний Redistribute на следующем join.', 'red'],
         ],
     },
     {
-        "kicker": "Rewrite",
-        "title": "Паттерн rewrite + проверка optimizer",
-        "subtitle": "Before/after при фиксированном SET optimizer (GUC сессии).",
-        "type": "code",
-        "code": (
-            "SET optimizer = on;  -- зафиксировали GUC\n"
-            "CREATE TEMP TABLE tmp_sales_feb AS\n"
-            "SELECT customer_id, product_id, amount\n"
-            "FROM lesson03.fact_sales\n"
-            "WHERE sale_date >= DATE '2026-02-01'\n"
-            "  AND sale_date <  DATE '2026-03-01'\n"
-            "DISTRIBUTED BY (customer_id);\n"
-            "ANALYZE tmp_sales_feb;\n"
-            "EXPLAIN ..."
-        ),
+        "kicker": 'TEMP FS map',
+        "title": 'Файловая карта: TEMP relation vs spill',
+        "subtitle": 'Снято с greenplum-625: два разных каталога под /data/*/gpsne*/base/.',
+        "type": 'code',
+        "code": '# TEMP TABLE (явная relation)\n/data/data1/gpsne0/base/12812/t_16465     # ~1.1 MB на seg0\n/data/data2/gpsne1/base/12812/t_16465     # ~1.2 MB на seg1\n/data/master/gpsne-1/base/12812/t_16465   # 0 bytes (QD placeholder)\n# pg_relation_filepath → base/12812/t_16465\n# nspname = pg_temp_787, relpersistence = t\n\n# Spill / workfiles (исполнитель Sort/Hash)\n/data/data1/gpsne0/base/pgsql_tmp/pgsql_tmp_Sort_1_<pid>.0\n/data/data2/gpsne1/base/pgsql_tmp/pgsql_tmp_Sort_1_<pid>.0\n# растут во время query, удаляются после завершения',
+    },
+    {
+        "kicker": 'Screenshot',
+        "title": 'Скрин FS: TEMP relfilenode t_* на сегментах',
+        "subtitle": 'После CREATE TEMP … AS SELECT … DISTRIBUTED BY — данные на QE, не в pgsql_tmp.',
+        "type": 'image',
+        "image": 'artifacts/lesson03-plan-screens/temp-relfilenode-fs.png',
+    },
+    {
+        "kicker": 'TEMP code',
+        "title": 'Код GPDB 6X_STABLE: TEMP и workfiles',
+        "subtitle": 'Якоря для deep-dive чтения, не «магия кластера».',
+        "type": 'cards',
+        "cards": [
+            ['TEMP namespace', 'catalog/namespace.c — InitTempTableNamespace\nhttps://github.com/greenplum-db/gpdb/blob/6X_STABLE/src/backend/catalog/namespace.c', 'green'],
+            ['Heap / relfilenode', 'storage/smgr + heapam; temp prefix t_\nhttps://github.com/greenplum-db/gpdb/tree/6X_STABLE/src/backend/storage', 'blue'],
+            ['Workfile manager', 'utils/workfile_manager/workfile_mgr.c\nhttps://github.com/greenplum-db/gpdb/tree/6X_STABLE/src/backend/utils/workfile_manager', 'amber'],
+            ['GUC памяти', 'statement_mem / max_statement_mem, gp_workfile_limit_*, gp_workfile_compression.', 'green'],
+        ],
+    },
+    {
+        "kicker": 'Spill',
+        "title": 'Spill deep-dive: когда executor пишет pgsql_tmp',
+        "subtitle": 'GUC statement_mem (на GP6 work_mem deprecated). Маркер в EXPLAIN ANALYZE.',
+        "type": 'code',
+        "code": "-- Демо со стенда (ужать память → external sort):\nSET optimizer = off;\nSET statement_mem = '8MB';\nEXPLAIN ANALYZE\nSELECT customer_id, product_id, amount, sale_date\nFROM tmp_spill_fuel   -- ~1M rows amplified TEMP\nORDER BY amount DESC, customer_id, product_id, sale_date;\n\n-- Факт с greenplum-625:\n-- Sort Method: external merge  Disk: 34592kB\n-- Memory used: 8192kB   Memory wanted: 58688kB\n-- FS: pgsql_tmp_Sort_1_*.0 рос 0.4MB → 17MB на сегмент, потом cleanup",
+    },
+    {
+        "kicker": 'Screenshot',
+        "title": 'Скрин FS: рост spill-файлов pgsql_tmp_Sort_*',
+        "subtitle": 'Поллинг во время EXPLAIN ANALYZE: bytes на seg0/seg1 растут, после query → cleanup.',
+        "type": 'image',
+        "image": 'artifacts/lesson03-plan-screens/spill-pgsql_tmp-growth.png',
+    },
+    {
+        "kicker": 'Screenshot',
+        "title": 'Скрин EXPLAIN: external merge Disk = spill',
+        "subtitle": 'Связка план ↔ файлы: Disk: NNkB в EXPLAIN = pgsql_tmp_Sort_* на сегментах.',
+        "type": 'image',
+        "image": 'artifacts/lesson03-plan-screens/spill-explain-external-merge.png',
+    },
+    {
+        "kicker": 'TEMP ±',
+        "title": 'Плюсы и минусы TEMP TABLE',
+        "subtitle": 'Physical stage — инструмент, не бесплатный cache.',
+        "type": 'two',
+        "left": ['Плюсы', 'Фиксирует grain; свой DISTRIBUTED BY; ANALYZE → честный следующий plan; можно переиспользовать в сессии; проще доказать before/after; отделяет дорогой фильтр от join/window.', 'green'],
+        "right": ['Минусы', 'Двойной IO (write+read); место на дисках всех сегментов; catalog/planning overhead; риск устаревших данных в сессии; без фильтра = дорогой materialize всего fact.', 'red'],
+    },
+    {
+        "kicker": 'TEMP when',
+        "title": 'Когда TEMP хорошо / когда плохо',
+        "subtitle": 'Критерий: stage уменьшает cardinality/Motion cost больше, чем стоит materialize.',
+        "type": 'two',
+        "left": ['Хорошо', 'Узкое окно дат + anti-test; grain под следующий join key; повторное использование stage в сессии; стабилизация плана после ANALYZE; разрез монолита на доказуемые шаги.', 'green'],
+        "right": ['Плохо', 'TEMP = весь fact без фильтра; забыли ANALYZE; DISTRIBUTED BY не под join; десятки мелких TEMP; вместо фикса stats/skew; CTE «для красоты» без physical need; игнор spill (диск растёт без CREATE TEMP).', 'red'],
+    },
+    {
+        "kicker": 'Rewrite',
+        "title": 'Паттерн rewrite + проверка optimizer',
+        "subtitle": 'Before/after при фиксированном SET optimizer (GUC сессии) + FS sanity.',
+        "type": 'code',
+        "code": "SET optimizer = on;  -- зафиксировали GUC\nCREATE TEMP TABLE tmp_sales_feb AS\nSELECT customer_id, product_id, amount\nFROM lesson03.fact_sales\nWHERE sale_date >= DATE '2026-02-01'\n  AND sale_date <  DATE '2026-03-01'\nDISTRIBUTED BY (customer_id);\nANALYZE tmp_sales_feb;\nEXPLAIN ...\n\n-- Evidence pack:\n-- 1) before/after EXPLAIN (тот же optimizer)\n-- 2) pg_relation_filepath / размер TEMP\n-- 3) при spill: Sort Method external merge + pgsql_tmp_Sort_*",
     },
     {
         "kicker": "Simple path",
@@ -655,8 +715,8 @@ SLIDES = [
         "type": "cards",
         "cards": [
             ["GUC", "optimizer on/off — явный выбор движка плана.", "green"],
-            ["Деревья", "Parse→Rewrite→Optimize→Dispatch→Execute + Motion/slices.", "blue"],
-            ["Доказательство", "before/after EXPLAIN при фиксированном GUC + stats/TEMP.", "amber"],
+            ["TEMP ≠ spill", "t_* relation на QE vs pgsql_tmp_Sort_* workfiles.", "blue"],
+            ["Доказательство", "before/after EXPLAIN + ANALYZE/distribution + FS sanity.", "amber"],
         ],
     },
 ]

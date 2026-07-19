@@ -13,7 +13,7 @@ def greenplum_query_tuning_deep_runbook() -> Runbook:
         title="Урок 03 deep-dive: internals статистики, storage и TEMP",
         description=(
             "90-120 минут: glossary→code map→plan trees, pg_statistic slots, "
-            "physical layout, TEMP/spill и design review rewrite."
+            "TEMP FS/spill, physical layout и design review rewrite."
         ),
         stages=[
             RunbookStage(
@@ -45,7 +45,7 @@ def greenplum_query_tuning_deep_runbook() -> Runbook:
                 links,
             ),
             RunbookStage(
-                "50:00-75:00",
+                "50:00-70:00",
                 "34-36",
                 "Physical storage",
                 "Свяжи Heap/AO/AOCO с типами данных и projection.",
@@ -60,29 +60,30 @@ def greenplum_query_tuning_deep_runbook() -> Runbook:
                 links,
             ),
             RunbookStage(
-                "75:00-100:00",
-                "37-39",
-                "TEMP и spill",
-                "Разбери pg_temp, файлы сегментов и отличие spill files от TEMP TABLE.",
+                "70:00-100:00",
+                "37-48",
+                "TEMP FS + spill deep-dive",
+                "Покажи t_* на QE vs pgsql_tmp_Sort_*; external merge Disk; плюсы/минусы TEMP.",
                 [
+                    "SELECT n.nspname, c.relname, c.relfilenode, pg_relation_filepath(c.oid) FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace WHERE n.nspname LIKE 'pg_temp%' LIMIT 20;",
+                    "SET statement_mem = '8MB'; SET optimizer = off; EXPLAIN ANALYZE SELECT customer_id, amount FROM lesson03.fact_sales ORDER BY amount;",
                     "EXPLAIN SELECT region, category, revenue, rank() OVER (PARTITION BY region ORDER BY revenue DESC) FROM tmp_lesson03_sales_shaped;",
-                    "SELECT count(*) FROM tmp_lesson03_sales_feb;",
                 ],
-                "Чем spill отличается от CREATE TEMP TABLE?",
-                "Spill — temporary files исполнителей hash/sort; TEMP TABLE — явная relation в pg_temp.",
-                "Ученик корректно разделяет два механизма.",
+                "Чем путь TEMP TABLE отличается от spill workfiles на FS?",
+                "TEMP → base/<dboid>/t_<relfilenode> (session relation); spill → base/pgsql_tmp/pgsql_tmp_Sort_* (executor overflow).",
+                "Ученик читает FS evidence и связывает с EXPLAIN Disk.",
                 links,
             ),
             RunbookStage(
                 "100:00-120:00",
-                "40-43",
+                "49-52",
                 "Design review",
                 "Попроси защитить rewrite как production mini-RFC при фиксированном GUC optimizer.",
                 [
                     "python3 mentor-lab.py runbook greenplum-query-tuning homework",
                 ],
                 "Какие три доказательства нужны для приёмки rewrite?",
-                "Before/after plan при том же GUC, stats/ANALYZE evidence, residual business risk.",
+                "Before/after plan при том же GUC, stats/ANALYZE + TEMP distribution evidence, residual business risk.",
                 "Ответ звучит как production review, не как учебный SQL.",
                 links,
             ),

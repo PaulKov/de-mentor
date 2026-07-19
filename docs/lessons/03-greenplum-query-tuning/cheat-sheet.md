@@ -45,17 +45,24 @@ WHERE schemaname = '...' AND tablename = '...';
 
 ```sql
 CREATE TEMP TABLE tmp_step AS
-SELECT ...
+SELECT ...          -- сужающий фильтр!
 DISTRIBUTED BY (...);
 ANALYZE tmp_step;
 ```
 
-## CTE vs TEMP
+| Где | Путь |
+| --- | --- |
+| TEMP TABLE | `base/<dboid>/t_<relfilenode>` на QE (`pg_temp_NNN`) |
+| Spill Sort/Hash | `<datadir>/base/pgsql_tmp/pgsql_tmp_Sort_*` |
+| Маркер spill | `Sort Method: external merge Disk: …` + `statement_mem` |
+
+## CTE vs TEMP vs Spill
 
 | Инструмент | Когда |
 | --- | --- |
-| CTE | Логическая читаемость, оптимизатор может инлайнить |
-| TEMP | Нужен новый physical stage, stats, distribution |
+| CTE | Логическая читаемость; optimizer может инлайнить |
+| TEMP | Нужен physical stage, stats, distribution |
+| Spill | Не хватило `statement_mem` — диск без CREATE TEMP |
 
 ## Storage
 

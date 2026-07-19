@@ -20,7 +20,7 @@ OPTIMIZER_SQL = (
 )
 GOOGLE_SLIDES_URL = (
     "https://docs.google.com/presentation/d/"
-    "1DGUBklnANac9jKpW85fTCPQ0MEiM7zEs9VnF3rN7aEA/edit?usp=sharing"
+    "1FtZysVPcsq5BUmAhJ6FqaIt8fpIhPXd9cKC_C6TMdwM/edit?usp=sharing"
 )
 
 
@@ -131,7 +131,7 @@ def test_lesson_03_runbook_slide_references_fit_the_standalone_deck():
             for name in pptx.namelist()
             if name.startswith("ppt/slides/slide") and name.endswith(".xml")
         ]
-    assert len(slides) == 43
+    assert len(slides) == 52
 
     catalog = RunbookCatalog.default()
     simple = catalog.get("greenplum-query-tuning", "simple")
@@ -153,6 +153,9 @@ def test_lesson_03_deck_source_has_russian_and_optimizer_markers():
     assert "pg_statistic" in source
     assert (ROOT / "artifacts/lesson03-plan-screens/explain-orca.png").exists()
     assert (ROOT / "artifacts/lesson03-plan-screens/explain-legacy.png").exists()
+    assert (ROOT / "artifacts/lesson03-plan-screens/temp-relfilenode-fs.png").exists()
+    assert (ROOT / "artifacts/lesson03-plan-screens/spill-pgsql_tmp-growth.png").exists()
+    assert "pgsql_tmp_Sort" in source or "external merge" in source
 
 
 def test_lesson_03_session_control_plane_points_to_lesson_03_materials(tmp_path):

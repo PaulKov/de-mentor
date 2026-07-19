@@ -11,9 +11,9 @@
 | 0-6 | 1-3 | Title + glossary (GUC/QD/QE/Motion) | Что такое GUC `optimizer`? |
 | 6-12 | 4-7 | Стенд + pipeline + фазы дерева | Где в EXPLAIN видны slices? |
 | 12-28 | 8-22 | Parse→Optimize, code map, plan trees + скрины ORCA/Legacy | Чем маркер GPORCA отличается от Legacy? |
-| 28-40 | 23-30 | Case + layered EXPLAIN + Motion | Какой Motion дороже всего? |
-| 40-52 | 31-39 | Stats + storage + TEMP | Зачем ANALYZE на TEMP при фиксированном GUC? |
-| 52-60 | 40-43 | Proof + homework | Какой evidence обязателен? |
+| 28-38 | 23-33 | Case + layered EXPLAIN + Motion + stats | Какой Motion дороже всего? |
+| 38-52 | 34-48 | Storage + TEMP FS/spill deep-dive | Где на диске TEMP vs pgsql_tmp_Sort? |
+| 52-60 | 49-52 | Proof + homework | Какой evidence обязателен? |
 
 ## Тайминг Deep (90-120 минут)
 
@@ -22,7 +22,7 @@
 3. Сравнение полных скринов `explain-orca.png` vs `explain-legacy.png`.
 4. `pg_statistic` slots (`stakind`, `stavalues`, TOAST).
 5. Физическая раскладка Heap vs AOCO (`appendonly` на GP6).
-6. TEMP namespace, spill vs TEMP TABLE.
+6. TEMP: `pg_temp` / `t_*` relfilenode на QE + spill `pgsql_tmp_Sort_*` (скрины FS).
 7. Design review: rewrite + optimizer policy.
 
 ## Что Не Делать
@@ -35,8 +35,9 @@
 ## Материалы
 
 - PPTX: `artifacts/greenplum-query-tuning-theory.pptx`
-- Google Slides: https://docs.google.com/presentation/d/1DGUBklnANac9jKpW85fTCPQ0MEiM7zEs9VnF3rN7aEA/edit?usp=sharing
+- Google Slides: https://docs.google.com/presentation/d/1FtZysVPcsq5BUmAhJ6FqaIt8fpIhPXd9cKC_C6TMdwM/edit?usp=sharing
 - Plan screenshots: `artifacts/lesson03-plan-screens/`
+- TEMP/spill FS evidence: `artifacts/lesson03-temp-fs/`
 - Plan text dumps: `artifacts/lesson03-plans/`
 - Lab: `labs/greenplum-625/`
 - SQL-lab: `labs/greenplum-625/examples/lesson03-olap-decomposition-tuning.sql`
