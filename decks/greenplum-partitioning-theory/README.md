@@ -5,7 +5,7 @@
 Артефакт:
 
 - [Презентация Google Slides](https://docs.google.com/presentation/d/17Ae88PoniaFU34egsFPwC0PndAOoXMze4qV1pIKQkaI/edit?usp=sharing)
-- [Презентация PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-partitioning-theory.pptx)
+- [Презентация PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-partitioning-theory/greenplum-partitioning-theory.pptx)
 
 Исходники:
 

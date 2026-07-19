@@ -2,7 +2,7 @@ route: greenplum-query-tuning
 lesson_code: lesson-03
 physical_lab: greenplum-625
 title: Декомпозиция и тюнинг тяжёлых запросов в MPP
-deck_path: artifacts/greenplum-query-tuning-theory.pptx
+deck_path: artifacts/greenplum-query-tuning-theory/greenplum-query-tuning-theory.pptx
 google_slides_url: https://docs.google.com/presentation/d/1e5vpqatw6ccgeZF0PWLLWMzIqkb4SODE-IwKxrSyqB8/edit?usp=sharing
 expected_owner_email: pavelkov007@gmail.com
 expected_slide_count: 65

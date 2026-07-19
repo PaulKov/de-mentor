@@ -4,14 +4,14 @@
 
 ## Артефакты
 
-- [Презентация PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-theory.pptx)
+- [Презентация PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-theory/greenplum-theory.pptx)
 - [Гайд ведущего](https://github.com/PaulKov/de-mentor/blob/master/decks/greenplum-theory/facilitator-guide.md)
 - [QD/QE/gang/slices explained](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md)
 - [Deep dive по master/segment data path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/master-segment-data-path.md)
 
 ## Как Использовать
 
-- [Презентация PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-theory.pptx) - светлая русскоязычная презентация для первого урока: 24 слайда основного маршрута и 8 appendix/deep-route слайдов.
+- [Презентация PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-theory/greenplum-theory.pptx) - светлая русскоязычная презентация для первого урока: 24 слайда основного маршрута и 8 appendix/deep-route слайдов.
 - [Гайд ведущего](https://github.com/PaulKov/de-mentor/blob/master/decks/greenplum-theory/facilitator-guide.md) - поминутный план прохождения слайдов, talk track, вопросы ученику и переходы к практике.
 - [QD/QE/gang/slices explained](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md) - standalone-объяснение QD, QE, slices, gangs и Motion в формате, удобном для ученика.
 - [Deep dive по master/segment data path](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/master-segment-data-path.md) - технический разбор master/coordinator, QD/QE, Motion, gpfdist и storage models.

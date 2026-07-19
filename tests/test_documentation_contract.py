@@ -634,7 +634,7 @@ def test_lesson_cross_links_are_clickable_repo_links():
         f"{REPO_BLOB_BASE}labs/greenplum-625/examples/partitioning-strategies.sql",
     ]:
         assert url in workbook
-    assert f"{REPO_BLOB_BASE}artifacts/greenplum-theory.pptx" in runbook
+    assert f"{REPO_BLOB_BASE}artifacts/greenplum-theory/greenplum-theory.pptx" in runbook
 
 
 def test_qd_qe_gang_slices_deep_dive_is_canonical_and_teachable():

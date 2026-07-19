@@ -37,6 +37,7 @@ python3 mentor-lab.py check greenplum-625
 
 Ключевые ссылки:
 
+- [Презентация (PowerPoint)](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-query-tuning-theory/greenplum-query-tuning-theory.pptx)
 - [Домашка Principal 90м](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/03-greenplum-query-tuning/homework.md)
 - [План домашки](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/03-greenplum-query-tuning/runbooks/homework-plan.md)
 - [SQL-lab](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/lesson03-olap-decomposition-tuning.sql)

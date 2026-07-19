@@ -45,7 +45,7 @@ def test_session_state_contains_academy_control_plane(tmp_path):
     assert control_plane["version"] == "academy-control-plane/v1"
     assert control_plane["mentor_mode"]["default_route"] == "simple"
     assert "python3 mentor-lab.py runbook greenplum simple" in control_plane["mentor_mode"]["runbook_commands"]
-    assert control_plane["mentor_mode"]["slide_deck"] == "artifacts/greenplum-theory.pptx"
+    assert control_plane["mentor_mode"]["slide_deck"] == "artifacts/greenplum-theory/greenplum-theory.pptx"
     assert control_plane["student_mode"]["workbook"] == "docs/lessons/01-greenplum/student-workbook.md"
     assert control_plane["student_mode"]["homework"] == "docs/lessons/01-greenplum/homework.md"
     assert control_plane["next_lesson"]["code"] == "02-greenplum-partitioning"

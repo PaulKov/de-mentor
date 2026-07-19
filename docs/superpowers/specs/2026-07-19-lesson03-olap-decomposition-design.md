@@ -15,7 +15,7 @@
 | Паттерн | Гибрид: один сквозной OLAP case + deep appendix по internals |
 | Артефакты | Полный контур Lesson 02 |
 | Route | `greenplum-query-tuning` |
-| Deck | `artifacts/greenplum-query-tuning-theory.pptx` (~22 слайда) |
+| Deck | `artifacts/greenplum-query-tuning-theory/greenplum-query-tuning-theory.pptx` (~22 слайда) |
 | Drive | `lessons/Greenplum/Lesson 03 - Decomposition and tuning of heavy MPP queries` |
 
 ## Curriculum blocks
