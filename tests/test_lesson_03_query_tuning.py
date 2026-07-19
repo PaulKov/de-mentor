@@ -20,7 +20,7 @@ OPTIMIZER_SQL = (
 )
 GOOGLE_SLIDES_URL = (
     "https://docs.google.com/presentation/d/"
-    "1FtZysVPcsq5BUmAhJ6FqaIt8fpIhPXd9cKC_C6TMdwM/edit?usp=sharing"
+    "1_YfYh4Kf-8Xblule_pprHwlxRlFDBpn4K14i6w18H5U/edit?usp=sharing"
 )
 
 
@@ -131,7 +131,7 @@ def test_lesson_03_runbook_slide_references_fit_the_standalone_deck():
             for name in pptx.namelist()
             if name.startswith("ppt/slides/slide") and name.endswith(".xml")
         ]
-    assert len(slides) == 52
+    assert len(slides) == 55
 
     catalog = RunbookCatalog.default()
     simple = catalog.get("greenplum-query-tuning", "simple")
@@ -149,6 +149,7 @@ def test_lesson_03_deck_source_has_russian_and_optimizer_markers():
     assert "GPORCA" in source
     assert "Legacy" in source
     assert "Grand Unified Configuration" in source
+    assert "Star-join" in source or "star-join" in source
     assert "greenplum-625" in source
     assert "pg_statistic" in source
     assert (ROOT / "artifacts/lesson03-plan-screens/explain-orca.png").exists()

@@ -18,7 +18,7 @@ def greenplum_query_tuning_simple_runbook() -> Runbook:
         stages=[
             RunbookStage(
                 "00:00-08:00",
-                "1-7",
+                "1-8",
                 "Glossary + pipeline",
                 "Расшифруй GUC/QD/QE/Motion и покажи стадии parse→execute на стенде GP 6.25.",
                 [
@@ -33,7 +33,7 @@ def greenplum_query_tuning_simple_runbook() -> Runbook:
             ),
             RunbookStage(
                 "08:00-22:00",
-                "8-22",
+                "9-25",
                 "Optimize deep + plan trees",
                 "Пройди code map gpdb 6X_STABLE и сравни деревья/скрины ORCA vs Legacy.",
                 [
@@ -48,7 +48,7 @@ def greenplum_query_tuning_simple_runbook() -> Runbook:
             ),
             RunbookStage(
                 "22:00-35:00",
-                "23-33",
+                "26-36",
                 "Case + layered EXPLAIN + stats",
                 "Разбери monolith слоями и свяжи selectivity с pg_stats / pg_statistic.",
                 [
@@ -62,7 +62,7 @@ def greenplum_query_tuning_simple_runbook() -> Runbook:
             ),
             RunbookStage(
                 "35:00-52:00",
-                "34-48",
+                "37-51",
                 "TEMP FS + spill + rewrite",
                 "Раздели TEMP TABLE (t_* на QE) и spill (pgsql_tmp_Sort_*); пройди rewrite с ANALYZE.",
                 [
@@ -77,7 +77,7 @@ def greenplum_query_tuning_simple_runbook() -> Runbook:
             ),
             RunbookStage(
                 "52:00-60:00",
-                "49-52",
+                "52-55",
                 "Homework handoff",
                 "Закрой evidence checklist и мост к WLM уроку.",
                 [

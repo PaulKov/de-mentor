@@ -18,7 +18,7 @@ def greenplum_query_tuning_deep_runbook() -> Runbook:
         stages=[
             RunbookStage(
                 "00:00-25:00",
-                "1-22",
+                "1-25",
                 "Glossary, code map, plan trees",
                 "Расшифруй GUC/QD/QE, пройди gpdb 6X_STABLE якоря и сравни скрины ORCA/Legacy.",
                 [
@@ -33,7 +33,7 @@ def greenplum_query_tuning_deep_runbook() -> Runbook:
             ),
             RunbookStage(
                 "25:00-50:00",
-                "23-33",
+                "26-36",
                 "pg_statistic internals",
                 "Разбери stakind/stavalues и путь ANALYZE → catalog → planner/ORCA.",
                 [
@@ -46,7 +46,7 @@ def greenplum_query_tuning_deep_runbook() -> Runbook:
             ),
             RunbookStage(
                 "50:00-70:00",
-                "34-36",
+                "37-39",
                 "Physical storage",
                 "Свяжи Heap/AO/AOCO с типами данных и projection.",
                 [
@@ -61,7 +61,7 @@ def greenplum_query_tuning_deep_runbook() -> Runbook:
             ),
             RunbookStage(
                 "70:00-100:00",
-                "37-48",
+                "40-51",
                 "TEMP FS + spill deep-dive",
                 "Покажи t_* на QE vs pgsql_tmp_Sort_*; external merge Disk; плюсы/минусы TEMP.",
                 [
@@ -76,7 +76,7 @@ def greenplum_query_tuning_deep_runbook() -> Runbook:
             ),
             RunbookStage(
                 "100:00-120:00",
-                "49-52",
+                "52-55",
                 "Design review",
                 "Попроси защитить rewrite как production mini-RFC при фиксированном GUC optimizer.",
                 [

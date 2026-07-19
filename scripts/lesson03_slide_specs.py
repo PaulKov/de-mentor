@@ -71,7 +71,7 @@ SLIDES = [
     },
     {
         "kicker": "Glossary",
-        "title": "Словарь сокращений (1/2) — читайте до «GUC optimizer»",
+        "title": "Словарь сокращений (1/3) — читайте до «GUC optimizer»",
         "subtitle": "Без расшифровок слайды звучат как внутренний жаргон. Держите этот слайд открытым.",
         "type": "cards",
         "cards": [
@@ -103,7 +103,7 @@ SLIDES = [
     },
     {
         "kicker": "Glossary",
-        "title": "Словарь сокращений (2/2) — план, storage, stats",
+        "title": "Словарь сокращений (2/3) — план, storage, stats",
         "subtitle": "Эти термины появятся в каждом EXPLAIN и deep-dive.",
         "type": "cards",
         "cards": [
@@ -130,6 +130,38 @@ SLIDES = [
                 "Most Common Values в pg_statistic. TEMP — явная temp-таблица "
                 "(не путать с spill files при нехватке work_mem).",
                 "green",
+            ],
+        ],
+    },
+    {
+        "kicker": "Glossary",
+        "title": "Словарь (3/3) — star-join и схемы данных",
+        "subtitle": "До слайдов с ORCA/Legacy на v_star_join_orca_case — что значит «star».",
+        "type": "cards",
+        "cards": [
+            [
+                "Star-join",
+                "Запрос к fact-таблице + несколько dimension по FK "
+                "(«звезда»: факты в центре, dims по лучам). Много equi-joins от одной fact.",
+                "green",
+            ],
+            [
+                "Fact / Dimension",
+                "Fact — события/меры (продажи, amount). "
+                "Dimension — справочники (клиент, продукт, дата) с атрибутами для GROUP BY.",
+                "blue",
+            ],
+            [
+                "Snowflake",
+                "Dims нормализованы дальше (dim → sub-dim). "
+                "Больше joins, чем у чистой star; сложнее reorder для planner.",
+                "amber",
+            ],
+            [
+                "Почему важно в GP",
+                "Join order + Broadcast/Redistribute dims сильно меняют Motion cost. "
+                "Здесь ORCA часто сильнее Legacy.",
+                "red",
             ],
         ],
     },
@@ -305,6 +337,63 @@ SLIDES = [
             "Legacy лучше / безопаснее",
             "Простые запросы; ORCA fallback/features gaps; отладка «странного» ORCA plan; иногда ниже planning time.",
             "amber",
+        ],
+    },
+    {
+        "kicker": "Star-join",
+        "title": "Star-join на пальцах: fact в центре, dims по лучам",
+        "subtitle": "Классическая OLAP-форма. На стенде: lesson03.fact_sales ⋈ dim_customer ⋈ dim_product …",
+        "type": "code",
+        "code": (
+            "                    dim_customer\n"
+            "                         \\\n"
+            "        dim_date ---- fact_sales ---- dim_product\n"
+            "                         /\n"
+            "                  dim_store (если есть)\n\n"
+            "-- Пример со стенда (упрощённый star; lab ещё дублирует joins):\n"
+            "SELECT c.region, d.category, sum(f.amount) AS revenue\n"
+            "FROM lesson03.fact_sales f          -- FACT (центр)\n"
+            "JOIN lesson03.dim_customer c        -- DIM\n"
+            "  ON c.customer_id = f.customer_id\n"
+            "JOIN lesson03.dim_product d         -- DIM\n"
+            "  ON d.product_id = f.product_id\n"
+            "WHERE f.sale_date >= DATE '2026-02-01'\n"
+            "  AND c.segment <> 'test'\n"
+            "GROUP BY c.region, d.category;\n\n"
+            "-- Признаки star-join: 1 большая fact + N маленьких dims по FK;\n"
+            "-- фильтры на fact/dim; agg по атрибутам dims."
+        ),
+    },
+    {
+        "kicker": "Star-join",
+        "title": "Альтернативы star-join и когда их брать",
+        "subtitle": "Star — не единственный shape. Выбор = модель данных + стоимость Motion/planning.",
+        "type": "cards",
+        "cards": [
+            [
+                "Snowflake",
+                "Dims разбиты (product → brand → category). "
+                "Больше joins; иногда яснее модель, чаще больнее planner.",
+                "amber",
+            ],
+            [
+                "Wide / denorm fact",
+                "Атрибуты dims уже в fact (region, category в строке продажи). "
+                "Меньше joins, больше хранения и риска рассинхрона.",
+                "blue",
+            ],
+            [
+                "TEMP stages",
+                "Сначала сузить fact → TEMP, потом 1–2 join к dims. "
+                "Контролируемый physical stage вместо одного many-join SQL.",
+                "green",
+            ],
+            [
+                "Меньше joins / views",
+                "Убрать дубли JOIN (как c2/d2 в v_star_join_orca_case) — "
+                "demo-перегруз для ORCA; в prod это anti-pattern.",
+                "red",
+            ],
         ],
     },
     {

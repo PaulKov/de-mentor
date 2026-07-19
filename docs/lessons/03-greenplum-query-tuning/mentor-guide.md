@@ -8,12 +8,12 @@
 
 | Время | Слайды | Фокус | Вопрос ученику |
 | --- | --- | --- | --- |
-| 0-6 | 1-3 | Title + glossary (GUC/QD/QE/Motion) | Что такое GUC `optimizer`? |
-| 6-12 | 4-7 | Стенд + pipeline + фазы дерева | Где в EXPLAIN видны slices? |
-| 12-28 | 8-22 | Parse→Optimize, code map, plan trees + скрины ORCA/Legacy | Чем маркер GPORCA отличается от Legacy? |
-| 28-38 | 23-33 | Case + layered EXPLAIN + Motion + stats | Какой Motion дороже всего? |
-| 38-52 | 34-48 | Storage + TEMP FS/spill deep-dive | Где на диске TEMP vs pgsql_tmp_Sort? |
-| 52-60 | 49-52 | Proof + homework | Какой evidence обязателен? |
+| 0-8 | 1-4 | Title + glossary (GUC, Motion, **star-join**) | Что такое star-join vs snowflake? |
+| 8-14 | 5-8 | Стенд + pipeline + фазы дерева | Где в EXPLAIN видны slices? |
+| 14-30 | 9-25 | Parse→Optimize, star-join deep, plan trees ORCA/Legacy | Чем маркер GPORCA отличается от Legacy? |
+| 30-40 | 26-36 | Case + layered EXPLAIN + Motion + stats | Какой Motion дороже всего? |
+| 40-52 | 37-51 | Storage + TEMP FS/spill deep-dive | Где на диске TEMP vs pgsql_tmp_Sort? |
+| 52-60 | 52-55 | Proof + homework | Какой evidence обязателен? |
 
 ## Тайминг Deep (90-120 минут)
 
@@ -35,7 +35,7 @@
 ## Материалы
 
 - PPTX: `artifacts/greenplum-query-tuning-theory.pptx`
-- Google Slides: https://docs.google.com/presentation/d/1FtZysVPcsq5BUmAhJ6FqaIt8fpIhPXd9cKC_C6TMdwM/edit?usp=sharing
+- Google Slides: https://docs.google.com/presentation/d/1_YfYh4Kf-8Xblule_pprHwlxRlFDBpn4K14i6w18H5U/edit?usp=sharing
 - Plan screenshots: `artifacts/lesson03-plan-screens/`
 - TEMP/spill FS evidence: `artifacts/lesson03-temp-fs/`
 - Plan text dumps: `artifacts/lesson03-plans/`

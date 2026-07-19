@@ -15,6 +15,8 @@
 | **DXL** | XML intermediate representation между GPORCA и executor (translator в `gpopt`). |
 | **MCV** | *Most Common Values* в `pg_statistic` / `pg_stats.most_common_vals`. |
 | **AO / AOCO** | Append-Only (row) / Append-Only Column-Oriented. |
+| **Star-join** | Fact в центре + несколько Dimension по FK («звезда»). Много equi-joins от одной fact. |
+| **Snowflake** | Dims нормализованы дальше (dim → sub-dim) → ещё больше joins. |
 
 ## Pipeline Оптимизации
 

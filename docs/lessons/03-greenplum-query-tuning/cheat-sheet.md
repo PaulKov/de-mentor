@@ -8,6 +8,8 @@
 | **optimizer** | GUC выбора движка плана: `on` = GPORCA, `off` = Legacy. |
 | **QD / QE** | Query Dispatcher / Query Executor. |
 | **Motion** | Redistribute / Broadcast / Gather между сегментами. |
+| **Star-join** | Fact в центре + несколько Dimension по FK («звезда»). |
+| **Snowflake** | Dims нормализованы дальше → ещё больше joins. |
 
 ## Optimizer (GP 6.25)
 

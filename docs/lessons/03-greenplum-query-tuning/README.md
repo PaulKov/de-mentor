@@ -66,7 +66,7 @@ SET optimizer = off;  -- Legacy
 
 ## Материалы
 
-- [Презентация в Google Slides](https://docs.google.com/presentation/d/1FtZysVPcsq5BUmAhJ6FqaIt8fpIhPXd9cKC_C6TMdwM/edit?usp=sharing)
+- [Презентация в Google Slides](https://docs.google.com/presentation/d/1_YfYh4Kf-8Xblule_pprHwlxRlFDBpn4K14i6w18H5U/edit?usp=sharing)
 - [PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-query-tuning-theory.pptx)
 - [Manifest](lesson.yaml)
 - [Deep-dive: Legacy vs GPORCA](deep-dives/optimizer-legacy-vs-orca.md)
