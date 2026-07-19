@@ -68,7 +68,8 @@ psql "host=127.0.0.1 port=15436 dbname=mentor user=gpadmin"
 \i /mentor-lab/examples/storage-and-partitioning.sql
 \i /mentor-lab/examples/partitioning-strategies.sql
 \i /mentor-lab/examples/lesson02-partitioning-statistics-loads.sql
-\i /mentor-lab/examples/lesson03-olap-decomposition-tuning.sql
+\i /mentor-lab/examples/lesson03-homework-seed.sql
+\i /mentor-lab/examples/lesson03-class-demo.sql
 \i /mentor-lab/examples/lesson03-optimizer-legacy-vs-orca.sql
 ```
 

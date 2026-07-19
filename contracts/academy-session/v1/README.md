@@ -32,7 +32,7 @@ python3 mentor-lab.py session greenplum start \
 ```bash
 python3 mentor-lab.py session greenplum start \
   --homework-review lesson-01 \
-  --submission submissions/homework.md \
+  --submission lessons/lesson-01/submissions/homework.md \
   --student Иван \
   --output artifacts/sessions/ivan-review
 ```

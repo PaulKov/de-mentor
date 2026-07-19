@@ -133,32 +133,32 @@ def _greenplum_checks() -> Iterable[LessonDoctorCheck]:
     return [
         LessonDoctorCheck(
             "Презентация",
-            Path("artifacts/lesson-01/greenplum-theory.pptx"),
+            Path("lessons/lesson-01/artifacts/greenplum-theory.pptx"),
         ),
         LessonDoctorCheck(
             "Workbook",
-            Path("docs/lessons/01-greenplum/student-workbook.md"),
-            ("homework.md", "partitioning-strategies.sql", "QD", "QE"),
+            Path("lessons/lesson-01/docs/student-workbook.md"),
+            ("homework/assignment.md", "partitioning-strategies.sql", "QD", "QE"),
         ),
         LessonDoctorCheck(
             "Mentor guide",
-            Path("docs/lessons/01-greenplum/mentor-guide.md"),
+            Path("lessons/lesson-01/docs/mentor-guide.md"),
             ("runbooks/simple-path.md", "runbooks/deep-dive-path.md"),
         ),
         LessonDoctorCheck(
             "Simple runbook",
-            Path("docs/lessons/01-greenplum/runbooks/simple-path.md"),
+            Path("lessons/lesson-01/docs/runbooks/simple-path.md"),
             ("Команды", "Что спрашиваем", "Как проверяем"),
         ),
         LessonDoctorCheck(
             "Storage SQL",
             Path("labs/greenplum-625/examples/storage-and-partitioning.sql"),
-            ("appendoptimized=true", "orientation=column", "PARTITION BY RANGE"),
+            ("appendonly=true", "orientation=column", "PARTITION BY RANGE"),
         ),
         LessonDoctorCheck(
             "Partitioning SQL",
             Path("labs/greenplum-625/examples/partitioning-strategies.sql"),
-            ("PARTITION BY RANGE", "PARTITION BY LIST", "PARTITION BY HASH"),
+            ("PARTITION BY RANGE", "PARTITION BY LIST"),
         ),
         LessonDoctorCheck(
             "Sample submission",

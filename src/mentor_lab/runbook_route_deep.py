@@ -35,7 +35,7 @@ def greenplum_deep_runbook() -> Runbook:
                                 ),
                                 "Ученик объясняет QD, QE, gang, slice без чтения C-кода.",
                                 common_links
-                                + ["docs/lessons/01-greenplum/deep-dives/master-segment-data-path.md"],
+                                + ["lessons/lesson-01/docs/deep-dives/master-segment-data-path.md"],
                             ),
                             RunbookStage(
                                 "15:00-40:00",
@@ -82,7 +82,7 @@ def greenplum_deep_runbook() -> Runbook:
                                 ),
                                 "Ученик заполняет plan-reading ladder из student-workbook.md.",
                                 common_links
-                                + ["docs/lessons/01-greenplum/deep-dives/physical-joins-in-mpp.md"],
+                                + ["lessons/lesson-01/docs/deep-dives/physical-joins-in-mpp.md"],
                             ),
                             RunbookStage(
                                 "75:00-120:00",
@@ -105,8 +105,8 @@ def greenplum_deep_runbook() -> Runbook:
                                 "Есть acceptance criteria и список deliverables из homework.md.",
                                 common_links
                                 + [
-                                    "docs/lessons/01-greenplum/deep-dives/explain-plan-reading.md",
-                                    "docs/lessons/01-greenplum/deep-dives/mpp-system-taxonomy.md",
+                                    "lessons/lesson-01/docs/deep-dives/explain-plan-reading.md",
+                                    "lessons/lesson-01/docs/deep-dives/mpp-system-taxonomy.md",
                                 ],
                             ),
                         ],

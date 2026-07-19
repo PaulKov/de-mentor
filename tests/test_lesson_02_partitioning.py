@@ -10,7 +10,9 @@ from mentor_lab.runbooks import RunbookCatalog
 
 
 ROOT = Path(__file__).resolve().parents[1]
-LESSON_ROOT = ROOT / "docs" / "lessons" / "02-greenplum-partitioning"
+LESSON_PACK = ROOT / "lessons" / "lesson-02"
+LESSON_ROOT = LESSON_PACK / "docs"
+HOMEWORK_ROOT = LESSON_PACK / "homework"
 SQL_EXAMPLE = ROOT / "labs" / "greenplum" / "examples" / "lesson02-partitioning-statistics-loads.sql"
 GOOGLE_SLIDES_URL = (
     "https://docs.google.com/presentation/d/"
@@ -47,14 +49,15 @@ def test_lesson_02_catalog_exposes_partitioning_curriculum():
 
 def test_lesson_02_documents_and_sql_lab_exist_with_contract_markers():
     expected_docs = [
+        LESSON_PACK / "README.md",
         LESSON_ROOT / "README.md",
         LESSON_ROOT / "mentor-guide.md",
         LESSON_ROOT / "student-workbook.md",
-        LESSON_ROOT / "homework.md",
-        LESSON_ROOT / "rubric.md",
+        HOMEWORK_ROOT / "assignment.md",
+        HOMEWORK_ROOT / "rubric.md",
+        HOMEWORK_ROOT / "plan.md",
         LESSON_ROOT / "runbooks" / "simple-path.md",
         LESSON_ROOT / "runbooks" / "deep-dive-path.md",
-        LESSON_ROOT / "runbooks" / "homework-plan.md",
         LESSON_ROOT / "cheat-sheet.md",
     ]
 
@@ -70,7 +73,7 @@ def test_lesson_02_documents_and_sql_lab_exist_with_contract_markers():
         "AOCO",
                 "pg_partitions",
         "lesson02-partitioning-statistics-loads.sql",
-        "docs/lessons/02-greenplum-partitioning/homework.md",
+        "lessons/lesson-02/homework/assignment.md",
     ]:
         assert marker in joined_docs
 
@@ -97,12 +100,12 @@ def test_lesson_02_runbook_cli_routes_are_available():
         assert "Lesson 02" in output
         assert "lesson02-partitioning-statistics-loads.sql" in output
         assert GOOGLE_SLIDES_URL in output
-        assert "docs/lessons/02-greenplum-partitioning/student-workbook.md" in output
-        assert "docs/lessons/02-greenplum-partitioning/homework.md" in output
+        assert "lessons/lesson-02/docs/student-workbook.md" in output
+        assert "lessons/lesson-02/homework/assignment.md" in output
 
 
 def test_lesson_02_runbook_slide_references_fit_the_standalone_deck():
-    deck_path = ROOT / "artifacts" / "lesson-02" / "greenplum-partitioning-theory.pptx"
+    deck_path = ROOT / "lessons" / "lesson-02" / "artifacts" / "greenplum-partitioning-theory.pptx"
     with ZipFile(deck_path) as deck:
         slide_count = len(
             [
@@ -147,13 +150,13 @@ def test_lesson_02_student_self_service_uses_same_greenplum_stand():
     assert "Student bootstrap: greenplum-partitioning" in bootstrap
     assert "py mentor-lab.py readiness greenplum --platform windows" in bootstrap
     assert "py mentor-lab.py runbook greenplum-partitioning simple" in bootstrap
-    assert "docs/lessons/02-greenplum-partitioning/student-workbook.md" in bootstrap
+    assert "lessons/lesson-02/docs/student-workbook.md" in bootstrap
 
     exit_code, homework = invoke(["student", "greenplum-partitioning", "homework"])
 
     assert exit_code == 0, homework
     assert "Student homework: greenplum-partitioning" in homework
-    assert "docs/lessons/02-greenplum-partitioning/homework.md" in homework
+    assert "lessons/lesson-02/homework/assignment.md" in homework
     assert "python3 mentor-lab.py runbook greenplum-partitioning homework" in homework
     assert "python3 mentor-lab.py check greenplum" in homework
 
@@ -199,12 +202,12 @@ def test_lesson_02_session_control_plane_points_to_lesson_02_materials(tmp_path)
     state = json.loads((session_dir / "session.json").read_text(encoding="utf-8"))
     control_plane = state["control_plane"]
 
-    assert control_plane["mentor_mode"]["slide_deck"] == "artifacts/lesson-02/greenplum-partitioning-theory.pptx"
+    assert control_plane["mentor_mode"]["slide_deck"] == "lessons/lesson-02/artifacts/greenplum-partitioning-theory.pptx"
     assert control_plane["mentor_mode"]["google_slides"] == GOOGLE_SLIDES_URL
     assert (ROOT / control_plane["mentor_mode"]["slide_deck"]).exists()
     assert "python3 mentor-lab.py runbook greenplum-partitioning simple" in control_plane["mentor_mode"]["runbook_commands"]
-    assert control_plane["student_mode"]["workbook"] == "docs/lessons/02-greenplum-partitioning/student-workbook.md"
-    assert control_plane["student_mode"]["homework"] == "docs/lessons/02-greenplum-partitioning/homework.md"
+    assert control_plane["student_mode"]["workbook"] == "lessons/lesson-02/docs/student-workbook.md"
+    assert control_plane["student_mode"]["homework"] == "lessons/lesson-02/homework/assignment.md"
     assert "labs/greenplum-625/examples/lesson02-partitioning-statistics-loads.sql" in {
         artifact["path"] for artifact in control_plane["artifacts"]
     }

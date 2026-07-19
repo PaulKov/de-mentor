@@ -1,3 +1,4 @@
--- Seed profile: full Lesson 03 dataset on Greenplum 6.25.
--- Target database: mentor (same convention as Lessons 01/02). Schema: lesson03.
-\i /mentor-lab/examples/lesson03-olap-decomposition-tuning.sql
+-- Seed profile: Lesson 03 dataset on Greenplum 6.25 (homework-safe).
+-- Target database: mentor. Schema: lesson03.
+-- No TEMP rewrite — class demo is a separate \i.
+\i /mentor-lab/examples/lesson03-homework-seed.sql

@@ -6,7 +6,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_greenplum_theory_deck_artifact_exists_and_has_32_slides():
-    deck = ROOT / "artifacts" / "lesson-01" / "greenplum-theory.pptx"
+    deck = ROOT / "lessons" / "lesson-01" / "artifacts" / "greenplum-theory.pptx"
 
     assert deck.exists()
     assert deck.stat().st_size > 50_000
@@ -75,7 +75,7 @@ def test_greenplum_theory_deck_uses_russian_light_theme():
 
 
 def test_greenplum_partitioning_deck_artifact_exists_and_has_18_slides():
-    deck = ROOT / "artifacts" / "lesson-02" / "greenplum-partitioning-theory.pptx"
+    deck = ROOT / "lessons" / "lesson-02" / "artifacts" / "greenplum-partitioning-theory.pptx"
 
     assert deck.exists()
     assert deck.stat().st_size > 50_000
@@ -108,11 +108,15 @@ def test_greenplum_partitioning_deck_source_has_lesson_02_markers():
     assert "AOCO partitions" in source
 
 
-def test_greenplum_query_tuning_deck_artifact_exists_and_has_65_slides():
-    deck = ROOT / "artifacts" / "lesson-03" / "greenplum-query-tuning-theory.pptx"
+def test_greenplum_query_tuning_deck_artifact_exists_and_has_208_full_slides():
+    deck = ROOT / "lessons" / "lesson-03" / "artifacts" / "greenplum-query-tuning-theory.pptx"
+    core_only = ROOT / "lessons" / "lesson-03" / "artifacts" / "greenplum-query-tuning-core.pptx"
+    appendix = ROOT / "lessons" / "lesson-03" / "artifacts" / "greenplum-query-tuning-appendix.pptx"
 
     assert deck.exists()
     assert deck.stat().st_size > 50_000
+    assert core_only.exists()
+    assert appendix.exists()
 
     with ZipFile(deck) as pptx:
         slides = [
@@ -120,8 +124,22 @@ def test_greenplum_query_tuning_deck_artifact_exists_and_has_65_slides():
             for name in pptx.namelist()
             if name.startswith("ppt/slides/slide") and name.endswith(".xml")
         ]
+    with ZipFile(core_only) as pptx:
+        core_slides = [
+            name
+            for name in pptx.namelist()
+            if name.startswith("ppt/slides/slide") and name.endswith(".xml")
+        ]
+    with ZipFile(appendix) as pptx:
+        appendix_slides = [
+            name
+            for name in pptx.namelist()
+            if name.startswith("ppt/slides/slide") and name.endswith(".xml")
+        ]
 
-    assert len(slides) == 65
+    assert len(slides) == 439  # core + divider + appendix + nav portals
+    assert len(core_slides) == 213
+    assert len(appendix_slides) >= 115
 
 
 def test_greenplum_query_tuning_deck_source_has_lesson_03_markers():
@@ -144,8 +162,8 @@ def test_greenplum_query_tuning_deck_source_has_lesson_03_markers():
 def test_greenplum_partitioning_google_slides_link_is_documented():
     docs = [
         ROOT / "README.md",
-        ROOT / "docs" / "lessons" / "02-greenplum-partitioning" / "README.md",
-        ROOT / "docs" / "lessons" / "02-greenplum-partitioning" / "mentor-guide.md",
+        ROOT / "lessons" / "lesson-02" / "docs" / "README.md",
+        ROOT / "lessons" / "lesson-02" / "docs" / "mentor-guide.md",
         ROOT / "decks" / "greenplum-partitioning-theory" / "README.md",
     ]
     link = (

@@ -1,0 +1,90 @@
+=== 0. Setup Legacy case (autostats off) ===
+SET
+SET
+SET
+SET
+SET
+SET
+ optimizer 
+-----------
+ off
+(1 row)
+
+ enable_nestloop 
+-----------------
+ on
+(1 row)
+
+ enable_hashjoin 
+-----------------
+ on
+(1 row)
+
+DROP TABLE
+DROP TABLE
+CREATE TABLE
+CREATE TABLE
+INSERT 0 80000
+INSERT 0 8000
+CREATE INDEX
+SET
+DELETE 0
+UPDATE 2
+SET
+  relname   | reltuples | stat_rows 
+------------+-----------+-----------
+ leg_orders |         0 |         0
+ leg_ref    |         0 |         0
+(2 rows)
+
+=== A. Legacy / NO STATS — Nested Loop Semi Join (est << actual) ===
+                                                                                                                                                        QUERY PLAN                                                                                                                                                        
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Gather Motion 2:1  (slice1; segments: 2)  (cost=0.33..1351.96 rows=451 width=64) (actual time=0.539..127.265 rows=80000 loops=1)
+   ->  Nested Loop  (cost=0.33..1351.96 rows=226 width=64) (actual time=0.104..123.664 rows=40060 loops=1)
+         Join Filter: (o.customer_id = r.customer_id)
+         ->  Nested Loop Semi Join  (cost=0.17..1298.65 rows=15 width=32) (actual time=0.103..38.282 rows=40060 loops=1)
+               ->  Seq Scan on leg_orders o  (cost=0.00..978.50 rows=29 width=28) (actual time=0.035..18.014 rows=40060 loops=1)
+                     Filter: ((COALESCE(channel, ''::text) <> 'IMPOSSIBLE_CHANNEL'::text) AND (upper(COALESCE(note, ''::text)) !~~ '%ZZZNEVER%'::text) AND ((amount * 1.0) >= '0'::numeric) AND ((mod(customer_id, 97) >= 0) OR (product_id IS NOT NULL)) AND (lower(channel) = ANY ('{web,app,store,partner}'::text[])))
+               ->  Index Scan using leg_ref_customer_idx on leg_ref r2  (cost=0.17..251.52 rows=47 width=4) (actual time=0.000..0.000 rows=1 loops=40060)
+                     Index Cond: (customer_id = o.customer_id)
+                     Filter: (tier IS NOT NULL)
+         ->  Index Scan using leg_ref_customer_idx on leg_ref r  (cost=0.17..1.65 rows=16 width=40) (actual time=0.000..0.001 rows=1 loops=40060)
+               Index Cond: (customer_id = r2.customer_id)
+               Filter: (score >= 0)
+ Planning time: 0.348 ms
+   (slice0)    Executor memory: 216K bytes.
+   (slice1)    Executor memory: 268K bytes avg x 2 workers, 268K bytes max (seg0).
+ Memory used:  131072kB
+ Optimizer: Postgres query optimizer
+ Execution time: 129.334 ms
+(18 rows)
+
+=== B. TEMP + ANALYZE → Hash Join (EXISTS was redundant for this grain) ===
+SELECT 80000
+ANALYZE
+ANALYZE
+       rel        | est_rows | actual_rows 
+------------------+----------+-------------
+ tmp_leg_enriched |    80000 |       80000
+(1 row)
+
+                                                             QUERY PLAN                                                              
+-------------------------------------------------------------------------------------------------------------------------------------
+ Gather Motion 2:1  (slice1; segments: 2)  (cost=212.00..2250.00 rows=80000 width=28) (actual time=1.839..19.895 rows=80000 loops=1)
+   ->  Hash Join  (cost=212.00..2250.00 rows=40000 width=28) (actual time=1.729..8.054 rows=40060 loops=1)
+         Hash Cond: (t.customer_id = r.customer_id)
+         Extra Text: (seg0)   Hash chain length 1.0 avg, 2 max, using 7941 of 524288 buckets.
+         ->  Seq Scan on tmp_leg_enriched t  (cost=0.00..938.00 rows=40000 width=17) (actual time=0.003..2.185 rows=40060 loops=1)
+         ->  Hash  (cost=112.00..112.00 rows=4000 width=15) (actual time=1.447..1.447 rows=8000 loops=1)
+               ->  Seq Scan on leg_ref r  (cost=0.00..112.00 rows=8000 width=15) (actual time=0.004..0.504 rows=8000 loops=1)
+                     Filter: (score >= 0)
+ Planning time: 0.114 ms
+   (slice0)    Executor memory: 87K bytes.
+   (slice1)    Executor memory: 5196K bytes avg x 2 workers, 5196K bytes max (seg0).  Work_mem: 313K bytes max.
+ Memory used:  131072kB
+ Optimizer: Postgres query optimizer
+ Execution time: 21.605 ms
+(14 rows)
+
+Done Legacy case. Expect Nested Loop Semi/NL in A, Hash Join in B.

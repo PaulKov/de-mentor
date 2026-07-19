@@ -1,0 +1,11 @@
+                                                                                                                                                                                                                                               QUERY PLAN
+ Gather Motion 1:1  (slice2; segments: 1)  (cost=0.00..437.00 rows=1 width=39) (actual time=0.764..95.459 rows=80000 loops=1)
+   ->  Nested Loop  (cost=0.00..437.00 rows=1 width=39) (actual time=0.344..81.588 rows=80000 loops=1)
+         ->  Result  (cost=0.00..431.00 rows=1 width=28) (actual time=0.334..17.392 rows=80000 loops=1)
+               ->  Broadcast Motion 2:1  (slice1; segments: 2)  (cost=0.00..431.00 rows=1 width=17) (actual time=0.329..7.162 rows=80000 loops=1)
+                     ->  Seq Scan on nlj_orders  (cost=0.00..431.00 rows=1 width=17) (actual time=0.013..25.776 rows=40060 loops=1)
+         ->  Index Scan using nlj_ref_customer_idx on nlj_ref  (cost=0.00..6.00 rows=1 width=11) (actual time=0.000..0.001 rows=1 loops=80000)
+ Planning time: 28.315 ms
+ Memory used:  131072kB
+ Optimizer: Pivotal Optimizer (GPORCA)
+ Execution time: 97.859 ms

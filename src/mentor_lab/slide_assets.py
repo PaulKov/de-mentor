@@ -74,7 +74,7 @@ class SlideAssetCatalog:
                 lesson_folder=(
                     "Lesson 03 - Decomposition and tuning of heavy MPP queries"
                 ),
-                expected_slide_count=65,
+                expected_slide_count=439,
             ),
         ]
         return cls({asset.route_name: asset for asset in routes})

@@ -7,3 +7,8 @@ outputs/
 node_modules/
 .nuxt/
 .output/
+
+# Student homework submissions (keep README layout only)
+lessons/*/submissions/*
+!lessons/*/submissions/README.md
+!lessons/*/submissions/.gitkeep

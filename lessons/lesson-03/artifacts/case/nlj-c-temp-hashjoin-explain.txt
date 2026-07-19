@@ -1,0 +1,12 @@
+C. TEMP: materialize complex predicates + ANALYZE → Hash Join ===
+                                                            QUERY PLAN
+ Gather Motion 2:1  (slice1; segments: 2)  (cost=0.00..891.91 rows=80000 width=31) (actual time=3.095..22.624 rows=80000 loops=1)
+   ->  Hash Join  (cost=0.00..880.77 rows=40000 width=31) (actual time=2.862..10.262 rows=40060 loops=1)
+         ->  Seq Scan on tmp_nlj_enriched  (cost=0.00..432.30 rows=40000 width=20) (actual time=0.005..2.438 rows=40060 loops=1)
+         ->  Hash  (cost=431.68..431.68 rows=8000 width=15) (actual time=2.152..2.152 rows=8000 loops=1)
+               ->  Seq Scan on nlj_ref  (cost=0.00..431.68 rows=8000 width=15) (actual time=0.007..0.546 rows=8000 loops=1)
+ Planning time: 25.245 ms
+ Memory used:  131072kB
+ Optimizer: Pivotal Optimizer (GPORCA)
+ Execution time: 24.795 ms
+Done. A/B → Nested Loop; C → Hash Join with correct cardinality.

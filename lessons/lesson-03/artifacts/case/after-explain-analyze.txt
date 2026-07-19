@@ -1,0 +1,26 @@
+                                                                         QUERY PLAN                                                                         
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Gather Motion 2:1  (slice1; segments: 2)  (cost=0.00..437.46 rows=9 width=32) (actual time=5.481..5.482 rows=4 loops=1)
+   Merge Key: region, (rank() OVER (?))
+   ->  Sort  (cost=0.00..437.46 rows=5 width=32) (actual time=5.159..5.159 rows=3 loops=1)
+         Sort Key: region, (rank() OVER (?))
+         Sort Method:  quicksort  Memory: 66kB
+         ->  WindowAgg  (cost=0.00..437.46 rows=5 width=32) (actual time=5.145..5.147 rows=3 loops=1)
+               Partition By: region
+               Order By: (sum(amount))
+               ->  Sort  (cost=0.00..437.46 rows=5 width=19) (actual time=5.143..5.144 rows=3 loops=1)
+                     Sort Key: region, (sum(amount))
+                     Sort Method:  quicksort  Memory: 66kB
+                     ->  HashAggregate  (cost=0.00..437.46 rows=5 width=19) (actual time=5.126..5.128 rows=3 loops=1)
+                           Group Key: region, category
+                           Extra Text: (seg1)   Hash chain length 1.0 avg, 1 max, using 3 of 32 buckets; total 0 expansions.
+ 
+                           ->  Seq Scan on tmp_lesson03_sales_shaped  (cost=0.00..431.64 rows=21088 width=17) (actual time=0.005..1.815 rows=31624 loops=1)
+ Planning time: 10.222 ms
+   (slice0)    Executor memory: 127K bytes.
+   (slice1)    Executor memory: 276K bytes avg x 2 workers, 276K bytes max (seg0).  Work_mem: 65K bytes max.
+ Memory used:  262144kB
+ Optimizer: Pivotal Optimizer (GPORCA)
+ Execution time: 5.718 ms
+(22 rows)
+

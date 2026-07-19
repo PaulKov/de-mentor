@@ -23,19 +23,51 @@ class LearningRoute:
     lesson_code: str
     physical_lab_name: str
     title: str
-    docs_root: str
+    lesson_root: str
     deck_path: str
     google_slides_url: Optional[str]
     sql_examples: tuple[str, ...]
     next_lesson: NextLesson
 
     @property
+    def docs_root(self) -> str:
+        return f"{self.lesson_root}/docs"
+
+    @property
     def workbook_path(self) -> str:
         return f"{self.docs_root}/student-workbook.md"
 
     @property
+    def homework_dir(self) -> str:
+        return f"{self.lesson_root}/homework"
+
+    @property
     def homework_path(self) -> str:
-        return f"{self.docs_root}/homework.md"
+        return f"{self.homework_dir}/assignment.md"
+
+    @property
+    def homework_plan_path(self) -> str:
+        return f"{self.homework_dir}/plan.md"
+
+    @property
+    def rubric_path(self) -> str:
+        return f"{self.homework_dir}/rubric.md"
+
+    @property
+    def artifacts_dir(self) -> str:
+        return f"{self.lesson_root}/artifacts"
+
+    @property
+    def submission_dir(self) -> str:
+        return f"{self.lesson_root}/submissions"
+
+    @property
+    def submission_path(self) -> str:
+        """Default CLI --submission path for this lesson."""
+
+        if self.lesson_code == "lesson-03":
+            return self.submission_dir
+        return f"{self.submission_dir}/homework.md"
 
     @property
     def prep_runbook_path(self) -> str:
@@ -43,7 +75,7 @@ class LearningRoute:
 
 
 class UnknownLearningRouteError(KeyError):
-    """Raised when a user asks for an unknown lesson route."""
+    """Raised when a user asks for an unknown learning route."""
 
     def __init__(self, requested_name: str, available_names: Iterable[str]) -> None:
         available = ", ".join(available_names)
@@ -61,8 +93,8 @@ LESSON_01_ROUTE = LearningRoute(
     lesson_code="lesson-01",
     physical_lab_name="greenplum",
     title="Greenplum MPP foundations",
-    docs_root="docs/lessons/01-greenplum",
-    deck_path="artifacts/lesson-01/greenplum-theory.pptx",
+    lesson_root="lessons/lesson-01",
+    deck_path="lessons/lesson-01/artifacts/greenplum-theory.pptx",
     google_slides_url=(
         "https://docs.google.com/presentation/d/"
         "1VFm7GG3_SO1h7AabgYyEt0_TANzI1OZiAQnoZpU6fO0/edit?usp=sharing"
@@ -75,7 +107,7 @@ LESSON_01_ROUTE = LearningRoute(
     next_lesson=NextLesson(
         code="02-greenplum-partitioning",
         title="Partitioning, statistics and incremental loads in MPP",
-        path="docs/lessons/02-greenplum-partitioning/README.md",
+        path="lessons/lesson-02/README.md",
     ),
 )
 
@@ -84,8 +116,8 @@ LESSON_02_ROUTE = LearningRoute(
     lesson_code="lesson-02",
     physical_lab_name="greenplum",
     title="Partitioning, statistics and incremental loads in MPP",
-    docs_root="docs/lessons/02-greenplum-partitioning",
-    deck_path="artifacts/lesson-02/greenplum-partitioning-theory.pptx",
+    lesson_root="lessons/lesson-02",
+    deck_path="lessons/lesson-02/artifacts/greenplum-partitioning-theory.pptx",
     google_slides_url=(
         "https://docs.google.com/presentation/d/"
         "17Ae88PoniaFU34egsFPwC0PndAOoXMze4qV1pIKQkaI/edit?usp=sharing"
@@ -98,7 +130,7 @@ LESSON_02_ROUTE = LearningRoute(
     next_lesson=NextLesson(
         code="03-greenplum-query-tuning",
         title="Декомпозиция и тюнинг тяжёлых запросов в MPP",
-        path="docs/lessons/03-greenplum-query-tuning/README.md",
+        path="lessons/lesson-03/README.md",
     ),
 )
 
@@ -107,20 +139,31 @@ LESSON_03_ROUTE = LearningRoute(
     lesson_code="lesson-03",
     physical_lab_name="greenplum-625",
     title="Декомпозиция и тюнинг тяжёлых запросов в MPP",
-    docs_root="docs/lessons/03-greenplum-query-tuning",
-    deck_path="artifacts/lesson-03/greenplum-query-tuning-theory.pptx",
+    lesson_root="lessons/lesson-03",
+    deck_path="lessons/lesson-03/artifacts/greenplum-query-tuning-theory.pptx",
     google_slides_url=(
         "https://docs.google.com/presentation/d/"
-        "1e5vpqatw6ccgeZF0PWLLWMzIqkb4SODE-IwKxrSyqB8/edit?usp=sharing"
+        "1pBIOaqt9WkubsHqCN_p5kxtAhCLjPs6rxFGH9s-_o3c/edit?usp=sharing"
     ),
     sql_examples=(
+        "labs/greenplum-625/examples/lesson03-homework-seed.sql",
+        "labs/greenplum-625/examples/lesson03-class-demo.sql",
         "labs/greenplum-625/examples/lesson03-olap-decomposition-tuning.sql",
         "labs/greenplum-625/examples/lesson03-optimizer-legacy-vs-orca.sql",
+        "labs/greenplum-625/examples/lesson03-cardinality-histogram-demo.sql",
+        "labs/greenplum-625/examples/lesson03-temp-on-commit-lifecycle.sql",
+        "labs/greenplum-625/examples/lesson03-stats-analyze-lifecycle.sql",
+        "labs/greenplum-625/examples/lesson03-e2e-case-metrics.sql",
+        "labs/greenplum-625/examples/lesson03-storage-heap-ao-aoco.sql",
+        "labs/greenplum-625/examples/lesson03-nlj-cte-temp-case.sql",
+        "labs/greenplum-625/examples/lesson03-orca-ce-trap.sql",
+        "labs/greenplum-625/examples/lesson03-legacy-ce-trap.sql",
+        "labs/greenplum-625/examples/lesson03-principal-scd2-locus.sql",
     ),
     next_lesson=NextLesson(
         code="04-greenplum-wlm-diagnostics",
         title="Workload management и production diagnostics",
-        path="docs/lessons/04-greenplum-wlm-diagnostics/README.md",
+        path="lessons/lesson-04/README.md",
     ),
 )
 

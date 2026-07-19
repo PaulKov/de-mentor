@@ -246,12 +246,12 @@ def test_academy_portal_is_split_out_of_core_repo():
 def test_academy_experience_v5_is_documented_in_public_guides():
     docs = [
         ROOT / "README.md",
-        ROOT / "docs/lessons/01-greenplum/README.md",
-        ROOT / "docs/lessons/01-greenplum/academy-loop.md",
-        ROOT / "docs/lessons/01-greenplum/academy-v2.md",
-        ROOT / "docs/lessons/01-greenplum/mentor-guide.md",
-        ROOT / "docs/lessons/01-greenplum/student-workbook.md",
-        ROOT / "docs/lessons/01-greenplum/cheat-sheet.md",
+        ROOT / "lessons/lesson-01/docs/README.md",
+        ROOT / "lessons/lesson-01/docs/academy-loop.md",
+        ROOT / "lessons/lesson-01/docs/academy-v2.md",
+        ROOT / "lessons/lesson-01/docs/mentor-guide.md",
+        ROOT / "lessons/lesson-01/docs/student-workbook.md",
+        ROOT / "lessons/lesson-01/docs/cheat-sheet.md",
     ]
     expected = [
         "Academy Experience v5",

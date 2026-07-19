@@ -6,9 +6,9 @@
 
 | Направление | Урок | Папка В Drive | Git Source | Артефакт |
 | --- | --- | --- | --- | --- |
-| Greenplum | Lesson 01 | `lessons/Greenplum/Lesson 01 - MPP foundations` | [greenplum-theory](https://github.com/PaulKov/de-mentor/tree/master/decks/greenplum-theory) | [greenplum-theory.pptx](https://github.com/PaulKov/de-mentor/blob/master/artifacts/lesson-01/greenplum-theory.pptx) |
-| Greenplum | Lesson 02 | `lessons/Greenplum/Lesson 02 - Partitioning, statistics and incremental loads` | [greenplum-partitioning-theory](https://github.com/PaulKov/de-mentor/tree/master/decks/greenplum-partitioning-theory) | [greenplum-partitioning-theory.pptx](https://github.com/PaulKov/de-mentor/blob/master/artifacts/lesson-02/greenplum-partitioning-theory.pptx) |
-| Greenplum | Lesson 03 | `lessons/Greenplum/Lesson 03 - Decomposition and tuning of heavy MPP queries` | [greenplum-query-tuning-theory](https://github.com/PaulKov/de-mentor/tree/master/decks/greenplum-query-tuning-theory) | [greenplum-query-tuning-theory.pptx](https://github.com/PaulKov/de-mentor/blob/master/artifacts/lesson-03/greenplum-query-tuning-theory.pptx) |
+| Greenplum | Lesson 01 | `lessons/Greenplum/Lesson 01 - MPP foundations` | [greenplum-theory](https://github.com/PaulKov/de-mentor/tree/master/decks/greenplum-theory) | [greenplum-theory.pptx](https://github.com/PaulKov/de-mentor/blob/master/lessons/lesson-01/artifacts/greenplum-theory.pptx) |
+| Greenplum | Lesson 02 | `lessons/Greenplum/Lesson 02 - Partitioning, statistics and incremental loads` | [greenplum-partitioning-theory](https://github.com/PaulKov/de-mentor/tree/master/decks/greenplum-partitioning-theory) | [greenplum-partitioning-theory.pptx](https://github.com/PaulKov/de-mentor/blob/master/lessons/lesson-02/artifacts/greenplum-partitioning-theory.pptx) |
+| Greenplum | Lesson 03 | `lessons/Greenplum/Lesson 03 - Decomposition and tuning of heavy MPP queries` | [greenplum-query-tuning-theory](https://github.com/PaulKov/de-mentor/tree/master/decks/greenplum-query-tuning-theory) | [greenplum-query-tuning-theory.pptx](https://github.com/PaulKov/de-mentor/blob/master/lessons/lesson-03/artifacts/greenplum-query-tuning-theory.pptx) |
 
 ## Публикация В Google Slides
 

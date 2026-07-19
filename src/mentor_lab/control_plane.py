@@ -68,7 +68,7 @@ class AcademyControlPlane:
                 "self_check_commands": [
                     f"python3 mentor-lab.py doctor",
                     f"python3 mentor-lab.py check {route.physical_lab_name} --dry-run",
-                    f"python3 mentor-lab.py homework {route.physical_lab_name} check --submission submissions/homework.md",
+                    f"python3 mentor-lab.py homework {route.physical_lab_name} check --submission {route.submission_path}",
                 ],
             },
             "portal_actions": {
@@ -190,7 +190,7 @@ def _lesson01_stage_guides(route: LearningRoute) -> List[StageGuide]:
             mentor_script="Закрой урок домашкой, критериями приемки и мостиком к Lesson 02.",
             show_commands=[
                 f"python3 mentor-lab.py session {route.name} report --session <session-dir>",
-                f"python3 mentor-lab.py homework {lab_name} check --submission submissions/homework.md",
+                f"python3 mentor-lab.py homework {lab_name} check --submission {route.submission_path}",
             ],
             question="Что ученик принесет на следующий урок?",
             expected_answer="EXPLAIN evidence, homework SQL/design, вопросы про partition pruning/statistics/incremental loads.",
@@ -281,7 +281,8 @@ def _lesson02_stage_guides(route: LearningRoute) -> List[StageGuide]:
 def _lesson03_stage_guides(route: LearningRoute) -> List[StageGuide]:
     workbook = route.workbook_path
     homework = route.homework_path
-    sql_lab = "labs/greenplum-625/examples/lesson03-olap-decomposition-tuning.sql"
+    sql_lab = "labs/greenplum-625/examples/lesson03-class-demo.sql"
+    homework_seed = "labs/greenplum-625/examples/lesson03-homework-seed.sql"
     return [
         StageGuide(
             "lab-optimizer",
@@ -295,7 +296,7 @@ def _lesson03_stage_guides(route: LearningRoute) -> List[StageGuide]:
             ],
             "Когда ORCA обычно лучше Legacy?",
             "На many-join OLAP, где distribution-aware search уменьшает Motion cost.",
-            f"SQL-lab выполнен: {sql_lab}; ученик показывает optimizer=on/off EXPLAIN.",
+            f"Class demo выполнен: {sql_lab}; ученик показывает optimizer=on/off EXPLAIN.",
             workbook,
             homework,
         ),
@@ -335,21 +336,23 @@ def _lesson03_stage_guides(route: LearningRoute) -> List[StageGuide]:
             ],
             "Зачем ANALYZE на TEMP при фиксированном optimizer?",
             "Чтобы следующий этап планировался по реальной cardinality этапа.",
-            "Ученик сравнивает before/after на TEMP stages.",
+            "Ученик сравнивает before/after на TEMP stages (class demo).",
             workbook,
             homework,
         ),
         StageGuide(
             "homework",
             "28-30",
-            "Закрой evidence pack: rewrite + optimizer policy + residual risk.",
+            "Senior core pack: свой design + e2e + two-way reconcile (не class-demo copy).",
             [
+                "\\i /mentor-lab/examples/lesson03-homework-seed.sql",
+                "python3 mentor-lab.py homework greenplum-625 check --submission lessons/lesson-03/submissions",
                 "python3 mentor-lab.py runbook greenplum-query-tuning homework",
                 "python3 mentor-lab.py student greenplum-query-tuning homework",
             ],
             "Что принести на следующий урок?",
-            "Rewrite SQL, before/after EXPLAIN при фиксированном optimizer, stats snippet, residual risk.",
-            "Ученик понимает критерии приёмки homework.",
+            "Свой rewrite (не class-demo), e2e metrics, two-way EXCEPT ALL, residual risks.",
+            f"Senior core pack готов; seed={homework_seed}; mechanical check зелёный.",
             workbook,
             homework,
         ),
