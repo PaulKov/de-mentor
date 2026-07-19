@@ -58,7 +58,7 @@ class SlideAssetCatalog:
                 resolve_learning_route("greenplum"),
                 project_root,
                 lesson_folder="Lesson 01 - MPP foundations",
-                expected_slide_count=32,
+                expected_slide_count=31,
             ),
             _asset_for_route(
                 resolve_learning_route("greenplum-partitioning"),
@@ -67,6 +67,14 @@ class SlideAssetCatalog:
                     "Lesson 02 - Partitioning, statistics and incremental loads"
                 ),
                 expected_slide_count=18,
+            ),
+            _asset_for_route(
+                resolve_learning_route("greenplum-query-tuning"),
+                project_root,
+                lesson_folder=(
+                    "Lesson 03 - Decomposition and tuning of heavy MPP queries"
+                ),
+                expected_slide_count=65,
             ),
         ]
         return cls({asset.route_name: asset for asset in routes})

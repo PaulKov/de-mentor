@@ -10,7 +10,7 @@
 
 - выбрать partition key под реальные фильтры, retention и SLA загрузки;
 - объяснить, почему partition key и distribution key решают разные задачи;
-- проверить partitions через `pg_partition_tree` и `gp_toolkit.gp_partitions`;
+- проверить partitions через `pg_partitions` и `pg_partitions`;
 - показать `EXPLAIN`, где виден эффект `partition pruning`;
 - включить AOCO для append-heavy fact и понимать ограничения maintenance;
 - описать incremental load: stage, publish, late-arriving facts, idempotency, `ANALYZE`, validation;
@@ -44,18 +44,18 @@ python3 mentor-lab.py student greenplum-partitioning homework
 
 Основной runnable-файл:
 
-[lesson02-partitioning-statistics-loads.sql](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/lesson02-partitioning-statistics-loads.sql)
+[lesson02-partitioning-statistics-loads.sql](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/lesson02-partitioning-statistics-loads.sql)
 
 Что он создает:
 
 - schema `lesson02`;
 - bad table `lesson02.fact_sales_bad_partition_key`, где `PARTITION BY RANGE (loaded_at)` не помогает типичному фильтру по `sale_date`;
 - good table `lesson02.fact_sales_partitioned` с `PARTITION BY RANGE (sale_date)`;
-- AOCO storage через `WITH (appendoptimized=true, orientation=column, compresstype=zstd, compresslevel=1)`;
+- AOCO storage через `WITH (appendonly=true, orientation=column, compresstype=zstd, compresslevel=1)`;
 - stage table `lesson02.fact_sales_stage`;
 - late-arriving facts;
 - `ANALYZE` после load;
-- проверки через `gp_segment_id`, `tableoid`, `pg_partition_tree`, `gp_toolkit.gp_partitions`;
+- проверки через `gp_segment_id`, `tableoid`, `pg_partitions`, `pg_partitions`;
 - `EXPLAIN` для сравнения pruning.
 
 Запуск в psql:
@@ -146,6 +146,6 @@ python3 mentor-lab.py slides verify greenplum-partitioning \
 
 ## Следующий Урок
 
-Lesson 03: Query tuning, workload management and production diagnostics.
+Урок 03: Декомпозиция и тюнинг тяжёлых запросов в MPP.
 
-Фокус: читать production-планы глубже, связывать `Motion`, joins, statistics, skew и workload management с конкретным RCA.
+Фокус: layered `EXPLAIN`, статистика до `pg_statistic`, физическое хранение Heap/AO/AOCO и TEMP-декомпозиция тяжёлого OLAP. WLM/RCA — уже Урок 04.

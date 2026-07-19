@@ -7,7 +7,7 @@
 | Partitioning model | путает partition и distribution | выбирает range key, но слабо объясняет workload | связывает predicate, pruning, retention и leaf partitions |
 | Distribution model | выбирает тот же ключ “для порядка” | понимает баланс, но не join locality | отдельно защищает `DISTRIBUTED BY` через join pattern и `gp_segment_id` |
 | EXPLAIN evidence | нет плана | есть план без вывода | показывает `partition pruning`, estimates и возможный `Motion` risk |
-| Catalog checks | нет checks | есть один query | использует `pg_partition_tree`, `gp_toolkit.gp_partitions`, `tableoid` |
+| Catalog checks | нет checks | есть один query | использует `pg_partitions`, `pg_partitions`, `tableoid` |
 | Statistics policy | забывает `ANALYZE` | пишет “ANALYZE после load” | объясняет touched data, stale estimates и before/after plan |
 | Incremental load | только `INSERT` | есть stage и validation | есть stage, publish, late-arriving facts, idempotency, retry, residual risk |
 | Storage | не понимает AOCO | включает `orientation=column` | объясняет AOCO как scan/storage choice, а не замену distribution |
@@ -23,8 +23,8 @@
 
 - Чем `partition pruning` отличается от colocated join?
 - Почему `PARTITION BY RANGE (sale_date)` может быть правильным, а `DISTRIBUTED BY (customer_id)` тоже правильным?
-- Что покажет `pg_partition_tree`?
-- Что покажет `gp_toolkit.gp_partitions`?
+- Что покажет `pg_partitions`?
+- Что покажет `pg_partitions`?
 - Когда `ANALYZE lesson02.fact_sales_partitioned` обязателен?
 - Как обрабатывать late-arriving facts без дублей?
 - Почему `DETACH PARTITION` полезен для retention?

@@ -11,7 +11,7 @@
 - partition key выбран под фильтры и retention;
 - distribution key выбран под join locality и баланс;
 - `partition pruning` подтвержден через `EXPLAIN`;
-- partitions проверены через `pg_partition_tree` или `gp_toolkit.gp_partitions`;
+- partitions проверены через `pg_partitions`;
 - incremental load имеет stage, publish, late-arriving facts, idempotency, `ANALYZE`, validation.
 
 ## Подготовка
@@ -40,7 +40,7 @@ python3 mentor-lab.py runbook greenplum-partitioning homework
 - rationale для `PARTITION BY RANGE`;
 - rationale для `DISTRIBUTED BY`;
 - `EXPLAIN` для запроса с date filter;
-- вывод `pg_partition_tree` или `gp_toolkit.gp_partitions`;
+- вывод `pg_partitions`;
 - проверку `gp_segment_id`;
 - policy для `ANALYZE` после incremental load;
 - late-arriving facts policy;
@@ -75,10 +75,14 @@ WHERE sale_date >= DATE '2026-02-01'
   AND sale_date < DATE '2026-03-01';
 
 SELECT *
-FROM pg_partition_tree('lesson02.fact_sales_partitioned'::regclass);
+-- catalog: pg_partitions (GP6)
+SELECT schemaname, tablename, partitiontablename, partitionboundary
+FROM pg_partitions
+WHERE schemaname = 'lesson02' AND tablename = 'fact_sales_partitioned'
+ORDER BY partitionrank, partitiontablename;
 
 SELECT *
-FROM gp_toolkit.gp_partitions
+FROM pg_partitions
 WHERE schemaname = 'lesson02'
 ORDER BY partitiontablename;
 
@@ -109,9 +113,9 @@ python3 mentor-lab.py check greenplum
 
 - DDL разделяет partition key и distribution key;
 - есть `PARTITION BY RANGE (sale_date)` или обоснованная альтернатива;
-- есть `WITH (appendoptimized=true, orientation=column, compresstype=zstd, compresslevel=1)` для append-heavy AOCO fact или объяснение, почему выбран другой storage;
+- есть `WITH (appendonly=true, orientation=column, compresstype=zstd, compresslevel=1)` для append-heavy AOCO fact или объяснение, почему выбран другой storage;
 - есть `EXPLAIN` для pruning;
-- есть `pg_partition_tree` или `gp_toolkit.gp_partitions`;
+- есть `pg_partitions`;
 - есть `ANALYZE` policy;
 - late-arriving facts не потеряны и не дублируются;
 - validation проверяет row counts и суммы;

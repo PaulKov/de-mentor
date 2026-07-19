@@ -1,26 +1,7 @@
+# Deprecated. Use labs/greenplum-625/docker-compose.yml
+# CLI lab names `greenplum` and `greenplum-625` both point there (port 15436).
 services:
-  greenplum:
-    image: docker.io/woblerr/greenplum:7.1.0
-    hostname: greenplum
-    environment:
-      TZ: Europe/Moscow
-      GREENPLUM_PASSWORD: gparray
-      GREENPLUM_DATABASE_NAME: mentor
-    ports:
-      - "15432:5432"
-    volumes:
-      - greenplum-data:/data
-      - ./init:/docker-entrypoint-initdb.d
-      - ./seed:/mentor-lab/seed
-      - ./examples:/mentor-lab/examples
-    healthcheck:
-      test:
-        - CMD-SHELL
-        - su - gpadmin -c ". /usr/local/greenplum-db/greenplum_path.sh && psql -U gpadmin -d mentor -c 'SELECT 1' >/dev/null 2>&1"
-      interval: 10s
-      timeout: 5s
-      retries: 30
-      start_period: 90s
-
-volumes:
-  greenplum-data:
+  greenplum-deprecated-pointer:
+    image: alpine:3.20
+    profiles: ["never"]
+    command: ["true"]

@@ -12,6 +12,11 @@ _LESSON_ALIASES = {
     "greenplum-02": "lesson-02",
     "gp-partitioning": "lesson-02",
     "partitioning": "lesson-02",
+    "greenplum-query-tuning": "lesson-03",
+    "greenplum-03": "lesson-03",
+    "gp-query-tuning": "lesson-03",
+    "query-tuning": "lesson-03",
+    "olap-tuning": "lesson-03",
 }
 
 _HINT_TOPIC_ALIASES = {
@@ -41,6 +46,19 @@ _HINT_TOPIC_ALIASES = {
     "late-arriving": "late-arriving-facts",
     "maintenance": "aoco-maintenance",
     "aoco": "aoco-maintenance",
+    "stats-internals": "statistics",
+    "pg-statistic": "statistics",
+    "temp": "temp-decomposition",
+    "temp-tables": "temp-decomposition",
+    "spill": "temp-decomposition",
+    "storage": "storage-layout",
+    "aoco-layout": "storage-layout",
+    "rewrite": "olap-rewrite",
+    "decomposition": "olap-rewrite",
+    "orca": "optimizer",
+    "gporca": "optimizer",
+    "legacy-planner": "optimizer",
+    "legacy": "optimizer",
 }
 
 _INCIDENT_ALIASES = {
@@ -103,6 +121,7 @@ class LessonCatalog:
     @classmethod
     def default(cls) -> "LessonCatalog":
         from mentor_lab.lesson_catalog_lesson02 import lesson02, lesson02_hints
+        from mentor_lab.lesson_catalog_lesson03 import lesson03, lesson03_hints
 
         return cls(
             lessons=[
@@ -223,6 +242,7 @@ class LessonCatalog:
                     ],
                 ),
                 lesson02(),
+                lesson03(),
             ],
             hints={
                 "lesson-01": {
@@ -258,6 +278,7 @@ class LessonCatalog:
                     ],
                 },
                 "lesson-02": lesson02_hints(),
+                "lesson-03": lesson03_hints(),
             },
             incidents=[
                 Incident(

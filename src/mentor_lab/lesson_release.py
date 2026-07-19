@@ -100,8 +100,9 @@ class LessonReleaseVerifier:
 
     def _route_matches_slide_catalog(self, manifest: LessonReleaseManifest) -> ReleaseCheck:
         asset = SlideAssetCatalog.default(self._project_root).get(manifest.route)
+        asset_url = asset.google_slides_url or ""
         expected = (
-            asset.google_slides_url == manifest.google_slides_url
+            asset_url == manifest.google_slides_url
             and asset.expected_owner_email == manifest.expected_owner_email
             and asset.expected_slide_count == manifest.expected_slide_count
             and asset.taxonomy.display_path == manifest.drive_folder
@@ -120,12 +121,19 @@ class LessonReleaseVerifier:
         return ReleaseCheck("pptx_artifact", "PASS", manifest.deck_path)
 
     def _google_static_check(self, manifest: LessonReleaseManifest) -> ReleaseCheck:
-        url_ok = "/presentation/d/" in manifest.google_slides_url
         owner_ok = manifest.expected_owner_email == "pavelkov007@gmail.com"
         folder_ok = manifest.drive_folder.startswith("lessons/Greenplum/")
-        if url_ok and owner_ok and folder_ok:
-            return ReleaseCheck("google_slides_static", "PASS", manifest.drive_folder)
-        return ReleaseCheck("google_slides_static", "FAIL", "Google Slides metadata mismatch")
+        if not owner_ok or not folder_ok:
+            return ReleaseCheck("google_slides_static", "FAIL", "Google Slides metadata mismatch")
+        if not manifest.google_slides_url:
+            return ReleaseCheck(
+                "google_slides_static",
+                "WARN",
+                "Google Slides URL pending publish",
+            )
+        if "/presentation/d/" not in manifest.google_slides_url:
+            return ReleaseCheck("google_slides_static", "FAIL", "Google Slides metadata mismatch")
+        return ReleaseCheck("google_slides_static", "PASS", manifest.drive_folder)
 
     def _session_control_plane_check(self, manifest: LessonReleaseManifest) -> ReleaseCheck:
         with tempfile.TemporaryDirectory(prefix="mentor-release-") as tmp:
@@ -133,7 +141,8 @@ class LessonReleaseVerifier:
             state = json.loads((session_dir / "session.json").read_text(encoding="utf-8"))
         control_plane = state["control_plane"]
         deck_ok = control_plane["mentor_mode"]["slide_deck"] == manifest.deck_path
-        slides_ok = control_plane["mentor_mode"]["google_slides"] == manifest.google_slides_url
+        session_slides = control_plane["mentor_mode"]["google_slides"] or ""
+        slides_ok = session_slides == (manifest.google_slides_url or "")
         if deck_ok and slides_ok:
             return ReleaseCheck("session_control_plane", "PASS", manifest.route)
         return ReleaseCheck("session_control_plane", "FAIL", "session.json points to stale assets")

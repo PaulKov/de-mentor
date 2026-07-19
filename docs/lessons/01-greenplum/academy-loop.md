@@ -48,7 +48,7 @@ python3 mentor-lab.py dataset greenplum generate --scale small --seed 42 --skew 
 python3 mentor-lab.py evidence greenplum collect redistribute-join --output submissions/redistribute-join.md
 python3 mentor-lab.py misconception greenplum diagnose --text "partition key это то же самое что distribution key"
 python3 mentor-lab.py homework greenplum check --submission submissions/homework.md
-python3 mentor-lab.py autograde-sql greenplum --submission labs/greenplum/examples/student-solution-example.sql --output artifacts/sql-autograde.md
+python3 mentor-lab.py autograde-sql greenplum --submission labs/greenplum-625/examples/student-solution-example.sql --output artifacts/sql-autograde.md
 python3 mentor-lab.py calibration greenplum show senior
 python3 mentor-lab.py submit greenplum advanced-joins
 python3 mentor-lab.py review greenplum --submission submissions/advanced-joins.md

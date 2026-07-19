@@ -1,0 +1,18 @@
+SELECT 44800
+ANALYZE
+  oid  |   nspname   |   relname   | relfilenode | relpersistence |      filepath      | total_size 
+-------+-------------+-------------+-------------+----------------+--------------------+------------
+ 16584 | pg_temp_787 | tmp_fs_demo |       16465 | t              | base/12812/t_16465 | 2304 kB
+(1 row)
+
+ gp_segment_id |      filepath      |  bytes  
+---------------+--------------------+---------
+             1 | base/12812/t_16465 | 1212416
+             0 | base/12812/t_16465 | 1146880
+(2 rows)
+
+ pg_sleep 
+----------
+ 
+(1 row)
+

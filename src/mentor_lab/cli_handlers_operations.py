@@ -7,7 +7,12 @@ from typing import Callable, Sequence
 
 from mentor_lab.certificates import CertificateWriter
 from mentor_lab.challenges import ChallengeCatalog
-from mentor_lab.checks import CheckStatus, GreenplumCheckSuite
+from mentor_lab.checks import (
+    CheckStatus,
+    Greenplum625CheckSuite,
+    GreenplumCheckSuite,
+    SharedAcademyCheckSuite,
+)
 from mentor_lab.ci_smoke import CiSmokePlanBuilder
 from mentor_lab.cli_context import (
     _lab_or_none,
@@ -129,14 +134,21 @@ def _handle_check(args: argparse.Namespace) -> int:
     lab = _lab_or_none(args.lab_name)
     if lab is None:
         return 1
+    suite_cls = (
+        SharedAcademyCheckSuite
+        if lab.name in {"greenplum", "greenplum-625"}
+        else GreenplumCheckSuite
+    )
     if args.dry_run:
         print("Checks that would run:")
-        for code in GreenplumCheckSuite.documented_check_codes():
+        for code in suite_cls.documented_check_codes():
             print(f"- {code}")
         return 0
 
     try:
-        checks = GreenplumCheckSuite(_sql_client(lab)).run()
+        client = _sql_client(lab)
+        client.ensure_database()
+        checks = suite_cls(client).run()
     except RuntimeError as exc:
         print(f"Check execution failed: {exc}")
         return 1
@@ -193,6 +205,11 @@ def _handle_seed(args: argparse.Namespace) -> int:
     if args.dry_run:
         print(client.format_command(command))
         return 0
+    try:
+        client.ensure_database()
+    except RuntimeError as exc:
+        print(f"Failed to ensure database {lab.default_database!r}: {exc}")
+        return 1
     return client.run_file(profile.container_path)
 
 
@@ -411,6 +428,13 @@ def _handle_lab_command(
     if args.dry_run:
         print(runner.format_command(command))
         return 0
+    # psql / interactive ops need mentor DB on GP 6.25 before connecting.
+    if lab.bootstrap_database and "psql" in " ".join(command):
+        try:
+            _sql_client(lab).ensure_database()
+        except RuntimeError as exc:
+            print(f"Failed to ensure database {lab.default_database!r}: {exc}")
+            return 1
     return runner.run(command)
 
 

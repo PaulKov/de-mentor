@@ -32,7 +32,7 @@ def _lesson01_stages(route: LearningRoute) -> List[SessionStage]:
             mentor_focus="Сравнить row-store и column-store на DDL и catalog checks.",
             student_action="Объяснить, где включается orientation=column.",
             command=(
-                "docker compose -f labs/greenplum/docker-compose.yml exec -T -u "
+                "docker compose -f labs/greenplum-625/docker-compose.yml exec -T -u "
                 "gpadmin greenplum psql -U gpadmin -d mentor -f "
                 "/mentor-lab/examples/storage-and-partitioning.sql"
             ),
@@ -53,7 +53,7 @@ def _lesson01_stages(route: LearningRoute) -> List[SessionStage]:
             student_action="Сформулировать причину, фикс и проверку до/после.",
             command=(
                 f"python3 mentor-lab.py autograde-sql {lab_name} "
-                "--submission labs/greenplum/examples/student-solution-example.sql"
+                "--submission labs/greenplum-625/examples/student-solution-example.sql"
             ),
         ),
         SessionStage(
@@ -161,7 +161,7 @@ def _default_commands(lab_name: str) -> List[str]:
         f"python3 mentor-lab.py coach-plan {physical_lab} --query bad_customer_join --sample",
         f"python3 mentor-lab.py dataset {physical_lab} generate --scale small --seed 42 --skew high --late-facts --wide-rows --output artifacts/generated-enterprise.sql",
         f"python3 mentor-lab.py evidence {physical_lab} collect redistribute-join --output submissions/redistribute-join.md",
-        f"python3 mentor-lab.py autograde-sql {physical_lab} --submission labs/greenplum/examples/student-solution-example.sql --output artifacts/sql-autograde.md",
+        f"python3 mentor-lab.py autograde-sql {physical_lab} --submission labs/greenplum-625/examples/student-solution-example.sql --output artifacts/sql-autograde.md",
         f"python3 mentor-lab.py session {route.name} report --session <session-dir> --output artifacts/{route.name}-session-report.md",
         f"python3 mentor-lab.py ci-smoke {physical_lab} --dry-run",
     ]

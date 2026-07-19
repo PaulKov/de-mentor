@@ -1,0 +1,24 @@
+QUERY PLAN                                                                                
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=0.00..871.63 rows=1 width=8) (actual time=9.799..9.799 rows=1 loops=1)
+   ->  Gather Motion 2:1  (slice1; segments: 2)  (cost=0.00..871.63 rows=1 width=8) (actual time=9.696..9.795 rows=2 loops=1)
+         ->  Aggregate  (cost=0.00..871.63 rows=1 width=8) (actual time=9.275..9.275 rows=1 loops=1)
+               ->  Hash Join  (cost=0.00..871.63 rows=2068 width=1) (actual time=3.547..9.348 rows=2296 loops=1)
+                     Hash Cond: (fact_sales.customer_id = dim_customer.customer_id)
+                     Extra Text: (seg1)   Hash chain length 1.0 avg, 1 max, using 163 of 524288 buckets.
+                     ->  Sequence  (cost=0.00..434.23 rows=35200 width=8) (actual time=0.796..4.422 rows=36160 loops=1)
+                           ->  Partition Selector for fact_sales (dynamic scan id: 1)  (cost=10.00..100.00 rows=50 width=4) (never executed)
+                                 Partitions selected: 3 (out of 4)
+                           ->  Dynamic Seq Scan on fact_sales (dynamic scan id: 1)  (cost=0.00..434.23 rows=35200 width=8) (actual time=0.788..3.034 rows=36160 loops=1)
+                                 Filter: (sale_date >= '2026-02-01'::date)
+                                 Partitions scanned:  Avg 3.0 (out of 4) x 2 workers.  Max 3 parts (seg0).
+                     ->  Hash  (cost=431.16..431.16 rows=147 width=4) (actual time=0.221..0.221 rows=163 loops=1)
+                           ->  Seq Scan on dim_customer  (cost=0.00..431.16 rows=147 width=4) (actual time=0.050..0.176 rows=163 loops=1)
+                                 Filter: (segment = 'test'::text)
+ Planning time: 33.833 ms
+   (slice0)    Executor memory: 131K bytes.
+   (slice1)    Executor memory: 4602K bytes avg x 2 workers, 4602K bytes max (seg0).  Work_mem: 4K bytes max.
+ Memory used:  128000kB
+ Optimizer: Pivotal Optimizer (GPORCA)
+ Execution time: 10.074 ms
+(21 rows)

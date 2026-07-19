@@ -4,6 +4,11 @@ from pathlib import Path
 
 from mentor_lab.domain import LabDefinition, LabRegistry
 
+# Shared Greenplum 6.25 academy stand (Lessons 01–03).
+_GP625_COMPOSE = Path("labs/greenplum-625/docker-compose.yml")
+_GP625_ENV = ". /usr/local/gpdb/greenplum_path.sh"
+_GP625_PORT = 15436
+
 
 def create_default_registry(project_root: Path) -> LabRegistry:
     """Create the default registry.
@@ -13,22 +18,38 @@ def create_default_registry(project_root: Path) -> LabRegistry:
     """
 
     _ = project_root
+    greenplum_academy = dict(
+        compose_file=_GP625_COMPOSE,
+        service_name="greenplum-625",
+        default_user="gpadmin",
+        default_database="mentor",
+        port=_GP625_PORT,
+        env_script=_GP625_ENV,
+        bootstrap_database="postgres",
+    )
     return LabRegistry(
         [
             LabDefinition(
                 name="greenplum",
-                title="Greenplum MPP basics",
+                title="Greenplum MPP academy (GP 6.25)",
                 description=(
-                    "Ready Docker Compose stand for distribution keys, skew, "
-                    "Motion nodes, and first warehouse modeling exercises."
+                    "Shared Docker Compose stand for Lessons 01–03: distribution, "
+                    "partitioning, OLAP decomposition and Legacy vs GPORCA."
                 ),
                 status="ready",
-                compose_file=Path("labs/greenplum/docker-compose.yml"),
-                service_name="greenplum",
-                default_user="gpadmin",
-                default_database="mentor",
-                port=15432,
-                docs_path=Path("labs/greenplum/README.md"),
+                docs_path=Path("labs/greenplum-625/README.md"),
+                **greenplum_academy,
+            ),
+            LabDefinition(
+                name="greenplum-625",
+                title="Greenplum 6.25 academy lab",
+                description=(
+                    "Alias of the shared academy stand (same container/port as "
+                    "`greenplum`). Prefer either name; data lives in DB mentor."
+                ),
+                status="ready",
+                docs_path=Path("labs/greenplum-625/README.md"),
+                **greenplum_academy,
             ),
             LabDefinition(
                 name="postgres",
@@ -92,4 +113,3 @@ def create_default_registry(project_root: Path) -> LabRegistry:
             ),
         ]
     )
-

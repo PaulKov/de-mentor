@@ -108,6 +108,39 @@ def test_greenplum_partitioning_deck_source_has_lesson_02_markers():
     assert "AOCO partitions" in source
 
 
+def test_greenplum_query_tuning_deck_artifact_exists_and_has_30_slides():
+    deck = ROOT / "artifacts" / "greenplum-query-tuning-theory.pptx"
+
+    assert deck.exists()
+    assert deck.stat().st_size > 50_000
+
+    with ZipFile(deck) as pptx:
+        slides = [
+            name
+            for name in pptx.namelist()
+            if name.startswith("ppt/slides/slide") and name.endswith(".xml")
+        ]
+
+    assert len(slides) == 30
+
+
+def test_greenplum_query_tuning_deck_source_has_lesson_03_markers():
+    deck_dir = ROOT / "decks" / "greenplum-query-tuning-theory"
+    source_files = sorted(deck_dir.rglob("*.md")) + sorted(deck_dir.rglob("*.mjs"))
+    source = "\n".join(path.read_text(encoding="utf-8") for path in source_files)
+
+    assert (deck_dir / "README.md").exists()
+    assert (deck_dir / "facilitator-guide.md").exists()
+    assert "#F7F7F4" in source
+    assert "Декомпозиция и тюнинг тяжёлых запросов в MPP" in source
+    assert "pg_statistic" in source
+    assert "TEMP" in source
+    assert "AOCO" in source
+    assert "EXPLAIN" in source
+    assert "GPORCA" in source
+    assert "greenplum-625" in source
+
+
 def test_greenplum_partitioning_google_slides_link_is_documented():
     docs = [
         ROOT / "README.md",

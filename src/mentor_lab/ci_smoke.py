@@ -50,7 +50,7 @@ class CiSmokePlanBuilder:
                 SmokeStep("Check Greenplum", "python3 mentor-lab.py check greenplum"),
                 SmokeStep("Run storage SQL", _example_sql_command("storage-and-partitioning.sql")),
                 SmokeStep("Run partitioning SQL", _example_sql_command("partitioning-strategies.sql")),
-                SmokeStep("Autograde sample SQL", "python3 mentor-lab.py autograde-sql greenplum --submission labs/greenplum/examples/student-solution-example.sql --live --output artifacts/sql-autograde.md"),
+                SmokeStep("Autograde sample SQL", "python3 mentor-lab.py autograde-sql greenplum --submission labs/greenplum-625/examples/student-solution-example.sql --live --output artifacts/sql-autograde.md"),
                 SmokeStep("Stop Greenplum", "python3 mentor-lab.py down greenplum"),
             ],
         )
@@ -63,7 +63,7 @@ class CiSmokePlanBuilder:
 
 def _example_sql_command(filename: str) -> str:
     return (
-        "docker compose -f labs/greenplum/docker-compose.yml exec -T -u gpadmin "
-        "greenplum bash -lc \". /usr/local/greenplum-db/greenplum_path.sh && "
+        "docker compose -f labs/greenplum-625/docker-compose.yml exec -T -u gpadmin "
+        "greenplum bash -lc \". /usr/local/gpdb/greenplum_path.sh && "
         f"psql -U gpadmin -d mentor -v ON_ERROR_STOP=1 -f /mentor-lab/examples/{filename}\""
     )

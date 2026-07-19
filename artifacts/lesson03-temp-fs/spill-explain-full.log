@@ -1,0 +1,37 @@
+SET
+SELECT 120000
+INSERT 0 120000
+INSERT 0 120000
+INSERT 0 120000
+INSERT 0 120000
+INSERT 0 120000
+INSERT 0 120000
+INSERT 0 120000
+INSERT 0 120000
+INSERT 0 120000
+ANALYZE
+SET
+SET
+SET
+                                                                    QUERY PLAN                                                                     
+---------------------------------------------------------------------------------------------------------------------------------------------------
+ Gather Motion 2:1  (slice1; segments: 2)  (cost=136777.62..139777.62 rows=1200000 width=18) (actual time=1206.158..1382.296 rows=1200000 loops=1)
+   Merge Key: amount, customer_id, product_id, sale_date
+   ->  Sort  (cost=136777.62..139777.62 rows=600000 width=18) (actual time=1067.102..1162.905 rows=611040 loops=1)
+         Sort Key: amount, customer_id, product_id, sale_date
+         Sort Method:  external merge  Disk: 34592kB
+         ->  Seq Scan on tmp_spill_fuel  (cost=0.00..15610.00 rows=600000 width=18) (actual time=0.006..286.788 rows=611040 loops=1)
+ Planning time: 0.153 ms
+   (slice0)    Executor memory: 119K bytes.
+ * (slice1)    Executor memory: 11169K bytes avg x 2 workers, 11169K bytes max (seg0).  Work_mem: 11126K bytes max, 58489K bytes wanted.
+ Memory used:  8192kB
+ Memory wanted:  58688kB
+ Optimizer: Postgres query optimizer
+ Execution time: 1407.947 ms
+(13 rows)
+
+ pg_sleep 
+----------
+ 
+(1 row)
+

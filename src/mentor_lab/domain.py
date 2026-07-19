@@ -23,6 +23,10 @@ class LabDefinition:
     default_database: str
     port: int
     docs_path: Path
+    env_script: str = ". /usr/local/greenplum-db/greenplum_path.sh"
+    # When set, CLI creates `default_database` via this maintenance DB if missing
+    # (andruche GP 6.25 images boot into `postgres`, unlike GP7 `mentor`).
+    bootstrap_database: str = ""
 
     def compose_path(self, project_root: Path) -> Path:
         """Return the absolute Docker Compose file path for this lab."""

@@ -27,7 +27,11 @@ python3 mentor-lab.py coach-plan greenplum --query bad_customer_join --sample
 
 ```sql
 SELECT *
-FROM pg_partition_tree('lesson02.fact_sales_partitioned'::regclass);
+-- catalog: pg_partitions (GP6)
+SELECT schemaname, tablename, partitiontablename, partitionboundary
+FROM pg_partitions
+WHERE schemaname = 'lesson02' AND tablename = 'fact_sales_partitioned'
+ORDER BY partitionrank, partitiontablename;
 
 SELECT c.oid::regclass, pg_get_partkeydef(c.oid)
 FROM pg_class AS c
@@ -48,7 +52,7 @@ WHERE sale_date >= DATE '2026-02-01'
 
 Как проверяем: ученик не путает pruning с segment distribution.
 
-Ссылки: [SQL-lab](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/lesson02-partitioning-statistics-loads.sql).
+Ссылки: [SQL-lab](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/lesson02-partitioning-statistics-loads.sql).
 
 ## Этап 3: 35:00-55:00 - Statistics И Plan Quality
 
@@ -115,7 +119,7 @@ LIMIT 10;
 \d+ lesson02.fact_sales_partitioned
 
 SELECT *
-FROM gp_toolkit.gp_partitions
+FROM pg_partitions
 WHERE schemaname = 'lesson02'
 ORDER BY partitiontablename;
 ```

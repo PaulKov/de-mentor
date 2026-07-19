@@ -87,7 +87,7 @@ class Runbook:
         if self.sql_examples is not None:
             return self.sql_examples
         return [
-            "labs/greenplum/examples/storage-and-partitioning.sql",
-            "labs/greenplum/examples/partitioning-strategies.sql",
-            "labs/greenplum/examples/cluster-monitoring.sql",
+            "labs/greenplum-625/examples/storage-and-partitioning.sql",
+            "labs/greenplum-625/examples/partitioning-strategies.sql",
+            "labs/greenplum-625/examples/cluster-monitoring.sql",
         ]

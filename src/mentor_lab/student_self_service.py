@@ -49,13 +49,22 @@ class StudentSelfServiceGuide:
             "Prepare:",
         ]
         lines.extend(f"- {note}" for note in profile.setup_notes)
-        lines.extend(
+        commands = [
+            "",
+            "Commands:",
+            f"  {prefix} mentor-lab.py doctor --full",
+            f"  {prefix} mentor-lab.py readiness {lab.name} --platform {platform}",
+            f"  {prefix} mentor-lab.py up {lab.name}",
+        ]
+        if lab.name in {"greenplum", "greenplum-625"}:
+            commands.append(
+                f"  {prefix} mentor-lab.py seed {lab.name} --profile academy"
+            )
+            commands.append(
+                f"  # Shared GP 6.25 stand @ :15436; DB mentor; schemas lesson01/02/03"
+            )
+        commands.extend(
             [
-                "",
-                "Commands:",
-                f"  {prefix} mentor-lab.py doctor --full",
-                f"  {prefix} mentor-lab.py readiness {lab.name} --platform {platform}",
-                f"  {prefix} mentor-lab.py up {lab.name}",
                 f"  {prefix} mentor-lab.py check {lab.name}",
                 f"  {prefix} mentor-lab.py runbook {route.name} simple",
                 f"  {prefix} mentor-lab.py academy {route.name} start --student <your-name>",
@@ -67,12 +76,20 @@ class StudentSelfServiceGuide:
                 f"  {lab.docs_path}",
             ]
         )
+        lines.extend(commands)
         return "\n".join(lines) + "\n"
 
     def homework(self, lab: LabDefinition, route: LearningRoute) -> str:
+        bring = (
+            "  rewrite.sql, before/after EXPLAIN (fixed optimizer), pg_stats autopsy, "
+            "ORCA/Legacy matrix, TEMP FS/spill, reconciliation, residual risk."
+            if route.name == "greenplum-query-tuning"
+            else "  DDL, EXPLAIN evidence, partition catalog checks, statistics policy, validation."
+        )
         lines = [
             f"Student homework: {route.name}",
             f"Physical lab: {lab.name}",
+            f"Database: {lab.default_database or '(n/a)'}",
             "",
             "Read:",
             f"  {route.homework_path}",
@@ -85,7 +102,7 @@ class StudentSelfServiceGuide:
             f"  python3 mentor-lab.py grade {lab.name} --dry-run",
             "",
             f"Bring to {_lesson_label(route.next_lesson.code)}:",
-            "  DDL, EXPLAIN evidence, partition catalog checks, statistics policy, validation.",
+            bring,
         ]
         return "\n".join(lines) + "\n"
 

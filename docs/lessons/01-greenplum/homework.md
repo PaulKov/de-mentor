@@ -29,7 +29,7 @@
 4. Partition key для фактов.
 5. Storage choice: heap, AO row или AOCO column.
 6. Partitioning strategy: `PARTITION BY RANGE`, `PARTITION BY LIST` или `PARTITION BY HASH`, либо объяснение, почему partitioning пока не нужен.
-7. Catalog evidence: `pg_partition_tree` или `gp_toolkit.gp_partitions`, включая `leaf_partitions`.
+7. Catalog evidence: `gp_toolkit.gp_partitions` или `gp_toolkit.gp_partitions`, включая `leaf_partitions`.
 8. 3 SQL-запроса для проверки качества модели.
 9. 3 риска и как ты их проверишь.
 10. 2-3 вопроса, которые принесешь на следующий урок.
@@ -72,7 +72,7 @@ python3 mentor-lab.py psql greenplum
 python3 mentor-lab.py homework greenplum check --submission submissions/homework.md
 ```
 
-Autograder смотрит не на объем текста, а на признаки инженерного ответа: facts/dimensions/grain, `DISTRIBUTED BY`, join pattern, cardinality, `PARTITION BY`, storage choice, `pg_partition_tree` / `gp_toolkit.gp_partitions`, `EXPLAIN`, `gp_segment_id`, validation, risks и вопросы к Lesson 02.
+Autograder смотрит не на объем текста, а на признаки инженерного ответа: facts/dimensions/grain, `DISTRIBUTED BY`, join pattern, cardinality, `PARTITION BY`, storage choice, `gp_toolkit.gp_partitions` / `gp_toolkit.gp_partitions`, `EXPLAIN`, `gp_segment_id`, validation, risks и вопросы к Lesson 02.
 
 Проверь skew:
 
@@ -112,7 +112,7 @@ WHERE sale_date >= DATE '2026-01-01'
 \i /mentor-lab/examples/partitioning-strategies.sql
 
 SELECT *
-FROM pg_partition_tree('lesson01.partition_range_demo'::regclass);
+FROM gp_toolkit.gp_partitions('lesson01.partition_range_demo'::regclass);
 
 SELECT *
 FROM gp_toolkit.gp_partitions
@@ -146,7 +146,7 @@ WHERE schemaname = 'lesson01';
 - grain описан до выбора ключей;
 - distribution key выбран с аргументацией по cardinality и join pattern;
 - partition key не смешан с distribution key;
-- есть проверка partitions через `pg_partition_tree` или `gp_toolkit.gp_partitions`;
+- есть проверка partitions через `gp_toolkit.gp_partitions` или `gp_toolkit.gp_partitions`;
 - storage choice объяснен через workload;
 - есть проверка skew;
 - есть хотя бы один запрос с `EXPLAIN`.

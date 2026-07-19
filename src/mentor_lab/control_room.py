@@ -43,7 +43,7 @@ class MentorControlRoom:
                     f"python3 mentor-lab.py evidence {lab_name} collect redistribute-join --output submissions/redistribute-join.md",
                     f"python3 mentor-lab.py misconception {lab_name} diagnose --text \"partition key это то же самое что distribution key\"",
                     f"python3 mentor-lab.py homework {lab_name} check --submission submissions/homework.md",
-                    f"python3 mentor-lab.py autograde-sql {lab_name} --submission labs/greenplum/examples/student-solution-example.sql --output artifacts/sql-autograde.md",
+                    f"python3 mentor-lab.py autograde-sql {lab_name} --submission labs/greenplum-625/examples/student-solution-example.sql --output artifacts/sql-autograde.md",
                     f"python3 mentor-lab.py calibration {lab_name} show senior",
                     f"python3 mentor-lab.py adaptive-review {lab_name} --submission submissions/query-tuning.md",
                     f"python3 mentor-lab.py debrief {lab_name} --student <name> --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/{lab_name}-debrief.md",

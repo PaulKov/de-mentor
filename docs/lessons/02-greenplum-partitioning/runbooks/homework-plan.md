@@ -50,10 +50,14 @@ WHERE sale_date >= DATE '2026-02-01'
   AND sale_date < DATE '2026-03-01';
 
 SELECT *
-FROM pg_partition_tree('lesson02.fact_sales_partitioned'::regclass);
+-- catalog: pg_partitions (GP6)
+SELECT schemaname, tablename, partitiontablename, partitionboundary
+FROM pg_partitions
+WHERE schemaname = 'lesson02' AND tablename = 'fact_sales_partitioned'
+ORDER BY partitionrank, partitiontablename;
 
 SELECT *
-FROM gp_toolkit.gp_partitions
+FROM pg_partitions
 WHERE schemaname = 'lesson02'
 ORDER BY partitiontablename;
 ```

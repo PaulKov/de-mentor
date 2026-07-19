@@ -106,6 +106,8 @@ class ControlPlaneBuilder:
 
 
 def _stage_guides(route: LearningRoute) -> List[StageGuide]:
+    if route.lesson_code == "lesson-03":
+        return _lesson03_stage_guides(route)
     if route.lesson_code == "lesson-02":
         return _lesson02_stage_guides(route)
     return _lesson01_stage_guides(route)
@@ -144,7 +146,7 @@ def _lesson01_stage_guides(route: LearningRoute) -> List[StageGuide]:
                 "orientation=column с аналитическим scan pattern."
             ),
             show_commands=[
-                "docker compose -f labs/greenplum/docker-compose.yml exec -T -u gpadmin greenplum "
+                "docker compose -f labs/greenplum-625/docker-compose.yml exec -T -u gpadmin greenplum "
                 "psql -U gpadmin -d mentor -f /mentor-lab/examples/storage-and-partitioning.sql",
             ],
             question="Где включается column-store в Greenplum?",
@@ -174,7 +176,7 @@ def _lesson01_stage_guides(route: LearningRoute) -> List[StageGuide]:
             slides="18-21",
             mentor_script="Переведи разговор в evidence: симптом, план, skew, фикс, проверка до/после.",
             show_commands=[
-                f"python3 mentor-lab.py autograde-sql {lab_name} --submission labs/greenplum/examples/student-solution-example.sql",
+                f"python3 mentor-lab.py autograde-sql {lab_name} --submission labs/greenplum-625/examples/student-solution-example.sql",
             ],
             question="Как доказать, что фикс помог, а не просто случайно ускорился запрос?",
             expected_answer="Нужны before/after EXPLAIN ANALYZE, gp_segment_id/skew evidence и одинаковый workload context.",
@@ -202,7 +204,7 @@ def _lesson01_stage_guides(route: LearningRoute) -> List[StageGuide]:
 def _lesson02_stage_guides(route: LearningRoute) -> List[StageGuide]:
     workbook = route.workbook_path
     homework = route.homework_path
-    sql_lab = "labs/greenplum/examples/lesson02-partitioning-statistics-loads.sql"
+    sql_lab = "labs/greenplum-625/examples/lesson02-partitioning-statistics-loads.sql"
     return [
         StageGuide(
             "replay",
@@ -222,7 +224,7 @@ def _lesson02_stage_guides(route: LearningRoute) -> List[StageGuide]:
             "4-7",
             "Покажи bad/good partition key и объясни, что pruning/retention не заменяют DISTRIBUTED BY.",
             [
-                "docker compose -f labs/greenplum/docker-compose.yml exec -T -u gpadmin greenplum bash -lc '. /usr/local/greenplum-db/greenplum_path.sh && psql -U gpadmin -d mentor -v ON_ERROR_STOP=1 -f /mentor-lab/examples/lesson02-partitioning-statistics-loads.sql'",
+                "docker compose -f labs/greenplum-625/docker-compose.yml exec -T -u gpadmin greenplum-625 bash -lc '. /usr/local/gpdb/greenplum_path.sh && psql -U gpadmin -d mentor -v ON_ERROR_STOP=1 -f /mentor-lab/examples/lesson02-partitioning-statistics-loads.sql'",
                 "SELECT * FROM pg_partition_tree('lesson02.fact_sales_partitioned'::regclass);",
             ],
             "Почему partition key не равен distribution key?",
@@ -270,6 +272,84 @@ def _lesson02_stage_guides(route: LearningRoute) -> List[StageGuide]:
             "Что принести на следующий урок?",
             "DDL, EXPLAIN, partition catalog checks, statistics policy и validation.",
             "Ученик понимает критерии приемки homework.",
+            workbook,
+            homework,
+        ),
+    ]
+
+
+def _lesson03_stage_guides(route: LearningRoute) -> List[StageGuide]:
+    workbook = route.workbook_path
+    homework = route.homework_path
+    sql_lab = "labs/greenplum-625/examples/lesson03-olap-decomposition-tuning.sql"
+    return [
+        StageGuide(
+            "lab-optimizer",
+            "1-14",
+            "Подними greenplum-625 и сравни Legacy vs GPORCA на одном SQL.",
+            [
+                "python3 mentor-lab.py up greenplum-625",
+                "python3 mentor-lab.py seed greenplum-625 --profile lesson03",
+                "python3 mentor-lab.py check greenplum-625",
+                "\\i /mentor-lab/examples/lesson03-optimizer-legacy-vs-orca.sql",
+            ],
+            "Когда ORCA обычно лучше Legacy?",
+            "На many-join OLAP, где distribution-aware search уменьшает Motion cost.",
+            f"SQL-lab выполнен: {sql_lab}; ученик показывает optimizer=on/off EXPLAIN.",
+            workbook,
+            homework,
+        ),
+        StageGuide(
+            "plan-reading",
+            "15-19",
+            "Разбери EXPLAIN слоями: optimizer → Motion → join → estimates → scan.",
+            [
+                "EXPLAIN SELECT * FROM lesson03.v_heavy_olap_monolith;",
+            ],
+            "Какой Motion выглядит самым дорогим?",
+            "Тот, что переносит самый широкий промежуточный set до сужения.",
+            "Ученик даёт layered readout плана с маркером optimizer.",
+            workbook,
+            homework,
+        ),
+        StageGuide(
+            "statistics",
+            "20-22",
+            "Свяжи selectivity с pg_stats и слотами pg_statistic.",
+            [
+                "SELECT attname, n_distinct, most_common_vals, histogram_bounds FROM pg_stats WHERE schemaname = 'lesson03' AND tablename = 'fact_sales';",
+                "SELECT staattnum, stakind1, stanumbers1 FROM pg_statistic WHERE starelid = 'lesson03.fact_sales'::regclass LIMIT 20;",
+            ],
+            "Почему stale statistics опасны и для Legacy, и для ORCA?",
+            "Оба читают pg_statistic; мусор на входе ломает join/Motion choices.",
+            "Ученик показывает catalog evidence статистики.",
+            workbook,
+            homework,
+        ),
+        StageGuide(
+            "storage-temp",
+            "23-27",
+            "Сравни Heap/AO/AOCO (appendonly) и TEMP-декомпозицию с ANALYZE.",
+            [
+                "EXPLAIN SELECT region, category, revenue, rank() OVER (PARTITION BY region ORDER BY revenue DESC) FROM tmp_lesson03_sales_shaped;",
+            ],
+            "Зачем ANALYZE на TEMP при фиксированном optimizer?",
+            "Чтобы следующий этап планировался по реальной cardinality этапа.",
+            "Ученик сравнивает before/after на TEMP stages.",
+            workbook,
+            homework,
+        ),
+        StageGuide(
+            "homework",
+            "28-30",
+            "Закрой evidence pack: rewrite + optimizer policy + residual risk.",
+            [
+                "python3 mentor-lab.py runbook greenplum-query-tuning homework",
+                "python3 mentor-lab.py student greenplum-query-tuning homework",
+            ],
+            "Что принести на следующий урок?",
+            "Rewrite SQL, before/after EXPLAIN при фиксированном optimizer, stats snippet, residual risk.",
+            "Ученик понимает критерии приёмки homework.",
             workbook,
             homework,
         ),

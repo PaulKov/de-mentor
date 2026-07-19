@@ -63,11 +63,14 @@ LESSON_01_ROUTE = LearningRoute(
     title="Greenplum MPP foundations",
     docs_root="docs/lessons/01-greenplum",
     deck_path="artifacts/greenplum-theory.pptx",
-    google_slides_url=None,
+    google_slides_url=(
+        "https://docs.google.com/presentation/d/"
+        "1VFm7GG3_SO1h7AabgYyEt0_TANzI1OZiAQnoZpU6fO0/edit?usp=sharing"
+    ),
     sql_examples=(
-        "labs/greenplum/examples/storage-and-partitioning.sql",
-        "labs/greenplum/examples/partitioning-strategies.sql",
-        "labs/greenplum/examples/cluster-monitoring.sql",
+        "labs/greenplum-625/examples/storage-and-partitioning.sql",
+        "labs/greenplum-625/examples/partitioning-strategies.sql",
+        "labs/greenplum-625/examples/cluster-monitoring.sql",
     ),
     next_lesson=NextLesson(
         code="02-greenplum-partitioning",
@@ -88,20 +91,43 @@ LESSON_02_ROUTE = LearningRoute(
         "17Ae88PoniaFU34egsFPwC0PndAOoXMze4qV1pIKQkaI/edit?usp=sharing"
     ),
     sql_examples=(
-        "labs/greenplum/examples/lesson02-partitioning-statistics-loads.sql",
-        "labs/greenplum/examples/partitioning-strategies.sql",
-        "labs/greenplum/examples/cluster-monitoring.sql",
+        "labs/greenplum-625/examples/lesson02-partitioning-statistics-loads.sql",
+        "labs/greenplum-625/examples/partitioning-strategies.sql",
+        "labs/greenplum-625/examples/cluster-monitoring.sql",
     ),
     next_lesson=NextLesson(
         code="03-greenplum-query-tuning",
-        title="Query tuning, workload management and production diagnostics",
+        title="Декомпозиция и тюнинг тяжёлых запросов в MPP",
         path="docs/lessons/03-greenplum-query-tuning/README.md",
+    ),
+)
+
+LESSON_03_ROUTE = LearningRoute(
+    name="greenplum-query-tuning",
+    lesson_code="lesson-03",
+    physical_lab_name="greenplum-625",
+    title="Декомпозиция и тюнинг тяжёлых запросов в MPP",
+    docs_root="docs/lessons/03-greenplum-query-tuning",
+    deck_path="artifacts/greenplum-query-tuning-theory.pptx",
+    google_slides_url=(
+        "https://docs.google.com/presentation/d/"
+        "1e5vpqatw6ccgeZF0PWLLWMzIqkb4SODE-IwKxrSyqB8/edit?usp=sharing"
+    ),
+    sql_examples=(
+        "labs/greenplum-625/examples/lesson03-olap-decomposition-tuning.sql",
+        "labs/greenplum-625/examples/lesson03-optimizer-legacy-vs-orca.sql",
+    ),
+    next_lesson=NextLesson(
+        code="04-greenplum-wlm-diagnostics",
+        title="Workload management и production diagnostics",
+        path="docs/lessons/04-greenplum-wlm-diagnostics/README.md",
     ),
 )
 
 _ROUTES = {
     LESSON_01_ROUTE.name: LESSON_01_ROUTE,
     LESSON_02_ROUTE.name: LESSON_02_ROUTE,
+    LESSON_03_ROUTE.name: LESSON_03_ROUTE,
 }
 
 _ALIASES = {
@@ -115,6 +141,13 @@ _ALIASES = {
     "greenplum-02": "greenplum-partitioning",
     "partitioning": "greenplum-partitioning",
     "gp-partitioning": "greenplum-partitioning",
+    "03": "greenplum-query-tuning",
+    "3": "greenplum-query-tuning",
+    "lesson-03": "greenplum-query-tuning",
+    "greenplum-03": "greenplum-query-tuning",
+    "query-tuning": "greenplum-query-tuning",
+    "olap-tuning": "greenplum-query-tuning",
+    "gp-query-tuning": "greenplum-query-tuning",
 }
 
 

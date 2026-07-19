@@ -19,9 +19,9 @@
 - deep dive по partitioning: [partitioning strategies](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md);
 - практика ученика: [student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md);
 - домашка: [homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md);
-- runnable SQL: [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/storage-and-partitioning.sql);
-- partitioning SQL: [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/partitioning-strategies.sql);
-- monitoring SQL: [cluster monitoring SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/cluster-monitoring.sql);
+- runnable SQL: [storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/storage-and-partitioning.sql);
+- partitioning SQL: [partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/partitioning-strategies.sql);
+- monitoring SQL: [cluster monitoring SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/cluster-monitoring.sql);
 - автоматическая проверка: `python3 mentor-lab.py check greenplum`.
 - режим ведения урока через stage-oriented CLI;
 - сбор evidence в submission-ready markdown;
@@ -57,7 +57,7 @@ python3 mentor-lab.py dataset greenplum generate --scale small --seed 42 --skew 
 python3 mentor-lab.py evidence greenplum collect redistribute-join --output submissions/redistribute-join.md
 python3 mentor-lab.py misconception greenplum diagnose --text "partition key это то же самое что distribution key"
 python3 mentor-lab.py homework greenplum check --submission submissions/homework.md
-python3 mentor-lab.py autograde-sql greenplum --submission labs/greenplum/examples/student-solution-example.sql --output artifacts/sql-autograde.md
+python3 mentor-lab.py autograde-sql greenplum --submission labs/greenplum-625/examples/student-solution-example.sql --output artifacts/sql-autograde.md
 python3 mentor-lab.py calibration greenplum show senior
 python3 mentor-lab.py debrief greenplum --student Иван --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/greenplum-debrief.md
 python3 mentor-lab.py learning-loop greenplum --pre 40 --post 85 --submission submissions/query-tuning.md --output artifacts/greenplum-learning-loop.md
@@ -88,7 +88,7 @@ Advanced track подключай только после базового ци�
 - [QD/QE/gang/slices explained](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/qd-qe-gang-slices-explained.md) - сначала простыми словами, затем технически объяснить QD, QE, slice, gang, Motion и `EXPLAIN`;
 - [EXPLAIN plan reading](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/explain-plan-reading.md) - читать план по scan/local work/join/Motion/global work/Rows out;
 - [Physical joins in MPP](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/physical-joins-in-mpp.md) - отличать локальный join algorithm от MPP data movement;
-- [Partitioning strategies](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md) - выбирать `PARTITION BY RANGE`, `PARTITION BY LIST`, `PARTITION BY HASH`, смотреть `DEFAULT partition`, no default partitioning, out-of-range INSERT, `leaf_partitions`, `pg_partition_tree`, `gp_toolkit.gp_partitions`, `ATTACH PARTITION`, `DETACH PARTITION`;
+- [Partitioning strategies](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/partitioning-strategies.md) - выбирать `PARTITION BY RANGE`, `PARTITION BY LIST`, `PARTITION BY HASH`, смотреть `DEFAULT partition`, no default partitioning, out-of-range INSERT, `leaf_partitions`, `gp_toolkit.gp_partitions`, `gp_toolkit.gp_partitions`, `ATTACH PARTITION`, `DETACH PARTITION`;
 - [MPP system taxonomy](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/deep-dives/mpp-system-taxonomy.md) - сравнивать SMP, MPP, EPP, lakehouse и HTAP по bottleneck.
 
 ### 0-5 Минут: Контекст
@@ -172,7 +172,7 @@ ORDER BY c.relname;
 Покажи DDL-маркер:
 
 ```sql
-WITH (appendoptimized=true, orientation=column, compresstype=zstd, compresslevel=1)
+WITH (appendonly=true, orientation=column, compresstype=zstd, compresslevel=1)
 PARTITION BY RANGE (sale_date)
 ```
 
@@ -182,7 +182,7 @@ PARTITION BY RANGE (sale_date)
 \i /mentor-lab/examples/partitioning-strategies.sql
 
 SELECT *
-FROM pg_partition_tree('lesson01.partition_range_demo'::regclass);
+FROM gp_toolkit.gp_partitions('lesson01.partition_range_demo'::regclass);
 
 SELECT *
 FROM gp_toolkit.gp_partitions

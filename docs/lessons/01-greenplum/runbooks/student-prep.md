@@ -6,7 +6,7 @@
 
 - рабочая тетрадь: [рабочая тетрадь ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md)
 - план урока: [план урока](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/README.md)
-- README стенда: [README стенда Greenplum](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/README.md)
+- README стенда: [README стенда Greenplum](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/README.md)
 - упрощенный маршрут ментора: [упрощенный маршрут](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/simple-path.md)
 
 ## Что Подготовить
@@ -16,7 +16,7 @@
 - ноутбук с 8 GB RAM или больше, лучше 16 GB;
 - 10-15 GB свободного места под Docker image, container и volume;
 - стабильный интернет для `git clone` и `docker pull`;
-- свободный локальный порт `15432`;
+- свободный локальный порт `15436`;
 - Git;
 - Python 3.9+;
 - Docker с Docker Compose v2;
@@ -81,6 +81,7 @@ Smoke-check перед уроком:
 ```bash
 docker pull docker.io/woblerr/greenplum:7.1.0
 python3 mentor-lab.py up greenplum
+python3 mentor-lab.py seed greenplum --profile academy
 python3 mentor-lab.py check greenplum
 python3 mentor-lab.py psql greenplum
 ```
@@ -129,6 +130,7 @@ Smoke-check перед уроком:
 ```powershell
 docker pull docker.io/woblerr/greenplum:7.1.0
 py mentor-lab.py up greenplum
+py mentor-lab.py seed greenplum --profile academy
 py mentor-lab.py check greenplum
 py mentor-lab.py psql greenplum
 ```
@@ -192,6 +194,7 @@ Smoke-check перед уроком:
 ```bash
 docker pull docker.io/woblerr/greenplum:7.1.0
 python3 mentor-lab.py up greenplum
+python3 mentor-lab.py seed greenplum --profile academy
 python3 mentor-lab.py check greenplum
 python3 mentor-lab.py psql greenplum
 ```
@@ -233,7 +236,7 @@ py mentor-lab.py logs greenplum
 - `mentor-lab.py up greenplum` поднял контейнер;
 - `mentor-lab.py check greenplum` показывает `PASS`;
 - `mentor-lab.py psql greenplum` открывает `psql`;
-- порт `15432` не занят другим сервисом;
+- порт `15436` не занят другим сервисом;
 - есть понимание, как остановить стенд: `mentor-lab.py down greenplum`.
 
 Полезная команда для повтора этого runbook:

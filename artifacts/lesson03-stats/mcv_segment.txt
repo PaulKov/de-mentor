@@ -1,0 +1,14 @@
+QUERY PLAN                                                          
+------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=0.00..431.17 rows=1 width=8) (actual time=0.478..0.478 rows=1 loops=1)
+   ->  Gather Motion 2:1  (slice1; segments: 2)  (cost=0.00..431.17 rows=1 width=8) (actual time=0.475..0.476 rows=2 loops=1)
+         ->  Aggregate  (cost=0.00..431.17 rows=1 width=8) (actual time=0.148..0.148 rows=1 loops=1)
+               ->  Seq Scan on dim_customer  (cost=0.00..431.17 rows=785 width=1) (actual time=0.006..0.130 rows=788 loops=1)
+                     Filter: (segment = 'enterprise'::text)
+ Planning time: 7.760 ms
+   (slice0)    Executor memory: 59K bytes.
+   (slice1)    Executor memory: 58K bytes avg x 2 workers, 58K bytes max (seg0).
+ Memory used:  128000kB
+ Optimizer: Pivotal Optimizer (GPORCA)
+ Execution time: 0.697 ms
+(11 rows)

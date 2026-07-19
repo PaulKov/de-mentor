@@ -1,0 +1,21 @@
+services:
+  greenplum-625:
+    image: ${GREENPLUM_625_IMAGE:-andruche/greenplum:6.25.3-slim-arm64}
+    hostname: greenplum-625
+    environment:
+      TZ: Europe/Moscow
+    ports:
+      - "15436:5432"
+    volumes:
+      - ./examples:/mentor-lab/examples
+      - ./seed:/mentor-lab/seed
+    # Healthcheck uses maintenance DB `postgres` (image default).
+    # Lesson data lives in DB `mentor` (created by mentor-lab seed/check/psql).
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - su - gpadmin -c ". /usr/local/gpdb/greenplum_path.sh && psql -U gpadmin -d postgres -c 'SELECT 1' >/dev/null 2>&1"
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 20s

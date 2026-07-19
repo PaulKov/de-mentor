@@ -12,7 +12,7 @@ def greenplum_prep_runbook() -> Runbook:
                         title="Student prep: Greenplum lesson 01 environment checklist",
                         description=(
                             "Self-service подготовка ученика к уроку: macOS, Windows и Linux, "
-                            "Docker Desktop / Docker Engine, WSL 2, Python, Git, порт 15432 и smoke-check."
+                            "Docker Desktop / Docker Engine, WSL 2, Python, Git, порт 15436 и smoke-check."
                         ),
                         stages=[
                             RunbookStage(
@@ -21,7 +21,7 @@ def greenplum_prep_runbook() -> Runbook:
                                 "Проверить железо и базовые инструменты",
                                 (
                                     "Ученик готовит ноутбук: Docker запущен, Python и Git "
-                                    "доступны из терминала, порт 15432 свободен."
+                                    "доступны из терминала, порт 15436 свободен."
                                 ),
                                 [
                                     "python3 --version",
@@ -66,7 +66,7 @@ def greenplum_prep_runbook() -> Runbook:
                                 [
                                     "docs/lessons/01-greenplum/runbooks/student-prep.md",
                                     "docs/lessons/01-greenplum/student-workbook.md",
-                                    "labs/greenplum/README.md",
+                                    "labs/greenplum-625/README.md",
                                 ],
                             ),
                             RunbookStage(
@@ -92,11 +92,11 @@ def greenplum_prep_runbook() -> Runbook:
                                     "Docker Desktop не запущен, WSL 2 backend выключен, "
                                     "виртуализация отключена в BIOS/UEFI или PowerShell открыт не в папке репозитория."
                                 ),
-                                "`py mentor-lab.py check greenplum` проходит, порт 15432 не занят.",
+                                "`py mentor-lab.py check greenplum` проходит, порт 15436 не занят.",
                                 [
                                     "docs/lessons/01-greenplum/runbooks/student-prep.md",
                                     "docs/lessons/01-greenplum/student-workbook.md",
-                                    "labs/greenplum/README.md",
+                                    "labs/greenplum-625/README.md",
                                 ],
                             ),
                             RunbookStage(
@@ -124,7 +124,7 @@ def greenplum_prep_runbook() -> Runbook:
                                 [
                                     "docs/lessons/01-greenplum/runbooks/student-prep.md",
                                     "docs/lessons/01-greenplum/student-workbook.md",
-                                    "labs/greenplum/README.md",
+                                    "labs/greenplum-625/README.md",
                                 ],
                             ),
                             RunbookStage(
