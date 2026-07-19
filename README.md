@@ -188,7 +188,7 @@ python3 mentor-lab.py academy greenplum-query-tuning start --student Иван --
 - [Индекс Урока 03](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/03-greenplum-query-tuning/README.md)
 - [Manifest выпуска](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/03-greenplum-query-tuning/lesson.yaml)
 - [Презентация в PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-query-tuning-theory.pptx)
-- [Презентация в Google Slides](https://docs.google.com/presentation/d/1_YfYh4Kf-8Xblule_pprHwlxRlFDBpn4K14i6w18H5U/edit?usp=sharing)
+- [Презентация в Google Slides](https://docs.google.com/presentation/d/1e5vpqatw6ccgeZF0PWLLWMzIqkb4SODE-IwKxrSyqB8/edit?usp=sharing)
 - [План ментора](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/03-greenplum-query-tuning/mentor-guide.md)
 - [Workbook ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/03-greenplum-query-tuning/student-workbook.md)
 - [Домашка](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/03-greenplum-query-tuning/homework.md)

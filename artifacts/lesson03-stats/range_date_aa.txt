@@ -1,0 +1,18 @@
+QUERY PLAN                                                                             
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=0.00..432.89 rows=1 width=8) (actual time=4.338..4.338 rows=1 loops=1)
+   ->  Gather Motion 2:1  (slice1; segments: 2)  (cost=0.00..432.89 rows=1 width=8) (actual time=4.254..4.334 rows=2 loops=1)
+         ->  Aggregate  (cost=0.00..432.89 rows=1 width=8) (actual time=3.804..3.804 rows=1 loops=1)
+               ->  Sequence  (cost=0.00..432.89 rows=22400 width=4) (actual time=0.845..3.221 rows=22896 loops=1)
+                     ->  Partition Selector for fact_sales (dynamic scan id: 1)  (cost=10.00..100.00 rows=50 width=4) (never executed)
+                           Partitions selected: 2 (out of 4)
+                     ->  Dynamic Seq Scan on fact_sales (dynamic scan id: 1)  (cost=0.00..432.89 rows=22400 width=4) (actual time=0.842..2.330 rows=22896 loops=1)
+                           Filter: ((sale_date >= '2026-02-01'::date) AND (sale_date < '2026-03-01'::date))
+                           Partitions scanned:  Avg 2.0 (out of 4) x 2 workers.  Max 2 parts (seg0).
+ Planning time: 12.426 ms
+   (slice0)    Executor memory: 131K bytes.
+   (slice1)    Executor memory: 346K bytes avg x 2 workers, 346K bytes max (seg0).
+ Memory used:  128000kB
+ Optimizer: Pivotal Optimizer (GPORCA)
+ Execution time: 4.581 ms
+(15 rows)

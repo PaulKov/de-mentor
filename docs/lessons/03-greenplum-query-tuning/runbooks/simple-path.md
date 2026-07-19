@@ -31,4 +31,4 @@ EXPLAIN SELECT * FROM lesson03.v_heavy_olap_monolith;
 
 ## Слайды
 
-1–4 (glossary + star-join), 5–25 (pipeline + star deep + plan trees), 26–36 (case/stats), 37–51 (TEMP FS/spill), 52–55 (proof).
+1–4 (glossary), 5–25 (pipeline + plans), 26–35 (case/Motion), 36–48 (stats deep), 49–62 (storage/TEMP), 63–65 (proof).

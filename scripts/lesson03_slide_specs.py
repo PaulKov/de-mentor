@@ -126,9 +126,9 @@ SLIDES = [
                 "amber",
             ],
             [
-                "MCV / TEMP",
-                "Most Common Values в pg_statistic. TEMP — явная temp-таблица "
-                "(не путать с spill files при нехватке work_mem).",
+                "MCV / Histogram",
+                "MCV — частые значения+freqs (equality). "
+                "Histogram — equi-depth bounds для range; длина ≈ statistics_target+1.",
                 "green",
             ],
         ],
@@ -577,15 +577,16 @@ SLIDES = [
     {
         "kicker": "Estimates",
         "title": "Если rows врут — тюнинг SQL почти бессмысленен",
-        "subtitle": "Плохая selectivity ломает и Legacy, и ORCA — но по-разному.",
+        "subtitle": "Сначала доказать estimate vs actual, потом rewrite/optimizer.",
         "type": "code",
         "code": (
             "EXPLAIN ANALYZE\n"
             "SELECT ...;\n\n"
-            "-- Ищем:\n"
-            "--   rows vs actual rows\n"
-            "--   расхождение x10–x100 на join input\n"
-            "-- Затем: pg_stats / ANALYZE, и только потом rewrite."
+            "-- Ищем на каждом узле:\n"
+            "--   rows=<estimate>  vs  actual rows=<fact>\n"
+            "-- Порог тревоги: x5–x10 на join/agg input\n"
+            "-- Дальше: pg_stats → ANALYZE / SET STATISTICS → TEMP\n"
+            "-- И только потом менять SQL shape / optimizer."
         ),
     },
     {
@@ -597,49 +598,264 @@ SLIDES = [
         "right": ["После", "TEMP окна + ANALYZE → меньше shuffle bytes.", "green"],
     },
     {
-        "kicker": "Statistics",
-        "title": "Оптимизатор питается MCV, histogram, n_distinct",
-        "subtitle": "И Legacy, и ORCA читают pg_statistic; мусор на входе = мусор в plan.",
-        "type": "cards",
-        "cards": [
-            ["n_distinct", "Кардинальность; ломается на skew.", "green"],
-            ["MCV", "Most Common Values для equality/IN.", "blue"],
-            ["Histogram", "Range predicates.", "amber"],
-            ["correlation", "Physical order vs logical.", "green"],
-        ],
-    },
-    {
-        "kicker": "Catalog",
-        "title": "pg_stats → pg_statistic → слоты на диске",
-        "subtitle": "Читаем статистику как plan: сначала human view, затем raw slots.",
-        "type": "code",
-        "code": (
-            "SELECT attname, n_distinct, most_common_vals, histogram_bounds\n"
-            "FROM pg_stats\n"
-            "WHERE schemaname='lesson03' AND tablename='fact_sales';\n\n"
-            "SELECT staattnum, stakind1, stanumbers1, stavalues1\n"
-            "FROM pg_statistic\n"
-            "WHERE starelid='lesson03.fact_sales'::regclass;"
-        ),
-    },
-    {
-        "kicker": "Engine",
-        "title": "ANALYZE path в коде Greenplum 6.25",
-        "subtitle": "sample → compute_stats → catalog heap tuple (возможно TOAST).",
+        "kicker": "Stats why",
+        "title": "На что влияет статистика в Greenplum",
+        "subtitle": "Не «для красоты catalog»: от rows зависят join order, Motion, mem и spill.",
         "type": "cards",
         "cards": [
             [
-                "analyze.c",
-                f"Sampling и MCV/histogram.\n{GPDB_6X}/src/backend/commands/analyze.c",
+                "Join order / hash vs nest",
+                "Estimate input rows решает, что строить в hash и какой dim Broadcast.",
                 "green",
             ],
             [
-                "selfuncs.c",
-                f"Selectivity для costing.\n{GPDB_6X}/src/backend/utils/adt/selfuncs.c",
+                "Motion cost",
+                "Завышенный rows → лишний Redistribute/Broadcast «на всякий случай».",
                 "blue",
             ],
-            ["pg_statistic", "Источник истины planner/ORCA metadata.", "amber"],
-            ["QD/QE", "План на QD; данные и файлы на segments.", "green"],
+            [
+                "Agg / GROUP BY",
+                "NDV групп ≈ n_distinct ключей; ошибка → плохой Redistribute grain.",
+                "amber",
+            ],
+            [
+                "Memory / spill",
+                "statement_mem и workfiles планируются от estimate; врёт rows → диск.",
+                "red",
+            ],
+        ],
+    },
+    {
+        "kicker": "Stats anatomy",
+        "title": "Из чего состоит статистика колонки",
+        "subtitle": "Human view: pg_stats. Source of truth: pg_statistic slots после ANALYZE.",
+        "type": "cards",
+        "cards": [
+            [
+                "n_distinct",
+                ">0 абсолют NDV; <0 доля от rows (−1 ≈ unique). "
+                "База для equality без MCV и для GROUP BY.",
+                "green",
+            ],
+            [
+                "MCV + freqs",
+                "most_common_vals / most_common_freqs. "
+                "Equality/IN по частым значениям → берёт freq, не 1/NDV.",
+                "blue",
+            ],
+            [
+                "Histogram",
+                "histogram_bounds — equi-depth корзины (равная доля строк). "
+                "Для range (<, BETWEEN). MCV-значения из hist исключены.",
+                "amber",
+            ],
+            [
+                "null_frac / correlation",
+                "Доля NULL; correlation физ.порядка vs logical "
+                "(влияние на index/scan costing).",
+                "green",
+            ],
+        ],
+    },
+    {
+        "kicker": "Screenshot",
+        "title": "Скрин pg_stats со стенда: MCV vs histogram",
+        "subtitle": "default_statistics_target=100 → hist_n≈101. sale_date: все в MCV → hist пуст.",
+        "type": "image",
+        "image": "artifacts/lesson03-plan-screens/stats-pg-stats-overview.png",
+    },
+    {
+        "kicker": "Histogram",
+        "title": "Гистограмма: equi-depth, сколько шагов, как читать",
+        "subtitle": "Не bar-chart «красивый» — массив границ корзин равной плотности строк.",
+        "type": "code",
+        "code": (
+            "-- default_statistics_target = 100  (GUC / SET / ALTER COLUMN SET STATISTICS)\n"
+            "-- ANALYZE строит до ~100 MCV и ~100 histogram buckets\n"
+            "-- histogram_bounds.length ≈ target + 1  (границы), на стенде: 101\n\n"
+            "bucket_i ≈ (значения между bounds[i] и bounds[i+1])\n"
+            "каждый bucket ≈ 1/target доли строк (equi-depth / equi-height)\n\n"
+            "SELECTIVITY (col BETWEEN lo AND hi):\n"
+            "  доля полных корзин внутри [lo,hi]\n"
+            "  + доля края (линейная интерполяция в partial bucket)\n\n"
+            "-- На стенде amount: bounds {1.67, 4.33, 6.67, ...}\n"
+            "-- sale_date: hist NULL — NDV мал, всё ушло в MCV"
+        ),
+    },
+    {
+        "kicker": "Screenshot",
+        "title": "Скрин: структура histogram + физический слот",
+        "subtitle": "stakind=2 → stavalues = bounds array в tuple pg_statistic (возможен TOAST).",
+        "type": "image",
+        "image": "artifacts/lesson03-plan-screens/stats-histogram-structure.png",
+    },
+    {
+        "kicker": "MCV",
+        "title": "MCV: как выглядит и когда histogram не строится",
+        "subtitle": "Частые значения + частоты. Если NDV ≤ target — весь столбец может быть MCV.",
+        "type": "code",
+        "code": (
+            "-- dim_customer.segment на стенде:\n"
+            "most_common_vals  = {enterprise, mid, smb, test}\n"
+            "most_common_freqs = {0.3138, 0.3138, 0.3136, 0.0588}\n"
+            "n_distinct = 4   histogram_bounds = NULL\n\n"
+            "WHERE segment = 'enterprise'  → sel ≈ 0.314  (не 0.25!)\n"
+            "WHERE segment = 'test'        → sel ≈ 0.059\n"
+            "WHERE segment = 'unknown'     → sel ≈ (1 - sum(mcf)) / (NDV - |MCV|)\n"
+            "                               или fallback, если значения нет в MCV\n\n"
+            "-- Физика: stakind=1; stavalues=values; stanumbers=freqs"
+        ),
+    },
+    {
+        "kicker": "Selectivity",
+        "title": "Как оцениваются предикаты (selfuncs)",
+        "subtitle": "Каждый фильтр → selectivity ∈ (0,1]; rows ≈ sel × child_rows.",
+        "type": "cards",
+        "cards": [
+            [
+                "col = const",
+                "Если const ∈ MCV → freq. Иначе ≈ (1−Σmcf)/(n_distinct−|MCV|) "
+                "или 1/n_distinct.",
+                "green",
+            ],
+            [
+                "col < / BETWEEN",
+                "По histogram_bounds (equi-depth) + края. "
+                "Без hist — грубый fallback.",
+                "blue",
+            ],
+            [
+                "AND / OR",
+                "По умолчанию независимость: sel_and ≈ s1·s2. "
+                "Корреляция колонок → главная ловушка.",
+                "amber",
+            ],
+            [
+                "Выражения",
+                "date_trunc(col), col+1, lower(col) — часто без stats "
+                "→ дефолтная selectivity (опасно).",
+                "red",
+            ],
+        ],
+    },
+    {
+        "kicker": "Screenshot",
+        "title": "Скрин EXPLAIN ANALYZE: хорошие оценки на стенде",
+        "subtitle": "Простые предикаты + свежий ANALYZE → estimate ≈ actual.",
+        "type": "image",
+        "image": "artifacts/lesson03-plan-screens/stats-estimates-good.png",
+    },
+    {
+        "kicker": "GROUP BY",
+        "title": "Оценка группировок: NDV и «плотность»",
+        "subtitle": "Planner оценивает число групп, не только строк до agg.",
+        "type": "code",
+        "code": (
+            "-- Базовая модель (упрощённо):\n"
+            "groups(col) ≈ n_distinct(col)          -- один ключ\n"
+            "groups(a,b) ≈ min( NDV(a)*NDV(b), rows )  -- независимость!\n\n"
+            "-- На стенде:\n"
+            "region: n_distinct=4, freqs равны 0.25\n"
+            "GROUP BY region → estimate groups=4, actual=4  ✓\n\n"
+            "-- Плохо: GROUP BY expr / много ключей с корреляцией\n"
+            "--   (region, segment) на самом деле << 4*4 возможных\n"
+            "-- GP 6.25: нет CREATE STATISTICS (pg_statistic_ext) —\n"
+            "--   market practice PG10+/GP7; здесь чиним декомпозицией."
+        ),
+    },
+    {
+        "kicker": "Stats fail",
+        "title": "Когда хорошая статистика всё равно врёт",
+        "subtitle": "Проблема не всегда stale ANALYZE — часто модель независимости и форма SQL.",
+        "type": "cards",
+        "cards": [
+            [
+                "Коррелированные фильтры",
+                "WHERE region='us' AND segment='enterprise' — "
+                "sel≠s1·s2, если атрибуты связаны.",
+                "red",
+            ],
+            [
+                "Many-join / star",
+                "Ошибка sel на каждом join перемножается → "
+                "взрыв/схлопывание rows на Motion.",
+                "amber",
+            ],
+            [
+                "Функции на колонках",
+                "WHERE date_trunc('week', sale_date)=… — "
+                "stats на sale_date не помогают напрямую.",
+                "blue",
+            ],
+            [
+                "Skew + редкие значения",
+                "Значение вне MCV при высоком skew → "
+                "недооценка; hash/Broadcast ломаются.",
+                "green",
+            ],
+        ],
+    },
+    {
+        "kicker": "Stats fix",
+        "title": "Путь решения: от ANALYZE до декомпозиции",
+        "subtitle": "Market practice: доказать misestimate → починить вход stats → иначе physical stage.",
+        "type": "flow",
+        "flow": [
+            ["Measure", "EXPLAIN ANALYZE rows vs actual.", "green"],
+            ["Refresh", "ANALYZE / после load.", "blue"],
+            ["Target", "SET STATISTICS N на ключ.", "amber"],
+            ["Rewrite", "убрать expr/коррел.", "green"],
+            ["TEMP", "stage + ANALYZE.", "blue"],
+        ],
+    },
+    {
+        "kicker": "Stats ops",
+        "title": "Как обновлять и настраивать статистику (GP 6.25)",
+        "subtitle": "Контракт production: stats = часть data pipeline, не «иногда vacuum».",
+        "type": "code",
+        "code": (
+            "ANALYZE lesson03.fact_sales;\n"
+            "ANALYZE lesson03.dim_customer;\n\n"
+            "-- Больше buckets/MCV на «важной» колонке (market practice):\n"
+            "ALTER TABLE lesson03.fact_sales\n"
+            "  ALTER COLUMN sale_date SET STATISTICS 200;\n"
+            "ANALYZE lesson03.fact_sales;\n\n"
+            "SHOW default_statistics_target;   -- на стенде: 100\n\n"
+            "-- После ETL/partition exchange — ANALYZE обязателен\n"
+            "-- TEMP stage: ANALYZE сразу после наполнения\n"
+            "-- GP6: нет CREATE STATISTICS; на GP7/PG10+ — multivariate NDV/MCV"
+        ),
+    },
+    {
+        "kicker": "Stats code",
+        "title": "Код и каталог: от ANALYZE до selectivity",
+        "subtitle": "Якоря 6X_STABLE + физика catalog heap.",
+        "type": "cards",
+        "cards": [
+            [
+                "ANALYZE",
+                f"sample → MCV/hist → pg_statistic\n"
+                f"{GPDB_6X}/src/backend/commands/analyze.c",
+                "green",
+            ],
+            [
+                "Selectivity",
+                f"eqsel / rangesel / …\n"
+                f"{GPDB_6X}/src/backend/utils/adt/selfuncs.c",
+                "blue",
+            ],
+            [
+                "Слоты",
+                "stakind 1=MCV, 2=histogram, 3=correlation; "
+                "stavalues/stanumbers; TOAST возможен.",
+                "amber",
+            ],
+            [
+                "Практика",
+                "Читать pg_stats → сверять EXPLAIN ANALYZE → "
+                "только потом TEMP/optimizer.",
+                "green",
+            ],
         ],
     },
     {
@@ -803,9 +1019,9 @@ SLIDES = [
         "subtitle": "Оптимизация Greenplum — это pipeline + два optimizer + физика данных.",
         "type": "cards",
         "cards": [
-            ["GUC", "optimizer on/off — явный выбор движка плана.", "green"],
-            ["TEMP ≠ spill", "t_* relation на QE vs pgsql_tmp_Sort_* workfiles.", "blue"],
-            ["Доказательство", "before/after EXPLAIN + ANALYZE/distribution + FS sanity.", "amber"],
+            ["Stats", "MCV/hist → selectivity → rows; иначе TEMP stage.", "green"],
+            ["TEMP ≠ spill", "t_* на QE vs pgsql_tmp_Sort_* workfiles.", "blue"],
+            ["Доказательство", "EXPLAIN ANALYZE + pg_stats + before/after rewrite.", "amber"],
         ],
     },
 ]

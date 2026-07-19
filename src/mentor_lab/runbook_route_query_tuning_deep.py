@@ -32,21 +32,24 @@ def greenplum_query_tuning_deep_runbook() -> Runbook:
                 links,
             ),
             RunbookStage(
-                "25:00-50:00",
-                "26-36",
-                "pg_statistic internals",
-                "Разбери stakind/stavalues и путь ANALYZE → catalog → planner/ORCA.",
+                "25:00-55:00",
+                "36-48",
+                "Statistics deep-dive",
+                "Equi-depth histogram, MCV, selectivity, GROUP BY NDV; fail modes → TEMP. Слоты stakind/TOAST.",
                 [
-                    "SELECT starelid::regclass, staattnum, stakind1, stanumbers1, stavalues1 FROM pg_statistic WHERE starelid = 'lesson03.fact_sales'::regclass LIMIT 20;",
+                    "SHOW default_statistics_target;",
+                    "SELECT attname, n_distinct, most_common_freqs, array_length(histogram_bounds, 1) FROM pg_stats WHERE schemaname='lesson03' AND tablename='fact_sales';",
+                    "SELECT staattnum, stakind1, stanumbers1, left(stavalues1::text,80) FROM pg_statistic WHERE starelid='lesson03.fact_sales'::regclass ORDER BY 1;",
+                    "EXPLAIN ANALYZE SELECT count(*) FROM lesson03.fact_sales f JOIN lesson03.dim_customer c ON c.customer_id=f.customer_id WHERE c.segment='test' AND f.sale_date >= DATE '2026-02-01';",
                 ],
-                "Где физически живут значения статистики?",
-                "В tuple pg_statistic (heap catalog), большие arrays могут быть в TOAST.",
-                "Ученик не ищет отдельный proprietary stats-file per column.",
+                "Когда свежий ANALYZE не спасает кардинальность и что делать на GP6?",
+                "Корреляция предикатов/many-join/expr — independence assumption; путь: rewrite + TEMP stage + ANALYZE (нет CREATE STATISTICS на GP6).",
+                "Ученик связывает slot → predicate → misestimate → decomposition.",
                 links,
             ),
             RunbookStage(
-                "50:00-70:00",
-                "37-39",
+                "55:00-70:00",
+                "49-50",
                 "Physical storage",
                 "Свяжи Heap/AO/AOCO с типами данных и projection.",
                 [
@@ -61,7 +64,7 @@ def greenplum_query_tuning_deep_runbook() -> Runbook:
             ),
             RunbookStage(
                 "70:00-100:00",
-                "40-51",
+                "51-62",
                 "TEMP FS + spill deep-dive",
                 "Покажи t_* на QE vs pgsql_tmp_Sort_*; external merge Disk; плюсы/минусы TEMP.",
                 [
@@ -76,7 +79,7 @@ def greenplum_query_tuning_deep_runbook() -> Runbook:
             ),
             RunbookStage(
                 "100:00-120:00",
-                "52-55",
+                "63-65",
                 "Design review",
                 "Попроси защитить rewrite как production mini-RFC при фиксированном GUC optimizer.",
                 [

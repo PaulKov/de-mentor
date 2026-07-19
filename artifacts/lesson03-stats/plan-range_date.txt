@@ -1,0 +1,12 @@
+QUERY PLAN                                                      
+----------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=0.00..432.89 rows=1 width=8)
+   ->  Gather Motion 2:1  (slice1; segments: 2)  (cost=0.00..432.89 rows=1 width=8)
+         ->  Aggregate  (cost=0.00..432.89 rows=1 width=8)
+               ->  Sequence  (cost=0.00..432.89 rows=22400 width=4)
+                     ->  Partition Selector for fact_sales (dynamic scan id: 1)  (cost=10.00..100.00 rows=50 width=4)
+                           Partitions selected: 2 (out of 4)
+                     ->  Dynamic Seq Scan on fact_sales (dynamic scan id: 1)  (cost=0.00..432.89 rows=22400 width=4)
+                           Filter: ((sale_date >= '2026-02-01'::date) AND (sale_date < '2026-03-01'::date))
+ Optimizer: Pivotal Optimizer (GPORCA)
+(9 rows)

@@ -36,12 +36,28 @@ SET optimizer = off;      -- Legacy
 ## Статистика
 
 ```sql
-SELECT attname, n_distinct, most_common_vals, histogram_bounds
+SHOW default_statistics_target;  -- обычно 100 → ~100 buckets, hist_bounds≈101
+
+SELECT attname, n_distinct, most_common_vals, most_common_freqs,
+       array_length(histogram_bounds, 1) AS hist_n
 FROM pg_stats
 WHERE schemaname = '...' AND tablename = '...';
+
+ANALYZE myschema.mytable;
+ALTER TABLE myschema.mytable ALTER COLUMN col SET STATISTICS 200;
+ANALYZE myschema.mytable;
 ```
 
-Помни: `ANALYZE` после существенного изменения данных — часть контракта, не «опция».
+| Предикат | Опора |
+| --- | --- |
+| `=` / `IN` | MCV freqs или `1/n_distinct` |
+| `<` / `BETWEEN` | equi-depth `histogram_bounds` |
+| `AND` | часто `s1·s2` (независимость — ловушка) |
+| `GROUP BY` | NDV ключей; на GP6 нет `CREATE STATISTICS` |
+
+Диагностика: `EXPLAIN ANALYZE` → `rows` vs `actual rows` → `pg_stats` → `ANALYZE` / `SET STATISTICS` / TEMP stage.
+
+Помни: `ANALYZE` после load/TEMP — часть контракта, не «опция».
 
 ## TEMP Паттерн
 

@@ -1,0 +1,22 @@
+QUERY PLAN                                                                  
+----------------------------------------------------------------------------------------------------------------------------------------------
+ Gather Motion 2:1  (slice2; segments: 2)  (cost=0.00..885.03 rows=4 width=12)
+   ->  GroupAggregate  (cost=0.00..885.03 rows=2 width=12)
+         Group Key: dim_customer.region
+         ->  Sort  (cost=0.00..885.03 rows=2 width=12)
+               Sort Key: dim_customer.region
+               ->  Redistribute Motion 2:2  (slice1; segments: 2)  (cost=0.00..885.03 rows=2 width=12)
+                     Hash Key: dim_customer.region
+                     ->  Result  (cost=0.00..885.03 rows=2 width=12)
+                           ->  HashAggregate  (cost=0.00..885.03 rows=2 width=12)
+                                 Group Key: dim_customer.region
+                                 ->  Hash Join  (cost=0.00..877.56 rows=59941 width=4)
+                                       Hash Cond: (fact_sales.customer_id = dim_customer.customer_id)
+                                       ->  Sequence  (cost=0.00..433.64 rows=60000 width=4)
+                                             ->  Partition Selector for fact_sales (dynamic scan id: 1)  (cost=10.00..100.00 rows=50 width=4)
+                                                   Partitions selected: 4 (out of 4)
+                                             ->  Dynamic Seq Scan on fact_sales (dynamic scan id: 1)  (cost=0.00..433.64 rows=60000 width=4)
+                                       ->  Hash  (cost=431.08..431.08 rows=2500 width=8)
+                                             ->  Seq Scan on dim_customer  (cost=0.00..431.08 rows=2500 width=8)
+ Optimizer: Pivotal Optimizer (GPORCA)
+(19 rows)

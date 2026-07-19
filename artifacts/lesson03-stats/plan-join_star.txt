@@ -1,0 +1,17 @@
+QUERY PLAN                                                         
+----------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=0.00..871.63 rows=1 width=8)
+   ->  Gather Motion 2:1  (slice1; segments: 2)  (cost=0.00..871.63 rows=1 width=8)
+         ->  Aggregate  (cost=0.00..871.63 rows=1 width=8)
+               ->  Hash Join  (cost=0.00..871.63 rows=2068 width=1)
+                     Hash Cond: (fact_sales.customer_id = dim_customer.customer_id)
+                     ->  Sequence  (cost=0.00..434.23 rows=35200 width=8)
+                           ->  Partition Selector for fact_sales (dynamic scan id: 1)  (cost=10.00..100.00 rows=50 width=4)
+                                 Partitions selected: 3 (out of 4)
+                           ->  Dynamic Seq Scan on fact_sales (dynamic scan id: 1)  (cost=0.00..434.23 rows=35200 width=8)
+                                 Filter: (sale_date >= '2026-02-01'::date)
+                     ->  Hash  (cost=431.16..431.16 rows=147 width=4)
+                           ->  Seq Scan on dim_customer  (cost=0.00..431.16 rows=147 width=4)
+                                 Filter: (segment = 'test'::text)
+ Optimizer: Pivotal Optimizer (GPORCA)
+(14 rows)
