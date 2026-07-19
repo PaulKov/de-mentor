@@ -49,4 +49,7 @@ py mentor-lab.py student greenplum-query-tuning homework
 - вопрос по `pg_stats` / estimate fail;
 - если есть домашка Lesson 02 — файл с pruning/`ANALYZE` evidence.
 
-Workbook: [student-workbook.md](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/03-greenplum-query-tuning/student-workbook.md).
+Материалы:
+
+- Workbook: [student-workbook.md](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/03-greenplum-query-tuning/student-workbook.md)
+- Презентация: [greenplum-query-tuning-theory.pptx](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-query-tuning-theory/greenplum-query-tuning-theory.pptx)

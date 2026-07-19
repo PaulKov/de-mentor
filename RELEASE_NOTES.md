@@ -28,7 +28,7 @@ python3 scripts/build_lesson03_pptx.py
 - Отдельный physical lab `greenplum-625` на Greenplum 6.25.3 (`andruche/greenplum`).
 - SQL-lab `labs/greenplum-625/examples/lesson03-olap-decomposition-tuning.sql`.
 - Demo Legacy vs GPORCA: `labs/greenplum-625/examples/lesson03-optimizer-legacy-vs-orca.sql`.
-- PPTX `artifacts/greenplum-query-tuning-theory.pptx` (30 слайдов) + declarative sources.
+- PPTX `artifacts/greenplum-query-tuning-theory/greenplum-query-tuning-theory.pptx` (30 слайдов) + declarative sources.
 - Academy Control Plane и Lesson Release Manifest для Урока 03.
 - Deep-dive `optimizer-legacy-vs-orca.md`.
 

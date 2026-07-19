@@ -42,4 +42,7 @@ py mentor-lab.py student greenplum-partitioning homework
 - вопрос по statistics или `ANALYZE`;
 - если есть домашка Lesson 01, файл с `EXPLAIN` и выводом `gp_segment_id`.
 
-Workbook: [student-workbook.md](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/student-workbook.md).
+Материалы:
+
+- Workbook: [student-workbook.md](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/student-workbook.md)
+- Презентация: [greenplum-partitioning-theory.pptx](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-partitioning-theory/greenplum-partitioning-theory.pptx)

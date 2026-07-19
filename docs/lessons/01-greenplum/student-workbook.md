@@ -535,27 +535,28 @@ python3 mentor-lab.py hint greenplum mpp-systems
 Материалы:
 
 1. [Student prep](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/student-prep.md) - подготовка Docker, Python и базовая диагностика для macOS, Windows и Linux.
-2. [Greenplum lab README](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/README.md) - как устроен Docker-стенд Greenplum и как его запустить.
-3. [Student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md) - задания урока и self-check по кластеру, skew, Motion, storage и partitioning intro.
-4. [Homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md) - что нужно сдать после урока.
-5. [Homework plan](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/homework-plan.md) - план самостоятельной работы на 60-90 минут.
-6. [Cluster inspection SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/cluster-inspection.sql) - проверка topology, segments, memory settings и disk free.
-7. [Cluster monitoring SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/cluster-monitoring.sql) - расширенная проверка `gp_segment_configuration`, `gp_toolkit.gp_disk_free`, `gp_segment_id`, pseudo/system columns и `gpstate -s` snippets.
-8. [Storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/storage-and-partitioning.sql) - runnable demo для Heap/AO/AOCO и partitioning intro.
-9. [Partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/partitioning-strategies.sql) - runnable demo для partitioning strategies и catalog checks.
-10. Evidence pack - markdown-шаблон сдачи практики с командами для `EXPLAIN`, `gp_segment_id`, RCA и validation.
-11. Student Portal v2 - интерактивный self-service маршрут с progress, hints, evidence checklist и export-ready submission.
-12. Misconception diagnosis - быстрый разбор типичных ошибок вроде `partition key = distribution key`.
-13. Homework review - автопроверка домашки по physical-design evidence.
-14. Debrief report - персональная обратная связь ученику и private notes для ментора.
-15. Личный Learning Loop report - карта навыков, missing evidence и план повторения на +1/+3/+7 дней.
-16. Readiness Doctor Pro - platform-specific подготовка macOS, Windows и Linux.
-17. Query Plan Coach - объяснение `EXPLAIN` через root cause hypothesis и следующий SQL.
-18. Gold calibration sample - эталонный senior-level ответ для сравнения со своей сдачей.
-19. Lesson Replay Pack - debrief, learning loop и подготовка к Lesson 02 в одном файле.
-20. Dataset Generator Pro - deterministic SQL datasets с scale, skew, late facts и wide rows.
-21. Real SQL Autograder - проверка SQL submission по physical design и executable evidence.
-22. Greenplum Live Smoke - команда/CI workflow для проверки живого стенда.
+2. [Презентация (PowerPoint)](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-theory/greenplum-theory.pptx) - теория урока.
+3. [Greenplum lab README](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/README.md) - как устроен Docker-стенд Greenplum и как его запустить.
+4. [Student workbook](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md) - задания урока и self-check по кластеру, skew, Motion, storage и partitioning intro.
+5. [Homework](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md) - что нужно сдать после урока.
+6. [Homework plan](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/homework-plan.md) - план самостоятельной работы на 60-90 минут.
+7. [Cluster inspection SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/cluster-inspection.sql) - проверка topology, segments, memory settings и disk free.
+8. [Cluster monitoring SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/cluster-monitoring.sql) - расширенная проверка `gp_segment_configuration`, `gp_toolkit.gp_disk_free`, `gp_segment_id`, pseudo/system columns и `gpstate -s` snippets.
+9. [Storage and partitioning SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/storage-and-partitioning.sql) - runnable demo для Heap/AO/AOCO и partitioning intro.
+10. [Partitioning strategies SQL](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/partitioning-strategies.sql) - runnable demo для partitioning strategies и catalog checks.
+11. Evidence pack - markdown-шаблон сдачи практики с командами для `EXPLAIN`, `gp_segment_id`, RCA и validation.
+12. Student Portal v2 - интерактивный self-service маршрут с progress, hints, evidence checklist и export-ready submission.
+13. Misconception diagnosis - быстрый разбор типичных ошибок вроде `partition key = distribution key`.
+14. Homework review - автопроверка домашки по physical-design evidence.
+15. Debrief report - персональная обратная связь ученику и private notes для ментора.
+16. Личный Learning Loop report - карта навыков, missing evidence и план повторения на +1/+3/+7 дней.
+17. Readiness Doctor Pro - platform-specific подготовка macOS, Windows и Linux.
+18. Query Plan Coach - объяснение `EXPLAIN` через root cause hypothesis и следующий SQL.
+19. Gold calibration sample - эталонный senior-level ответ для сравнения со своей сдачей.
+20. Lesson Replay Pack - debrief, learning loop и подготовка к Lesson 02 в одном файле.
+21. Dataset Generator Pro - deterministic SQL datasets с scale, skew, late facts и wide rows.
+22. Real SQL Autograder - проверка SQL submission по physical design и executable evidence.
+23. Greenplum Live Smoke - команда/CI workflow для проверки живого стенда.
 
 Команда подготовки окружения:
 

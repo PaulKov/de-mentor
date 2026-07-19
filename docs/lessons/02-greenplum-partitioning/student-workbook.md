@@ -32,6 +32,7 @@ python3 mentor-lab.py check greenplum
 
 Ключевые ссылки:
 
+- [Презентация (PowerPoint)](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-partitioning-theory/greenplum-partitioning-theory.pptx)
 - [Домашка](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/homework.md)
 - [План домашки](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/runbooks/homework-plan.md)
 - [SQL-lab](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/lesson02-partitioning-statistics-loads.sql)
