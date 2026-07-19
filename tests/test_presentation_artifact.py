@@ -6,7 +6,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_greenplum_theory_deck_artifact_exists_and_has_32_slides():
-    deck = ROOT / "artifacts" / "greenplum-theory" / "greenplum-theory.pptx"
+    deck = ROOT / "artifacts" / "lesson-01" / "greenplum-theory.pptx"
 
     assert deck.exists()
     assert deck.stat().st_size > 50_000
@@ -75,7 +75,7 @@ def test_greenplum_theory_deck_uses_russian_light_theme():
 
 
 def test_greenplum_partitioning_deck_artifact_exists_and_has_18_slides():
-    deck = ROOT / "artifacts" / "greenplum-partitioning-theory" / "greenplum-partitioning-theory.pptx"
+    deck = ROOT / "artifacts" / "lesson-02" / "greenplum-partitioning-theory.pptx"
 
     assert deck.exists()
     assert deck.stat().st_size > 50_000
@@ -109,7 +109,7 @@ def test_greenplum_partitioning_deck_source_has_lesson_02_markers():
 
 
 def test_greenplum_query_tuning_deck_artifact_exists_and_has_65_slides():
-    deck = ROOT / "artifacts" / "greenplum-query-tuning-theory" / "greenplum-query-tuning-theory.pptx"
+    deck = ROOT / "artifacts" / "lesson-03" / "greenplum-query-tuning-theory.pptx"
 
     assert deck.exists()
     assert deck.stat().st_size > 50_000

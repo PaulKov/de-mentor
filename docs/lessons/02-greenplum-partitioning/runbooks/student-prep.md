@@ -45,4 +45,4 @@ py mentor-lab.py student greenplum-partitioning homework
 Материалы:
 
 - Workbook: [student-workbook.md](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/student-workbook.md)
-- Презентация: [greenplum-partitioning-theory.pptx](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-partitioning-theory/greenplum-partitioning-theory.pptx)
+- Презентация: [greenplum-partitioning-theory.pptx](https://github.com/PaulKov/de-mentor/blob/master/artifacts/lesson-02/greenplum-partitioning-theory.pptx)

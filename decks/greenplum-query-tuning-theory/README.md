@@ -2,7 +2,7 @@
 
 ## Артефакты
 
-- PowerPoint: [greenplum-query-tuning-theory.pptx](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-query-tuning-theory/greenplum-query-tuning-theory.pptx) (30 слайдов)
+- PowerPoint: [greenplum-query-tuning-theory.pptx](https://github.com/PaulKov/de-mentor/blob/master/artifacts/lesson-03/greenplum-query-tuning-theory.pptx) (30 слайдов)
 - Google Slides: https://docs.google.com/presentation/d/1e5vpqatw6ccgeZF0PWLLWMzIqkb4SODE-IwKxrSyqB8/edit?usp=sharing
 - Исходники: `decks/greenplum-query-tuning-theory/slides/`
 - Facilitator: [facilitator-guide.md](facilitator-guide.md)

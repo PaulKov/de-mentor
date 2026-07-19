@@ -125,7 +125,7 @@ def test_lesson_03_runbook_cli_routes_are_available():
 
 
 def test_lesson_03_runbook_slide_references_fit_the_standalone_deck():
-    deck_path = ROOT / "artifacts" / "greenplum-query-tuning-theory" / "greenplum-query-tuning-theory.pptx"
+    deck_path = ROOT / "artifacts" / "lesson-03" / "greenplum-query-tuning-theory.pptx"
     assert deck_path.exists()
     assert deck_path.stat().st_size > 50_000
 
@@ -155,13 +155,13 @@ def test_lesson_03_deck_source_has_russian_and_optimizer_markers():
     assert "Grand Unified Configuration" in source
     assert "Star-join" in source or "star-join" in source
     assert "equi-depth" in source or "histogram_bounds" in source
-    assert (ROOT / "artifacts/lesson03-plan-screens/stats-histogram-structure.png").exists()
+    assert (ROOT / "artifacts/lesson-03/plan-screens/stats-histogram-structure.png").exists()
     assert "greenplum-625" in source
     assert "pg_statistic" in source
-    assert (ROOT / "artifacts/lesson03-plan-screens/explain-orca.png").exists()
-    assert (ROOT / "artifacts/lesson03-plan-screens/explain-legacy.png").exists()
-    assert (ROOT / "artifacts/lesson03-plan-screens/temp-relfilenode-fs.png").exists()
-    assert (ROOT / "artifacts/lesson03-plan-screens/spill-pgsql_tmp-growth.png").exists()
+    assert (ROOT / "artifacts/lesson-03/plan-screens/explain-orca.png").exists()
+    assert (ROOT / "artifacts/lesson-03/plan-screens/explain-legacy.png").exists()
+    assert (ROOT / "artifacts/lesson-03/plan-screens/temp-relfilenode-fs.png").exists()
+    assert (ROOT / "artifacts/lesson-03/plan-screens/spill-pgsql_tmp-growth.png").exists()
     assert "pgsql_tmp_Sort" in source or "external merge" in source
 
 
@@ -182,7 +182,7 @@ def test_lesson_03_session_control_plane_points_to_lesson_03_materials(tmp_path)
     control_plane = json.loads((session_dir / "session.json").read_text(encoding="utf-8"))[
         "control_plane"
     ]
-    assert control_plane["mentor_mode"]["slide_deck"] == "artifacts/greenplum-query-tuning-theory/greenplum-query-tuning-theory.pptx"
+    assert control_plane["mentor_mode"]["slide_deck"] == "artifacts/lesson-03/greenplum-query-tuning-theory.pptx"
     assert control_plane["mentor_mode"]["google_slides"] == GOOGLE_SLIDES_URL
     assert "labs/greenplum-625/examples/lesson03-olap-decomposition-tuning.sql" in {
         item["path"] for item in control_plane["artifacts"] if item["kind"] == "sql"

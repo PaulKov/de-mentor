@@ -6,7 +6,7 @@
 
 - рабочая тетрадь: [рабочая тетрадь ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md)
 - план урока: [план урока](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/README.md)
-- презентация: [greenplum-theory.pptx](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-theory/greenplum-theory.pptx)
+- презентация: [greenplum-theory.pptx](https://github.com/PaulKov/de-mentor/blob/master/artifacts/lesson-01/greenplum-theory.pptx)
 - README стенда: [README стенда Greenplum](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/README.md)
 - упрощенный маршрут ментора: [упрощенный маршрут](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/simple-path.md)
 

@@ -42,8 +42,8 @@ SET optimizer = off;
 ## Деревья плана по фазам (что видеть в EXPLAIN)
 
 Ниже — реальные планы со стенда `greenplum-625` (GP 6.25.3).
-Скрины: [`artifacts/lesson03-plan-screens/`](../../../../artifacts/lesson03-plan-screens/).
-Текст: [`artifacts/lesson03-plans/`](../../../../artifacts/lesson03-plans/).
+Скрины: [`artifacts/lesson-03/plan-screens/`](../../../../artifacts/lesson-03/plan-screens/).
+Текст: [`artifacts/lesson-03/plans/`](../../../../artifacts/lesson-03/plans/).
 
 ### Parse
 

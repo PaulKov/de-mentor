@@ -62,7 +62,7 @@ LESSON_01_ROUTE = LearningRoute(
     physical_lab_name="greenplum",
     title="Greenplum MPP foundations",
     docs_root="docs/lessons/01-greenplum",
-    deck_path="artifacts/greenplum-theory/greenplum-theory.pptx",
+    deck_path="artifacts/lesson-01/greenplum-theory.pptx",
     google_slides_url=(
         "https://docs.google.com/presentation/d/"
         "1VFm7GG3_SO1h7AabgYyEt0_TANzI1OZiAQnoZpU6fO0/edit?usp=sharing"
@@ -85,7 +85,7 @@ LESSON_02_ROUTE = LearningRoute(
     physical_lab_name="greenplum",
     title="Partitioning, statistics and incremental loads in MPP",
     docs_root="docs/lessons/02-greenplum-partitioning",
-    deck_path="artifacts/greenplum-partitioning-theory/greenplum-partitioning-theory.pptx",
+    deck_path="artifacts/lesson-02/greenplum-partitioning-theory.pptx",
     google_slides_url=(
         "https://docs.google.com/presentation/d/"
         "17Ae88PoniaFU34egsFPwC0PndAOoXMze4qV1pIKQkaI/edit?usp=sharing"
@@ -108,7 +108,7 @@ LESSON_03_ROUTE = LearningRoute(
     physical_lab_name="greenplum-625",
     title="Декомпозиция и тюнинг тяжёлых запросов в MPP",
     docs_root="docs/lessons/03-greenplum-query-tuning",
-    deck_path="artifacts/greenplum-query-tuning-theory/greenplum-query-tuning-theory.pptx",
+    deck_path="artifacts/lesson-03/greenplum-query-tuning-theory.pptx",
     google_slides_url=(
         "https://docs.google.com/presentation/d/"
         "1e5vpqatw6ccgeZF0PWLLWMzIqkb4SODE-IwKxrSyqB8/edit?usp=sharing"

@@ -153,7 +153,7 @@ python3 mentor-lab.py lesson-release greenplum-partitioning verify
 - [Manifest выпуска Lesson 02](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/lesson.yaml)
 - [Каталог презентаций и Drive-таксономия](https://github.com/PaulKov/de-mentor/blob/master/decks/README.md)
 - [Презентация Lesson 02 в Google Slides](https://docs.google.com/presentation/d/17Ae88PoniaFU34egsFPwC0PndAOoXMze4qV1pIKQkaI/edit?usp=sharing)
-- [Презентация Lesson 02 в PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-partitioning-theory/greenplum-partitioning-theory.pptx)
+- [Презентация Lesson 02 в PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/artifacts/lesson-02/greenplum-partitioning-theory.pptx)
 - [План ментора](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/mentor-guide.md)
 - [Workbook ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/student-workbook.md)
 - [Домашка](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/02-greenplum-partitioning/homework.md)
@@ -187,7 +187,7 @@ python3 mentor-lab.py academy greenplum-query-tuning start --student Иван --
 
 - [Индекс Урока 03](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/03-greenplum-query-tuning/README.md)
 - [Manifest выпуска](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/03-greenplum-query-tuning/lesson.yaml)
-- [Презентация в PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-query-tuning-theory/greenplum-query-tuning-theory.pptx)
+- [Презентация в PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/artifacts/lesson-03/greenplum-query-tuning-theory.pptx)
 - [Презентация в Google Slides](https://docs.google.com/presentation/d/1e5vpqatw6ccgeZF0PWLLWMzIqkb4SODE-IwKxrSyqB8/edit?usp=sharing)
 - [План ментора](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/03-greenplum-query-tuning/mentor-guide.md)
 - [Workbook ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/03-greenplum-query-tuning/student-workbook.md)
@@ -433,7 +433,7 @@ python3 mentor-lab.py dsl greenplum show redistribute-join
 | Матрица оценки | [rubric.md](docs/lessons/01-greenplum/rubric.md) |
 | Финальная задача | [capstone.md](docs/lessons/01-greenplum/capstone.md) |
 | Сквозной кейс | [case-study.md](docs/lessons/01-greenplum/case-study.md) |
-| Презентация | [greenplum-theory.pptx](artifacts/greenplum-theory/greenplum-theory.pptx) |
+| Презентация | [greenplum-theory.pptx](artifacts/lesson-01/greenplum-theory.pptx) |
 | Каталог презентаций | [decks/README.md](decks/README.md) |
 | Исходники презентации | [decks/greenplum-theory](decks/greenplum-theory/README.md) |
 | Manifest выпуска Lesson 02 | [lesson.yaml](docs/lessons/02-greenplum-partitioning/lesson.yaml) |

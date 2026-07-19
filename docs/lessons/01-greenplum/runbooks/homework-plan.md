@@ -4,7 +4,7 @@
 
 Связанные материалы:
 
-- презентация: [теоретическая презентация Greenplum](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-theory/greenplum-theory.pptx)
+- презентация: [теоретическая презентация Greenplum](https://github.com/PaulKov/de-mentor/blob/master/artifacts/lesson-01/greenplum-theory.pptx)
 - подготовка ученика: [подготовка ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/runbooks/student-prep.md)
 - рабочая тетрадь: [рабочая тетрадь ученика](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/student-workbook.md)
 - домашка: [домашка](https://github.com/PaulKov/de-mentor/blob/master/docs/lessons/01-greenplum/homework.md)

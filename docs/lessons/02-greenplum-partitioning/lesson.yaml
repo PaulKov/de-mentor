@@ -2,7 +2,7 @@ route: greenplum-partitioning
 lesson_code: lesson-02
 physical_lab: greenplum
 title: Partitioning, statistics and incremental loads in MPP
-deck_path: artifacts/greenplum-partitioning-theory/greenplum-partitioning-theory.pptx
+deck_path: artifacts/lesson-02/greenplum-partitioning-theory.pptx
 google_slides_url: https://docs.google.com/presentation/d/17Ae88PoniaFU34egsFPwC0PndAOoXMze4qV1pIKQkaI/edit?usp=sharing
 expected_owner_email: pavelkov007@gmail.com
 expected_slide_count: 18

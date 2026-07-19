@@ -50,7 +50,7 @@ class Runbook:
     title: str
     description: str
     stages: List[RunbookStage]
-    deck_path: str = "artifacts/greenplum-theory/greenplum-theory.pptx"
+    deck_path: str = "artifacts/lesson-01/greenplum-theory.pptx"
     google_slides_url: Optional[str] = None
     workbook_path: str = "docs/lessons/01-greenplum/student-workbook.md"
     homework_path: str = "docs/lessons/01-greenplum/homework.md"

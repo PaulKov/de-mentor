@@ -10,7 +10,7 @@ Drive folder: lessons/Greenplum/Lesson 03 - Decomposition and tuning of heavy MP
 
 - PASS manifest: docs/lessons/03-greenplum-query-tuning/lesson.yaml
 - PASS slide_asset_catalog: lessons/Greenplum/Lesson 03 - Decomposition and tuning of heavy MPP queries
-- PASS pptx_artifact: artifacts/greenplum-query-tuning-theory/greenplum-query-tuning-theory.pptx
+- PASS pptx_artifact: artifacts/lesson-03/greenplum-query-tuning-theory.pptx
 - PASS google_slides_static: lessons/Greenplum/Lesson 03 - Decomposition and tuning of heavy MPP queries
 - PASS session_control_plane: greenplum-query-tuning
 - PASS safe_cli_commands: 10 commands

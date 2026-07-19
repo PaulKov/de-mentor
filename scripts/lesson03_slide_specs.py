@@ -7,8 +7,8 @@ code links) can evolve without touching layout helpers.
 from __future__ import annotations
 
 # Real EXPLAIN snippets captured from labs/greenplum-625 (GP 6.25.3).
-# Full screenshots: artifacts/lesson03-plan-screens/explain-*.png
-# Raw text: artifacts/lesson03-plans/*.txt
+# Full screenshots: artifacts/lesson-03/plan-screens/explain-*.png
+# Raw text: artifacts/lesson-03/plans/*.txt
 
 GPDB_6X = "https://github.com/greenplum-db/gpdb/blob/6X_STABLE"
 
@@ -406,14 +406,14 @@ SLIDES = [
     {
         "kicker": "Screenshot",
         "title": "Скрин EXPLAIN: GPORCA на простом GROUP BY",
-        "subtitle": "artifacts/lesson03-plan-screens/explain-simple.png — снято с живого стенда.",
+        "subtitle": "artifacts/lesson-03/plan-screens/explain-simple.png — снято с живого стенда.",
         "type": "image",
-        "image": "artifacts/lesson03-plan-screens/explain-simple.png",
+        "image": "artifacts/lesson-03/plan-screens/explain-simple.png",
     },
     {
         "kicker": "Plan tree",
         "title": "Дерево плана: star-join под GPORCA (сжатый readout)",
-        "subtitle": "Тот же SQL, что в демо. Полный скрин — следующий слайд; raw: artifacts/lesson03-plans/orca.txt",
+        "subtitle": "Тот же SQL, что в демо. Полный скрин — следующий слайд; raw: artifacts/lesson-03/plans/orca.txt",
         "type": "code",
         "code": PLAN_ORCA_STAR,
     },
@@ -422,7 +422,7 @@ SLIDES = [
         "title": "Скрин EXPLAIN: GPORCA star-join (v_star_join_orca_case)",
         "subtitle": "Ищите Redistribute до/после Hash Join и маркер Optimizer: GPORCA.",
         "type": "image",
-        "image": "artifacts/lesson03-plan-screens/explain-orca.png",
+        "image": "artifacts/lesson-03/plan-screens/explain-orca.png",
     },
     {
         "kicker": "Plan tree",
@@ -436,14 +436,14 @@ SLIDES = [
         "title": "Скрин EXPLAIN: Legacy на том же star-join",
         "subtitle": "Сравнивайте join order и положение Redistribute с предыдущим скрином ORCA.",
         "type": "image",
-        "image": "artifacts/lesson03-plan-screens/explain-legacy.png",
+        "image": "artifacts/lesson-03/plan-screens/explain-legacy.png",
     },
     {
         "kicker": "Screenshot",
         "title": "Скрин EXPLAIN: monolith (WindowAgg + multi-slice)",
         "subtitle": "v_heavy_olap_monolith: несколько Redistribute + WindowAgg — типичный «дорогой» OLAP shape.",
         "type": "image",
-        "image": "artifacts/lesson03-plan-screens/explain-monolith.png",
+        "image": "artifacts/lesson-03/plan-screens/explain-monolith.png",
     },
     {
         "kicker": "Demo SQL",
@@ -662,7 +662,7 @@ SLIDES = [
         "title": "Скрин pg_stats со стенда: MCV vs histogram",
         "subtitle": "default_statistics_target=100 → hist_n≈101. sale_date: все в MCV → hist пуст.",
         "type": "image",
-        "image": "artifacts/lesson03-plan-screens/stats-pg-stats-overview.png",
+        "image": "artifacts/lesson-03/plan-screens/stats-pg-stats-overview.png",
     },
     {
         "kicker": "Histogram",
@@ -687,7 +687,7 @@ SLIDES = [
         "title": "Скрин: структура histogram + физический слот",
         "subtitle": "stakind=2 → stavalues = bounds array в tuple pg_statistic (возможен TOAST).",
         "type": "image",
-        "image": "artifacts/lesson03-plan-screens/stats-histogram-structure.png",
+        "image": "artifacts/lesson-03/plan-screens/stats-histogram-structure.png",
     },
     {
         "kicker": "MCV",
@@ -743,7 +743,7 @@ SLIDES = [
         "title": "Скрин EXPLAIN ANALYZE: хорошие оценки на стенде",
         "subtitle": "Простые предикаты + свежий ANALYZE → estimate ≈ actual.",
         "type": "image",
-        "image": "artifacts/lesson03-plan-screens/stats-estimates-good.png",
+        "image": "artifacts/lesson-03/plan-screens/stats-estimates-good.png",
     },
     {
         "kicker": "GROUP BY",
@@ -930,7 +930,7 @@ SLIDES = [
         "title": 'Скрин FS: TEMP relfilenode t_* на сегментах',
         "subtitle": 'После CREATE TEMP … AS SELECT … DISTRIBUTED BY — данные на QE, не в pgsql_tmp.',
         "type": 'image',
-        "image": 'artifacts/lesson03-plan-screens/temp-relfilenode-fs.png',
+        "image": 'artifacts/lesson-03/plan-screens/temp-relfilenode-fs.png',
     },
     {
         "kicker": 'TEMP code',
@@ -956,14 +956,14 @@ SLIDES = [
         "title": 'Скрин FS: рост spill-файлов pgsql_tmp_Sort_*',
         "subtitle": 'Поллинг во время EXPLAIN ANALYZE: bytes на seg0/seg1 растут, после query → cleanup.',
         "type": 'image',
-        "image": 'artifacts/lesson03-plan-screens/spill-pgsql_tmp-growth.png',
+        "image": 'artifacts/lesson-03/plan-screens/spill-pgsql_tmp-growth.png',
     },
     {
         "kicker": 'Screenshot',
         "title": 'Скрин EXPLAIN: external merge Disk = spill',
         "subtitle": 'Связка план ↔ файлы: Disk: NNkB в EXPLAIN = pgsql_tmp_Sort_* на сегментах.',
         "type": 'image',
-        "image": 'artifacts/lesson03-plan-screens/spill-explain-external-merge.png',
+        "image": 'artifacts/lesson-03/plan-screens/spill-explain-external-merge.png',
     },
     {
         "kicker": 'TEMP ±',

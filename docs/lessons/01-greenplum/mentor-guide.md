@@ -6,7 +6,7 @@
 
 ## Как Вести Урок
 
-Используй [презентацию PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/artifacts/greenplum-theory/greenplum-theory.pptx) вместе с поминутным presenter guide:
+Используй [презентацию PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/artifacts/lesson-01/greenplum-theory.pptx) вместе с поминутным presenter guide:
 
 - исходники слайдов: [slides source](https://github.com/PaulKov/de-mentor/tree/master/decks/greenplum-theory/slides);
 - гайд ведущего: [гайд ведущего](https://github.com/PaulKov/de-mentor/blob/master/decks/greenplum-theory/facilitator-guide.md);

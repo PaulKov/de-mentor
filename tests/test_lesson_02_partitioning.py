@@ -102,7 +102,7 @@ def test_lesson_02_runbook_cli_routes_are_available():
 
 
 def test_lesson_02_runbook_slide_references_fit_the_standalone_deck():
-    deck_path = ROOT / "artifacts" / "greenplum-partitioning-theory" / "greenplum-partitioning-theory.pptx"
+    deck_path = ROOT / "artifacts" / "lesson-02" / "greenplum-partitioning-theory.pptx"
     with ZipFile(deck_path) as deck:
         slide_count = len(
             [
@@ -199,7 +199,7 @@ def test_lesson_02_session_control_plane_points_to_lesson_02_materials(tmp_path)
     state = json.loads((session_dir / "session.json").read_text(encoding="utf-8"))
     control_plane = state["control_plane"]
 
-    assert control_plane["mentor_mode"]["slide_deck"] == "artifacts/greenplum-partitioning-theory/greenplum-partitioning-theory.pptx"
+    assert control_plane["mentor_mode"]["slide_deck"] == "artifacts/lesson-02/greenplum-partitioning-theory.pptx"
     assert control_plane["mentor_mode"]["google_slides"] == GOOGLE_SLIDES_URL
     assert (ROOT / control_plane["mentor_mode"]["slide_deck"]).exists()
     assert "python3 mentor-lab.py runbook greenplum-partitioning simple" in control_plane["mentor_mode"]["runbook_commands"]
