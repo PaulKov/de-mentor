@@ -201,7 +201,12 @@ def _handle_seed(args: argparse.Namespace) -> int:
         return 1
 
     client = _sql_client(lab)
-    command = client.build_file_command(profile.container_path)
+    scale = getattr(args, "scale", "small") or "small"
+    # lesson03 seed (and academy, which includes it) honors -v scale=
+    variables = None
+    if args.profile in {"lesson03", "academy"}:
+        variables = {"scale": scale}
+    command = client.build_file_command(profile.container_path, variables=variables)
     if args.dry_run:
         print(client.format_command(command))
         return 0
@@ -210,7 +215,7 @@ def _handle_seed(args: argparse.Namespace) -> int:
     except RuntimeError as exc:
         print(f"Failed to ensure database {lab.default_database!r}: {exc}")
         return 1
-    return client.run_file(profile.container_path)
+    return client.run_file(profile.container_path, variables=variables)
 
 
 def _handle_dataset(args: argparse.Namespace) -> int:

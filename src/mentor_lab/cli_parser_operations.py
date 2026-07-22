@@ -99,6 +99,15 @@ def register_operations_commands(subparsers: argparse._SubParsersAction) -> None
     )
     seed_parser.add_argument("lab_name")
     seed_parser.add_argument("--profile", default="skewed")
+    seed_parser.add_argument(
+        "--scale",
+        choices=["small", "principal"],
+        default="small",
+        help=(
+            "Lesson 03 / academy row scale: small≈120k facts (default homework), "
+            "principal≈2M facts (local stress). Passed as psql -v scale=…"
+        ),
+    )
     seed_parser.add_argument("--dry-run", action="store_true")
     seed_parser.set_defaults(handler=_handle_seed)
 
