@@ -10,6 +10,7 @@
 | `spark-worker-1` | executor resources: 1 core / 1 GB | UI `18081` |
 | `spark-worker-2` | executor resources: 1 core / 1 GB | UI `18082` |
 | `spark-client` | driver / `spark-submit` | application UI `4040` |
+| `spark-notebook` | optional Jupyter kernel for VS Code | server `18888`, application UI `14040` |
 
 Image: `apache/spark:4.2.0-python3`, multi-arch `amd64`/`arm64`.
 
@@ -47,6 +48,17 @@ python3 mentor-lab.py spark-submit spark \
   -- --hold-seconds 300
 ```
 
+## Jupyter notebooks в VS Code
+
+Notebook-сервис запускается отдельно через Compose profile и использует тот же Spark cluster:
+
+```bash
+docker compose -f labs/spark/docker-compose.yml --profile notebook \
+  up -d --build --wait spark-notebook
+```
+
+Подключение VS Code, каталог demo и smoke-команды: [notebooks/README.md](notebooks/README.md).
+
 ## Data lifecycle
 
 Generated input, event logs and outputs are written under `labs/spark/data/` and ignored by Git.
@@ -68,6 +80,7 @@ python3 mentor-lab.py config spark
 Common issues:
 
 - port collision: stop another Spark/Jupyter application on `4040` or another lab on `18080`;
+- notebook kernel unavailable: start the `notebook` Compose profile and connect VS Code to `http://localhost:18888/?token=de-mentor`;
 - image pull: confirm Docker network access and retry `up`;
 - no workers: inspect `spark-worker-1/2` logs through Docker Compose;
 - UI disappears: run the demo with `--hold-seconds 300`;

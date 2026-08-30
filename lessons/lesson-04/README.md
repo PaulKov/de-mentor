@@ -5,6 +5,7 @@
 | Раздел | Путь | Зачем |
 | --- | --- | --- |
 | Docs | [docs/](docs/) | теория, workbook, runbooks, deep-dives |
+| Notebooks | [../../labs/spark/notebooks/](../../labs/spark/notebooks/) | интерактивные PySpark demo для VS Code |
 | Homework | [homework/](homework/) | assignment, plan, rubric, evidence template |
 | Artifacts | [artifacts/](artifacts/) | полный и core PPTX |
 | Submissions | [submissions/](submissions/) | `pipeline.py` + `evidence.md` |
