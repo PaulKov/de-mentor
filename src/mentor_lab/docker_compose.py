@@ -22,8 +22,32 @@ class DockerComposeRunner:
         self._project_root = project_root
         self._executor = executor or self._run_subprocess
 
-    def build_up_command(self, lab: LabDefinition) -> Command:
-        return self._compose_prefix(lab) + ["up", "-d"]
+    def build_up_command(
+        self,
+        lab: LabDefinition,
+        *,
+        profiles: Sequence[str] = (),
+        build: bool = False,
+        wait: bool = False,
+        services: Sequence[str] = (),
+    ) -> Command:
+        """Build a configurable, non-interactive Compose start command.
+
+        Defaults preserve the original ``docker compose up -d`` contract.
+        Profiles remain global Compose options; build/wait and services are
+        attached to the ``up`` command in a deterministic order.
+        """
+
+        command = self._compose_prefix(lab)
+        for profile in profiles:
+            command.extend(("--profile", profile))
+        command.extend(("up", "-d"))
+        if build:
+            command.append("--build")
+        if wait:
+            command.append("--wait")
+        command.extend(services)
+        return command
 
     def build_down_command(self, lab: LabDefinition) -> Command:
         return self._compose_prefix(lab) + ["down", "--remove-orphans"]

@@ -18,7 +18,7 @@ VS Code запомнит server для следующих запусков. Ко
 
 | Notebook | Фокус | Проверяемое доказательство |
 | --- | --- | --- |
-| `01_execution_model.ipynb` | lazy evaluation, partitions, action | `Exchange` и task/partition mapping |
+| `01_execution_model.ipynb` | lazy, partitions, scheduler и cache reuse | `Exchange`, task mapping, `InMemoryTableScan` |
 | `02_shuffle_and_joins.ipynb` | shuffle join против broadcast | `SortMergeJoin` vs `BroadcastHashJoin` |
 | `03_quality_and_parquet.ipynb` | data quality и idempotent output | counts/revenue Parquet round-trip |
 

@@ -5,10 +5,12 @@ Deep включает Core и добавляет:
 - четыре уровня объяснения Spark vs MapReduce;
 - side-by-side architecture и materialization pipeline;
 - fault-tolerance и workload comparison matrices;
+- DAGScheduler / TaskScheduler / SchedulerBackend responsibility map;
 - четыре plan layers;
 - narrow/wide transformations;
 - Python/JVM boundary;
 - shuffle anatomy;
+- BlockManager, storage levels, eviction и lineage recompute;
 - sort-merge vs broadcast join;
 - AQE и skew как observable runtime decisions;
 - small-files/partition output contract.
@@ -17,12 +19,12 @@ Deep включает Core и добавляет:
 | --- | --- | --- |
 | 00–15 | 1–8 | Big Data history, 3V и расширения |
 | 15–28 | 9–16 | MapReduce → Spark, версии и причины adoption |
-| 28–42 | 17–25 | application architecture + execution model |
-| 42–58 | 26–35 | core pipeline, plan, UI и exit |
-| 58–73 | 36–44 | Spark vs MapReduce: layperson → principal |
-| 73–80 | 45–48 | Catalyst, narrow/wide, Python/JVM, shuffle |
-| 80–87 | 49–52 | join A/B, AQE и skew |
-| 87–90 | 53 | production checklist |
+| 28–42 | 17–29 | API/context, scheduler flow, lazy evaluation и cache |
+| 42–58 | 30–39 | core pipeline, plan, UI и exit |
+| 58–73 | 40–49 | Spark vs MapReduce + scheduler internals |
+| 73–82 | 50–54 | Catalyst, narrow/wide, Python/JVM, shuffle и cache internals |
+| 82–88 | 55–58 | join A/B, AQE и skew |
+| 88–90 | 59 | production checklist |
 
 ```bash
 python3 mentor-lab.py spark-submit spark \

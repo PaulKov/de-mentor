@@ -283,8 +283,8 @@ function renderLayers(slide, spec) {
   addTitle(slide, spec.title);
   spec.rows.forEach(([label, example, meaning], i) => {
     const y = 220 + i * 94;
-    addText(slide, label, { left: 72, top: y, width: 185, height: 52 }, { fontSize: 25, bold: true, color: i === spec.rows.length - 1 ? C.orange : C.blue });
-    addText(slide, example, { left: 286, top: y, width: 430, height: 52 }, { fontSize: 22, bold: true });
+    addText(slide, label, { left: 72, top: y, width: 245, height: 52 }, { fontSize: 23, bold: true, color: i === spec.rows.length - 1 ? C.orange : C.blue });
+    addText(slide, example, { left: 335, top: y, width: 381, height: 52 }, { fontSize: 22, bold: true });
     addText(slide, meaning, { left: 760, top: y, width: 400, height: 52 }, { fontSize: 20, color: C.muted });
     addRule(slide, 72, y + 66, 1088, C.line, 1);
   });

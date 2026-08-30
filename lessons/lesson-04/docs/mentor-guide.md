@@ -4,18 +4,20 @@
 
 1. Начать с workload и SLA, а не с определения Spark.
 2. Через историю объяснить, почему распределённая система принимает именно такие компромиссы.
-3. Построить mental model: driver планирует, executors выполняют tasks над partitions.
-4. Показать lazy DataFrame pipeline: до action нет job.
-5. Найти `Exchange` в plan и shuffle bytes в UI.
-6. Закончить correctness evidence, а не «ускорением любой ценой».
+3. Построить mental model API: SparkSession → DataFrame, SparkContext → runtime,
+   RDD как low-level abstraction, Dataset как JVM-only typed API.
+4. Показать scheduler flow: driver/DAGScheduler/TaskScheduler назначают tasks,
+   cluster manager только выделяет executors/resources.
+5. Показать lazy DataFrame pipeline: до action нет job; без persist каждый
+   следующий action повторяет lineage.
+6. Найти `Exchange` в plan и shuffle bytes в UI.
+7. Закончить correctness evidence, а не «ускорением любой ценой».
 
 ## Перед уроком
 
 ```bash
 python3 mentor-lab.py doctor --full
-python3 mentor-lab.py up spark
-python3 mentor-lab.py seed spark --profile lesson04
-python3 mentor-lab.py check spark
+python3 mentor-lab.py student spark-foundations start --profile lesson04
 python3 mentor-lab.py runbook spark-foundations simple
 ```
 
@@ -89,7 +91,16 @@ AQE, Connect, Data Source V2 и PySpark UX.
 ```text
 DataFrame transformations → logical plan → physical plan
 action → job → stages separated by shuffle → tasks per partition
+action → DAGScheduler → TaskSet → TaskScheduler → executor slots
 ```
+
+Сначала разведи API:
+
+- `SparkSession` — вход в DataFrame/SQL;
+- `SparkContext` — connection/control plane application;
+- DataFrame — основной PySpark API с Catalyst;
+- RDD — low-level partitioned collection;
+- Dataset — typed Scala/Java API, отдельного Dataset API в Python нет.
 
 Prediction questions:
 
@@ -97,6 +108,11 @@ Prediction questions:
 2. Сколько tasks ожидаем при четырёх input partitions?
 3. Почему `groupBy` часто разделяет stages?
 4. Что означает `Exchange`?
+5. Кто выбирает executor slot для task — cluster manager или driver scheduler?
+
+Покажи два actions над одним DataFrame: без persist upstream выполняется снова;
+после `cache()` первый action заполняет blocks, второй использует
+`InMemoryTableScan`. Подчеркни, что `cache()` сам по себе остаётся lazy.
 
 ### 42–52 — Live demo
 
@@ -144,10 +160,12 @@ python3 mentor-lab.py spark-submit spark \
 - durable job boundaries против shuffle/persist boundaries;
 - recovery через materialized output против lineage recompute;
 - workload matrix: где преимущество Spark велико, мало или оба engine не подходят;
+- DAGScheduler → TaskScheduler → SchedulerBackend, locality, slots, retry/speculation;
 - parsed/analyzed/optimized/physical plan;
 - narrow vs wide dependency;
 - built-in expression vs Python UDF boundary;
 - shuffle join vs broadcast join;
+- BlockManager, `MEMORY_AND_DISK_DESER`, eviction, lineage recompute и `unpersist()`;
 - AQE как runtime re-optimization, а не «магический ускоритель»;
 - skew и small files как production risks.
 
@@ -191,6 +209,7 @@ python3 mentor-lab.py spark-submit spark \
 
 ```bash
 python3 mentor-lab.py student spark-foundations homework
+python3 mentor-lab.py student spark-foundations test
 python3 mentor-lab.py runbook spark-foundations homework
 ```
 

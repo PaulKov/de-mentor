@@ -10,16 +10,18 @@
 | Artifacts | [artifacts/](artifacts/) | полный и core PPTX |
 | Submissions | [submissions/](submissions/) | `pipeline.py` + `evidence.md` |
 
-[Google Slides — полная версия, 60 слайдов](https://docs.google.com/presentation/d/1U_u3cwqdCzz2oRoa_w5BT7btbLqUlBSou3rJe2YXni0/edit?usp=sharing)
+[Google Slides — полная версия, 66 слайдов](https://docs.google.com/presentation/d/1U_u3cwqdCzz2oRoa_w5BT7btbLqUlBSou3rJe2YXni0/edit?usp=sharing)
 
 ## Быстрый старт
 
 ```bash
-python3 mentor-lab.py up spark
-python3 mentor-lab.py seed spark --profile lesson04
-python3 mentor-lab.py check spark
+python3 mentor-lab.py student spark-foundations start --profile lesson04
+python3 mentor-lab.py student spark-foundations init
 python3 mentor-lab.py runbook spark-foundations simple
 ```
+
+`start` поднимает Spark и Jupyter, ждёт health checks, создаёт dataset и запускает
+live smoke. Полный контракт CLI: [docs/student-cli.md](docs/student-cli.md).
 
 Запуск core-пайплайна:
 

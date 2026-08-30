@@ -17,8 +17,11 @@
 - сравнить Spark и MapReduce от бытовой аналогии до execution/recovery cost model;
 - объяснить, когда Spark нужен и когда создаёт лишнюю сложность;
 - различить application, driver, cluster manager, executor, partition, job, stage и task;
+- объяснить SparkSession, SparkContext, RDD, DataFrame и почему Dataset API отсутствует в PySpark;
+- пройти путь `action → DAGScheduler → TaskScheduler → executor slot`;
 - написать pipeline на PySpark DataFrame API без Scala;
 - объяснить lazy evaluation и transformation/action;
+- доказать повторный lineage для двух actions и reuse через `cache/persist`;
 - найти `Exchange` в `explain("formatted")`;
 - связать `Exchange` со shuffle metrics в Spark UI;
 - записать Parquet mart и проверить counts/revenue roundtrip;
@@ -89,10 +92,11 @@ JSON events
 - [Deep 90](runbooks/deep-dive-path.md)
 - [Live-практика в VS Code](runbooks/live-practice.md)
 - [PySpark notebooks в VS Code](../../../labs/spark/notebooks/README.md)
+- [Self-service CLI ученика](student-cli.md)
 - [Facilitator skip-map](runbooks/facilitator-skip-map.md)
 - [Homework](../homework/assignment.md)
 - [Rubric](../homework/rubric.md)
-- [Google Slides — полная версия, 60 слайдов](https://docs.google.com/presentation/d/1U_u3cwqdCzz2oRoa_w5BT7btbLqUlBSou3rJe2YXni0/edit?usp=sharing)
+- [Google Slides — полная версия, 66 слайдов](https://docs.google.com/presentation/d/1U_u3cwqdCzz2oRoa_w5BT7btbLqUlBSou3rJe2YXni0/edit?usp=sharing)
 - [Публикация в Google Slides](google-slides-publish.md)
 
 ## Официальные источники

@@ -65,10 +65,10 @@ class StudentSelfServiceGuide:
             )
         elif lab.runtime == "spark":
             commands.append(
-                f"  {prefix} mentor-lab.py seed {lab.name} --profile lesson04"
+                f"  {prefix} mentor-lab.py student {route.name} start --profile lesson04"
             )
             commands.append(
-                "  # Spark master UI @ :18080; driver UI @ :4040 while a job is running"
+                "  # Includes Spark + Jupyter :18888 + seed + live smoke check"
             )
         commands.extend(
             [
@@ -147,7 +147,10 @@ class StudentSelfServiceGuide:
             (
                 f"  python3 mentor-lab.py grade {lab.name} --dry-run"
                 if lab.runtime == "sql"
-                else "  # Spark homework is checked from the submission pack"
+                else (
+                    f"  python3 mentor-lab.py student {route.name} test "
+                    f"--submission {route.submission_path}"
+                )
             ),
             "",
             f"Bring to {_lesson_label(route.next_lesson.code)}:",

@@ -17,10 +17,14 @@ Image: `apache/spark:4.2.0-python3`, multi-arch `amd64`/`arm64`.
 ## Быстрый старт
 
 ```bash
-python3 mentor-lab.py up spark
-python3 mentor-lab.py seed spark --profile lesson04
-python3 mentor-lab.py check spark
+python3 mentor-lab.py student spark-foundations start --profile lesson04
+python3 mentor-lab.py student spark-foundations init
 ```
+
+Первая команда поднимает cluster и Jupyter, ждёт health checks, генерирует
+dataset и запускает smoke application. `--dry-run` печатает план без Docker;
+`--no-notebook` исключает только Jupyter. Полный UX-контракт:
+[student-cli.md](../../lessons/lesson-04/docs/student-cli.md).
 
 Профили:
 
@@ -50,7 +54,8 @@ python3 mentor-lab.py spark-submit spark \
 
 ## Jupyter notebooks в VS Code
 
-Notebook-сервис запускается отдельно через Compose profile и использует тот же Spark cluster:
+Notebook-сервис по умолчанию входит в self-service `start` и использует тот же
+Spark cluster. Низкоуровневый Compose-вариант для диагностики:
 
 ```bash
 docker compose -f labs/spark/docker-compose.yml --profile notebook \

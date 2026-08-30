@@ -2,12 +2,12 @@
 
 Исходники и инструкции для двух версий презентации четвёртой лекции:
 
-- `apache-spark-foundations-core.pptx` — обязательное ядро, 35 слайдов / 60 минут;
-- `apache-spark-foundations-theory.pptx` — полная версия, 60 слайдов / 90 минут;
+- `apache-spark-foundations-core.pptx` — обязательное ядро, 39 слайдов / 60 минут;
+- `apache-spark-foundations-theory.pptx` — полная версия, 66 слайдов / 90 минут;
 - `content.mjs` — единый источник содержания;
 - `build_lesson04_pptx.mjs` — детерминированный сборщик editable PPTX;
-- `build_google_slides_requests.mjs` — детерминированный план нативной миграции
-  опубликованной Google Slides с 42 до 60 слайдов;
+- `build_google_slides_requests.mjs` — детерминированный план нативного обновления
+  опубликованной Google Slides с 60 до 66 слайдов;
 - `facilitator-guide.md` — рекомендуемый темп, вопросы аудитории и skip map.
 
 ## Самостоятельная пересборка
@@ -40,7 +40,7 @@ node build_google_slides_requests.mjs raw-template.json update-plan.json
 
 Применяйте `creationChunks` последовательно, затем перечитайте структуру и
 убедитесь, что созданы все `createdSlideIds`. После этого примените каждый
-элемент `positionBatches` отдельным batch update, проверьте порядок
-`deliveredSlideIds` без `p5`–`p7` и только последним шагом выполните
-`deleteRequests`. После финального readback обязательны issue checker и полный
-PDF-рендер всех 60 слайдов.
+элемент `positionBatches` отдельным batch update и проверьте точный порядок
+`deliveredSlideIds`. `deleteRequests` пуст: обновление сохраняет все 60
+существующих слайдов и добавляет шесть новых. После финального readback
+обязательны issue checker и полный PDF-рендер всех 66 слайдов.
