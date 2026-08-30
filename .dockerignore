@@ -1,0 +1,7 @@
+.git/
+.pytest_cache/
+.venv/
+**/__pycache__/
+node_modules/
+outputs/
+labs/spark/data/

@@ -82,3 +82,50 @@ services:
     command: ["bash", "-lc", "mkdir -p /workspace/labs/spark/data/event-log && exec sleep infinity"]
     ports:
       - "4040:4040"
+
+  spark-notebook:
+    <<: *spark-common
+    profiles: ["notebook"]
+    build:
+      context: ../..
+      dockerfile: labs/spark/jupyter/Dockerfile
+    image: de-mentor/spark-notebook:4.2.0
+    hostname: spark-notebook
+    environment:
+      PYTHONPATH: /workspace/labs/spark:/opt/spark/python:/opt/spark/python/lib/py4j-0.10.9.9-src.zip
+      SPARK_NO_DAEMONIZE: "true"
+      SPARK_MASTER_URL: spark://spark-master:7077
+      SPARK_DRIVER_HOST: spark-notebook
+      SPARK_SHUFFLE_PARTITIONS: "8"
+      SPARK_UI_PORT: "4040"
+      JUPYTER_TOKEN: de-mentor
+      JUPYTER_CONFIG_DIR: /tmp/jupyter-config
+      JUPYTER_DATA_DIR: /tmp/jupyter-data
+      JUPYTER_RUNTIME_DIR: /tmp/jupyter-runtime
+    depends_on:
+      spark-master:
+        condition: service_healthy
+      spark-worker-1:
+        condition: service_started
+      spark-worker-2:
+        condition: service_started
+    command:
+      - bash
+      - -lc
+      - >-
+        exec jupyter lab
+        --ip=0.0.0.0
+        --port=8888
+        --no-browser
+        --allow-root
+        --ServerApp.root_dir=/workspace
+        --ServerApp.allow_origin='*'
+        --IdentityProvider.token="$${JUPYTER_TOKEN}"
+    ports:
+      - "127.0.0.1:18888:8888"
+      - "127.0.0.1:14040:4040"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c ': > /dev/tcp/127.0.0.1/8888'"]
+      interval: 5s
+      timeout: 3s
+      retries: 30

@@ -31,6 +31,8 @@ PySpark-код → physical plan → job/stages/tasks → runtime metrics → Pa
 
 Команды запускай через `Tasks: Run Task`: это исключает ошибки в длинных CLI-командах и передаёт Docker CLI в `PATH` интегрированного терминала.
 
+Для интерактивных экспериментов открой `labs/spark/notebooks/` и запусти `Jupyter · Start server`. Одноразовое подключение kernel описано в [notebooks/README.md](../../../../labs/spark/notebooks/README.md). Notebook application UI работает на `14040`, поэтому не конфликтует с CLI demo на `4040`.
+
 ## Core-практика: 15 минут внутри маршрута Core 60
 
 | Время | Действие ментора | Вопрос группе | Evidence |

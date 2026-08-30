@@ -86,6 +86,7 @@ JSON events
 - [Core 60](runbooks/simple-path.md)
 - [Deep 90](runbooks/deep-dive-path.md)
 - [Live-практика в VS Code](runbooks/live-practice.md)
+- [PySpark notebooks в VS Code](../../../labs/spark/notebooks/README.md)
 - [Facilitator skip-map](runbooks/facilitator-skip-map.md)
 - [Homework](../homework/assignment.md)
 - [Rubric](../homework/rubric.md)

@@ -17,6 +17,7 @@ LESSON_ROOT = ROOT / "lessons" / "lesson-04"
 LAB_ROOT = ROOT / "labs" / "spark"
 FULL_DECK = LESSON_ROOT / "artifacts" / "apache-spark-foundations-theory.pptx"
 CORE_DECK = LESSON_ROOT / "artifacts" / "apache-spark-foundations-core.pptx"
+NOTEBOOK_ROOT = LAB_ROOT / "notebooks"
 GOOGLE_SLIDES_URL = (
     "https://docs.google.com/presentation/d/"
     "1U_u3cwqdCzz2oRoa_w5BT7btbLqUlBSou3rJe2YXni0/edit?usp=sharing"
@@ -89,6 +90,14 @@ def test_lesson_04_documents_lab_and_artifacts_are_self_service_complete():
         LAB_ROOT / "seed" / "generate_lesson04_data.py",
         LAB_ROOT / "examples" / "lesson04_core_pipeline.py",
         LAB_ROOT / "examples" / "lesson04_deep_join.py",
+        LAB_ROOT / "jupyter" / "Dockerfile",
+        LAB_ROOT / "jupyter" / "requirements.txt",
+        LAB_ROOT / "jupyter" / "run_smoke.py",
+        LAB_ROOT / "mentor_spark_lab" / "notebook_support.py",
+        NOTEBOOK_ROOT / "README.md",
+        NOTEBOOK_ROOT / "01_execution_model.ipynb",
+        NOTEBOOK_ROOT / "02_shuffle_and_joins.ipynb",
+        NOTEBOOK_ROOT / "03_quality_and_parquet.ipynb",
         FULL_DECK,
         CORE_DECK,
     ]
@@ -125,6 +134,50 @@ def test_spark_master_healthcheck_targets_the_bound_hostname():
 
     assert "/dev/tcp/spark-master/7077" in compose
     assert "/dev/tcp/127.0.0.1/7077" not in compose
+
+
+def test_lesson_04_notebooks_are_clean_and_cover_core_evidence():
+    notebooks = sorted(NOTEBOOK_ROOT.glob("[0-9][0-9]_*.ipynb"))
+
+    assert len(notebooks) == 3
+    combined_source = ""
+    for path in notebooks:
+        notebook = json.loads(path.read_text(encoding="utf-8"))
+        assert notebook["nbformat"] == 4
+        assert notebook["metadata"]["kernelspec"]["name"] == "python3"
+        assert all(cell.get("id") for cell in notebook["cells"])
+        assert all(cell.get("execution_count") is None for cell in notebook["cells"] if cell["cell_type"] == "code")
+        assert all(not cell.get("outputs") for cell in notebook["cells"] if cell["cell_type"] == "code")
+        combined_source += "\n".join(
+            "".join(cell["source"]) for cell in notebook["cells"]
+        )
+
+    for marker in [
+        "Exchange",
+        "SortMergeJoin",
+        "BroadcastHashJoin",
+        "output_roundtrip",
+        "spark.stop()",
+    ]:
+        assert marker in combined_source
+
+
+def test_lesson_04_notebook_service_is_local_and_version_pinned():
+    compose = (LAB_ROOT / "docker-compose.yml").read_text(encoding="utf-8")
+    requirements = (LAB_ROOT / "jupyter" / "requirements.txt").read_text(encoding="utf-8")
+    extensions = json.loads((ROOT / ".vscode" / "extensions.json").read_text(encoding="utf-8"))
+
+    assert 'profiles: ["notebook"]' in compose
+    assert '"127.0.0.1:18888:8888"' in compose
+    assert '"127.0.0.1:14040:4040"' in compose
+    assert "JUPYTER_TOKEN: de-mentor" in compose
+    assert "/opt/spark/python/lib/py4j-0.10.9.9-src.zip" in compose
+    assert "--IdentityProvider.token" in compose
+    assert "--allow-root" in compose
+    assert "jupyterlab==" in requirements
+    assert "ipykernel==" in requirements
+    assert "nbconvert==" in requirements
+    assert "ms-toolsai.jupyter" in extensions["recommendations"]
 
 
 def test_lesson_04_decks_have_visible_source_notes():

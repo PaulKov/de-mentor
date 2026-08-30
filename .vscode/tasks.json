@@ -97,6 +97,61 @@
       }
     },
     {
+      "label": "Jupyter · Start server",
+      "type": "shell",
+      "command": "docker compose -f labs/spark/docker-compose.yml --profile notebook up -d --build --wait --wait-timeout 300 spark-notebook && printf 'VS Code Existing Jupyter Server: http://localhost:18888/?token=de-mentor\\nSpark notebook UI: http://localhost:14040\\n'",
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PATH": "/Applications/Docker.app/Contents/Resources/bin:${env:PATH}"
+        }
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      }
+    },
+    {
+      "label": "Jupyter · Smoke all demos",
+      "type": "shell",
+      "command": "docker compose -f labs/spark/docker-compose.yml --profile notebook exec -T spark-notebook python3 /workspace/labs/spark/jupyter/run_smoke.py",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Jupyter · Start server"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PATH": "/Applications/Docker.app/Contents/Resources/bin:${env:PATH}"
+        }
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      }
+    },
+    {
+      "label": "Jupyter · Stop server",
+      "type": "shell",
+      "command": "docker compose -f labs/spark/docker-compose.yml --profile notebook stop spark-notebook",
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PATH": "/Applications/Docker.app/Contents/Resources/bin:${env:PATH}"
+        }
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      }
+    },
+    {
       "label": "Spark · Status",
       "type": "shell",
       "command": "docker compose -f labs/spark/docker-compose.yml ps",
