@@ -1,0 +1,45 @@
+route: spark-foundations
+lesson_code: lesson-04
+physical_lab: spark
+title: Apache Spark foundations - Big Data and PySpark execution model
+deck_path: lessons/lesson-04/artifacts/apache-spark-foundations-theory.pptx
+google_slides_url: null
+expected_owner_email: pavelkov007@gmail.com
+expected_slide_count: 42
+drive_folder: lessons/Spark/Lesson 04 - Apache Spark foundations and PySpark
+portal_repo: https://github.com/PaulKov/de-mentor-portal
+docs:
+  - lessons/lesson-04/docs/README.md
+  - lessons/lesson-04/docs/mentor-guide.md
+  - lessons/lesson-04/docs/student-workbook.md
+  - lessons/lesson-04/docs/cheat-sheet.md
+  - lessons/lesson-04/homework/assignment.md
+  - lessons/lesson-04/homework/rubric.md
+runbooks:
+  - lessons/lesson-04/docs/runbooks/simple-path.md
+  - lessons/lesson-04/docs/runbooks/deep-dive-path.md
+  - lessons/lesson-04/docs/runbooks/facilitator-skip-map.md
+  - lessons/lesson-04/docs/runbooks/student-prep.md
+  - lessons/lesson-04/homework/plan.md
+sql_examples:
+  - labs/spark/seed/generate_lesson04_data.py
+  - labs/spark/examples/lesson04_core_pipeline.py
+  - labs/spark/examples/lesson04_deep_join.py
+  - labs/spark/examples/lesson04_smoke.py
+student_handoff:
+  - lessons/lesson-04/docs/runbooks/student-prep.md
+  - lessons/lesson-04/docs/student-workbook.md
+  - lessons/lesson-04/homework/assignment.md
+  - lessons/lesson-04/homework/plan.md
+  - lessons/lesson-04/homework/templates/evidence.md
+  - labs/spark/examples/lesson04_core_pipeline.py
+safe_cli_commands:
+  - python3 mentor-lab.py up spark
+  - python3 mentor-lab.py seed spark --profile lesson04
+  - python3 mentor-lab.py check spark
+  - python3 mentor-lab.py runbook spark-foundations simple
+  - python3 mentor-lab.py runbook spark-foundations deep
+  - python3 mentor-lab.py runbook spark-foundations homework
+  - python3 mentor-lab.py student spark-foundations homework
+  - python3 mentor-lab.py lesson-release spark-foundations verify
+  - python3 mentor-lab.py slides publish spark-foundations --dry-run --confirm-account pavelkov007@gmail.com

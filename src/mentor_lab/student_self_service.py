@@ -63,11 +63,23 @@ class StudentSelfServiceGuide:
             commands.append(
                 f"  # Shared GP 6.25 stand @ :15436; DB mentor; schemas lesson01/02/03"
             )
+        elif lab.runtime == "spark":
+            commands.append(
+                f"  {prefix} mentor-lab.py seed {lab.name} --profile lesson04"
+            )
+            commands.append(
+                "  # Spark master UI @ :18080; driver UI @ :4040 while a job is running"
+            )
         commands.extend(
             [
                 f"  {prefix} mentor-lab.py check {lab.name}",
                 f"  {prefix} mentor-lab.py runbook {route.name} simple",
-                f"  {prefix} mentor-lab.py academy {route.name} start --student <your-name>",
+                (
+                    f"  {prefix} mentor-lab.py session {route.name} start "
+                    "--student <your-name>"
+                    if lab.runtime == "spark"
+                    else f"  {prefix} mentor-lab.py academy {route.name} start --student <your-name>"
+                ),
                 "",
                 "Lesson pack:",
                 f"  {route.lesson_root}/README.md",
@@ -82,7 +94,13 @@ class StudentSelfServiceGuide:
 
     def homework(self, lab: LabDefinition, route: LearningRoute) -> str:
         read_extra: list[str] = []
-        if route.lesson_code == "lesson-03":
+        if route.lesson_code == "lesson-04":
+            bring = (
+                "  pipeline.py, evidence.md, explain(formatted), quality checks, "
+                "Spark UI observations and a production decision."
+            )
+            read_extra = [f"  {route.homework_dir}/templates/evidence.md"]
+        elif route.lesson_code == "lesson-03":
             bring = (
                 "  Senior core: rewrite.sql (0–3 stages), evidence.md (e2e + decision), "
                 "reconcile.sql (two-way EXCEPT ALL), residual risks. "
@@ -106,6 +124,7 @@ class StudentSelfServiceGuide:
         lines = [
             f"Student homework: {route.name}",
             f"Physical lab: {lab.name}",
+            f"Runtime: {lab.runtime}",
             f"Database: {lab.default_database or '(n/a)'}",
             f"Lesson pack: {route.lesson_root}/",
             f"Submission: {route.submission_path}",
@@ -125,7 +144,11 @@ class StudentSelfServiceGuide:
                 f"  python3 mentor-lab.py homework {lab.name} check "
                 f"--submission {route.submission_path}"
             ),
-            f"  python3 mentor-lab.py grade {lab.name} --dry-run",
+            (
+                f"  python3 mentor-lab.py grade {lab.name} --dry-run"
+                if lab.runtime == "sql"
+                else "  # Spark homework is checked from the submission pack"
+            ),
             "",
             f"Bring to {_lesson_label(route.next_lesson.code)}:",
             bring,
@@ -140,4 +163,6 @@ def _lesson_label(code: str) -> str:
         return "Lesson 03"
     if code.startswith("04-"):
         return "Lesson 04"
+    if code.startswith("05-"):
+        return "Lesson 05"
     return code

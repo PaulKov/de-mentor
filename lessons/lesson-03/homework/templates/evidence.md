@@ -75,6 +75,6 @@ Do not declare a winner from estimated cost alone.
 1.
 2.
 
-## J. Question → Lesson 04 (WLM / kill-switch)
+## J. Question → Lesson 05 (WLM / kill-switch)
 
 …

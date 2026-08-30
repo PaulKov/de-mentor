@@ -23,6 +23,7 @@ class LabDefinition:
     default_database: str
     port: int
     docs_path: Path
+    runtime: str = "sql"
     env_script: str = ". /usr/local/greenplum-db/greenplum_path.sh"
     # When set, CLI creates `default_database` via this maintenance DB if missing
     # (andruche GP 6.25 images boot into `postgres`, unlike GP7 `mentor`).
@@ -37,6 +38,12 @@ class LabDefinition:
         """Return the absolute documentation path for this lab."""
 
         return project_root / self.docs_path
+
+    @property
+    def supports_sql_console(self) -> bool:
+        """Whether the lab exposes the repository's interactive SQL console."""
+
+        return self.runtime == "sql" and bool(self.default_database)
 
 
 class UnknownLabError(KeyError):
@@ -71,4 +78,3 @@ class LabRegistry:
             return self._labs[name]
         except KeyError as exc:
             raise UnknownLabError(name, self._labs.keys()) from exc
-

@@ -13,6 +13,7 @@ from mentor_lab.runbook_route_query_tuning_deep import greenplum_query_tuning_de
 from mentor_lab.runbook_route_query_tuning_homework import greenplum_query_tuning_homework_runbook
 from mentor_lab.runbook_route_query_tuning_simple import greenplum_query_tuning_simple_runbook
 from mentor_lab.runbook_route_simple import greenplum_simple_runbook
+from mentor_lab.runbook_route_spark import spark_runbooks
 
 
 def default_runbooks() -> List[Runbook]:
@@ -27,4 +28,5 @@ def default_runbooks() -> List[Runbook]:
         greenplum_query_tuning_simple_runbook(),
         greenplum_query_tuning_deep_runbook(),
         greenplum_query_tuning_homework_runbook(),
+        *spark_runbooks(),
     ]

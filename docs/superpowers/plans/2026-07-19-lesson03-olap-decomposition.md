@@ -11,7 +11,7 @@
 ## Global Constraints
 
 - Контент на русском; устоявшиеся термины (`EXPLAIN`, AOCO, Motion) сохраняем.
-- WLM/RCA вне scope → Урок 04.
+- WLM/RCA вне scope → Урок 05.
 - Google publish только в `pavelkov007@gmail.com`.
 
 ## Tasks

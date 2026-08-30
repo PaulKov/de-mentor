@@ -699,7 +699,7 @@ def test_lesson_03_session_control_plane_points_to_lesson_03_materials(tmp_path)
     assert "labs/greenplum-625/examples/lesson03-homework-seed.sql" in sql_paths
     assert "labs/greenplum-625/examples/lesson03-class-demo.sql" in sql_paths
 
-    assert control_plane["next_lesson"]["code"] == "04-greenplum-wlm-diagnostics"
+    assert control_plane["next_lesson"]["code"] == "04-spark-foundations"
     assert control_plane["mentor_mode"]["stage_guides"][0]["stage_code"] == "lab-optimizer"
 
 

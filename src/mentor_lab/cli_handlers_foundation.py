@@ -43,24 +43,43 @@ def _handle_info(args: argparse.Namespace) -> int:
     print("Student interface:")
     print(f"  python3 mentor-lab.py up {lab.name}")
     print(f"  python3 mentor-lab.py status {lab.name}")
-    print(f"  python3 mentor-lab.py psql {lab.name}")
+    if lab.supports_sql_console:
+        print(f"  python3 mentor-lab.py psql {lab.name}")
+    elif lab.runtime == "spark":
+        print(f"  python3 mentor-lab.py seed {lab.name} --profile lesson04")
+        print(
+            "  python3 mentor-lab.py spark-submit spark "
+            "labs/spark/examples/lesson04_core_pipeline.py"
+        )
     print(f"  python3 mentor-lab.py reset {lab.name}")
     print("")
     print("macOS:")
     print("  1. Install Docker Desktop.")
     print(f"  2. Run: python3 mentor-lab.py up {lab.name}")
-    print(f"  3. Run: python3 mentor-lab.py psql {lab.name}")
+    if lab.supports_sql_console:
+        print(f"  3. Run: python3 mentor-lab.py psql {lab.name}")
+    else:
+        print(f"  3. Run: python3 mentor-lab.py check {lab.name}")
     print("")
     print("Windows:")
     print("  1. Install Docker Desktop with WSL 2 backend enabled.")
     print("  2. Open PowerShell in the repository folder.")
     print(f"  3. Run: py mentor-lab.py up {lab.name}")
-    print(f"  4. Run: py mentor-lab.py psql {lab.name}")
+    if lab.supports_sql_console:
+        print(f"  4. Run: py mentor-lab.py psql {lab.name}")
+    else:
+        print(f"  4. Run: py mentor-lab.py check {lab.name}")
     print("")
-    print(
-        "The psql command runs inside the container, so students do not need "
-        "a local PostgreSQL client."
-    )
+    if lab.supports_sql_console:
+        print(
+            "The psql command runs inside the container, so students do not need "
+            "a local PostgreSQL client."
+        )
+    else:
+        print(
+            "Spark, PySpark and Java run inside Docker, so students do not need "
+            "a local JVM or PySpark installation."
+        )
     return 0
 
 

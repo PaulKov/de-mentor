@@ -65,7 +65,7 @@ class LearningRoute:
     def submission_path(self) -> str:
         """Default CLI --submission path for this lesson."""
 
-        if self.lesson_code == "lesson-03":
+        if self.lesson_code in {"lesson-03", "lesson-04"}:
             return self.submission_dir
         return f"{self.submission_dir}/homework.md"
 
@@ -161,9 +161,30 @@ LESSON_03_ROUTE = LearningRoute(
         "labs/greenplum-625/examples/lesson03-principal-scd2-locus.sql",
     ),
     next_lesson=NextLesson(
-        code="04-greenplum-wlm-diagnostics",
-        title="Workload management и production diagnostics",
+        code="04-spark-foundations",
+        title="Apache Spark foundations: Big Data и PySpark execution model",
         path="lessons/lesson-04/README.md",
+    ),
+)
+
+LESSON_04_ROUTE = LearningRoute(
+    name="spark-foundations",
+    lesson_code="lesson-04",
+    physical_lab_name="spark",
+    title="Apache Spark foundations: Big Data и PySpark execution model",
+    lesson_root="lessons/lesson-04",
+    deck_path="lessons/lesson-04/artifacts/apache-spark-foundations-theory.pptx",
+    google_slides_url=None,
+    sql_examples=(
+        "labs/spark/seed/generate_lesson04_data.py",
+        "labs/spark/examples/lesson04_core_pipeline.py",
+        "labs/spark/examples/lesson04_deep_join.py",
+        "labs/spark/examples/lesson04_smoke.py",
+    ),
+    next_lesson=NextLesson(
+        code="05-greenplum-wlm-diagnostics",
+        title="Workload management и production diagnostics",
+        path="lessons/lesson-05/README.md",
     ),
 )
 
@@ -171,6 +192,7 @@ _ROUTES = {
     LESSON_01_ROUTE.name: LESSON_01_ROUTE,
     LESSON_02_ROUTE.name: LESSON_02_ROUTE,
     LESSON_03_ROUTE.name: LESSON_03_ROUTE,
+    LESSON_04_ROUTE.name: LESSON_04_ROUTE,
 }
 
 _ALIASES = {
@@ -191,6 +213,12 @@ _ALIASES = {
     "query-tuning": "greenplum-query-tuning",
     "olap-tuning": "greenplum-query-tuning",
     "gp-query-tuning": "greenplum-query-tuning",
+    "04": "spark-foundations",
+    "4": "spark-foundations",
+    "lesson-04": "spark-foundations",
+    "spark": "spark-foundations",
+    "pyspark": "spark-foundations",
+    "spark-intro": "spark-foundations",
 }
 
 

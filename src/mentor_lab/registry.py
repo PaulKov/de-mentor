@@ -52,6 +52,23 @@ def create_default_registry(project_root: Path) -> LabRegistry:
                 **greenplum_academy,
             ),
             LabDefinition(
+                name="spark",
+                title="Apache Spark 4.2 PySpark academy",
+                description=(
+                    "Self-service Spark Standalone cluster for Lesson 04: one "
+                    "master, two workers, a PySpark client and observable Spark UI."
+                ),
+                status="ready",
+                compose_file=Path("labs/spark/docker-compose.yml"),
+                service_name="spark-client",
+                default_user="spark",
+                default_database="",
+                port=4040,
+                docs_path=Path("labs/spark/README.md"),
+                runtime="spark",
+                env_script="",
+            ),
+            LabDefinition(
                 name="postgres",
                 title="PostgreSQL foundations",
                 description="Planned OLTP and SQL baseline lab.",

@@ -8,7 +8,7 @@
 
 | Решение | Выбор |
 |---|---|
-| Scope | Deep OLAP + internals; WLM/RCA → Lesson 04 |
+| Scope | Deep OLAP + internals; WLM/RCA → Lesson 05 |
 | Название | Декомпозиция и тюнинг тяжёлых запросов в MPP |
 | Язык | Русский; устоявшиеся термины (`EXPLAIN`, `ANALYZE`, AOCO, Motion) сохраняем |
 | Формат | Simple 60 мин + deep-dive 90–120 мин |
@@ -25,7 +25,7 @@
 3. Статистика: `pg_stats` → `pg_statistic` → файлы/код
 4. Физическое хранение Heap / AO / AOCO и типы данных
 5. `TEMP` / spill / `pg_temp` vs CTE
-6. Homework + мост к Lesson 04 (WLM)
+6. Homework + мост к будущему WLM-модулю (Lesson 05)
 
 ## Out of scope
 

@@ -122,7 +122,7 @@ class LessonReleaseVerifier:
 
     def _google_static_check(self, manifest: LessonReleaseManifest) -> ReleaseCheck:
         owner_ok = manifest.expected_owner_email == "pavelkov007@gmail.com"
-        folder_ok = manifest.drive_folder.startswith("lessons/Greenplum/")
+        folder_ok = manifest.drive_folder.startswith("lessons/")
         if not owner_ok or not folder_ok:
             return ReleaseCheck("google_slides_static", "FAIL", "Google Slides metadata mismatch")
         if not manifest.google_slides_url:
