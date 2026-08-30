@@ -41,6 +41,7 @@ def test_registry_documents_future_learning_platforms():
     assert lab_names == [
         "greenplum",
         "greenplum-625",
+        "spark",
         "postgres",
         "clickhouse",
         "hadoop-hdfs",
@@ -48,6 +49,19 @@ def test_registry_documents_future_learning_platforms():
         "spark-k8s",
     ]
     assert registry.get("spark-k8s").status == "planned"
+
+
+def test_registry_exposes_ready_spark_lesson_stand():
+    registry = create_default_registry(Path("/workspace"))
+
+    lab = registry.get("spark")
+
+    assert lab.status == "ready"
+    assert lab.runtime == "spark"
+    assert lab.compose_file == Path("labs/spark/docker-compose.yml")
+    assert lab.service_name == "spark-client"
+    assert lab.port == 4040
+    assert not lab.supports_sql_console
 
 
 def test_unknown_lab_error_names_available_labs():

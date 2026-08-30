@@ -47,6 +47,7 @@ class CiSmokePlanBuilder:
             steps=[
                 SmokeStep("Render generated dataset", "python3 mentor-lab.py dataset greenplum generate --scale small --seed 42 --skew high --late-facts --wide-rows --output artifacts/generated-enterprise.sql"),
                 SmokeStep("Start Greenplum", "python3 mentor-lab.py up greenplum"),
+                SmokeStep("Seed academy dataset", "python3 mentor-lab.py seed greenplum --profile academy"),
                 SmokeStep("Check Greenplum", "python3 mentor-lab.py check greenplum"),
                 SmokeStep("Run storage SQL", _example_sql_command("storage-and-partitioning.sql")),
                 SmokeStep("Run partitioning SQL", _example_sql_command("partitioning-strategies.sql")),
@@ -64,6 +65,6 @@ class CiSmokePlanBuilder:
 def _example_sql_command(filename: str) -> str:
     return (
         "docker compose -f labs/greenplum-625/docker-compose.yml exec -T -u gpadmin "
-        "greenplum bash -lc \". /usr/local/gpdb/greenplum_path.sh && "
+        "greenplum-625 bash -lc \". /usr/local/gpdb/greenplum_path.sh && "
         f"psql -U gpadmin -d mentor -v ON_ERROR_STOP=1 -f /mentor-lab/examples/{filename}\""
     )

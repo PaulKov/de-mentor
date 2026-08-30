@@ -85,7 +85,7 @@ Production decision обязателен: **merge / do not merge / needs larger-
 - filepath TEMP / constrained spill;
 - Optimizer Policy RFC (когда `optimizer=on|off`, evidence before merge, monitoring);
 - raw `pg_statistic` slots;
-- вопрос к Уроку 04 (WLM / kill-switch);
+- вопрос к Уроку 05 (WLM / kill-switch);
 - Challenge 2 co-location proof (если использовал TEMP).
 
 `v_star_join_orca_case` — demo join-space; не основной graded rewrite target.

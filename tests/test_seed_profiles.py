@@ -9,14 +9,14 @@ def test_seed_profile_catalog_exposes_realistic_learning_modes():
     profiles = catalog.list("greenplum")
     names = [profile.name for profile in profiles]
 
-    assert names[:3] == ["balanced", "skewed", "enterprise"]
+    assert names[:4] == ["academy", "lesson01", "lesson02", "lesson03"]
     assert "late-facts" in names
     assert "bad-statistics" in names
     assert "bad-partitioning" in names
     assert "wide-aoco" in names
     assert "small-dimension-broadcast" in names
     assert catalog.get("greenplum", "skewed").file_path == Path(
-        "/workspace/labs/greenplum/seed/skewed.sql"
+        "/workspace/labs/greenplum-625/seed/lesson01.sql"
     )
 
 

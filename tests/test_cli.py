@@ -26,7 +26,7 @@ def test_up_dry_run_prints_cross_platform_docker_compose_command():
 
     assert exit_code == 0
     assert "docker compose -f" in output
-    assert "labs/greenplum/docker-compose.yml up -d" in output
+    assert "labs/greenplum-625/docker-compose.yml up -d" in output
 
 
 def test_info_command_gives_student_friendly_greenplum_entrypoint():
@@ -45,4 +45,3 @@ def test_unknown_lab_returns_clear_error():
     assert exit_code == 1
     assert "Unknown lab 'oracle'" in output
     assert "greenplum" in output
-

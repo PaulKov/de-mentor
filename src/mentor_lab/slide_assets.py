@@ -59,6 +59,8 @@ class SlideAssetCatalog:
                 project_root,
                 lesson_folder="Lesson 01 - MPP foundations",
                 expected_slide_count=31,
+                direction_folder="Greenplum",
+                academy_name="Greenplum Academy",
             ),
             _asset_for_route(
                 resolve_learning_route("greenplum-partitioning"),
@@ -67,6 +69,8 @@ class SlideAssetCatalog:
                     "Lesson 02 - Partitioning, statistics and incremental loads"
                 ),
                 expected_slide_count=18,
+                direction_folder="Greenplum",
+                academy_name="Greenplum Academy",
             ),
             _asset_for_route(
                 resolve_learning_route("greenplum-query-tuning"),
@@ -75,6 +79,16 @@ class SlideAssetCatalog:
                     "Lesson 03 - Decomposition and tuning of heavy MPP queries"
                 ),
                 expected_slide_count=439,
+                direction_folder="Greenplum",
+                academy_name="Greenplum Academy",
+            ),
+            _asset_for_route(
+                resolve_learning_route("spark-foundations"),
+                project_root,
+                lesson_folder="Lesson 04 - Apache Spark foundations and PySpark",
+                expected_slide_count=42,
+                direction_folder="Spark",
+                academy_name="Spark Academy",
             ),
         ]
         return cls({asset.route_name: asset for asset in routes})
@@ -90,10 +104,12 @@ def _asset_for_route(
     *,
     lesson_folder: str,
     expected_slide_count: int,
+    direction_folder: str,
+    academy_name: str,
 ) -> SlideAsset:
     return SlideAsset(
         route_name=route.name,
-        title=f"Greenplum Academy - {route.lesson_code}: {route.title}",
+        title=f"{academy_name} - {route.lesson_code}: {route.title}",
         pptx_path=project_root / route.deck_path,
         google_slides_url=route.google_slides_url,
         expected_owner_email=PERSONAL_OWNER_EMAIL,
@@ -101,7 +117,7 @@ def _asset_for_route(
         taxonomy=DriveTaxonomy(
             root_folder_id=PERSONAL_DRIVE_ROOT_ID,
             root_folder_name="lessons",
-            direction_folder="Greenplum",
+            direction_folder=direction_folder,
             lesson_folder=lesson_folder,
         ),
     )

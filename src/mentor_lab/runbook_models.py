@@ -74,7 +74,7 @@ class Runbook:
                 f"Homework: {self.homework_path}",
             ]
         )
-        lines.extend(f"SQL example: {path}" for path in self._sql_examples())
+        lines.extend(f"Example: {path}" for path in self._sql_examples())
         lines.append("")
         for index, stage in enumerate(self.stages, start=1):
             lines.append(stage.render(index))

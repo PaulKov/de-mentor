@@ -382,7 +382,7 @@ EXPLAIN SELECT * FROM lesson03.v_heavy_olap_monolith;
 
 ## Что Не Делать
 
-- Не уводи в полный WLM — Урок 04.
+- Не уводи в полный WLM — Урок 05.
 - Не принимай rewrite без before/after EXPLAIN и без `SET optimizer`.
 - Не предлагай AOCO как универсальный фикс.
 - Не произноси аббревиатуры без словаря.

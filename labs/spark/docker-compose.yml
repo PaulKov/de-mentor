@@ -1,0 +1,84 @@
+name: de-mentor-spark
+
+x-spark-common: &spark-common
+  image: apache/spark:4.2.0-python3
+  user: "0:0"
+  environment:
+    PYTHONPATH: /workspace/labs/spark
+    SPARK_NO_DAEMONIZE: "true"
+  volumes:
+    - ../..:/workspace
+
+services:
+  spark-master:
+    <<: *spark-common
+    hostname: spark-master
+    command:
+      - /opt/spark/bin/spark-class
+      - org.apache.spark.deploy.master.Master
+      - --host
+      - spark-master
+      - --port
+      - "7077"
+      - --webui-port
+      - "8080"
+    ports:
+      - "17077:7077"
+      - "18080:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c ': > /dev/tcp/127.0.0.1/7077'"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  spark-worker-1:
+    <<: *spark-common
+    hostname: spark-worker-1
+    depends_on:
+      spark-master:
+        condition: service_healthy
+    command:
+      - /opt/spark/bin/spark-class
+      - org.apache.spark.deploy.worker.Worker
+      - spark://spark-master:7077
+      - --cores
+      - "1"
+      - --memory
+      - 1g
+      - --webui-port
+      - "8081"
+    ports:
+      - "18081:8081"
+
+  spark-worker-2:
+    <<: *spark-common
+    hostname: spark-worker-2
+    depends_on:
+      spark-master:
+        condition: service_healthy
+    command:
+      - /opt/spark/bin/spark-class
+      - org.apache.spark.deploy.worker.Worker
+      - spark://spark-master:7077
+      - --cores
+      - "1"
+      - --memory
+      - 1g
+      - --webui-port
+      - "8082"
+    ports:
+      - "18082:8082"
+
+  spark-client:
+    <<: *spark-common
+    hostname: spark-client
+    depends_on:
+      spark-master:
+        condition: service_healthy
+      spark-worker-1:
+        condition: service_started
+      spark-worker-2:
+        condition: service_started
+    command: ["bash", "-lc", "mkdir -p /workspace/labs/spark/data/event-log && exec sleep infinity"]
+    ports:
+      - "4040:4040"

@@ -58,6 +58,30 @@ ANALYZE lesson01.fact_orders_student;
     assert "Real SQL Autograde" in grade.render()
 
 
+def test_sql_submission_grader_accepts_greenplum_6_aoco_syntax():
+    submission = """
+CREATE TABLE lesson01.fact_orders_student (
+    customer_id bigint,
+    sale_date date
+)
+WITH (appendonly=true, orientation=column)
+DISTRIBUTED BY (customer_id)
+PARTITION BY RANGE (sale_date)
+(
+    START (DATE '2026-01-01') END (DATE '2026-02-01') EVERY (INTERVAL '1 day')
+);
+EXPLAIN ANALYZE SELECT * FROM lesson01.fact_orders_student;
+SELECT gp_segment_id, count(*) FROM lesson01.fact_orders_student GROUP BY 1;
+ANALYZE lesson01.fact_orders_student;
+-- validation before/after
+"""
+
+    grade = SqlSubmissionGrader.default().grade_text("greenplum", submission)
+
+    assert grade.accepted
+    assert "aoco_storage" in grade.passed_codes
+
+
 def test_autograde_sql_cli_writes_report(tmp_path):
     submission = tmp_path / "submission.sql"
     report = tmp_path / "grade.md"
@@ -149,9 +173,22 @@ def test_ci_smoke_cli_and_workflow_are_available():
     with open(workflow, encoding="utf-8") as handle:
         content = handle.read()
     assert "Greenplum Live Smoke" in content
-    assert "python3 -m pip install pytest" in content
+    assert 'python3 -m pip install -e ".[dev]"' in content
     assert "Wait for Greenplum" in content
     assert "for attempt in {1..30}" in content
+    assert "psql -U gpadmin -d postgres -tAc 'SELECT 1'" in content
+    assert "mentor-lab.py seed greenplum --profile academy" in content
     assert "mentor-lab.py check greenplum" in content
     assert "mentor-lab.py dataset greenplum generate" in content
     assert "mentor-lab.py autograde-sql greenplum" in content
+
+
+def test_ci_sample_solution_is_accepted_by_autograder():
+    sample = "labs/greenplum-625/examples/student-solution-example.sql"
+    with open(sample, encoding="utf-8") as handle:
+        submission = handle.read()
+
+    grade = SqlSubmissionGrader.default().grade_text("greenplum", submission)
+
+    assert grade.score == 100
+    assert grade.accepted

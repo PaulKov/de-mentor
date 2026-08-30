@@ -8,8 +8,12 @@ setup(
     package_dir={"": "src"},
     packages=find_packages(where="src"),
     install_requires=[],
-    extras_require={"dev": ["pytest>=8.0,<9.0"]},
+    extras_require={
+        "dev": [
+            "pytest>=8.0,<9.0",
+            "python-pptx>=1.0,<2.0",
+        ]
+    },
     entry_points={"console_scripts": ["mentor-lab=mentor_lab.cli:console"]},
     python_requires=">=3.9",
 )
-

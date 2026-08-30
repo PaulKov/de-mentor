@@ -26,6 +26,7 @@ from mentor_lab.cli_handlers_operations import (
 )
 from mentor_lab.docker_compose import DockerComposeRunner
 from mentor_lab.domain import LabDefinition
+from mentor_lab.cli_handlers_spark import handle_spark_submit
 
 
 def register_operations_commands(subparsers: argparse._SubParsersAction) -> None:
@@ -101,6 +102,20 @@ def register_operations_commands(subparsers: argparse._SubParsersAction) -> None
     seed_parser.add_argument("--profile", default="skewed")
     seed_parser.add_argument("--dry-run", action="store_true")
     seed_parser.set_defaults(handler=_handle_seed)
+
+    submit_parser = subparsers.add_parser(
+        "spark-submit",
+        help="Submit a PySpark application to a supported Spark lab.",
+    )
+    submit_parser.add_argument("lab_name")
+    submit_parser.add_argument("script")
+    submit_parser.add_argument("--dry-run", action="store_true")
+    submit_parser.add_argument(
+        "script_args",
+        nargs=argparse.REMAINDER,
+        help="Arguments passed to the application; prefix them with --.",
+    )
+    submit_parser.set_defaults(handler=handle_spark_submit)
 
     dataset_parser = subparsers.add_parser(
         "dataset",

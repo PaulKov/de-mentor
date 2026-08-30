@@ -13,6 +13,8 @@ class ReadinessProfile:
     fixes: List[str]
 
     def render(self, lab_name: str) -> str:
+        is_spark = lab_name.startswith("spark")
+        fixes = [fix.replace("{lab_name}", lab_name) for fix in self.fixes]
         lines = [
             f"# Readiness Doctor Pro: {lab_name}",
             "",
@@ -24,11 +26,11 @@ class ReadinessProfile:
         lines.extend(["", "## Checks"])
         lines.extend(f"- `{check}`" for check in self.checks)
         lines.extend(["", "## Fix actions"])
-        lines.extend(f"- {fix}" for fix in self.fixes)
+        lines.extend(f"- {fix}" for fix in fixes)
         lines.extend(
             [
                 "",
-                "## Greenplum smoke",
+                "## Spark smoke" if is_spark else "## Greenplum smoke",
                 "```bash",
                 f"python3 mentor-lab.py up {lab_name}",
                 f"python3 mentor-lab.py status {lab_name}",
@@ -37,8 +39,12 @@ class ReadinessProfile:
                 "",
                 "## Minimum resources",
                 "- CPU: 4 cores recommended.",
-                "- RAM: 8 GB minimum, 12-16 GB comfortable for future Spark/Hadoop labs.",
-                "- Disk: 20 GB free for Greenplum lesson, 80+ GB for the full roadmap.",
+                "- RAM: 8 GB minimum, 12-16 GB comfortable.",
+                (
+                    "- Disk: 10 GB free for the Spark lesson, 80+ GB for the full roadmap."
+                    if is_spark
+                    else "- Disk: 20 GB free for Greenplum lesson, 80+ GB for the full roadmap."
+                ),
                 "",
             ]
         )
@@ -77,7 +83,7 @@ class ReadinessDoctorPro:
             ],
             fixes=[
                 "Enable WSL 2 backend in Docker Desktop settings.",
-                "Run `py mentor-lab.py up greenplum` from PowerShell in the repository folder.",
+                "Run `py mentor-lab.py up {lab_name}` from PowerShell in the repository folder.",
                 "Keep the repository on the Windows filesystem or inside one WSL distro, not split across both.",
             ],
         ),

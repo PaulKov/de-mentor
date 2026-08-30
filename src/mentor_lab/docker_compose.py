@@ -46,6 +46,8 @@ class DockerComposeRunner:
         return command
 
     def build_psql_command(self, lab: LabDefinition) -> Command:
+        if not lab.supports_sql_console:
+            raise ValueError(f"Lab '{lab.name}' does not expose a psql console.")
         return self._compose_prefix(lab) + [
             "exec",
             "-u",
@@ -55,6 +57,21 @@ class DockerComposeRunner:
             "-lc",
             self._build_psql_shell_command(lab),
         ]
+
+    def build_exec_command(
+        self,
+        lab: LabDefinition,
+        service_name: str,
+        command: Sequence[str],
+        *,
+        interactive: bool = False,
+    ) -> Command:
+        """Build a reusable Compose exec command without invoking a shell."""
+
+        exec_args = ["exec"]
+        if not interactive:
+            exec_args.append("-T")
+        return self._compose_prefix(lab) + exec_args + [service_name, *command]
 
     def build_config_command(self, lab: LabDefinition) -> Command:
         return self._compose_prefix(lab) + ["config"]

@@ -9,7 +9,7 @@
 | `artifacts/` | презентации (PPTX), screens, case metrics |
 | `submissions/` | куда сдавать (layout + ваши файлы) |
 
-Общий стенд Greenplum **не** лежит в уроке → [`labs/`](../labs/).
+Общие стенды Greenplum и Spark **не** лежат в уроке → [`labs/`](../labs/).
 
 ## Оглавление
 
@@ -18,6 +18,7 @@
 | [lesson-01](lesson-01/) | MPP foundations | `greenplum` | [README](lesson-01/README.md) · [homework](lesson-01/homework/) · [deck](lesson-01/artifacts/) |
 | [lesson-02](lesson-02/) | Partitioning, stats, incremental loads | `greenplum` | [README](lesson-02/README.md) · [homework](lesson-02/homework/) · [deck](lesson-02/artifacts/) |
 | [lesson-03](lesson-03/) | Query tuning / OLAP decomposition | `greenplum-625` | [README](lesson-03/README.md) · [homework](lesson-03/homework/) · [deck](lesson-03/artifacts/) |
+| [lesson-04](lesson-04/) | Apache Spark foundations / PySpark | `spark` | [README](lesson-04/README.md) · [homework](lesson-04/homework/) · [deck](lesson-04/artifacts/) |
 
 ## Как пользоваться
 
@@ -27,10 +28,10 @@
 4. Презентация и evidence → `artifacts/`.
 
 ```bash
-# Пример: домашка Урока 03
-python3 mentor-lab.py student greenplum-query-tuning homework
-python3 mentor-lab.py homework greenplum-625 check \
-  --submission lessons/lesson-03/submissions
+# Пример: домашка Урока 04
+python3 mentor-lab.py student spark-foundations homework
+python3 mentor-lab.py homework spark check \
+  --submission lessons/lesson-04/submissions
 ```
 
 ## Карта репозитория (коротко)

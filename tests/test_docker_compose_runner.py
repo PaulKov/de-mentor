@@ -14,7 +14,7 @@ def test_up_command_uses_lab_compose_file_and_detached_mode():
         "docker",
         "compose",
         "-f",
-        "/workspace/labs/greenplum/docker-compose.yml",
+        "/workspace/labs/greenplum-625/docker-compose.yml",
         "up",
         "-d",
     ]
@@ -30,7 +30,7 @@ def test_reset_command_removes_volumes_for_clean_student_retry():
         "docker",
         "compose",
         "-f",
-        "/workspace/labs/greenplum/docker-compose.yml",
+        "/workspace/labs/greenplum-625/docker-compose.yml",
         "down",
         "--volumes",
         "--remove-orphans",
@@ -47,14 +47,14 @@ def test_psql_command_uses_container_client_for_windows_and_macos():
         "docker",
         "compose",
         "-f",
-        "/workspace/labs/greenplum/docker-compose.yml",
+        "/workspace/labs/greenplum-625/docker-compose.yml",
         "exec",
         "-u",
         "gpadmin",
-        "greenplum",
+        "greenplum-625",
         "bash",
         "-lc",
-        ". /usr/local/greenplum-db/greenplum_path.sh && psql -U gpadmin -d mentor",
+        ". /usr/local/gpdb/greenplum_path.sh && psql -U gpadmin -d mentor",
     ]
 
 
@@ -69,5 +69,5 @@ def test_healthcheck_command_uses_greenplum_environment():
         "-",
         "gpadmin",
         "-c",
-        ". /usr/local/greenplum-db/greenplum_path.sh && psql -U gpadmin -d mentor -c 'SELECT 1'",
+        ". /usr/local/gpdb/greenplum_path.sh && psql -U gpadmin -d mentor -c 'SELECT 1'",
     ]

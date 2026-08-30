@@ -7,20 +7,9 @@ from typing import Callable, Sequence
 
 from mentor_lab.certificates import CertificateWriter
 from mentor_lab.challenges import ChallengeCatalog
-from mentor_lab.checks import (
-    CheckStatus,
-    Greenplum625CheckSuite,
-    GreenplumCheckSuite,
-    SharedAcademyCheckSuite,
-)
+from mentor_lab.checks import CheckStatus, GreenplumCheckSuite, SharedAcademyCheckSuite
 from mentor_lab.ci_smoke import CiSmokePlanBuilder
-from mentor_lab.cli_context import (
-    _lab_or_none,
-    _normalize_lesson_arg,
-    _project_root,
-    _runner,
-    _sql_client,
-)
+from mentor_lab.cli_context import _lab_or_none, _normalize_lesson_arg, _project_root, _runner, _sql_client
 from mentor_lab.dataset_generator import DatasetGenerator, DatasetSpec
 from mentor_lab.debrief import DebriefGenerator
 from mentor_lab.docker_compose import DockerComposeRunner
@@ -32,6 +21,7 @@ from mentor_lab.replay import LessonReplayBuilder
 from mentor_lab.reports import MentorReport
 from mentor_lab.scenario_dsl import ScenarioDslCatalog
 from mentor_lab.seed_profiles import SeedProfileCatalog
+from mentor_lab.cli_handlers_spark import run_spark_check, run_spark_seed
 from mentor_lab.telemetry import TelemetryReport
 
 def _handle_telemetry(args: argparse.Namespace) -> int:
@@ -134,6 +124,9 @@ def _handle_check(args: argparse.Namespace) -> int:
     lab = _lab_or_none(args.lab_name)
     if lab is None:
         return 1
+    if lab.runtime == "spark":
+        return run_spark_check(lab, args.dry_run)
+
     suite_cls = (
         SharedAcademyCheckSuite
         if lab.name in {"greenplum", "greenplum-625"}
@@ -194,6 +187,9 @@ def _handle_seed(args: argparse.Namespace) -> int:
     lab = _lab_or_none(args.lab_name)
     if lab is None:
         return 1
+    if lab.runtime == "spark":
+        return run_spark_seed(lab, args.profile, args.dry_run)
+
     try:
         profile = SeedProfileCatalog.default(_project_root()).get(lab.name, args.profile)
     except KeyError as exc:
@@ -424,7 +420,11 @@ def _handle_lab_command(
         return 1
 
     runner = _runner()
-    command = command_builder(runner, lab)
+    try:
+        command = command_builder(runner, lab)
+    except ValueError as exc:
+        print(str(exc))
+        return 1
     if args.dry_run:
         print(runner.format_command(command))
         return 0

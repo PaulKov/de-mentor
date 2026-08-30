@@ -17,6 +17,10 @@ _LESSON_ALIASES = {
     "gp-query-tuning": "lesson-03",
     "query-tuning": "lesson-03",
     "olap-tuning": "lesson-03",
+    "spark-foundations": "lesson-04",
+    "spark": "lesson-04",
+    "pyspark": "lesson-04",
+    "spark-intro": "lesson-04",
 }
 
 _HINT_TOPIC_ALIASES = {
@@ -59,6 +63,16 @@ _HINT_TOPIC_ALIASES = {
     "gporca": "optimizer",
     "legacy-planner": "optimizer",
     "legacy": "optimizer",
+    "lazy": "lazy-evaluation",
+    "lazy-evaluation": "lazy-evaluation",
+    "driver-executor": "spark-architecture",
+    "spark-cluster": "spark-architecture",
+    "spark-partitions": "spark-partitions",
+    "exchange": "spark-shuffle",
+    "shuffle": "spark-shuffle",
+    "broadcast": "spark-joins",
+    "spark-joins": "spark-joins",
+    "spark-ui": "spark-observability",
 }
 
 _INCIDENT_ALIASES = {
@@ -122,6 +136,11 @@ class LessonCatalog:
     def default(cls) -> "LessonCatalog":
         from mentor_lab.lesson_catalog_lesson02 import lesson02, lesson02_hints
         from mentor_lab.lesson_catalog_lesson03 import lesson03, lesson03_hints
+        from mentor_lab.lesson_catalog_lesson04 import (
+            lesson04,
+            lesson04_hints,
+            lesson04_incident,
+        )
 
         return cls(
             lessons=[
@@ -243,6 +262,7 @@ class LessonCatalog:
                 ),
                 lesson02(),
                 lesson03(),
+                lesson04(),
             ],
             hints={
                 "lesson-01": {
@@ -279,6 +299,7 @@ class LessonCatalog:
                 },
                 "lesson-02": lesson02_hints(),
                 "lesson-03": lesson03_hints(),
+                "lesson-04": lesson04_hints(),
             },
             incidents=[
                 Incident(
@@ -353,6 +374,7 @@ class LessonCatalog:
                         "Propose a repeatable load command.",
                     ],
                 ),
+                lesson04_incident(),
             ],
         )
 

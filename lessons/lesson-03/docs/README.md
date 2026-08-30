@@ -19,7 +19,7 @@
 - использовать `TEMP` как physical stage с `DISTRIBUTED BY` + `ANALYZE`;
 - формулировать ORCA/Legacy осторожно (shape на стенде ≠ industrial proof).
 
-Вне scope: полноценный WLM и production RCA → Урок 04.
+Вне scope: полноценный WLM и production RCA → Урок 05.
 
 ## Self-Service Стенд (GP 6.25)
 
@@ -121,4 +121,5 @@ python3 scripts/build_lesson03_pptx.py
 
 ## Следующий Урок
 
-Урок 04: workload management и production diagnostics.
+Урок 04: Apache Spark foundations — Big Data и PySpark execution model.
+Урок 05: workload management и production diagnostics.

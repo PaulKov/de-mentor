@@ -32,6 +32,8 @@ WHERE sale_date >= DATE '2026-01-01'
 
 ANALYZE lesson01.fact_sales_student_good;
 
+-- Validation before/after: compare plan shape, runtime and segment row spread
+-- against lesson01.fact_sales_bad before accepting the storage redesign.
 EXPLAIN ANALYZE
 SELECT c.region, count(*) AS orders_count, sum(f.amount) AS revenue
 FROM lesson01.fact_sales_student_good AS f

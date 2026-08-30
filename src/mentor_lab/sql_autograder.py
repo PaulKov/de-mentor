@@ -1,6 +1,6 @@
 """Evidence-first SQL autograder for Greenplum submissions."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Iterable, List
 
@@ -12,9 +12,16 @@ class SqlGradeCriterion:
     weight: int
     signals: List[str]
     remediation: str
+    any_signals: List[str] = field(default_factory=list)
 
     def passed(self, normalized_submission: str) -> bool:
-        return all(signal.lower() in normalized_submission for signal in self.signals)
+        required_signals_present = all(
+            signal.lower() in normalized_submission for signal in self.signals
+        )
+        alternative_signal_present = not self.any_signals or any(
+            signal.lower() in normalized_submission for signal in self.any_signals
+        )
+        return required_signals_present and alternative_signal_present
 
 
 @dataclass(frozen=True)
@@ -102,10 +109,12 @@ class SqlSubmissionGrader:
                 ),
                 SqlGradeCriterion(
                     "aoco_storage",
-                    "Storage выбран явно: AOCO через appendoptimized/orientation.",
+                    "Storage выбран явно: AOCO через appendonly/appendoptimized и orientation.",
                     15,
-                    ["appendoptimized=true", "orientation=column"],
-                    "Добавь storage choice: `appendoptimized=true, orientation=column` для append fact.",
+                    ["orientation=column"],
+                    "Добавь storage choice: `appendonly=true, orientation=column` для GP6 "
+                    "или `appendoptimized=true, orientation=column` для GP7.",
+                    ["appendonly=true", "appendoptimized=true"],
                 ),
                 SqlGradeCriterion(
                     "explain_analyze",

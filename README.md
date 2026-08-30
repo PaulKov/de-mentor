@@ -9,6 +9,7 @@
 ![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-3776AB)
 ![Docker Desktop](https://img.shields.io/badge/Docker-Desktop-2496ED)
 ![Greenplum](https://img.shields.io/badge/Module-Greenplum-2E7D32)
+![Apache Spark](https://img.shields.io/badge/Module-Apache%20Spark-E25A1C)
 ![Tests](https://img.shields.io/badge/tests-163%20passing-0A7F3F)
 
 </div>
@@ -38,12 +39,13 @@
 | [01](lessons/lesson-01/) | [docs](lessons/lesson-01/docs/) | [homework](lessons/lesson-01/homework/) | [artifacts](lessons/lesson-01/artifacts/) | [submissions](lessons/lesson-01/submissions/) |
 | [02](lessons/lesson-02/) | [docs](lessons/lesson-02/docs/) | [homework](lessons/lesson-02/homework/) | [artifacts](lessons/lesson-02/artifacts/) | [submissions](lessons/lesson-02/submissions/) |
 | [03](lessons/lesson-03/) | [docs](lessons/lesson-03/docs/) | [homework](lessons/lesson-03/homework/) | [artifacts](lessons/lesson-03/artifacts/) | [submissions](lessons/lesson-03/submissions/) |
+| [04](lessons/lesson-04/) | [docs](lessons/lesson-04/docs/) | [homework](lessons/lesson-04/homework/) | [artifacts](lessons/lesson-04/artifacts/) | [submissions](lessons/lesson-04/submissions/) |
 
 ## Что это
 
 `DE Mentor` помогает провести сильный практический урок по data engineering без ручной подготовки стенда и разрозненных материалов.
 
-Первый модуль посвящён **Greenplum**: MPP-архитектуре, coordinator/master, segments, interconnect, distribution keys, data skew, Motion nodes, physical joins, heap vs AO/AOCO и чтению `EXPLAIN`.
+Первые три урока посвящены **Greenplum**: MPP-архитектуре, distribution, partitions, statistics и query tuning. Урок 04 открывает модуль **Apache Spark**: история Big Data, PySpark DataFrame API, driver/executors, partitions, lazy execution, shuffle и Spark UI.
 
 Идея простая: ученик не просто слушает теорию, а запускает локальный стенд, ломает и чинит данные, читает планы, сдаёт evidence, получает review и понимает, почему MPP-системы требуют другого мышления.
 
@@ -179,7 +181,7 @@ python3 mentor-lab.py lesson-release greenplum-partitioning publish-slides --dry
 
 ### Урок 03: Декомпозиция и тюнинг тяжёлых запросов в MPP
 
-Третий урок — route `greenplum-query-tuning` на отдельном стенде **Greenplum 6.25** (`greenplum-625`). Фокус: стадии оптимизатора, Legacy vs GPORCA, layered `EXPLAIN`, статистика, storage, TEMP. WLM → Урок 04.
+Третий урок — route `greenplum-query-tuning` на отдельном стенде **Greenplum 6.25** (`greenplum-625`). Фокус: стадии оптимизатора, Legacy vs GPORCA, layered `EXPLAIN`, статистика, storage, TEMP. WLM → Урок 05.
 
 ```bash
 python3 mentor-lab.py up greenplum-625
@@ -208,6 +210,33 @@ SQL для урока / homework:
 
 ```bash
 python3 scripts/build_lesson03_pptx.py
+```
+
+### Урок 04: Apache Spark Foundations
+
+Четвёртый урок — route `spark-foundations` на Dockerized Spark Standalone cluster: один master, два workers и PySpark client. Фокус: история Big Data, execution model, DataFrame ETL, `Exchange`, shuffle и Spark UI. Scala не используется.
+
+```bash
+python3 mentor-lab.py up spark
+python3 mentor-lab.py seed spark --profile lesson04
+python3 mentor-lab.py check spark
+python3 mentor-lab.py runbook spark-foundations simple
+python3 mentor-lab.py spark-submit spark \
+  labs/spark/examples/lesson04_core_pipeline.py \
+  -- --hold-seconds 300
+```
+
+Материалы:
+
+- [Индекс Урока 04](lessons/lesson-04/docs/README.md)
+- [План ментора](lessons/lesson-04/docs/mentor-guide.md)
+- [Workbook ученика](lessons/lesson-04/docs/student-workbook.md)
+- [Домашка](lessons/lesson-04/homework/assignment.md)
+- [Spark lab](labs/spark/README.md)
+- [Презентация PowerPoint](lessons/lesson-04/artifacts/apache-spark-foundations-theory.pptx)
+
+```bash
+python3 mentor-lab.py lesson-release spark-foundations verify
 ```
 
 ## Быстрый старт

@@ -10,6 +10,7 @@ from mentor_lab.cockpit import MentorCockpit
 from mentor_lab.evidence import EvidenceCollector
 from mentor_lab.homework_review import HomeworkReviewer
 from mentor_lab.homework_review_lesson03 import Lesson03HomeworkReviewer
+from mentor_lab.homework_review_lesson04 import Lesson04HomeworkReviewer
 from mentor_lab.observation import ObservationBuilder
 from mentor_lab.portal import StudentPortal
 from mentor_lab.portal_launcher import PortalLauncher
@@ -149,7 +150,9 @@ def _handle_homework(args: argparse.Namespace) -> int:
 
     # Lesson 03 (greenplum-625): directory pack + mechanical gates.
     # Lessons 01/02 keep the markdown HomeworkReviewer unchanged.
-    if lab.name == "greenplum-625":
+    if lab.name == "spark":
+        review = Lesson04HomeworkReviewer().review(path)
+    elif lab.name == "greenplum-625":
         review = Lesson03HomeworkReviewer().review(path)
     else:
         if path.is_dir():
