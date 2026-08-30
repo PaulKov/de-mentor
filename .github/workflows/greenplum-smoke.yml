@@ -48,7 +48,8 @@ jobs:
       - name: Wait for Greenplum
         run: |
           for attempt in {1..30}; do
-            if python3 mentor-lab.py check greenplum; then
+            if docker compose -f labs/greenplum-625/docker-compose.yml exec -T -u gpadmin greenplum-625 \
+              bash -lc ". /usr/local/gpdb/greenplum_path.sh && psql -U gpadmin -d postgres -tAc 'SELECT 1'"; then
               exit 0
             fi
             echo "Greenplum is not ready yet, attempt ${attempt}/30"
@@ -56,6 +57,12 @@ jobs:
           done
           python3 mentor-lab.py logs greenplum --dry-run
           exit 1
+
+      - name: Seed academy dataset
+        run: python3 mentor-lab.py seed greenplum --profile academy
+
+      - name: Check Greenplum lesson data
+        run: python3 mentor-lab.py check greenplum
 
       - name: Run storage demo SQL
         run: |

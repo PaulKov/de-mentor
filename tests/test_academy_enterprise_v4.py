@@ -152,6 +152,8 @@ def test_ci_smoke_cli_and_workflow_are_available():
     assert 'python3 -m pip install -e ".[dev]"' in content
     assert "Wait for Greenplum" in content
     assert "for attempt in {1..30}" in content
+    assert "psql -U gpadmin -d postgres -tAc 'SELECT 1'" in content
+    assert "mentor-lab.py seed greenplum --profile academy" in content
     assert "mentor-lab.py check greenplum" in content
     assert "mentor-lab.py dataset greenplum generate" in content
     assert "mentor-lab.py autograde-sql greenplum" in content
