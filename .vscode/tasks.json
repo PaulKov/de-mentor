@@ -1,0 +1,134 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Spark · Up cluster",
+      "type": "shell",
+      "command": "python3 mentor-lab.py up spark",
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PATH": "/Applications/Docker.app/Contents/Resources/bin:${env:PATH}"
+        }
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      }
+    },
+    {
+      "label": "Spark · Seed Lesson 04",
+      "type": "shell",
+      "command": "python3 mentor-lab.py seed spark --profile lesson04",
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PATH": "/Applications/Docker.app/Contents/Resources/bin:${env:PATH}"
+        }
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      }
+    },
+    {
+      "label": "Spark · Readiness check",
+      "type": "shell",
+      "command": "python3 mentor-lab.py check spark",
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PATH": "/Applications/Docker.app/Contents/Resources/bin:${env:PATH}"
+        }
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      }
+    },
+    {
+      "label": "Spark · Prepare stand",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Spark · Up cluster",
+        "Spark · Seed Lesson 04",
+        "Spark · Readiness check"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Spark · Core live (UI 5 min)",
+      "type": "shell",
+      "command": "python3 mentor-lab.py spark-submit spark labs/spark/examples/lesson04_core_pipeline.py -- --hold-seconds 300",
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PATH": "/Applications/Docker.app/Contents/Resources/bin:${env:PATH}"
+        }
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      }
+    },
+    {
+      "label": "Spark · Deep join live (UI 5 min)",
+      "type": "shell",
+      "command": "python3 mentor-lab.py spark-submit spark labs/spark/examples/lesson04_deep_join.py -- --hold-seconds 300",
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PATH": "/Applications/Docker.app/Contents/Resources/bin:${env:PATH}"
+        }
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      }
+    },
+    {
+      "label": "Spark · Status",
+      "type": "shell",
+      "command": "docker compose -f labs/spark/docker-compose.yml ps",
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PATH": "/Applications/Docker.app/Contents/Resources/bin:${env:PATH}"
+        }
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      }
+    },
+    {
+      "label": "Spark · Stop cluster",
+      "type": "shell",
+      "command": "python3 mentor-lab.py down spark",
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PATH": "/Applications/Docker.app/Contents/Resources/bin:${env:PATH}"
+        }
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      }
+    }
+  ]
+}

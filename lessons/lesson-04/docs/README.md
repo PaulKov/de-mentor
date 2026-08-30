@@ -85,6 +85,7 @@ JSON events
 - [Cheat sheet](cheat-sheet.md)
 - [Core 60](runbooks/simple-path.md)
 - [Deep 90](runbooks/deep-dive-path.md)
+- [Live-практика в VS Code](runbooks/live-practice.md)
 - [Facilitator skip-map](runbooks/facilitator-skip-map.md)
 - [Homework](../homework/assignment.md)
 - [Rubric](../homework/rubric.md)

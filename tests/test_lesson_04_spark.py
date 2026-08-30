@@ -81,6 +81,7 @@ def test_lesson_04_documents_lab_and_artifacts_are_self_service_complete():
         LESSON_ROOT / "docs" / "cheat-sheet.md",
         LESSON_ROOT / "docs" / "runbooks" / "simple-path.md",
         LESSON_ROOT / "docs" / "runbooks" / "deep-dive-path.md",
+        LESSON_ROOT / "docs" / "runbooks" / "live-practice.md",
         LESSON_ROOT / "homework" / "assignment.md",
         LESSON_ROOT / "homework" / "rubric.md",
         LAB_ROOT / "docker-compose.yml",
@@ -117,6 +118,13 @@ def test_lesson_04_documents_lab_and_artifacts_are_self_service_complete():
         "evidence",
     ]:
         assert marker in source
+
+
+def test_spark_master_healthcheck_targets_the_bound_hostname():
+    compose = (LAB_ROOT / "docker-compose.yml").read_text(encoding="utf-8")
+
+    assert "/dev/tcp/spark-master/7077" in compose
+    assert "/dev/tcp/127.0.0.1/7077" not in compose
 
 
 def test_lesson_04_decks_have_visible_source_notes():
