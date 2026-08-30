@@ -43,7 +43,20 @@ python3 mentor-lab.py runbook spark-foundations simple
 - можно ли решить задачу СУБД или single-node engine;
 - какова операционная цена кластера.
 
-### 05–13 — История
+### 05–15 — Big Data: история термина и инженерная причина
+
+Обязательные формулировки:
+
+- у Big Data нет одного бесспорного «изобретателя» и фиксированного порога в байтах;
+- John Mashey популяризировал термин в контексте InfraStress в 1998 году;
+- Doug Laney в 2001 году описал volume, velocity и variety как независимые давления на data management;
+- 6V/10V — последующие расширения, а не единый стандарт;
+- архитектуру выбирают по workload, SLA, failure model и стоимости.
+
+Попроси ученика для каждого V назвать не пример данных, а сломанное обещание
+системы и архитектурный ответ.
+
+### 15–28 — MapReduce → Spark
 
 История объясняет constraints:
 
@@ -55,7 +68,11 @@ python3 mentor-lab.py runbook spark-foundations simple
 
 Не превращай блок в перечисление дат. После каждой вехи отвечай: «какое ограничение сняли и какую цену добавили?»
 
-### 13–23 — Границы Spark
+На версии Spark трать не больше трёх минут: `0.x/1.x` дают PySpark,
+Streaming, YARN, MLlib и DataFrame; `2.x–4.x` смещают центр тяжести к SQL engine,
+AQE, Connect, Data Source V2 и PySpark UX.
+
+### 28–34 — Границы Spark
 
 Обязательные формулировки:
 
@@ -65,7 +82,7 @@ python3 mentor-lab.py runbook spark-foundations simple
 - Spark application изолирована собственными executors;
 - local/standalone/YARN/Kubernetes меняют deployment, не DataFrame semantics.
 
-### 23–34 — Execution model
+### 34–42 — Execution model
 
 На доске/слайде собери цепочку:
 
@@ -81,7 +98,7 @@ Prediction questions:
 3. Почему `groupBy` часто разделяет stages?
 4. Что означает `Exchange`?
 
-### 34–49 — Live demo
+### 42–52 — Live demo
 
 ```bash
 python3 mentor-lab.py spark-submit spark \
@@ -99,7 +116,7 @@ python3 mentor-lab.py spark-submit spark \
 6. Spark UI SQL → Jobs → Stages.
 7. Output Parquet и roundtrip checks.
 
-### 49–56 — Evidence
+### 52–58 — Evidence
 
 Попроси ученика сам найти:
 
@@ -110,7 +127,7 @@ python3 mentor-lab.py spark-submit spark \
 - самый медленный task;
 - output row count.
 
-### 56–60 — Exit ticket
+### 58–60 — Exit ticket
 
 Урок пройден, если ученик отвечает:
 
@@ -122,12 +139,22 @@ python3 mentor-lab.py spark-submit spark \
 
 ## Добавки Deep 90
 
+- Spark vs MapReduce на четырёх уровнях: бытовая аналогия → principal cost model;
+- архитектуры YARN MapReduce job и Spark application DAG;
+- durable job boundaries против shuffle/persist boundaries;
+- recovery через materialized output против lineage recompute;
+- workload matrix: где преимущество Spark велико, мало или оба engine не подходят;
 - parsed/analyzed/optimized/physical plan;
 - narrow vs wide dependency;
 - built-in expression vs Python UDF boundary;
 - shuffle join vs broadcast join;
 - AQE как runtime re-optimization, а не «магический ускоритель»;
 - skew и small files как production risks.
+
+На матрице не принимай «Spark быстрее». Требуй назвать доминирующую стоимость:
+число проходов, bytes scanned, shuffle, reuse, recovery path, p95 latency и
+operator toil. Обязательно проговори, что Spark умеет spill и пишет shuffle на
+disk, поэтому сравнение не сводится к «disk против RAM».
 
 Запуск A/B:
 
