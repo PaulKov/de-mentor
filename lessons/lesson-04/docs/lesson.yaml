@@ -5,7 +5,7 @@ title: Apache Spark foundations - Big Data and PySpark execution model
 deck_path: lessons/lesson-04/artifacts/apache-spark-foundations-theory.pptx
 google_slides_url: https://docs.google.com/presentation/d/1U_u3cwqdCzz2oRoa_w5BT7btbLqUlBSou3rJe2YXni0/edit?usp=sharing
 expected_owner_email: pavelkov007@gmail.com
-expected_slide_count: 42
+expected_slide_count: 60
 drive_folder: lessons/Spark/Lesson 04 - Apache Spark foundations and PySpark
 portal_repo: https://github.com/PaulKov/de-mentor-portal
 docs:

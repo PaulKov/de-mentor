@@ -2,10 +2,12 @@
 
 Исходники и инструкции для двух версий презентации четвёртой лекции:
 
-- `apache-spark-foundations-core.pptx` — обязательное ядро, 26 слайдов / 60 минут;
-- `apache-spark-foundations-theory.pptx` — полная версия, 42 слайда / 90 минут;
+- `apache-spark-foundations-core.pptx` — обязательное ядро, 35 слайдов / 60 минут;
+- `apache-spark-foundations-theory.pptx` — полная версия, 60 слайдов / 90 минут;
 - `content.mjs` — единый источник содержания;
 - `build_lesson04_pptx.mjs` — детерминированный сборщик editable PPTX;
+- `build_google_slides_requests.mjs` — детерминированный план нативной миграции
+  опубликованной Google Slides с 42 до 60 слайдов;
 - `facilitator-guide.md` — рекомендуемый темп, вопросы аудитории и skip map.
 
 ## Самостоятельная пересборка
@@ -22,3 +24,23 @@ node build_lesson04_pptx.mjs full ../../lessons/lesson-04/artifacts/apache-spark
 переполнений. Источники для внешних утверждений записаны в speaker notes каждого
 слайда в блоке `[Sources]`.
 
+Исторический блок намеренно различает исходную модель 3V и более поздние
+неунифицированные расширения 6V/10V. Principal-блок сравнивает Spark и
+MapReduce по execution graph, materialization, recovery, workload fit и полной
+стоимости эксплуатации, а не по мифу «disk против RAM».
+
+## Нативная миграция Google Slides
+
+Сборщик запросов не пишет в Google сам и рассчитан на безопасный workflow с
+промежуточным readback:
+
+```bash
+node build_google_slides_requests.mjs raw-template.json update-plan.json
+```
+
+Применяйте `creationChunks` последовательно, затем перечитайте структуру и
+убедитесь, что созданы все `createdSlideIds`. После этого примените каждый
+элемент `positionBatches` отдельным batch update, проверьте порядок
+`deliveredSlideIds` без `p5`–`p7` и только последним шагом выполните
+`deleteRequests`. После финального readback обязательны issue checker и полный
+PDF-рендер всех 60 слайдов.

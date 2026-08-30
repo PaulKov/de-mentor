@@ -2,6 +2,9 @@
 
 Deep включает Core и добавляет:
 
+- четыре уровня объяснения Spark vs MapReduce;
+- side-by-side architecture и materialization pipeline;
+- fault-tolerance и workload comparison matrices;
 - четыре plan layers;
 - narrow/wide transformations;
 - Python/JVM boundary;
@@ -12,14 +15,14 @@ Deep включает Core и добавляет:
 
 | Время | Слайды | Фокус |
 | --- | --- | --- |
-| 00–15 | 1–6 | история и критерий «нужен ли Spark» |
-| 15–28 | 7–12 | application architecture |
-| 28–42 | 13–18 | execution + plan layers |
-| 42–58 | 19–26 | core pipeline |
-| 58–70 | 27–30 | shuffle + Python boundary |
-| 70–82 | 31–34 | join A/B |
-| 82–87 | 35 | AQE, skew, small files |
-| 87–90 | 36 | production checklist |
+| 00–15 | 1–8 | Big Data history, 3V и расширения |
+| 15–28 | 9–16 | MapReduce → Spark, версии и причины adoption |
+| 28–42 | 17–25 | application architecture + execution model |
+| 42–58 | 26–35 | core pipeline, plan, UI и exit |
+| 58–73 | 36–44 | Spark vs MapReduce: layperson → principal |
+| 73–80 | 45–48 | Catalyst, narrow/wide, Python/JVM, shuffle |
+| 80–87 | 49–52 | join A/B, AQE и skew |
+| 87–90 | 53 | production checklist |
 
 ```bash
 python3 mentor-lab.py spark-submit spark \
@@ -27,4 +30,6 @@ python3 mentor-lab.py spark-submit spark \
   -- --hold-seconds 300
 ```
 
-Deep acceptance: ученик показывает не только другой operator name, но и сравнение shuffle metrics и условие безопасности broadcast.
+Deep acceptance: ученик показывает не только другой operator name, но и
+сравнение shuffle metrics, условие безопасности broadcast и объясняет, почему
+one-pass I/O-bound job может почти не получить преимущества от Spark DAG.

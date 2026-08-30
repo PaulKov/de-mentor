@@ -103,8 +103,8 @@ def test_lesson_04_documents_lab_and_artifacts_are_self_service_complete():
     ]
 
     assert [path.relative_to(ROOT).as_posix() for path in required if not path.exists()] == []
-    assert pptx_slide_count(CORE_DECK) == 26
-    assert pptx_slide_count(FULL_DECK) == 42
+    assert pptx_slide_count(CORE_DECK) == 35
+    assert pptx_slide_count(FULL_DECK) == 60
 
     source = "\n".join(
         path.read_text(encoding="utf-8")
@@ -123,6 +123,9 @@ def test_lesson_04_documents_lab_and_artifacts_are_self_service_complete():
         "Exchange",
         "Spark UI",
         "BroadcastHashJoin",
+        "MapReduce",
+        "John Mashey",
+        "Doug Laney",
         "AQE",
         "evidence",
     ]:
@@ -189,7 +192,7 @@ def test_lesson_04_decks_have_visible_source_notes():
         ]
         notes = "\n".join(deck.read(name).decode("utf-8") for name in note_files)
 
-    assert len(note_files) == 42
+    assert len(note_files) == 60
     assert "[Sources]" in notes
     assert "spark.apache.org" in notes
 

@@ -20,6 +20,7 @@ const C = {
 };
 const FONT = "Aptos";
 const MONO = "Aptos Mono";
+const APPENDIX_SLIDE_NUMBER = SLIDES.findIndex((spec) => spec.section === "APPENDIX") + 1;
 
 function addShape(slide, geometry, position, fill = "none", line = "none", name = undefined) {
   return slide.shapes.add({
@@ -51,8 +52,9 @@ function addRule(slide, left, top, width, color = C.line, height = 2) {
 }
 
 function addChrome(slide, spec, index) {
+  const isDeepDive = index > CORE_SLIDE_COUNT && index < APPENDIX_SLIDE_NUMBER;
   addText(slide, spec.section ?? "LESSON 04", { left: 64, top: 34, width: 300, height: 28 }, {
-    fontSize: 14, bold: true, color: index >= 27 && index <= 36 ? C.blue : C.orange,
+    fontSize: 14, bold: true, color: isDeepDive ? C.blue : C.orange,
   });
   addText(slide, "DE / MENTOR", { left: 1040, top: 34, width: 176, height: 28 }, {
     fontSize: 13, bold: true, color: C.muted, alignment: "right",
@@ -186,6 +188,67 @@ function renderArchitecture(slide, spec) {
     addText(slide, body, { left: left + 24, top: 338, width: 182, height: 70 }, { fontSize: 18, color: i === 0 ? C.panel : C.muted, alignment: "center" });
   });
   addText(slide, spec.caption, { left: 105, top: 500, width: 1070, height: 70 }, { fontSize: 22, color: C.muted, alignment: "center" });
+}
+
+function renderArchitectureCompare(slide, spec) {
+  addTitle(slide, spec.title);
+  [spec.left, spec.right].forEach((column, columnIndex) => {
+    const left = columnIndex === 0 ? 72 : 672;
+    const accent = columnIndex === 0 ? C.muted : C.orange;
+    addText(slide, column.label.toUpperCase(), { left, top: 208, width: 500, height: 28 }, {
+      fontSize: 16, bold: true, color: accent,
+    });
+    for (let i = 0; i < column.nodes.length - 1; i += 1) {
+      addText(slide, "↓", { left: left + 220, top: 304 + i * 80, width: 60, height: 30 }, {
+        fontSize: 22, bold: true, color: C.orange, alignment: "center",
+      });
+    }
+    column.nodes.forEach(([label, body], i) => {
+      const top = 246 + i * 80;
+      const isTerminal = i === column.nodes.length - 1;
+      addShape(slide, "roundRect", { left, top, width: 500, height: 62 }, isTerminal ? C.dark : C.panel, isTerminal ? "none" : C.line);
+      addText(slide, label, { left: left + 22, top: top + 16, width: 190, height: 30 }, {
+        fontSize: 20, bold: true, color: isTerminal ? C.orange : C.text,
+      });
+      addText(slide, body, { left: left + 220, top: top + 16, width: 255, height: 30 }, {
+        fontSize: 17, color: isTerminal ? C.panel : C.muted, alignment: "right",
+      });
+    });
+  });
+  addRule(slide, 632, 205, 2, C.line, 380);
+  addText(slide, spec.callout, { left: 96, top: 590, width: 1088, height: 52 }, {
+    fontSize: 20, bold: true, color: C.orange, alignment: "center",
+  });
+}
+
+function renderPipelineCompare(slide, spec) {
+  addTitle(slide, spec.title);
+  [spec.left, spec.right].forEach((lane, laneIndex) => {
+    const top = laneIndex === 0 ? 256 : 438;
+    const darkTokens = new Set(["HDFS", "shuffle"]);
+    addText(slide, lane.label.toUpperCase(), { left: 72, top: top - 48, width: 420, height: 30 }, {
+      fontSize: 17, bold: true, color: laneIndex === 0 ? C.muted : C.orange,
+    });
+    lane.steps.forEach((step, i) => {
+      const left = 72 + i * 158;
+      if (i < lane.steps.length - 1) {
+        addText(slide, "→", { left: left + 112, top: top + 20, width: 46, height: 34 }, {
+          fontSize: 24, bold: true, color: C.orange, alignment: "center",
+        });
+      }
+      const highlighted = darkTokens.has(step);
+      addShape(slide, "roundRect", { left, top, width: 112, height: 70 }, highlighted ? C.dark : C.panel, highlighted ? "none" : C.line);
+      addText(slide, step, { left: left + 8, top: top + 21, width: 96, height: 30 }, {
+        fontSize: 16, bold: true, color: highlighted ? C.orange : C.text, alignment: "center",
+      });
+    });
+    addText(slide, lane.note, { left: 72, top: top + 86, width: 1100, height: 34 }, {
+      fontSize: 17, color: C.muted,
+    });
+  });
+  addText(slide, spec.callout, { left: 96, top: 610, width: 1088, height: 42 }, {
+    fontSize: 20, bold: true, color: C.orange, alignment: "center",
+  });
 }
 
 function renderPartition(slide, spec) {
@@ -362,6 +425,33 @@ function renderMatrix(slide, spec) {
   });
 }
 
+function renderComparisonMatrix(slide, spec) {
+  addTitle(slide, spec.title);
+  const labelX = 72;
+  const columnX = [300, 560, 820];
+  const columnWidth = [240, 240, 360];
+  spec.columns.forEach((column, i) => {
+    addText(slide, column, { left: columnX[i], top: 210, width: columnWidth[i] - 12, height: 40 }, {
+      fontSize: 19, bold: true, color: i === 2 ? C.orange : C.blue, alignment: "center",
+    });
+  });
+  spec.rows.forEach((row, rowIndex) => {
+    const top = 265 + rowIndex * 58;
+    if (rowIndex % 2 === 0) {
+      addShape(slide, "rect", { left: 64, top: top - 3, width: 1120, height: 53 }, C.panel2, "none");
+    }
+    addText(slide, row[0], { left: labelX, top: top + 7, width: 210, height: 38 }, {
+      fontSize: 17, bold: true,
+    });
+    row.slice(1).forEach((value, columnIndex) => {
+      addText(slide, value, { left: columnX[columnIndex], top: top + 4, width: columnWidth[columnIndex] - 12, height: 44 }, {
+        fontSize: 15, color: columnIndex === 2 ? C.text : C.muted, alignment: "center", verticalAlignment: "middle",
+      });
+    });
+    addRule(slide, 64, top + 51, 1120, C.line, 1);
+  });
+}
+
 function renderSources(slide, spec) {
   addTitle(slide, spec.title);
   addText(slide, "EVIDENCE CHAIN", { left: 72, top: 214, width: 430, height: 32 }, { fontSize: 16, bold: true, color: C.orange });
@@ -384,6 +474,8 @@ const RENDERERS = {
   boundary: renderBoundary,
   decision: renderDecision,
   architecture: renderArchitecture,
+  architectureCompare: renderArchitectureCompare,
+  pipelineCompare: renderPipelineCompare,
   partition: renderPartition,
   flow: renderFlow,
   layers: renderLayers,
@@ -398,6 +490,7 @@ const RENDERERS = {
   checklist: renderChecklist,
   glossary: renderGlossary,
   matrix: renderMatrix,
+  comparisonMatrix: renderComparisonMatrix,
   sources: renderSources,
 };
 

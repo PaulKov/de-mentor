@@ -13,6 +13,8 @@
 После урока ученик умеет:
 
 - провести линию GFS → MapReduce → Hadoop → Spark;
+- объяснить происхождение термина Big Data, исходную модель 3V и неканоничность 6V/10V;
+- сравнить Spark и MapReduce от бытовой аналогии до execution/recovery cost model;
 - объяснить, когда Spark нужен и когда создаёт лишнюю сложность;
 - различить application, driver, cluster manager, executor, partition, job, stage и task;
 - написать pipeline на PySpark DataFrame API без Scala;
@@ -33,8 +35,8 @@ python3 mentor-lab.py runbook spark-foundations homework
 
 | Маршрут | Время | Фокус |
 | --- | ---: | --- |
-| Core | 60 мин | история → architecture → lazy execution → pipeline → plan/UI |
-| Deep | 90 мин | Core + plan layers, Python/JVM boundary, shuffle/broadcast, AQE |
+| Core | 60 мин | Big Data/3V → MapReduce/Spark history → architecture → pipeline → plan/UI |
+| Deep | 90 мин | Core + Spark/MapReduce principal matrix + plan layers, shuffle/broadcast, AQE |
 | Homework | 90–120 мин | собственный pipeline + evidence pack |
 
 ## Стенд
@@ -90,7 +92,7 @@ JSON events
 - [Facilitator skip-map](runbooks/facilitator-skip-map.md)
 - [Homework](../homework/assignment.md)
 - [Rubric](../homework/rubric.md)
-- [Google Slides — полная версия, 42 слайда](https://docs.google.com/presentation/d/1U_u3cwqdCzz2oRoa_w5BT7btbLqUlBSou3rJe2YXni0/edit?usp=sharing)
+- [Google Slides — полная версия, 60 слайдов](https://docs.google.com/presentation/d/1U_u3cwqdCzz2oRoa_w5BT7btbLqUlBSou3rJe2YXni0/edit?usp=sharing)
 - [Публикация в Google Slides](google-slides-publish.md)
 
 ## Официальные источники
@@ -102,6 +104,9 @@ JSON events
 - [Spark Web UI](https://spark.apache.org/docs/4.2.0/web-ui.html)
 - [GFS paper](https://research.google/pubs/the-google-file-system/)
 - [MapReduce paper](https://research.google/pubs/mapreduce-simplified-data-processing-on-large-clusters/)
+- [John Mashey: Big Data and the Next Wave of InfraStress](https://web.stanford.edu/class/ee380/9798win/lect08.html)
+- [RDD paper, NSDI 2012](https://www.usenix.org/conference/nsdi12/technical-sessions/presentation/zaharia)
+- [Spark release 4.2.0](https://spark.apache.org/releases/spark-release-4-2-0.html)
 
 ## Вне scope
 

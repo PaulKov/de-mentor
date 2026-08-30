@@ -10,7 +10,7 @@
 | Artifacts | [artifacts/](artifacts/) | полный и core PPTX |
 | Submissions | [submissions/](submissions/) | `pipeline.py` + `evidence.md` |
 
-[Google Slides — полная версия, 42 слайда](https://docs.google.com/presentation/d/1U_u3cwqdCzz2oRoa_w5BT7btbLqUlBSou3rJe2YXni0/edit?usp=sharing)
+[Google Slides — полная версия, 60 слайдов](https://docs.google.com/presentation/d/1U_u3cwqdCzz2oRoa_w5BT7btbLqUlBSou3rJe2YXni0/edit?usp=sharing)
 
 ## Быстрый старт
 

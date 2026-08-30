@@ -86,7 +86,7 @@ class SlideAssetCatalog:
                 resolve_learning_route("spark-foundations"),
                 project_root,
                 lesson_folder="Lesson 04 - Apache Spark foundations and PySpark",
-                expected_slide_count=42,
+                expected_slide_count=60,
                 direction_folder="Spark",
                 academy_name="Spark Academy",
             ),

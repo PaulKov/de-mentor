@@ -214,7 +214,11 @@ python3 scripts/build_lesson03_pptx.py
 
 ### Урок 04: Apache Spark Foundations
 
-Четвёртый урок — route `spark-foundations` на Dockerized Spark Standalone cluster: один master, два workers и PySpark client. Фокус: история Big Data, execution model, DataFrame ETL, `Exchange`, shuffle и Spark UI. Scala не используется.
+Четвёртый урок — route `spark-foundations` на Dockerized Spark Standalone
+cluster: один master, два workers и PySpark client. Фокус: история Big Data и
+3V, MapReduce → Spark, эволюция Spark 0.x–4.2, principal-level comparison
+matrix, execution model, DataFrame ETL, `Exchange`, shuffle и Spark UI. Scala
+не используется.
 
 ```bash
 python3 mentor-lab.py up spark
