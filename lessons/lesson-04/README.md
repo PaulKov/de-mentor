@@ -38,6 +38,7 @@ python3 mentor-lab.py spark-submit spark \
 - [docs/README.md](docs/README.md)
 - [docs/mentor-guide.md](docs/mentor-guide.md)
 - [docs/student-workbook.md](docs/student-workbook.md)
+- [docs/runbooks/live-practice.md](docs/runbooks/live-practice.md)
 - [homework/assignment.md](homework/assignment.md)
 - [homework/rubric.md](homework/rubric.md)
 - [artifacts/apache-spark-foundations-theory.pptx](artifacts/apache-spark-foundations-theory.pptx)
