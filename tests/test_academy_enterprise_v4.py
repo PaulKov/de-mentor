@@ -149,7 +149,7 @@ def test_ci_smoke_cli_and_workflow_are_available():
     with open(workflow, encoding="utf-8") as handle:
         content = handle.read()
     assert "Greenplum Live Smoke" in content
-    assert "python3 -m pip install pytest" in content
+    assert 'python3 -m pip install -e ".[dev]"' in content
     assert "Wait for Greenplum" in content
     assert "for attempt in {1..30}" in content
     assert "mentor-lab.py check greenplum" in content
