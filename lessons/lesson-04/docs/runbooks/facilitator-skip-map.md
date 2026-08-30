@@ -4,22 +4,22 @@
 
 | Режим | Live slides | Demo | Цель |
 | --- | ---: | --- | --- |
-| Core 60 | 1–35 | core pipeline | history + mental model + first evidence |
-| Deep 90 | 1–53 | core + MapReduce matrix + join A/B | execution/recovery/cost reasoning |
-| Self-service | 1–60 | все examples | reference + readings + homework |
+| Core 60 | 1–39 | core pipeline | history + mental model + first evidence |
+| Deep 90 | 1–59 | core + MapReduce matrix + join A/B | execution/recovery/cost reasoning |
+| Self-service | 1–66 | все examples | reference + readings + homework |
 
 ## Core 60
 
 LIVE:
 
 ```text
-1–16, 17–25, 26–32 вместе с demo, 33–35
+1–16, 17–29, 30–36 вместе с demo, 37–39
 ```
 
 SKIP:
 
 ```text
-36–60
+40–66
 ```
 
 ## Deep 90
@@ -27,13 +27,13 @@ SKIP:
 LIVE:
 
 ```text
-1–53
+1–59
 ```
 
 SKIP на проекторе:
 
 ```text
-54–60 appendix
+60–66 appendix
 ```
 
 ## Stop conditions
@@ -48,7 +48,7 @@ SKIP на проекторе:
 
 ## Anti-patterns ведущего
 
-- не показывать 60 слайдов за 60 минут;
+- не показывать 66 слайдов за 60 минут;
 - не начинать с Catalyst/AQE;
 - не объяснять Spark фразой «всё в памяти»;
 - не использовать Scala-фрагменты;

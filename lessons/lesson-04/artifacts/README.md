@@ -1,7 +1,7 @@
 # Lesson 04 artifacts
 
-- `apache-spark-foundations-theory.pptx` — полный deck: Core + Deep + Appendix;
-- `apache-spark-foundations-core.pptx` — Core 60 без deep/appendix;
+- `apache-spark-foundations-theory.pptx` — 66 слайдов: Core + Deep + Appendix;
+- `apache-spark-foundations-core.pptx` — 39 слайдов Core 60 без deep/appendix;
 - Google Slides URL хранится в `../docs/lesson.yaml` после публикации.
 
 Сборка:

@@ -32,6 +32,7 @@ class Lesson04HomeworkReviewer:
                 skill_scores={},
                 missing=["Submission must be a directory with pipeline.py and evidence.md"],
                 next_actions=["Use lessons/lesson-04/submissions as the submission path"],
+                next_actions_title="Next actions",
             )
 
         missing_files = [name for name in self._REQUIRED_FILES if not (submission / name).is_file()]
@@ -42,6 +43,7 @@ class Lesson04HomeworkReviewer:
                 skill_scores={},
                 missing=[f"Missing file: {name}" for name in missing_files],
                 next_actions=["Copy the homework templates and complete both required files"],
+                next_actions_title="Next actions",
             )
 
         pipeline = (submission / "pipeline.py").read_text(encoding="utf-8")
@@ -73,4 +75,5 @@ class Lesson04HomeworkReviewer:
             skill_scores=skill_scores,
             missing=missing,
             next_actions=actions,
+            next_actions_title="Next actions",
         )

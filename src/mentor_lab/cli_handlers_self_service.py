@@ -2,10 +2,17 @@
 
 from __future__ import annotations
 
+import argparse
 from pathlib import Path
 
 from mentor_lab.academy_self_service import AcademySelfService, AcademyStartOptions
-from mentor_lab.cli_context import _lab_or_none, _learning_route_or_none, _runner
+from mentor_lab.cli_context import (
+    _lab_or_none,
+    _learning_route_or_none,
+    _project_root,
+    _runner,
+)
+from mentor_lab.spark_student_workflow import SparkStudentWorkflow
 from mentor_lab.student_self_service import StudentSelfServiceGuide
 
 
@@ -51,5 +58,34 @@ def _handle_student(args: argparse.Namespace) -> int:
     if args.student_command == "homework":
         print(guide.homework(lab, route), end="")
         return 0
-    print("Use: mentor-lab student <lab> bootstrap|homework")
+    if args.student_command in {"start", "init", "test"}:
+        if lab.runtime != "spark" or route.lesson_code != "lesson-04":
+            print(
+                "The start/init/test student workflow is available for "
+                "spark-foundations (Lesson 04)."
+            )
+            return 1
+        workflow = SparkStudentWorkflow(_project_root(), lab, route, _runner())
+        if args.student_command == "start":
+            try:
+                result = workflow.start(
+                    args.profile,
+                    with_notebook=args.with_notebook,
+                    dry_run=args.dry_run,
+                )
+            except (KeyError, ValueError, FileNotFoundError) as exc:
+                print(str(exc))
+                return 1
+            print(result.render(), end="")
+            return result.exit_code
+        if args.student_command == "init":
+            destination = Path(args.output) if args.output else None
+            result = workflow.initialize_submission(destination, force=args.force)
+            print(result.render(), end="")
+            return result.exit_code
+        submission = Path(args.submission) if args.submission else None
+        result = workflow.test_submission(submission, skip_live=args.skip_live)
+        print(result.render(), end="")
+        return result.exit_code
+    print("Use: mentor-lab student <lab> bootstrap|homework|start|init|test")
     return 1

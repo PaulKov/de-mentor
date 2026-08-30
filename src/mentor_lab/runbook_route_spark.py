@@ -46,9 +46,7 @@ def spark_prep_runbook() -> Runbook:
                 "Environment",
                 "Подними stand, сгенерируй class dataset и прогони smoke.",
                 [
-                    "python3 mentor-lab.py up spark",
-                    "python3 mentor-lab.py seed spark --profile lesson04",
-                    "python3 mentor-lab.py check spark",
+                    "python3 mentor-lab.py student spark-foundations start --profile lesson04",
                 ],
                 "Какие интерфейсы должны быть доступны?",
                 "Master UI :18080, driver UI :4040 во время application, два workers.",
@@ -66,10 +64,10 @@ def spark_simple_runbook() -> Runbook:
         "60 минут: история, mental model, DataFrame pipeline, plan и Spark UI.",
         [
             RunbookStage(
-                "00:00-13:00",
-                "1-6",
+                "00:00-15:00",
+                "1-8",
                 "Big Data и история",
-                "Начни с SLA локального pipeline; проведи GFS → MapReduce → Hadoop → Spark.",
+                "Начни с SLA локального pipeline; раскрой термин, 3V и причины distributed architecture.",
                 ["python3 mentor-lab.py status spark"],
                 "Когда Spark избыточен?",
                 "Когда данные и SLA помещаются в один процесс/СУБД без распределённой цены.",
@@ -77,19 +75,30 @@ def spark_simple_runbook() -> Runbook:
                 _LINKS,
             ),
             RunbookStage(
-                "13:00-34:00",
-                "7-16",
-                "Architecture и lazy execution",
-                "Свяжи driver/executors/partitions с transformations/actions и stages.",
+                "15:00-28:00",
+                "9-16",
+                "MapReduce → Spark",
+                "Свяжи GFS, MapReduce и Spark с болью multi-stage/iterative workloads.",
                 ["python3 mentor-lab.py check spark --dry-run"],
-                "Что создаёт job и что создаёт stage boundary?",
-                "Action создаёт job; shuffle/Exchange разделяет stages.",
-                "Ученик правильно раскладывает job → stages → tasks.",
+                "Какая стоимость породила Spark?",
+                "Повторный durable I/O и orchestration цепочек jobs для reuse/iterations.",
+                "Ученик связывает pain → execution model → feature.",
                 _LINKS,
             ),
             RunbookStage(
-                "34:00-49:00",
-                "17-23",
+                "28:00-42:00",
+                "17-29",
+                "API, scheduler, lazy и cache",
+                "Разведи Session/Context/RDD/DataFrame/Dataset; пройди путь action до executor slot.",
+                ["python3 mentor-lab.py check spark --dry-run"],
+                "Кто назначает task и что делает cache() до первого action?",
+                "Driver scheduler назначает task; cache ленив и заполняется первым action.",
+                "Ученик объясняет job → stages → TaskSet → tasks и reuse blocks.",
+                _LINKS,
+            ),
+            RunbookStage(
+                "42:00-54:00",
+                "30-36",
                 "Live PySpark pipeline",
                 "Читай с schema, очисти, join, aggregate, explain, write Parquet.",
                 [
@@ -101,8 +110,8 @@ def spark_simple_runbook() -> Runbook:
                 _LINKS,
             ),
             RunbookStage(
-                "49:00-60:00",
-                "24-26",
+                "54:00-60:00",
+                "37-39",
                 "Plan, UI, exit ticket",
                 "Найди Exchange и свяжи его со stage shuffle metrics.",
                 ["open http://localhost:4040"],
@@ -121,12 +130,12 @@ def spark_deep_runbook() -> Runbook:
         "Lesson 04 Deep 90: plans, shuffle и join strategy",
         "Core + 30 минут: plan layers, Python/JVM boundary, broadcast A/B и AQE.",
         [
-            *spark_simple_runbook().stages[:2],
+            *spark_simple_runbook().stages[:3],
             RunbookStage(
-                "34:00-58:00",
-                "17-26",
-                "Pipeline + plan layers",
-                "Разбери parsed/analyzed/optimized/physical и запусти core case.",
+                "42:00-58:00",
+                "30-39",
+                "Core pipeline + plan/UI",
+                "Запусти core case, свяжи plan, stages/tasks, UI metrics и correctness.",
                 [
                     "python3 mentor-lab.py spark-submit spark labs/spark/examples/lesson04_core_pipeline.py -- --hold-seconds 300"
                 ],
@@ -136,10 +145,21 @@ def spark_deep_runbook() -> Runbook:
                 _LINKS,
             ),
             RunbookStage(
-                "58:00-82:00",
-                "27-34",
-                "Shuffle vs broadcast A/B",
-                "Сравни два плана на одном input и одной бизнес-семантике.",
+                "58:00-73:00",
+                "40-49",
+                "Spark vs MapReduce + scheduler internals",
+                "Пройди cost matrices и scheduler stack от DAGScheduler до executor slot.",
+                ["python3 mentor-lab.py status spark"],
+                "Где Spark экономит I/O и кто принимает scheduling decision?",
+                "DAG/persist экономят reuse; driver scheduler запускает tasks на выделенных executors.",
+                "Ученик связывает cost model, TaskSet, locality и retry.",
+                _LINKS,
+            ),
+            RunbookStage(
+                "73:00-88:00",
+                "50-58",
+                "Execution/cache internals + join A/B",
+                "Сравни plans, BlockManager reuse и shuffle/broadcast на одной семантике.",
                 [
                     "python3 mentor-lab.py spark-submit spark labs/spark/examples/lesson04_deep_join.py -- --hold-seconds 300"
                 ],
@@ -149,8 +169,8 @@ def spark_deep_runbook() -> Runbook:
                 _LINKS,
             ),
             RunbookStage(
-                "82:00-90:00",
-                "35-36",
+                "88:00-90:00",
+                "59",
                 "Production checklist",
                 "Закрой collect/UDF/cache/small files/skew и выдай homework evidence pack.",
                 ["python3 mentor-lab.py runbook spark-foundations homework"],
@@ -175,9 +195,8 @@ def spark_homework_runbook() -> Runbook:
                 "Baseline",
                 "Зафиксируй schema, counts, partitions и исходный physical plan.",
                 [
-                    "python3 mentor-lab.py up spark",
-                    "python3 mentor-lab.py seed spark --profile lesson04",
-                    "python3 mentor-lab.py check spark",
+                    "python3 mentor-lab.py student spark-foundations start --profile lesson04",
+                    "python3 mentor-lab.py student spark-foundations init",
                 ],
                 "Что является baseline evidence?",
                 "Input contract, counts, partition count, explain(formatted).",
@@ -201,7 +220,7 @@ def spark_homework_runbook() -> Runbook:
                 "Reconciliation и self-check",
                 "Проверь counts, sums, persisted roundtrip и residual risks.",
                 [
-                    "python3 mentor-lab.py homework spark check --submission lessons/lesson-04/submissions"
+                    "python3 mentor-lab.py student spark-foundations test --submission lessons/lesson-04/submissions"
                 ],
                 "Что запрещает принять быстрое, но неверное изменение?",
                 "Hard gates по correctness и reproducibility.",

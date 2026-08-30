@@ -2,12 +2,12 @@
 
 Текущая нативная публикация: [Lesson 04 — Apache Spark foundations and
 PySpark](https://docs.google.com/presentation/d/1U_u3cwqdCzz2oRoa_w5BT7btbLqUlBSou3rJe2YXni0/edit?usp=sharing).
-Владелец — `pavelkov007@gmail.com`, в презентации 60 слайдов.
+Владелец — `pavelkov007@gmail.com`, в презентации 66 слайдов.
 
-Историческая миграция 42 → 60 выполнена нативными Google Slides API-объектами,
-поэтому текст, схемы и матрицы остаются редактируемыми. Воспроизводимый
-генератор плана и безопасная последовательность readback/reorder/delete
-описаны в `decks/apache-spark-foundations/README.md`.
+Историческая миграция 42 → 60 и текущее обновление 60 → 66 выполнены нативными
+Google Slides API-объектами, поэтому текст, схемы и матрицы остаются
+редактируемыми. Воспроизводимый генератор плана и безопасная последовательность
+readback/reorder описаны в `decks/apache-spark-foundations/README.md`.
 
 Публикация защищена проверкой аккаунта: целевой владелец —
 `pavelkov007@gmail.com`. CLI сначала запрашивает email через Google Drive API и

@@ -6,9 +6,9 @@ import { CORE_SLIDE_COUNT, SLIDES } from "./content.mjs";
  * Build a deterministic Google Slides API migration plan for Lesson 04.
  *
  * The input is the full connector response captured while the published deck
- * still has its original 42-slide structure. The output deliberately splits
- * native slide creation, ordered block moves and deletion of superseded slides
- * so a caller can perform structural readbacks between irreversible phases.
+ * has its 60-slide structure. The output deliberately splits native slide
+ * creation and ordered block moves so a caller can perform structural readbacks
+ * between phases.
  * This script only prepares requests; it never performs network writes.
  */
 
@@ -27,6 +27,7 @@ const C = {
   orange: "#E25A1C",
   dark: "#1F2428",
 };
+const APPENDIX_SLIDE_NUMBER = SLIDES.findIndex((spec) => spec.section === "APPENDIX") + 1;
 
 function rgb(hex) {
   const value = hex.replace("#", "");
@@ -182,7 +183,7 @@ class NativeSlidesBuilder {
   }
 
   addChrome(pageId, spec, index) {
-    const isDeepDive = index > CORE_SLIDE_COUNT && index < 54;
+    const isDeepDive = index > CORE_SLIDE_COUNT && index < APPENDIX_SLIDE_NUMBER;
     this.addText(pageId, spec.section ?? "LESSON 04", { left: 64, top: 34, width: 300, height: 28 }, {
       fontSize: 14,
       bold: true,
@@ -347,8 +348,8 @@ class NativeSlidesBuilder {
     this.addTitle(pageId, spec.title);
     spec.rows.forEach(([label, example, meaning], index) => {
       const top = 220 + index * 94;
-      this.addText(pageId, label, { left: 72, top, width: 185, height: 52 }, { fontSize: 25, bold: true, color: index === spec.rows.length - 1 ? C.orange : C.blue });
-      this.addText(pageId, example, { left: 286, top, width: 430, height: 52 }, { fontSize: 22, bold: true });
+      this.addText(pageId, label, { left: 72, top, width: 245, height: 52 }, { fontSize: 23, bold: true, color: index === spec.rows.length - 1 ? C.orange : C.blue });
+      this.addText(pageId, example, { left: 335, top, width: 381, height: 52 }, { fontSize: 22, bold: true });
       this.addText(pageId, meaning, { left: 760, top, width: 400, height: 52 }, { fontSize: 20, color: C.muted });
       this.addRule(pageId, 72, top + 66, 1088, C.line, 1);
     });
@@ -448,14 +449,19 @@ class NativeSlidesBuilder {
 
 function renumberExistingSlides(rawPresentation, deliveredSlideIds) {
   const slideById = new Map(rawPresentation.slides.map((slide) => [slide.objectId, slide]));
+  const currentNumberById = new Map(
+    rawPresentation.slides.map((slide, index) => [slide.objectId, index + 1]),
+  );
   const requests = [];
   deliveredSlideIds.forEach((slideId, index) => {
-    if (!/^p\d+$/.test(slideId) || ["p1", "p27", "p37"].includes(slideId)) return;
+    const currentNumber = currentNumberById.get(slideId);
+    if (!currentNumber) return;
     const slide = slideById.get(slideId);
     if (!slide) throw new Error(`Existing slide not found: ${slideId}`);
-    const oldNumber = Number.parseInt(slideId.slice(1), 10);
-    const pageNumber = slide.pageElements.find((element) => textOf(element) === String(oldNumber).padStart(2, "0"));
-    if (!pageNumber) throw new Error(`Page number shape not found on ${slideId}`);
+    const pageNumber = slide.pageElements.find(
+      (element) => textOf(element) === String(currentNumber).padStart(2, "0"),
+    );
+    if (!pageNumber) return;
     const nextNumber = String(index + 1).padStart(2, "0");
     requests.push(
       { deleteText: { objectId: pageNumber.objectId, textRange: { type: "ALL" } } },
@@ -486,7 +492,7 @@ function renumberExistingSlides(rawPresentation, deliveredSlideIds) {
   return requests;
 }
 
-function chunkRequests(requests, chunkSize = 180) {
+function chunkRequests(requests, chunkSize = 60) {
   const chunks = [];
   for (let index = 0; index < requests.length; index += chunkSize) {
     chunks.push(requests.slice(index, index + chunkSize));
@@ -506,45 +512,37 @@ function main() {
   if (!layoutId) throw new Error("No layout available in source presentation");
 
   const builder = new NativeSlidesBuilder({ layoutId });
-  const newSlideNumbers = [
-    ...Array.from({ length: 12 }, (_, index) => index + 5),
-    ...Array.from({ length: 8 }, (_, index) => index + 37),
-    59,
-  ];
-  const newSlideIds = new Map(newSlideNumbers.map((number) => [number, `spark60_s${String(number).padStart(2, "0")}`]));
+  if (presentation.slides.length !== 60) {
+    throw new Error(`Expected a 60-slide published deck, got ${presentation.slides.length}`);
+  }
+  const existingIds = presentation.slides.map((slide) => slide.objectId);
+  const newSlideNumbers = [21, 22, 26, 27, 49, 54];
+  const newSlideIds = new Map(
+    newSlideNumbers.map((number) => [number, `spark66_s${String(number).padStart(2, "0")}`]),
+  );
   newSlideNumbers.forEach((number) => builder.render(newSlideIds.get(number), SLIDES[number - 1], number));
 
   const deliveredSlideIds = [
-    "p1", "p2", "p3", "p4",
-    ...Array.from({ length: 12 }, (_, index) => newSlideIds.get(index + 5)),
-    ...Array.from({ length: 19 }, (_, index) => `p${index + 8}`),
-    "p27",
-    ...Array.from({ length: 8 }, (_, index) => newSlideIds.get(index + 37)),
-    ...Array.from({ length: 9 }, (_, index) => `p${index + 28}`),
-    ...Array.from({ length: 5 }, (_, index) => `p${index + 37}`),
-    newSlideIds.get(59),
-    "p42",
+    ...existingIds.slice(0, 20),
+    newSlideIds.get(21),
+    newSlideIds.get(22),
+    ...existingIds.slice(20, 23),
+    newSlideIds.get(26),
+    newSlideIds.get(27),
+    ...existingIds.slice(23, 44),
+    newSlideIds.get(49),
+    ...existingIds.slice(44, 48),
+    newSlideIds.get(54),
+    ...existingIds.slice(48),
   ];
-  if (deliveredSlideIds.length !== 60 || new Set(deliveredSlideIds).size !== 60) {
-    throw new Error("Delivered slide order must contain exactly 60 unique IDs");
+  if (deliveredSlideIds.length !== 66 || new Set(deliveredSlideIds).size !== 66) {
+    throw new Error("Delivered slide order must contain exactly 66 unique IDs");
   }
 
-  const compatibilityRequests = [
-    ...renumberExistingSlides(presentation, deliveredSlideIds),
-    {
-      replaceAllText: {
-        containsText: {
-          text: "Разбираем Catalyst, shuffle, Python/JVM boundary, AQE и skew",
-          matchCase: true,
-        },
-        replaceText: "Spark vs MapReduce на principal-уровне, затем Catalyst, shuffle, Python/JVM boundary, AQE и skew",
-        pageObjectIds: ["p27"],
-      },
-    },
-  ];
+  const compatibilityRequests = renumberExistingSlides(presentation, deliveredSlideIds);
   const creationRequests = [...builder.requests, ...compatibilityRequests];
   const output = {
-    migration: "lesson-04-google-slides-42-to-60",
+    migration: "lesson-04-google-slides-60-to-66",
     presentationId: presentation.presentationId,
     sourceRevisionId: presentation.revisionId,
     createdSlideIds: [...newSlideIds.values()],
@@ -553,24 +551,30 @@ function main() {
     positionBatches: [
       [{
         updateSlidesPosition: {
-          slideObjectIds: Array.from({ length: 12 }, (_, index) => newSlideIds.get(index + 5)),
-          insertionIndex: 4,
+          slideObjectIds: [newSlideIds.get(21), newSlideIds.get(22)],
+          insertionIndex: 20,
         },
       }],
       [{
         updateSlidesPosition: {
-          slideObjectIds: Array.from({ length: 8 }, (_, index) => newSlideIds.get(index + 37)),
-          insertionIndex: 39,
+          slideObjectIds: [newSlideIds.get(26), newSlideIds.get(27)],
+          insertionIndex: 25,
         },
       }],
       [{
         updateSlidesPosition: {
-          slideObjectIds: [newSlideIds.get(59)],
-          insertionIndex: 61,
+          slideObjectIds: [newSlideIds.get(49)],
+          insertionIndex: 48,
+        },
+      }],
+      [{
+        updateSlidesPosition: {
+          slideObjectIds: [newSlideIds.get(54)],
+          insertionIndex: 53,
         },
       }],
     ],
-    deleteRequests: ["p5", "p6", "p7"].map((objectId) => ({ deleteObject: { objectId } })),
+    deleteRequests: [],
   };
   fs.mkdirSync(path.dirname(outputPath), { recursive: true });
   fs.writeFileSync(outputPath, `${JSON.stringify(output, null, 2)}\n`);

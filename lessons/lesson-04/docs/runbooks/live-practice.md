@@ -62,9 +62,7 @@ PySpark-код → physical plan → job/stages/tasks → runtime metrics → Pa
 ## Команды без VS Code Tasks
 
 ```bash
-python3 mentor-lab.py up spark
-python3 mentor-lab.py seed spark --profile lesson04
-python3 mentor-lab.py check spark
+python3 mentor-lab.py student spark-foundations start --profile lesson04
 
 python3 mentor-lab.py spark-submit spark \
   labs/spark/examples/lesson04_core_pipeline.py \
@@ -78,10 +76,14 @@ python3 mentor-lab.py spark-submit spark \
 ## Что проговаривать во время ожидания job
 
 - Сначала driver строит logical/physical plan; это ещё не обработка всего датасета.
+- DAGScheduler режет job на stages, TaskScheduler назначает TaskSet на свободные
+  executor slots; cluster manager к этому моменту уже выделил resources/executors.
 - `action` создаёт job; shuffle-разрыв превращается в границу stages.
 - `task` работает с partition, а не «со строкой» и не «с таблицей целиком».
 - Python-код задаёт plan через PySpark API; основная DataFrame execution идёт в JVM executors.
 - Время на локальном стенде не является production benchmark. Доказательство — сравнительный plan и runtime metrics при одинаковом входе.
+- `cache()` ленив: первый action materialize partitions через BlockManager,
+  следующий action reuse их; после эксперимента нужен `unpersist()`.
 
 ## Аварийный сценарий
 
@@ -97,10 +99,11 @@ python3 mentor-lab.py spark-submit spark \
 
 Практика закончена, когда ученик может без подсказки:
 
-1. назвать driver, executor, partition, job, stage и task;
+1. назвать SparkSession/SparkContext, driver, executor, partition, job, stage и task;
 2. предсказать хотя бы один `Exchange` до запуска;
 3. найти его в formatted plan и Spark UI;
 4. объяснить, почему broadcast уменьшает shuffle и когда он опасен;
 5. показать correctness evidence: input count, valid count, output count и revenue round-trip.
+6. объяснить повторный lineage без cache и путь cache block на executor.
 
 После занятия стенд останавливается через `Tasks: Run Task` → `Spark · Stop cluster`. Данные в `labs/spark/data/` сохраняются для следующего запуска.

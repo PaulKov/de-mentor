@@ -23,6 +23,7 @@ class HomeworkReview:
     skill_scores: Dict[str, int]
     missing: List[str]
     next_actions: List[str]
+    next_actions_title: str = "Lesson 02 readiness"
 
     def render(self) -> str:
         lines = [
@@ -38,7 +39,7 @@ class HomeworkReview:
         lines.extend(["", "## Missing evidence"])
         for item in self.missing or ["No missing evidence"]:
             lines.append(f"- {item}")
-        lines.extend(["", "## Lesson 02 readiness"])
+        lines.extend(["", f"## {self.next_actions_title}"])
         for action in self.next_actions:
             lines.append(f"- {action}")
         return "\n".join(lines) + "\n"

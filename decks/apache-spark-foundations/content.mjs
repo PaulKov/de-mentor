@@ -291,6 +291,42 @@ export const SLIDES = [
     sources: ["https://spark.apache.org/docs/4.2.0/cluster-overview.html"],
   },
   {
+    type: "layers",
+    section: "API + CONTEXT",
+    title: "В PySpark работаем через DataFrame — но понимаем все уровни API",
+    rows: [
+      ["SparkSession", "spark.read / spark.sql", "Главная точка входа PySpark"],
+      ["SparkContext", "spark.sparkContext", "Связь application с cluster runtime"],
+      ["DataFrame", "строки + schema", "Основной оптимизируемый API"],
+      ["RDD", "partitioned objects", "Низкий уровень без Catalyst/schema"],
+      ["Dataset[T]", "JVM typed API", "Scala/Java; отдельного API в Python нет"],
+    ],
+    sources: [
+      "https://spark.apache.org/docs/4.2.0/api/python/reference/pyspark.sql/api/pyspark.sql.SparkSession.html",
+      "https://spark.apache.org/docs/4.2.0/api/python/reference/api/pyspark.SparkContext.html",
+      "https://spark.apache.org/docs/4.2.0/rdd-programming-guide.html",
+      "https://spark.apache.org/docs/4.2.0/sql-programming-guide.html",
+    ],
+  },
+  {
+    type: "architecture",
+    section: "SCHEDULER FLOW",
+    title: "Driver назначает tasks — cluster manager лишь выделяет executors",
+    nodes: [
+      ["Action", "Driver создаёт job\nиз DAG"],
+      ["DAGScheduler", "режет DAG на stages\nпо shuffle"],
+      ["TaskScheduler", "создаёт TaskSet\nи выбирает slots"],
+      ["Executors", "одна task читает\nодну partition"],
+    ],
+    caption: "Назначение учитывает свободные executor slots и locality; status/retry возвращаются driver. FIFO/FAIR выбирает очередь между jobs.",
+    sources: [
+      "https://spark.apache.org/docs/4.2.0/cluster-overview.html",
+      "https://spark.apache.org/docs/4.2.0/job-scheduling.html",
+      "https://github.com/apache/spark/blob/v4.2.0/core/src/main/scala/org/apache/spark/scheduler/DAGScheduler.scala",
+      "https://github.com/apache/spark/blob/v4.2.0/core/src/main/scala/org/apache/spark/scheduler/TaskSchedulerImpl.scala",
+    ],
+  },
+  {
     type: "partition",
     section: "ПАРАЛЛЕЛИЗМ",
     title: "Partition — минимальная порция данных для одной task",
@@ -320,6 +356,55 @@ export const SLIDES = [
     ],
     callout: "До action Spark может переписать и сократить план.",
     sources: ["https://spark.apache.org/docs/4.2.0/api/python/getting_started/quickstart_df.html"],
+  },
+  {
+    type: "architectureCompare",
+    section: "LAZY EVALUATION",
+    title: "Lazy evaluation даёт optimizer увидеть весь pipeline до запуска",
+    left: {
+      label: "Код написан",
+      nodes: [
+        ["read", "источник объявлен"],
+        ["select", "лишние columns видны"],
+        ["filter", "условие записано позже"],
+        ["groupBy", "результат не вычислен"],
+      ],
+    },
+    right: {
+      label: "План к action",
+      nodes: [
+        ["Prune", "читать нужные columns"],
+        ["Pushdown", "filter ближе к source"],
+        ["Choose", "join/aggregate strategy"],
+        ["Execute", "action создаёт новый job"],
+      ],
+    },
+    callout: "Lazy ≠ cached: каждый action запускает job и по умолчанию заново проходит lineage.",
+    sources: [
+      "https://spark.apache.org/docs/4.2.0/rdd-programming-guide.html",
+      "https://spark.apache.org/docs/4.2.0/sql-performance-tuning.html",
+    ],
+  },
+  {
+    type: "pipelineCompare",
+    section: "CACHE",
+    title: "Два actions без persist повторяют lineage; cache меняет второй проход",
+    left: {
+      label: "Без cache",
+      steps: ["source", "transform", "count", "transform", "write"],
+      note: "count = job 1; write = job 2; общий upstream вычисляется снова.",
+    },
+    right: {
+      label: "cache / persist",
+      steps: ["source", "transform", "fill cache", "RAM/disk", "reuse"],
+      note: "cache() ленив; первый action заполняет blocks, следующий читает их.",
+    },
+    callout: "Persist только при reuse: выигрыш повторного compute должен окупить storage, eviction и serialization.",
+    sources: [
+      "https://spark.apache.org/docs/4.2.0/rdd-programming-guide.html",
+      "https://spark.apache.org/docs/4.2.0/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.cache.html",
+      "https://spark.apache.org/docs/4.2.0/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.persist.html",
+    ],
   },
   {
     type: "layers",
@@ -620,6 +705,25 @@ export const SLIDES = [
   },
   {
     type: "layers",
+    section: "SCHEDULER · INTERNALS",
+    title: "От action до executor slot: границы ответственности scheduler stack",
+    rows: [
+      ["DAGScheduler", "Job → stages", "ShuffleDependency задаёт boundary"],
+      ["Stage", "TaskSet", "Одна task на output partition"],
+      ["TaskScheduler", "locality + slots", "FIFO/FAIR и resource offers"],
+      ["SchedulerBackend", "launch / status", "Связь driver с executors"],
+      ["Recovery", "retry / speculation", "Повтор task или lineage partition"],
+    ],
+    sources: [
+      "https://spark.apache.org/docs/4.2.0/job-scheduling.html",
+      "https://spark.apache.org/docs/4.2.0/cluster-overview.html",
+      "https://github.com/apache/spark/blob/v4.2.0/core/src/main/scala/org/apache/spark/scheduler/DAGScheduler.scala",
+      "https://github.com/apache/spark/blob/v4.2.0/core/src/main/scala/org/apache/spark/scheduler/TaskSchedulerImpl.scala",
+      "https://github.com/apache/spark/blob/v4.2.0/core/src/main/scala/org/apache/spark/scheduler/SchedulerBackend.scala",
+    ],
+  },
+  {
+    type: "layers",
     section: "CATALYST",
     title: "Один DataFrame проходит четыре слоя плана",
     rows: [
@@ -666,6 +770,24 @@ export const SLIDES = [
     triggers: ["serialize", "write", "fetch", "merge", "spill"],
     warning: "Оптимизация shuffle начинается с объёма данных и распределения ключей.",
     sources: ["https://spark.apache.org/docs/4.2.0/rdd-programming-guide.html#shuffle-operations"],
+  },
+  {
+    type: "architecture",
+    section: "CACHE · INTERNALS",
+    title: "Cache хранит partitions как blocks на executors — не обрывая lineage",
+    nodes: [
+      ["persist()", "только помечает\nDataFrame"],
+      ["First action", "вычисляет каждую\npartition"],
+      ["BlockManager", "memory / disk\nна executors"],
+      ["Next action", "cache scan\nили recompute"],
+    ],
+    caption: "Следующий plan показывает InMemoryTableScan. Default: MEMORY_AND_DISK_DESER; потерянный block recompute по lineage; unpersist() освобождает storage.",
+    sources: [
+      "https://spark.apache.org/docs/4.2.0/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.persist.html",
+      "https://spark.apache.org/docs/4.2.0/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.cache.html",
+      "https://spark.apache.org/docs/4.2.0/rdd-programming-guide.html",
+      "https://spark.apache.org/docs/4.2.0/configuration.html#memory-management",
+    ],
   },
   {
     type: "plan",
@@ -838,5 +960,5 @@ export const SLIDES = [
   },
 ];
 
-export const CORE_SLIDE_COUNT = 35;
-export const FULL_SLIDE_COUNT = 60;
+export const CORE_SLIDE_COUNT = 39;
+export const FULL_SLIDE_COUNT = 66;

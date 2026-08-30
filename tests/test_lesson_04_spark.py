@@ -103,8 +103,8 @@ def test_lesson_04_documents_lab_and_artifacts_are_self_service_complete():
     ]
 
     assert [path.relative_to(ROOT).as_posix() for path in required if not path.exists()] == []
-    assert pptx_slide_count(CORE_DECK) == 35
-    assert pptx_slide_count(FULL_DECK) == 60
+    assert pptx_slide_count(CORE_DECK) == 39
+    assert pptx_slide_count(FULL_DECK) == 66
 
     source = "\n".join(
         path.read_text(encoding="utf-8")
@@ -127,6 +127,11 @@ def test_lesson_04_documents_lab_and_artifacts_are_self_service_complete():
         "John Mashey",
         "Doug Laney",
         "AQE",
+        "SparkSession",
+        "SparkContext",
+        "Dataset[T]",
+        "DAGScheduler",
+        "BlockManager",
         "evidence",
     ]:
         assert marker in source
@@ -159,6 +164,8 @@ def test_lesson_04_notebooks_are_clean_and_cover_core_evidence():
         "Exchange",
         "SortMergeJoin",
         "BroadcastHashJoin",
+        "InMemoryTableScan",
+        "unpersist",
         "output_roundtrip",
         "spark.stop()",
     ]:
@@ -192,7 +199,7 @@ def test_lesson_04_decks_have_visible_source_notes():
         ]
         notes = "\n".join(deck.read(name).decode("utf-8") for name in note_files)
 
-    assert len(note_files) == 60
+    assert len(note_files) == 66
     assert "[Sources]" in notes
     assert "spark.apache.org" in notes
 
@@ -250,14 +257,14 @@ def test_lesson_04_runbooks_and_student_guides_cover_core_deep_and_homework():
         assert "labs/spark" in output
 
     deep = RunbookCatalog.default().get("spark-foundations", "deep")
-    assert any("27-34" in stage.slides for stage in deep.stages)
+    assert any("50-58" in stage.slides for stage in deep.stages)
 
     exit_code, bootstrap = invoke(
         ["student", "spark-foundations", "bootstrap", "--platform", "macos"]
     )
     assert exit_code == 0, bootstrap
-    assert "seed spark --profile lesson04" in bootstrap
-    assert "Spark master UI @ :18080" in bootstrap
+    assert "student spark-foundations start --profile lesson04" in bootstrap
+    assert "Jupyter :18888" in bootstrap
 
     exit_code, readiness = invoke(["readiness", "spark", "--platform", "macos"])
     assert exit_code == 0, readiness
@@ -268,7 +275,90 @@ def test_lesson_04_runbooks_and_student_guides_cover_core_deep_and_homework():
     exit_code, homework = invoke(["student", "spark-foundations", "homework"])
     assert exit_code == 0, homework
     assert "pipeline.py, evidence.md" in homework
-    assert "submission pack" in homework
+    assert "student spark-foundations test" in homework
+
+
+def test_lesson_04_student_start_dry_run_is_one_command_self_service():
+    exit_code, output = invoke(
+        [
+            "student",
+            "spark-foundations",
+            "start",
+            "--profile",
+            "tiny",
+            "--dry-run",
+        ]
+    )
+
+    assert exit_code == 0, output
+    assert "# Spark student environment" in output
+    assert "--profile notebook up -d --build --wait" in output
+    assert "generate_lesson04_data.py --events 25000" in output
+    assert "lesson04_smoke.py" in output
+    assert "JupyterLab http://localhost:18888" in output
+
+
+def test_lesson_04_student_init_is_safe_and_test_is_deterministic(tmp_path):
+    submission = tmp_path / "submission"
+    exit_code, initialized = invoke(
+        [
+            "student",
+            "spark-foundations",
+            "init",
+            "--output",
+            str(submission),
+        ]
+    )
+
+    assert exit_code == 0, initialized
+    assert (submission / "pipeline.py").is_file()
+    assert (submission / "evidence.md").is_file()
+
+    exit_code, unchanged = invoke(
+        [
+            "student",
+            "spark-foundations",
+            "init",
+            "--output",
+            str(submission),
+        ]
+    )
+    assert exit_code == 1
+    assert "not changed" in unchanged
+
+    (submission / "pipeline.py").write_text(
+        """
+from pyspark.sql.types import StructType
+events = spark.read.schema(StructType([])).parquet(input)
+result = events.filter("amount > 0").join(dim, "id").groupBy("day").count()
+result.write.mode("overwrite").parquet(output)
+result.explain("formatted")
+""",
+        encoding="utf-8",
+    )
+    (submission / "evidence.md").write_text(
+        """
+Exchange marks the shuffle stage. The revenue roundtrip count is reconciled.
+Decision: broadcast only after size evidence. Risk: skew; validate the output.
+""",
+        encoding="utf-8",
+    )
+
+    exit_code, tested = invoke(
+        [
+            "student",
+            "spark-foundations",
+            "test",
+            "--submission",
+            str(submission),
+            "--skip-live",
+        ]
+    )
+    assert exit_code == 0, tested
+    assert "SKIP live Spark readiness" in tested
+    assert "Accepted: yes" in tested
+    assert "## Next actions" in tested
+    assert "Lesson 02 readiness" not in tested
 
 
 def test_lesson_04_homework_reviewer_accepts_evidence_and_blocks_driver_collect(tmp_path):
