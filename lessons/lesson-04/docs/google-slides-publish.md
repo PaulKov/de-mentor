@@ -1,5 +1,9 @@
 # Публикация Lesson 04 в Google Slides
 
+Текущая нативная публикация: [Lesson 04 — Apache Spark foundations and
+PySpark](https://docs.google.com/presentation/d/1U_u3cwqdCzz2oRoa_w5BT7btbLqUlBSou3rJe2YXni0/edit?usp=sharing).
+Владелец — `pavelkov007@gmail.com`, в презентации 42 слайда.
+
 Публикация защищена проверкой аккаунта: целевой владелец —
 `pavelkov007@gmail.com`. CLI сначала запрашивает email через Google Drive API и
 останавливается до загрузки, если активен другой аккаунт.
@@ -42,4 +46,3 @@ python3 mentor-lab.py slides verify spark-foundations \
 
 python3 mentor-lab.py lesson-release spark-foundations verify
 ```
-

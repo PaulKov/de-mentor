@@ -17,6 +17,10 @@ LESSON_ROOT = ROOT / "lessons" / "lesson-04"
 LAB_ROOT = ROOT / "labs" / "spark"
 FULL_DECK = LESSON_ROOT / "artifacts" / "apache-spark-foundations-theory.pptx"
 CORE_DECK = LESSON_ROOT / "artifacts" / "apache-spark-foundations-core.pptx"
+GOOGLE_SLIDES_URL = (
+    "https://docs.google.com/presentation/d/"
+    "1U_u3cwqdCzz2oRoa_w5BT7btbLqUlBSou3rJe2YXni0/edit?usp=sharing"
+)
 
 
 def invoke(args):
@@ -64,6 +68,7 @@ def test_lesson_04_route_maps_to_spark_lab_and_next_lesson():
     assert route.name == "spark-foundations"
     assert route.physical_lab_name == "spark"
     assert route.deck_path.endswith("apache-spark-foundations-theory.pptx")
+    assert route.google_slides_url == GOOGLE_SLIDES_URL
     assert route.submission_path == "lessons/lesson-04/submissions"
     assert route.next_lesson.code == "05-greenplum-wlm-diagnostics"
 
@@ -254,6 +259,7 @@ def test_lesson_04_session_control_plane_points_to_spark_materials(tmp_path):
     assert control_plane["mentor_mode"]["slide_deck"] == (
         "lessons/lesson-04/artifacts/apache-spark-foundations-theory.pptx"
     )
+    assert control_plane["mentor_mode"]["google_slides"] == GOOGLE_SLIDES_URL
     assert control_plane["student_mode"]["workbook"].endswith("student-workbook.md")
     assert control_plane["next_lesson"]["code"] == "05-greenplum-wlm-diagnostics"
     artifact_paths = {artifact["path"] for artifact in control_plane["artifacts"]}

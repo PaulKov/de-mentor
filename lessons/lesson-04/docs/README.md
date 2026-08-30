@@ -88,6 +88,7 @@ JSON events
 - [Facilitator skip-map](runbooks/facilitator-skip-map.md)
 - [Homework](../homework/assignment.md)
 - [Rubric](../homework/rubric.md)
+- [Google Slides — полная версия, 42 слайда](https://docs.google.com/presentation/d/1U_u3cwqdCzz2oRoa_w5BT7btbLqUlBSou3rJe2YXni0/edit?usp=sharing)
 - [Публикация в Google Slides](google-slides-publish.md)
 
 ## Официальные источники

@@ -174,7 +174,10 @@ LESSON_04_ROUTE = LearningRoute(
     title="Apache Spark foundations: Big Data и PySpark execution model",
     lesson_root="lessons/lesson-04",
     deck_path="lessons/lesson-04/artifacts/apache-spark-foundations-theory.pptx",
-    google_slides_url=None,
+    google_slides_url=(
+        "https://docs.google.com/presentation/d/"
+        "1U_u3cwqdCzz2oRoa_w5BT7btbLqUlBSou3rJe2YXni0/edit?usp=sharing"
+    ),
     sql_examples=(
         "labs/spark/seed/generate_lesson04_data.py",
         "labs/spark/examples/lesson04_core_pipeline.py",
