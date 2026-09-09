@@ -216,9 +216,19 @@ def test_lesson_03_documents_and_sql_lab_exist_with_contract_markers():
     assert "≥2 TEMP" not in homework
     assert "0 до 3" in homework or "0–3" in homework
     assert "lesson03-class-demo.sql" in homework
+    for marker in [
+        "v_homework_brand_region",
+        "Candidate A",
+        "Candidate B",
+        "--scale",
+        "v_heavy_olap_monolith",
+    ]:
+        assert marker in homework
     rubric = (HOMEWORK_ROOT / "rubric.md").read_text(encoding="utf-8")
     assert "Environment" in rubric
     assert "не** scored" in rubric or "не scored" in rubric.lower()
+    assert "v_homework_brand_region" in rubric
+    assert "A/B" in rubric or "Candidate" in rubric
 
     seed = HOMEWORK_SEED.read_text(encoding="utf-8")
     for marker in [
@@ -228,10 +238,14 @@ def test_lesson_03_documents_and_sql_lab_exist_with_contract_markers():
         "appendonly = true",
         "orientation = column",
         "v_heavy_olap_monolith",
+        "v_homework_brand_region",
         "v_star_join_orca_case",
+        "hot customers",
+        "scale",
     ]:
         assert marker in seed
     assert "CREATE TEMP TABLE" not in seed
+    assert "CREATE OR REPLACE VIEW lesson03.v_homework_brand_region" in seed
 
     demo = CLASS_DEMO.read_text(encoding="utf-8")
     for marker in [
@@ -246,13 +260,20 @@ def test_lesson_03_documents_and_sql_lab_exist_with_contract_markers():
     shim = SQL_EXAMPLE.read_text(encoding="utf-8")
     assert "lesson03-class-demo.sql" in shim
     assert REFERENCE_REWRITE.exists()
-    assert "CREATE TEMP TABLE" in REFERENCE_REWRITE.read_text(encoding="utf-8")
+    reference = REFERENCE_REWRITE.read_text(encoding="utf-8")
+    assert "CREATE TEMP TABLE" in reference
+    assert "v_homework_brand_region" in reference
 
     evidence_tmpl = HOMEWORK_ROOT / "templates" / "evidence.md"
     reconcile_tmpl = HOMEWORK_ROOT / "templates" / "reconcile.sql"
     assert evidence_tmpl.exists()
     assert reconcile_tmpl.exists()
-    assert reconcile_tmpl.read_text(encoding="utf-8").lower().count("except all") >= 2
+    evidence_text = evidence_tmpl.read_text(encoding="utf-8")
+    reconcile_text = reconcile_tmpl.read_text(encoding="utf-8")
+    assert reconcile_text.lower().count("except all") >= 2
+    assert "v_homework_brand_region" in reconcile_text
+    assert "Candidate A" in evidence_text
+    assert "Candidate B" in evidence_text
 
     optimizer_sql = OPTIMIZER_SQL.read_text(encoding="utf-8")
     assert "SET optimizer = on" in optimizer_sql
@@ -455,13 +476,17 @@ def test_lesson_03_homework_mechanical_checker_accepts_valid_pack(tmp_path):
 SET optimizer = on;
 DROP TABLE IF EXISTS tmp_l03_a;
 CREATE TEMP TABLE tmp_l03_a AS
-SELECT customer_id, amount FROM lesson03.fact_sales
-WHERE sale_date >= DATE '2026-02-01'
+SELECT customer_id, product_id, amount FROM lesson03.fact_sales
+WHERE sale_date >= DATE '2026-03-01' AND sale_date < DATE '2026-04-01'
 DISTRIBUTED BY (customer_id);
 ANALYZE tmp_l03_a;
-SELECT region, sum(amount) FROM tmp_l03_a t
+-- production Candidate B for lesson03.v_homework_brand_region
+SELECT c.region, d.brand, sum(t.amount) AS revenue
+FROM tmp_l03_a t
 JOIN lesson03.dim_customer c USING (customer_id)
-GROUP BY 1;
+JOIN lesson03.dim_product d USING (product_id)
+WHERE c.segment IN ('smb', 'mid') AND d.category <> 'security'
+GROUP BY 1, 2;
 """,
         encoding="utf-8",
     )
@@ -471,13 +496,20 @@ GROUP BY 1;
     )
     (pack / "evidence.md").write_text(
         (HOMEWORK_ROOT / "templates" / "evidence.md").read_text(encoding="utf-8")
-        .replace("Grain:", "Grain: region×category")
-        .replace("Optimizer for rewrite proof (`SET optimizer = …`):",
-                 "Optimizer for rewrite proof (`SET optimizer = …`): on; DB mentor")
-        .replace("Production decision: **merge / do not merge / needs larger-scale validation** — why:",
-                 "Production decision: **do not merge** — total pipeline slower; TEMP boundary explored")
-        .replace("## I. Residual risks\n\n(Beyond the verified snapshot — does **not** replace H.)\n\n1.\n2.",
-                 "## I. Residual risks\n\n(Beyond the verified snapshot — does **not** replace H.)\n\n1. NDV drift after load\n2. ORCA fallback on larger scale\n"),
+        .replace(
+            "Optimizer for rewrite proof (`SET optimizer = …`):",
+            "Optimizer for rewrite proof (`SET optimizer = …`): on; DB mentor",
+        )
+        .replace(
+            "Production decision: **merge / do not merge / needs larger-scale validation** — why:",
+            "Production decision: **do not merge** — total pipeline slower vs "
+            "v_homework_brand_region; TEMP boundary explored; Candidate B chosen",
+        )
+        .replace(
+            "## I. Residual risks\n\n(Beyond the verified snapshot — does **not** replace H.)\n\n1.\n2.",
+            "## I. Residual risks\n\n(Beyond the verified snapshot — does **not** replace H.)\n\n"
+            "1. NDV drift after load\n2. ORCA fallback on larger scale\n",
+        ),
         encoding="utf-8",
     )
 
@@ -493,6 +525,23 @@ GROUP BY 1;
     assert exit_code == 0, output
     assert "Accepted: yes" in output
     assert "mechanical" in output.lower()
+
+
+def test_lesson_03_seed_dry_run_passes_scale_variable():
+    exit_code, output = invoke(
+        [
+            "seed",
+            "greenplum-625",
+            "--profile",
+            "lesson03",
+            "--scale",
+            "principal",
+            "--dry-run",
+        ]
+    )
+    assert exit_code == 0, output
+    assert "scale=principal" in output
+    assert "lesson03.sql" in output
 
 
 def test_lesson_03_homework_mechanical_checker_rejects_class_demo_copy(tmp_path):

@@ -42,7 +42,12 @@ def _gp625_profiles(base: Path) -> List[SeedProfile]:
         SeedProfile(
             "lesson03",
             "Lesson 03 OLAP + optimizer dataset",
-            "Loads mentor.lesson03 schema, AOCO fact, star-join ORCA case and TEMP stages.",
+            (
+                "Loads mentor.lesson03: AOCO fact (skew + correlated dims), "
+                "class view v_heavy_olap_monolith, graded homework view "
+                "v_homework_brand_region, ORCA star-join demo. No TEMP rewrite. "
+                "Scale via --scale small|principal."
+            ),
             base / "lesson03.sql",
             "/mentor-lab/seed/lesson03.sql",
         ),
