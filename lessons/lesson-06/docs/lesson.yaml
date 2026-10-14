@@ -1,0 +1,29 @@
+route: flink-kafka-iceberg
+lesson_code: lesson-06
+physical_lab: flink-iceberg
+title: Flink with Kafka and Iceberg on S3
+docs:
+  - lessons/lesson-06/docs/README.md
+  - lessons/lesson-06/docs/student-workbook.md
+  - lessons/lesson-06/docs/mentor-guide.md
+  - lessons/lesson-06/docs/deep-dives/flink-runtime-and-checkpoint-internals.md
+  - lessons/lesson-06/docs/deep-dives/kafka-source-event-time-internals.md
+  - lessons/lesson-06/docs/deep-dives/kafka-to-iceberg-exactly-once.md
+  - lessons/lesson-06/homework/assignment.md
+  - lessons/lesson-06/homework/rubric.md
+runbooks:
+  - lessons/lesson-06/docs/runbooks/student-prep.md
+  - lessons/lesson-06/docs/runbooks/simple-path.md
+  - lessons/lesson-06/docs/runbooks/deep-dive-path.md
+  - lessons/lesson-06/docs/runbooks/recovery-drill.md
+  - lessons/lesson-06/docs/runbooks/facilitator-skip-map.md
+sql_examples:
+  - labs/flink-iceberg/sql/04-kafka-source.sql
+  - labs/flink-iceberg/sql/05-stream-to-iceberg.sql
+  - labs/flink-iceberg/sql/06-query-iceberg.sql
+safe_cli_commands:
+  - ./labs/flink-iceberg/scripts/up.ps1
+  - ./labs/flink-iceberg/scripts/create-topic.ps1
+  - ./labs/flink-iceberg/scripts/sql-client.ps1
+  - ./labs/flink-iceberg/scripts/publish-orders.ps1
+  - ./labs/flink-iceberg/scripts/down.ps1
