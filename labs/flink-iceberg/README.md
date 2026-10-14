@@ -65,6 +65,15 @@ Get-Content labs/flink-iceberg/data/orders.jsonl | docker compose -f labs/flink-
 
 В Iceberg sink запустится checkpoint-driven commit. Проверь checkpoints в Flink UI, Iceberg snapshots в SQL, объекты через SeaweedFS filer UI/API и Kafka offsets. Затем останови job в Flink UI, перезапусти TaskManager и разберись, какие гарантии дают checkpoint + sink commit, а какие ограничения остаются у локального одноброкерного стенда.
 
+Последняя запись в seed-файле намеренно опоздавшая. Kafka — бесконечный источник: окончание файла производителя само по себе не закрывает последнее окно. Чтобы продвинуть watermark и увидеть окно `10:02`, отправь событие с более поздним `event_time`:
+
+```powershell
+'{"order_id":"watermark-advance","region":"north","amount":0.00,"event_time":"2025-10-14T10:03:10.000"}' | docker compose -f labs/flink-iceberg/compose.yaml exec -T kafka `
+  /opt/kafka/bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic orders
+```
+
+Эта запись также начинает окно `10:03`, которое останется открытым, пока watermark снова не продвинется. Это полезный пример различия между «producer закончил отправку» и «event-time window получил watermark за своим end time».
+
 ## Управление и очистка
 
 ```powershell

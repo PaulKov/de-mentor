@@ -169,6 +169,16 @@ services:
     networks:
       - flink-iceberg
 
+  nessie-data-init:
+    image: busybox:1.37.0
+    user: "0:0"
+    command: ["sh", "-c", "mkdir -p /nessie/data && chown -R 10000:10001 /nessie/data"]
+    volumes:
+      - nessie-data:/nessie/data
+    restart: "no"
+    networks:
+      - flink-iceberg
+
   nessie:
     image: ghcr.io/projectnessie/nessie:0.109.0
     environment:
@@ -193,6 +203,8 @@ services:
       - nessie-data:/nessie/data
     depends_on:
       seaweedfs-init:
+        condition: service_completed_successfully
+      nessie-data-init:
         condition: service_completed_successfully
     healthcheck:
       test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/localhost/9000 && echo -e \"GET /q/health HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n\" >&3 && cat <&3 | grep -q \"200 OK\"'"]
