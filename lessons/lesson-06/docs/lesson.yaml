@@ -19,6 +19,7 @@ runbooks:
   - lessons/lesson-06/docs/runbooks/facilitator-skip-map.md
 sql_examples:
   - labs/flink-iceberg/sql/04-kafka-source.sql
+  - labs/flink-iceberg/sql/04a-preview-kafka-source.sql
   - labs/flink-iceberg/sql/05-stream-to-iceberg.sql
   - labs/flink-iceberg/sql/06-query-iceberg.sql
 safe_cli_commands:

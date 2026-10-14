@@ -17,5 +17,3 @@ WITH (
   'format' = 'json',
   'json.timestamp-format.standard' = 'ISO-8601'
 );
-
-SELECT order_id, region, amount, event_time FROM orders_source;

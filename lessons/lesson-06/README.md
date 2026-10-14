@@ -24,7 +24,7 @@
 ./labs/flink-iceberg/scripts/sql-client.ps1
 ```
 
-Из SQL Client выполнить `04-kafka-source.sql`, затем `05-stream-to-iceberg.sql`; в отдельном PowerShell отправить `data/orders.jsonl` через `publish-orders.ps1`. Подробности, адреса и очистка: [lab README](../../labs/flink-iceberg/README.md).
+Из SQL Client выполнить DDL `04-kafka-source.sql`, затем `05-stream-to-iceberg.sql`; в отдельном PowerShell отправить `data/orders.jsonl` через `publish-orders.ps1`. Опциональный бесконечный preview source вынесен в `04a-preview-kafka-source.sql` — запускай его отдельно и останови после просмотра событий. Подробности, адреса и очистка: [lab README](../../labs/flink-iceberg/README.md).
 
 ## Навигация
 

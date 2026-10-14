@@ -39,6 +39,8 @@ docker compose -f labs/flink-iceberg/compose.yaml ps
 -- labs/flink-iceberg/sql/05-stream-to-iceberg.sql
 ```
 
+`04-kafka-source.sql` содержит только DDL. Необязательный unbounded `SELECT` вынесен в `04a-preview-kafka-source.sql`; запускай preview отдельно и останавливай после просмотра, иначе он будет занимать SQL Client.
+
 В другом PowerShell отправь фиксированный dataset:
 
 ```powershell

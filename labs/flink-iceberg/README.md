@@ -56,7 +56,7 @@ docker compose -f labs/flink-iceberg/compose.yaml exec flink-sql-client `
 ./labs/flink-iceberg/scripts/create-topic.ps1
 ```
 
-В SQL Client выполни команды из `sql/04-kafka-source.sql`, затем `sql/05-stream-to-iceberg.sql`. После появления job в Flink UI отправь данные:
+В SQL Client выполни DDL из `sql/04-kafka-source.sql`, затем команды из `sql/05-stream-to-iceberg.sql`. Необязательный бесконечный preview source есть в `sql/04a-preview-kafka-source.sql`; запускай его в отдельном SQL Client и останови, когда увидишь события. После появления sink job в Flink UI отправь данные:
 
 ```powershell
 ./labs/flink-iceberg/scripts/publish-orders.ps1
