@@ -1,5 +1,7 @@
 # Lesson 05 — цели и карта занятия
 
+**Prerequisite:** [Lesson 04b — Distributed filesystems and object storage](../../lesson-04b-distributed-storage/README.md). Ученик должен различать bucket/key, object bytes, filer metadata и filesystem path. Это позволяет обсуждать Iceberg snapshot/catalog semantics отдельно от нижнего storage API.
+
 ## Учебные цели
 
 К концу занятия ученик:

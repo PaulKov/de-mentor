@@ -16,6 +16,8 @@
 
 Ученик пишет и объясняет Kafka→Flink→Iceberg pipeline; различает Kafka partition offsets, Flink checkpoint state, event time и watermark; доказывает, что checkpoint, Iceberg snapshot commit и бизнес-уникальность — отдельные гарантии; диагностирует backpressure, поздние события, conflict, file smallness и recovery.
 
+**Prerequisites:** [Lesson 04b — object storage internals](../lesson-04b-distributed-storage/README.md) и [Lesson 05 — Iceberg catalogs/metadata](../lesson-05/README.md). Перед streaming sink важно отличать S3 object consistency, Iceberg snapshot commit и Flink checkpoint recovery.
+
 ## Быстрый старт
 
 ```powershell

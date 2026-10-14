@@ -11,6 +11,8 @@
 | SQL и сервисы | [../../labs/flink-iceberg/](../../labs/flink-iceberg/) | практика на общем S3 bucket и двух каталогах |
 | Evidence | [submissions/](submissions/) | submission layout |
 
+Перед этим уроком пройди [Lesson 04b: distributed filesystems and object storage](../lesson-04b-distributed-storage/): там объяснены object keys, S3 API, SeaweedFS topology и границы гарантии storage. Здесь эти знания используются для отдельного разбора Iceberg metadata/catalog commits.
+
 ## Результат урока
 
 Ученик прослеживает путь от `INSERT` до Iceberg snapshot, объясняет разделение каталога и S3, поднимает Lakekeeper REST catalog, сравнивает его с Nessie и аргументированно выбирает каталог для заданного окружения.
