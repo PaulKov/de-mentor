@@ -122,7 +122,39 @@ docker compose -f $Compose run --rm --no-deps --entrypoint aws seaweedfs-init @A
 
 Если Hadoop client отсутствует, HDFS write path разберись по официальному [HDFS design](https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html): NameNode выбирает DataNodes; клиент передаёт block pipeline и ждёт acknowledgement chain; NameNode управляет namespace и блоками, но не проксирует payload bytes.
 
-## 7. Senior design prompt
+## 7. Лабораторная D — выбери класс системы и проследи request path
+
+Прочитай [HDFS internals](deep-dives/hdfs-internals.md), [Ceph internals](deep-dives/ceph-internals.md), [SeaweedFS internals](deep-dives/seaweedfs-internals.md) и сравнительный [product/deployment deep dive](deep-dives/products-and-deployment.md). Для каждой системы заполни таблицу своими словами:
+
+| Система | API приложения | Кто владеет namespace/metadata | Кто выбирает placement | Кто передаёт payload | Главный recovery unit | Первая вероятная точка давления |
+| --- | --- | --- | --- | --- | --- | --- |
+| HDFS |  |  |  |  |  |  |
+| Ceph RGW / CephFS / RBD |  |  |  |  |  |  |
+| SeaweedFS S3 / Filer |  |  |  |  |  |  |
+| Apache Ozone |  |  |  |  |  |  |
+| Lustre |  |  |  |  |  |  |
+| RustFS |  |  |  |  |  |  |
+
+Ответь и приведи источник для каждого ответа:
+
+1. Почему HDFS NameNode — и одновременно упрощение control plane, и потенциальный namespace bottleneck? Что решают HA и federation, а чего они не решают?
+2. Почему Ceph client получает cluster map и вычисляет placement через CRUSH, а не спрашивает центральный locator для каждого RADOS object? Какие компромиссы дают PG/acting set и recovery?
+3. В SeaweedFS почему master может не находиться в прямом byte path после получения mapping, и чем долговечность Filer metadata отличается от долговечности volume bytes?
+4. Apache Ozone использует слова *volume*, *bucket*, *key*, *block* и *container*: укажи, к какому namespace/слою относится каждое. Почему `ofs://` не следует автоматически называть POSIX mount?
+5. Lustre OST называется *Object Storage Target*. Почему отсюда не следует S3 bucket/key API? Нарисуй путь POSIX `open()`/read через MDT и OSS/OST.
+6. RustFS — S3-first сервис с erasure coding. Какие проверяемые признаки нужны, прежде чем поручить ему production Iceberg warehouse: S3 operation matrix, node-loss behavior, quorum, heal, upgrade, restore, metrics, IAM/KMS, workload benchmark?
+
+| Workload | Система-кандидат | Почему | Что обязательно проверить |
+| --- | --- | --- | --- |
+| Hadoop batch scan больших файлов |  |  |  |
+| MPI/HPC shared checkpoints, 1000 клиентов |  |  |  |
+| on-prem VM block + POSIX + S3 |  |  |  |
+| lakehouse на Hadoop/Spark с `ofs://` и S3 |  |  |  |
+| миллиарды небольших media blobs |  |  |  |
+
+Это paper lab: Compose стенда намеренно не поднимает HDFS, Ceph, Ozone или Lustre. Не выдавай single-node SeaweedFS S3 lab за отказный PoC этих систем.
+
+## 8. Senior design prompt
 
 На выбор: (A) 5 PB холодного backup, редкие большие GET и compliance hold; (B) 40 TB live Iceberg, параллельный Flink/Spark/Trino, много metadata operations; (C) media service с миллиардами изображений по 10–200 KB и CDN; (D) ML feature store с низким latency и частым overwrite.
 

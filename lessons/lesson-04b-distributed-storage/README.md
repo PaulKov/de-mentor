@@ -6,7 +6,7 @@
 | --- | --- | --- |
 | Карта занятия | [docs/](docs/) | цели, тайминг, границы block/file/object |
 | Workbook | [student-workbook.md](docs/student-workbook.md) | упражнения и evidence |
-| Internals | [deep-dives/](docs/deep-dives/) | HDFS, Ceph, SeaweedFS, object API, размещение, отказ и ремонт |
+| Internals | [Deep dives](docs/deep-dives/README.md) | три полных разбора HDFS, Ceph и SeaweedFS; object API, placement, отказ и repair |
 | Сравнение | [decision-matrix.md](docs/decision-matrix.md) | выбрать систему по workload и ограничениям |
 | Практика | [runbooks/](docs/runbooks/) | SeaweedFS S3 API и безопасный путь лабораторной |
 | Homework | [homework/](homework/) | архитектура хранилища и эксплуатационный план |
@@ -22,10 +22,11 @@ SeaweedFS — распределённая система хранения, сп
 
 1. Объяснить, какую задачу решают block, file и object interfaces и почему одинаковый диск под ними не означает одинаковых гарантий.
 2. Проследить PUT/GET от HTTP-клиента через gateway, metadata/index и storage node до checksum, replica или erasure-coded shards.
-3. Сравнить HDFS, Ceph, SeaweedFS, MinIO, Amazon S3, Google Cloud Storage и Azure Data Lake Storage по API, namespace, placement, consistency, отказам и стоимости владения.
-4. Подобрать replication или erasure coding, размер данных, failure domains, cache и metadata architecture под требования workload.
-5. Провести небольшую S3-лабораторную, найти объект в SeaweedFS и не принять локальный одноконтейнерный demo за distributed failure test.
-6. Защитить выбор on-prem, cloud или hybrid-хранилища с RPO/RTO, capacity headroom, security boundary, benchmark plan и планом восстановления.
+3. Проследить внутренности HDFS, Ceph и SeaweedFS; отличать их цели, namespace, control/data plane, quorum и recovery.
+4. Сравнить HDFS, Apache Ozone, Lustre, Ceph, SeaweedFS, RustFS и cloud object stores по API, namespace, placement, consistency, отказам и стоимости владения.
+5. Подобрать replication или erasure coding, размер данных, failure domains, cache и metadata architecture под требования workload.
+6. Провести небольшую S3-лабораторную, найти объект в SeaweedFS и не принять локальный одноконтейнерный demo за distributed failure test.
+7. Защитить выбор on-prem, cloud или hybrid-хранилища с RPO/RTO, capacity headroom, security boundary, benchmark plan и планом восстановления.
 
 ## Быстрый вход
 
@@ -45,6 +46,7 @@ Invoke-RestMethod http://localhost:19333/cluster/status
 - [Матрица выбора](docs/decision-matrix.md)
 - [Deep dive: модели, устройство и data paths](docs/deep-dives/distributed-storage-internals.md)
 - [Deep dive: продукты, внедрение и операции](docs/deep-dives/products-and-deployment.md)
+- [Deep dive: HDFS internals](docs/deep-dives/hdfs-internals.md) · [Ceph internals](docs/deep-dives/ceph-internals.md) · [SeaweedFS internals](docs/deep-dives/seaweedfs-internals.md)
 - [Быстрый маршрут](docs/runbooks/simple-path.md) · [глубокий маршрут](docs/runbooks/deep-dive-path.md)
 - [Домашнее задание](homework/assignment.md) · [оценивание](homework/rubric.md)
 

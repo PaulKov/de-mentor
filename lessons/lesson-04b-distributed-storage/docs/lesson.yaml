@@ -8,7 +8,11 @@ docs:
   - lessons/lesson-04b-distributed-storage/docs/mentor-guide.md
   - lessons/lesson-04b-distributed-storage/docs/decision-matrix.md
   - lessons/lesson-04b-distributed-storage/docs/deep-dives/distributed-storage-internals.md
+  - lessons/lesson-04b-distributed-storage/docs/deep-dives/README.md
   - lessons/lesson-04b-distributed-storage/docs/deep-dives/products-and-deployment.md
+  - lessons/lesson-04b-distributed-storage/docs/deep-dives/hdfs-internals.md
+  - lessons/lesson-04b-distributed-storage/docs/deep-dives/ceph-internals.md
+  - lessons/lesson-04b-distributed-storage/docs/deep-dives/seaweedfs-internals.md
   - lessons/lesson-04b-distributed-storage/homework/assignment.md
   - lessons/lesson-04b-distributed-storage/homework/rubric.md
 runbooks:

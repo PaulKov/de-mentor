@@ -2,7 +2,7 @@
 
 ## Подготовка
 
-1. Прочитать [internals deep dive](deep-dives/distributed-storage-internals.md) и [product/deployment deep dive](deep-dives/products-and-deployment.md).
+1. Прочитать [общие internals](deep-dives/distributed-storage-internals.md), отдельные главы [HDFS](deep-dives/hdfs-internals.md), [Ceph](deep-dives/ceph-internals.md), [SeaweedFS](deep-dives/seaweedfs-internals.md), затем [product/deployment comparison](deep-dives/products-and-deployment.md).
 2. Поднять стенд через `labs/flink-iceberg/scripts/up.ps1`; убедиться, что SeaweedFS слушает только loopback ports.
 3. Проверить доступность `http://localhost:19333/cluster/status` и filer UI `http://localhost:18888`.
 4. Убедиться, что bucket `de-mentor-warehouse` создан; не проверять урок через удаление warehouse или reset volumes.
@@ -11,7 +11,8 @@
 ## Главные тезисы
 
 - Storage contract определяет, что обещает клиенту API; физическая реализация — другой уровень.
-- HDFS, Ceph и SeaweedFS оптимизируют разные абстракции, а не просто предлагают «диск побольше».
+- HDFS, Ceph и SeaweedFS оптимизируют разные абстракции. Ozone, Lustre и RustFS — дополнительные альтернативы, но не взаимозаменяемые реализации одного storage API.
+- Apache Ozone — object store с Hadoop `ofs://` и S3, Lustre — parallel POSIX filesystem (OST не S3), RustFS — S3-first object server с собственной erasure/operations моделью.
 - Replication и EC дают разные capacity/repair/latency tradeoffs; география shard placement важнее формулы overhead.
 - S3 API дает HTTP key/object operations, но «S3-compatible» не гарантирует весь набор semantics конкретного cloud provider.
 - Сильная консистентность одного key не делает multi-key update атомарным; Iceberg catalog commit и Flink checkpoint — следующие слои гарантий.
@@ -25,7 +26,7 @@
 
 ### 50–90 минут: объяснить data path
 
-На доске рисуются две стрелки: control plane (name/metadata/placement/policy) и data plane (payload/checksum/replica). Пусть группа отдельно проследит HDFS client → NameNode allocation → DataNode pipeline, Ceph client → cluster map/CRUSH → PG/OSDs, Seaweed S3 gateway → Filer/metadata → volume. Исправляйте схемы, в которых bytes проходят через master без источника.
+На доске рисуются две стрелки: control plane (name/metadata/placement/policy) и data plane (payload/checksum/replica). Пусть группа отдельно проследит HDFS client → NameNode allocation → DataNode pipeline, Ceph client → cluster map/CRUSH → PG/OSDs, Seaweed S3 gateway → Filer/metadata → volume, Ozone OM → SCM/container → DataNode и Lustre client → MDT layout → parallel OSTs. Исправляйте схемы, в которых bytes идут через master без источника или человеку подменяют file API на S3.
 
 ### 105–135 минут: durability, quorum, failure domains
 

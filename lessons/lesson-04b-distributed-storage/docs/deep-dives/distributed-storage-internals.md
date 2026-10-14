@@ -2,6 +2,8 @@
 
 Уровень: **Senior** · Предпосылки: TCP/IP, filesystem basics, replication, Hadoop/Spark. Цель — научиться читать storage architecture по request path и failure mode, а не по названию продукта.
 
+Полные product-specific разборы: [HDFS](hdfs-internals.md), [Ceph](ceph-internals.md) и [SeaweedFS](seaweedfs-internals.md). Для выбора смежных альтернатив, включая Apache Ozone, Lustre и RustFS, см. [products and deployment](products-and-deployment.md).
+
 ## 1. Мотивация: почему локального диска и NFS стало мало
 
 Storage API кодирует компромисс. Локальный блочный диск удобен для произвольных обновлений и малых random I/O, но ограничен машиной и часто не разделяется конкурентно. NFS/SMB дают привычную файловую модель и central namespace, однако metadata сервер, locks, directory traversal и network latency входят в путь многих операций. Крупная data processing система должна хранить больше, чем один узел, переживать обычные дисковые/серверные отказы и кормить множество вычислителей одновременно.
@@ -17,6 +19,8 @@ Storage API кодирует компромисс. Локальный блочн
 | 2010 — Facebook Haystack paper | много маленьких фото, long-tail reads, слишком много metadata lookups в NFS/NAS пути | специализированный object store снижает metadata disk operations; tradeoff делается под конкретный read-mostly workload |
 | 2010-е — cloud data lakes | compute и storage масштабируются независимо | lifecycle, classes, IAM, cross-region и дешёвое хранение; добавляются request/egress cost и переменная сеть |
 | Lakehouse era | table formats поверх object stores | S3 сам по себе не транзакционная таблица; manifests/snapshots/catalog добавляют snapshot isolation и атомарную публикацию состояния |
+
+Эта история — не линейное «новый продукт заменил старый». HDFS решает Hadoop data-processing model; Ceph стремится к software-defined block/file/object из общего RADOS; Lustre проектируется как parallel POSIX filesystem для HPC; Ozone — объектный storage design в Hadoop ecosystem с S3 и Hadoop filesystem API; SeaweedFS оптимизирует blob/file namespace и metadata footprint; RustFS относится к более поздней волне S3-first self-hosted storage. Сравнивай их контракт и организационную стоимость, а не возраст или маркетинговое название.
 
 Источники: [GFS, SOSP 2003](https://research.google/pubs/the-google-file-system/), [HDFS Architecture](https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html), [Ceph, OSDI 2006](https://www.usenix.org/legacy/event/osdi06/tech/full_papers/weil/weil_html/index.html), [Amazon S3 launch date](https://aws.amazon.com/blogs/aws/eight-years-and-counting-of-cloud-computing/).
 

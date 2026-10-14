@@ -5,7 +5,7 @@
 | Workload contract и выбор API | 15 | path/key/block semantics, access pattern, atomic unit и hard constraints явно перечислены |
 | Системная архитектура и data path | 15 | metadata/control/data/placement components разведены; client bytes path непротиворечив |
 | Capacity, replication/EC и topology | 15 | raw/usable/reserve расчёт; failure map учитывает rack/site и degraded repair |
-| Product alternatives и ADR | 15 | сравнение минимум трех реалистичных альтернатив; причины отказа из требований |
+| Product alternatives и ADR | 15 | сравнение минимум трех реалистичных альтернатив по разным storage contracts; корректно различены HDFS, Ozone, Lustre, Ceph, SeaweedFS и/или RustFS там, где они релевантны; причины отказа привязаны к требованиям |
 | Security и governance | 10 | identity separation, TLS/encryption, audit, retention, least privilege и key rotation |
 | Reliability, recovery, backup | 15 | отдельные RPO/RTO для bytes/metadata; runnable restore и post-restore validation |
 | PoC и эксплуатационная модель | 10 | версии, realistic size/skew/concurrency, p99, LIST/multipart and pass/fail gates |

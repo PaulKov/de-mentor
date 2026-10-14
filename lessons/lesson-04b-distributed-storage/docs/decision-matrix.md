@@ -15,6 +15,33 @@
 | POSIX-like shared namespace, rename/locks | + | ++ (CephFS) | + (Filer/FUSE; verify semantics) | − | − | + (HNS-specific) | ++ (HNS) |
 | Minimal storage operations team | − | − | ~ | ~ | ++ | ++ | ++ |
 
+## Systems omitted by the first matrix: compare by interface, not name
+
+The table below is a focused shortlist for HDFS, Ozone, Lustre, Ceph, SeaweedFS, and RustFS. Ratings are workload hypotheses; `++` means a native design match, not a performance guarantee.
+
+| Workload / contract | HDFS | Apache Ozone | Lustre | Ceph | SeaweedFS | RustFS |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Hadoop batch reading large files | ++ | ++ (`ofs://`, Hadoop ecosystem) | ~ (POSIX path, client integration needed) | + (CephFS/RGW choice changes semantics) | + (Hadoop client options; verify) | + (S3 clients; verify engine FileIO) |
+| Hadoop-native object lakehouse | ~ (filesystem contract) | ++ (S3 + `ofs://`) | − | + (RGW S3) | + (S3) | + (S3; verify used Iceberg operations) |
+| HPC parallel POSIX I/O | − | − | ++ | + (CephFS, benchmark workload) | − | − |
+| VM/database block device | − | − | − | ++ (RBD) | − | − |
+| Shared POSIX namespace | + (Hadoop FS semantics) | − (`ofs://` is Hadoop FS API, not a kernel POSIX mount) | ++ | ++ (CephFS) | + (Filer/FUSE; validate semantics) | − |
+| On-prem S3 endpoint | − | ++ (S3 Gateway) | − | ++ (RGW) | ++ (S3 gateway) | ++ (S3-first) |
+| Billions of keys with Hadoop scale-out | ~ (NameNode namespace sizing/federation) | ++ (primary design target; still PoC) | ~ (metadata layout and DNE) | + (RGW metadata/pool sizing) | + (volume-level master + external filer metadata) | + (check current implementation limits and metadata behavior) |
+| Small-file or metadata-heavy namespace | −/`~` (file count drives NameNode memory) | + (small-file features; benchmark) | ~ (MDT/DNE/DOM choices) | ~ (metadata servers/pools; benchmark) | ++ (blob packing plus pluggable Filer store) | ~ (object API does not imply cheap LIST/HEAD at every scale) |
+| Minimal platform operations team | − | − | − | − | ~ | ~ |
+
+### Keep the interfaces straight
+
+- HDFS and Lustre both present file paths, but their clients, write models and target workloads differ. Lustre is a parallel POSIX filesystem; HDFS is a Hadoop filesystem for large distributed datasets.
+- Apache Ozone is an object store with Hadoop-oriented `ofs://` and an S3 Gateway. `ofs://` does not by itself provide POSIX kernel mount semantics.
+- Lustre OST means Object Storage Target inside the filesystem architecture. It is not an S3 endpoint and does not make Lustre an object-storage service.
+- Ceph's shared RADOS backend supports separate client contracts: RBD is block, CephFS is file, and RGW is object. Select and benchmark the correct interface.
+- SeaweedFS exposes blob, Filer/path and S3 surfaces; operational durability spans both volume bytes and Filer metadata.
+- RustFS is an S3-first project. Validate exact S3 calls, erasure-set placement, node-failure tolerance, repair, upgrades, observability, and support for the precise release; do not score it as a file or block system.
+
+Official architecture starting points: [HDFS](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html), [Ozone](https://ozone.hadoop.apache.org/docs/core-concepts/architecture/overview/), [Lustre](https://wiki.lustre.org/Introduction_to_Lustre), [Ceph](https://docs.ceph.com/en/latest/architecture/), [SeaweedFS](https://github.com/seaweedfs/seaweedfs/blob/master/README.md), [RustFS](https://github.com/rustfs/rustfs/blob/main/ARCHITECTURE.md).
+
 ## Reading the table
 
 - Cloud managed services reduce infrastructure operations but lock the workload into identity, pricing, regional topology and API-specific features.

@@ -36,7 +36,7 @@
 
 Создай `lessons/lesson-04b-distributed-storage/submissions/<name>/`:
 
-1. `adr.md`: use case, NFR, hard constraints, выбранная архитектура и две rejected alternatives.
+1. `adr.md`: use case, NFR, hard constraints, выбранная архитектура и минимум две rejected alternatives. Если кейс Hadoop/HPC/on-prem object, сравни подходящие варианты из HDFS, Apache Ozone, Lustre, Ceph, SeaweedFS и RustFS; выбери альтернативы с другим failure/operating/API tradeoff, а не только другой бренд.
 2. `architecture.md`: block/file/object contracts, components, control/data paths, namespace, placement и identity boundary; Mermaid diagram обязателен.
 3. `capacity-and-cost.md`: logical/raw, replica/EC, usable reserve, metadata, network/repair budget; для cloud — requests, restore, egress, KMS и support.
 4. `failure-matrix.md`: потеря disk/node/rack/site, network partition, metadata DB outage, accidental delete и credential compromise; expected response, detection, RPO/RTO.
@@ -54,6 +54,7 @@
 - Как защищены object deletion, catalog metadata, identities и encryption keys?
 - Как измеряется стоимость request/list/restore/egress, кроме GB-month?
 - Какая миграция/rollback стратегия если PoC не подтвердит SLO или API semantics?
+- Почему Lustre OST не является S3 object API? Чем Hadoop `ofs://` отличается от POSIX mount? Какие RustFS S3 operations и failure/upgrade guarantees ты проверил именно на выбранной версии?
 
 ## Сдача
 

@@ -6,9 +6,12 @@ Storage product selection начинается с workload и operating model. �
 
 | Система | Primary contract / substrate | Особенная сторона | Хороший fit | Плохой fit / проверить |
 | --- | --- | --- | --- | --- |
-| **HDFS** | distributed filesystem, blocks + NameNode/DataNodes | streaming throughput, compute locality, Hadoop native semantics | on-prem Hadoop/Spark batch, большие scan-heavy files | мелкие объекты, public-cloud elastic access, много независимых namespaces, случайные overwrite |
+| **HDFS** | Hadoop distributed filesystem, blocks + NameNode/DataNodes | потоковый доступ к крупным файлам, compute locality, mature Hadoop semantics | on-prem Hadoop/Spark batch, scan-heavy datasets | object-native clients, low-latency random writes, namespace из огромного числа крошечных файлов без sizing NameNode |
+| **Apache Ozone** | distributed object store: OM + SCM + DataNodes; S3 и Hadoop `ofs://` | отделяет namespace от block/container management; рассчитан на большое число объектов в Hadoop-среде | lakehouse и Hadoop workloads, которым нужны объектный API и интеграция с Hadoop | POSIX clients и HPC parallel I/O; deployment/HA требует отдельного Ozone expertise |
+| **Lustre** | parallel POSIX filesystem: MGS/MGT, MDS/MDT, OSS/OST, native clients | распараллеливает большие файловые I/O по OST и metadata по MDT | HPC, MPI-IO, simulation/checkpoint, GPU/AI training с общим POSIX namespace | generic S3 service, cloud object lake, простая эксплуатация без Linux/kernel/fabric expertise |
 | **Ceph** | RADOS + CRUSH; RBD block, CephFS, RGW S3/Swift | единый self-managed substrate для block/file/object, placement policy поверх heterogenous OSDs | private cloud, Kubernetes VM volumes + file share + S3 endpoint в одном fleet | малый ops team, нет места для recovery reserve, низкая допустимая сложность cluster-wide debugging |
 | **SeaweedFS** | volume/blob store + Master + Filer metadata + gateways | master отслеживает volumes, append-oriented blobs, много файлов, filer metadata backend выбирается отдельно | self-hosted file/object service, media, edge/cloud tiering, большое число blobs | команды, которым нужны полностью одинаковые POSIX/S3 semantics; без отдельной экспертизы metadata DB/maintenance |
+| **RustFS** | self-hosted S3-compatible object store, erasure-coded storage sets | implementation на Rust с data/parity shards, S3/IAM/STS surfaces и собственным repair/operations model | on-prem S3 endpoint, lab/PoC и workloads, где проверены нужные API и maturity конкретного release | заменять Ceph/HDFS/Lustre как block/POSIX substrate; считать S3 compatibility полной без feature/failure PoC |
 | **MinIO AIStor** | S3 API object service, erasure sets | object placement/sharding и erasure-code model напрямую сфокусированы на S3 | S3-native on-prem appliance/software, когда product edition/support и API subset прошли PoC | полноценная shared POSIX filesystem или multi-protocol block/file storage; необходимо отдельно оценивать текущую edition, license, support и feature matrix |
 | **Amazon S3** | managed object service, bucket/key + versions/classes/lifecycle | AWS-managed scaling/operations, broad ecosystem, documented strong object read-after-write consistency | AWS-native lakehouse, backups, archives, artifacts, durable static blobs | local POSIX/low-latency random I/O, cloud-independent deployments, uncontrolled request/egress cost, multi-key transaction |
 | **Google Cloud Storage** | managed object store; flat namespace or optional HNS buckets | strong global consistency; HNS can add folder resources/atomic folder rename for supported workloads | GCP analytics/AI, bulk objects, HNS-aware file-oriented jobs | relying on every flat-namespace feature in HNS buckets; check documented incompatibilities and migration is creation-time choice |
@@ -16,19 +19,49 @@ Storage product selection начинается с workload и operating model. �
 
 ### Product source notes
 
-- HDFS separates NameNode namespace/block map from DataNode data; see [HDFS Architecture](https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html).
+- Подробные разборы с data path, командами и лабораторными: [HDFS](hdfs-internals.md), [Ceph](ceph-internals.md), [SeaweedFS](seaweedfs-internals.md).
+- HDFS separates NameNode namespace/block map from DataNode data; HA with QJM replicates edit records to a JournalNode majority. See [HDFS Architecture](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html) and [HA with QJM](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSHighAvailabilityWithQJM.html).
 - Ceph unifies RADOS under [CephFS, RBD and RGW](https://docs.ceph.com/en/latest/architecture/); placement policies are [CRUSH rules](https://docs.ceph.com/en/latest/rados/operations/crush-map/).
 - SeaweedFS exposes master, volume server, filer and S3 surfaces; see [upstream architecture](https://github.com/seaweedfs/seaweedfs/blob/master/README.md) and [S3 API mapping](https://github.com/seaweedfs/seaweedfs/wiki/Amazon-S3-API).
+- Apache Ozone is an object store with namespace in Ozone Manager, block/container control in Storage Container Manager and bytes on DataNodes; the project documents both [architecture](https://ozone.hadoop.apache.org/docs/core-concepts/architecture/overview/) and [S3 / `ofs://` interfaces](https://ozone.hadoop.apache.org/docs/).
+- Lustre's “object” in Object Storage Target (OST) is an internal parallel-filesystem storage abstraction; applications mount a shared POSIX filesystem. See [Lustre architecture](https://wiki.lustre.org/Introduction_to_Lustre) and [internals](https://wiki.lustre.org/Understanding_Lustre_Internals).
+- RustFS is a newer S3-focused project. Its upstream [architecture](https://github.com/rustfs/rustfs/blob/main/ARCHITECTURE.md) describes the request pipeline and [erasure coding](https://github.com/rustfs/rustfs/blob/main/docs/architecture/erasure-coding.md); check exact release, supported S3 operations, HA/failure contract, upgrade path and support model before production selection.
 - [MinIO AIStor erasure coding](https://docs.min.io/aistor/operations/core-concepts/erasure-coding/) documents erasure sets, data/parity shards and quorum behavior; AIStor docs describe that edition. Verify the product/edition/version actually under evaluation.
 - AWS lists object uses, storage classes and [strong read-after-write consistency for object PUT/DELETE](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html); it explicitly notes no atomic updates across keys.
 - GCS documents [strongly consistent object/list operations](https://docs.cloud.google.com/storage/docs/consistency) and [HNS folders/atomic rename](https://docs.cloud.google.com/storage/docs/folders-overview); HNS differs from simulated prefix folders.
 - Azure explains how [Blob and Data Lake APIs share HNS data, first-class directories and ACL enforcement](https://learn.microsoft.com/azure/storage/blobs/data-lake-storage-multi-protocol-access).
 
-These are not benchmark claims. A product's marketing phrase “S3-compatible” does not certify your used operations, semantics, performance or failure behavior.
+These are not benchmark claims. A product's marketing phrase “S3-compatible” does not certify your used operations, semantics, performance or failure behavior. “Distributed” also does not mean that two products share the same application contract: Lustre's internal object targets are not S3 buckets, Ozone's `ofs://` is not a POSIX kernel mount, and RustFS's S3 endpoint does not turn it into a block or parallel file system.
+
+## 1.1 Почему это разные категории
+
+```text
+HDFS     path + file/block namespace  -> NameNode chooses DataNodes; Hadoop client streams blocks
+Ozone    volume/bucket/key namespace  -> OM resolves key; SCM tracks containers; client reads DataNodes
+Lustre   POSIX path + file handles    -> MDT resolves layout; client stripes file ranges across OSTs
+Ceph     RADOS object substrate       -> clients map PGs to OSDs; RBD/CephFS/RGW add contracts
+Seaweed  file-id / path / S3 key      -> Master locates volumes; Filer owns path metadata; volume serves blobs
+RustFS   bucket/key API               -> S3 request path writes data/parity shards to an erasure set
+```
+
+The workload boundary matters more than the word *object*: HDFS and Lustre both expose filesystem-oriented paths, but HDFS is optimized for Hadoop batch streaming while Lustre is a parallel POSIX filesystem for high-bandwidth multi-client I/O. Ozone and RustFS both expose S3-compatible APIs, but Ozone integrates namespace and data blocks with Hadoop's storage ecosystem while RustFS is an S3-first object server. Ceph covers more interface families by layering services over RADOS; SeaweedFS combines a blob layer with Filer namespace and gateways.
+
+### Fast selection guide
+
+| If the hard requirement is… | Start evaluation with… | First design risk to test |
+| --- | --- | --- |
+| Existing Hadoop batch estate and HDFS paths | HDFS | NameNode namespace size, HA/federation, small files, client locality |
+| Hadoop lakehouse object store with `ofs://` and S3 | Apache Ozone | OM/SCM HA, S3 feature subset, operational complexity and engine integration |
+| Shared high-throughput POSIX filesystem for HPC | Lustre | MDT/OST sizing, stripe layout, fabric, client/kernel lifecycle and metadata hot spots |
+| One on-prem fleet for VM block, POSIX file and S3 | Ceph | OSD/PG recovery, CRUSH failure domains, capacity headroom and multi-service coupling |
+| Many small blobs/media with Filer paths and S3 | SeaweedFS | filer metadata durability, volume maintenance, namespace/S3 semantic edges |
+| S3 API service with self-managed erasure sets | RustFS or another S3-first store | exact S3 conformance, multi-node write/read quorum, healing, upgrades and project maturity |
+
+Use these as shortlist heuristics, not final recommendations. A production PoC must include the exact engine SDK, realistic object/file size distribution, the failure domain you intend to survive, metadata backup/restore, and recovery while foreground traffic runs.
 
 ## 2. Capability checklist for S3 compatibility
 
-Build a table with client version × server version × used feature. Include at least:
+Build a table with client version × server version × used feature. Include at least for SeaweedFS S3, Ceph RGW, Ozone S3 Gateway, RustFS, and managed cloud services:
 
 | Surface | Probes |
 | --- | --- |
@@ -120,7 +153,7 @@ Migration checklist:
 
 ### Case A — on-prem petabyte archive
 
-Compare Ceph EC pool, SeaweedFS blob volumes, HDFS and appliance alternatives. Requirements: 5 PB logical, 2 sites, archive restore in hours, new writes daily, 10 TB/day ingest. Deliver rough disks/racks/network, replication/EC, metadata backup, expected restore throughput, utilization ceiling and on-call plan. Explicitly separate same-site media failure from site disaster recovery.
+Compare Ceph EC pools, SeaweedFS cold volumes, HDFS EC, Ozone EC, RustFS erasure sets and appliance/cloud alternatives. Requirements: 5 PB logical, 2 sites, archive restore in hours, new writes daily, 10 TB/day ingest. Deliver rough disks/racks/network, replication/EC, metadata backup, expected restore throughput, utilization ceiling and on-call plan. Explicitly separate same-site media failure from site disaster recovery.
 
 ### Case B — cloud lakehouse
 
@@ -129,6 +162,10 @@ Two Flink jobs, Spark compaction, Trino readers, one Iceberg REST catalog and GC
 ### Case C — billions of small media objects
 
 Compare SeaweedFS, object store plus CDN, file storage, database/blob hybrid. Include object size histogram, hot/cold tiers, lookup index, upload concurrency, cache invalidation, metadata backend scale and cleanup correctness. State which service owns media metadata versus object payload.
+
+### Case D — shared scratch for an HPC center
+
+Compare Lustre, CephFS, parallel filesystem appliances, and object-backed staging. Requirements: thousands of clients, MPI-IO, 2 TB/s aggregate sequential bandwidth target, very large checkpoint bursts and small-file-heavy job startup. Specify MDT/MDT DNE layout, OST stripe policy, fabric and client/kernel upgrade plan; explain why S3 object storage or HDFS is not a drop-in replacement for POSIX semantics.
 
 ### Defense standard
 
