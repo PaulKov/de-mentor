@@ -1,3 +1,6 @@
+-- There is one Kafka partition but two Flink source subtasks; let the unused subtask go idle.
+SET 'table.exec.source.idle-timeout' = '5 s';
+
 CREATE TABLE IF NOT EXISTS orders_source (
   order_id STRING,
   region STRING,

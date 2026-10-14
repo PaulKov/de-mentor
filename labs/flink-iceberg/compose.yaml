@@ -17,7 +17,7 @@ x-flink-common: &flink-common
   environment:
     FLINK_PROPERTIES: |
       jobmanager.rpc.address: flink-jobmanager
-      taskmanager.numberOfTaskSlots: 2
+      taskmanager.numberOfTaskSlots: 4
       parallelism.default: 2
       execution.checkpointing.interval: 15s
       execution.checkpointing.mode: EXACTLY_ONCE
@@ -190,6 +190,7 @@ services:
       - nessie.catalog.warehouses.warehouse.location=s3://de-mentor-warehouse/nessie
       - nessie.catalog.service.s3.default-options.region=us-east-1
       - nessie.catalog.service.s3.default-options.path-style-access=true
+      - nessie.catalog.service.s3.default-options.request-signing-enabled=false
       - nessie.catalog.service.s3.default-options.access-key=urn:nessie-secret:quarkus:nessie.catalog.secrets.access-key
       - nessie.catalog.secrets.access-key.name=demouser
       - nessie.catalog.secrets.access-key.secret=demosecret123456
@@ -255,7 +256,7 @@ services:
       FLINK_PROPERTIES: |
         jobmanager.rpc.address: flink-jobmanager
         jobmanager.memory.process.size: 768m
-        taskmanager.numberOfTaskSlots: 2
+        taskmanager.numberOfTaskSlots: 4
         parallelism.default: 2
         execution.checkpointing.interval: 15s
         execution.checkpointing.mode: EXACTLY_ONCE
@@ -270,6 +271,8 @@ services:
         condition: service_completed_successfully
       nessie:
         condition: service_healthy
+      flink-state-init:
+        condition: service_completed_successfully
     healthcheck:
       test: ["CMD-SHELL", "curl -fsS http://localhost:8081/overview >/dev/null"]
       interval: 5s
@@ -284,7 +287,7 @@ services:
     environment:
       FLINK_PROPERTIES: |
         jobmanager.rpc.address: flink-jobmanager
-        taskmanager.numberOfTaskSlots: 2
+        taskmanager.numberOfTaskSlots: 4
         taskmanager.memory.process.size: 1536m
         parallelism.default: 2
         execution.checkpointing.interval: 15s
@@ -296,6 +299,15 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
+  flink-state-init:
+    image: busybox:1.37.0
+    user: "0:0"
+    command: ["sh", "-c", "chown -R 9999:9999 /checkpoints /savepoints"]
+    volumes:
+      - flink-checkpoints:/checkpoints
+      - flink-savepoints:/savepoints
+    restart: "no"
+
   flink-sql-client:
     <<: *flink-common
     command: ["sleep", "infinity"]
@@ -304,7 +316,7 @@ services:
         jobmanager.rpc.address: flink-jobmanager
         rest.address: flink-jobmanager
         rest.port: 8081
-        taskmanager.numberOfTaskSlots: 2
+        taskmanager.numberOfTaskSlots: 4
         parallelism.default: 2
         state.checkpoints.dir: file:///opt/flink/checkpoints
         state.savepoints.dir: file:///opt/flink/savepoints

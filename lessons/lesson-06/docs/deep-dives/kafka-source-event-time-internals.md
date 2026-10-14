@@ -75,6 +75,8 @@ DataStream<Order> orders = env.fromSource(
 
 `withIdleness(timeout)` объявляет источник idle после отсутствия записей за период и исключает его watermark из минимума. Но после возврата idle partition поздние для уже сработавших окон records могут попасть в late side output/быть отброшены согласно политике. Настройка idle timeout — решение о бизнес-корректности, а не только удобный tuning. В KafkaSource параллелизм выше числа partitions не автоматически помечает лишние readers idle; configure idleness or size parallelism intentionally. [Kafka per-partition watermarks and idleness](https://nightlies.apache.org/flink/flink-docs-release-2.2/docs/connectors/datastream/kafka/#idleness).
 
+В Table/SQL API аналогичная сессийная настройка — `SET 'table.exec.source.idle-timeout' = '5 s'`. В нашей лаборатории topic имеет одну partition, а source parallelism равен двум, поэтому один reader закономерно не получает partition. Без idle timeout его `MIN` watermark блокирует event-time timers downstream, даже когда reader с partition уже прочёл все сообщения. Проверьте оба значения метрики `currentOutputWatermark` на source subtasks, затем включите idle timeout и сравните, когда закроются окна.
+
 ## 6. Late events, allowed lateness и state cleanup
 
 Window trigger fires when watermark passes window end. Allowed lateness держит state некоторое дополнительное event-time время и может выпускать updates; слишком поздние элементы могут быть отброшены или отправлены в side output. Для оконного агрегата и Iceberg append-only sink важно определить, записываем ли мы:

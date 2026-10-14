@@ -28,6 +28,7 @@ SELECT
   COUNT(*) AS order_count,
   SUM(amount) AS gross_amount
 FROM TABLE(
-  TUMBLE(TABLE orders_source, DESCRIPTOR(event_time), INTERVAL '1' MINUTE)
+  TUMBLE(TABLE default_catalog.default_database.orders_source,
+    DESCRIPTOR(event_time), INTERVAL '1' MINUTE)
 )
 GROUP BY window_start, window_end, region;

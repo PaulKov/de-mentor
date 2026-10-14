@@ -13,6 +13,10 @@ WITH (
   'write.distribution-mode' = 'hash'
 );
 
+-- Make bounded demo writes complete before the following verification query.
+SET 'execution.runtime-mode' = 'BATCH';
+SET 'table.dml-sync' = 'true';
+
 INSERT INTO lesson05.catalog_comparison VALUES
   ('evt-101', 'books', 12.50, TIMESTAMP '2025-10-14 10:00:01.000'),
   ('evt-102', 'books', 19.00, TIMESTAMP '2025-10-14 10:00:21.000'),
@@ -21,3 +25,7 @@ INSERT INTO lesson05.catalog_comparison VALUES
 SELECT category, COUNT(*) AS rows_count, SUM(amount) AS revenue
 FROM lesson05.catalog_comparison
 GROUP BY category;
+
+-- Return the shared SQL session to defaults before the streaming lesson.
+SET 'table.dml-sync' = 'false';
+SET 'execution.runtime-mode' = 'STREAMING';

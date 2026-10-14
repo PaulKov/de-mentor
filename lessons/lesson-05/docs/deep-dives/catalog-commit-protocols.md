@@ -82,6 +82,20 @@ merge review → main      ← conflict-aware ref operation
 
 Lakekeeper и Nessie отвечают на разные акценты: Lakekeeper позиционируется как централизованный catalog service с warehouse/storage access management; Nessie — версионирование ссылок и согласование изменений между таблицами/ветками. Оба могут давать REST интерфейс, но REST не стирает разницу бизнес-семантики.
 
+### S3 delegation — не «просто настройки endpoint»
+
+При Iceberg REST-каталоге клиент получает не только metadata location. В ответ могут входить `io-impl`, endpoint и path-style настройки для FileIO, а также один из механизмов полномочий на запись в object store:
+
+- **credentials vending**: клиент получает ограниченные по времени credentials; обычно нужна STS-совместимая инфраструктура;
+- **remote request signing**: клиент строит S3-запрос, но просит catalog подписать его отдельным REST-вызовом; секрет остаётся на стороне catalog;
+- **credentials у клиента**: прямой статический ключ, как в нашем изолированном учебном стенде.
+
+Последний вариант проще для локального SeaweedFS, но даёт Flink TaskManager постоянные ключи. Не переносите его в общую среду или production. Nessie предупреждает, что его Iceberg REST integration экспериментальна; возможности endpoint-ов и способы выдачи доступа нужно сверять одновременно для catalog server, Iceberg runtime и движка.
+
+В этом стенде мы поймали полезную межверсионную ошибку. Nessie 0.109.0 возвращал конфигурацию с `s3.signer.uri`/`s3.signer.endpoint`, но установленный Iceberg 1.12.0 вызывал `POST /iceberg/v1/main/namespaces/lesson05/tables/catalog_comparison/sign`; Nessie отвечал 404. Ошибка возникала при закрытии Parquet writer, уходила в fatal exception handler TaskManager и перезапускала сам процесс. Поэтому диагностика только по SQL клиенту выглядела как нестабильность Flink, хотя первичная причина была на REST/S3 delegation границе.
+
+Для лаборатории выбран явный обход: Nessie `request-signing-enabled=false`, а Nessie Iceberg Catalog получает SeaweedFS endpoint и фиктивные статические credentials напрямую в `01-catalogs.sql`. Так запись, commit и последующее чтение работают; учение об auth boundary остаётся в этом Deep Dive. Это локальная compatibility-настройка, не универсальная рекомендация. Перед другим сочетанием версий сделайте короткий write/read smoke test и проверьте `GET /iceberg/v1/config`, конфигурацию загруженной таблицы и реально вызванные REST paths. История Nessie релизов показывает, что поддержка Iceberg REST и S3 credential/signing механизмов добавлялась постепенно; Iceberg 1.11 также существенно расширил REST-протокол. [Nessie Iceberg REST guide](https://projectnessie.org/guides/iceberg-rest/) · [Nessie release history](https://projectnessie.org/releases/) · [Iceberg REST Catalog](https://iceberg.apache.org/rest-catalog-spec/).
+
 ## 6. Failure matrix: что ломается и что должно пережить
 
 | Сбой | Видимый эффект | Корректное восстановление |

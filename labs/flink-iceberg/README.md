@@ -6,7 +6,7 @@
 
 | Сервис | Роль | Адрес с хоста |
 | --- | --- | --- |
-| Flink JobManager / TaskManager | SQL и потоковая обработка; один TaskManager, два слота | UI: <http://localhost:18081> |
+| Flink JobManager / TaskManager | SQL и потоковая обработка; один TaskManager, четыре слота | UI: <http://localhost:18081> |
 | Kafka 4.2.2 | входной topic `orders` | `localhost:19092` |
 | SeaweedFS 4.46 | S3-compatible object storage | S3 API: <http://localhost:19000>; filer UI/API: <http://localhost:18888>; master: <http://localhost:19333> |
 | Lakekeeper 0.13.6 | Iceberg REST catalog, warehouse в SeaweedFS | UI/API: <http://localhost:18181/ui/>; REST: `/catalog` |
@@ -16,6 +16,8 @@
 Порт-план намеренно отличен от базового Flink курса. Все опубликованные порты привязаны к loopback. Kafka и Flink общаются через отдельную Docker-сеть.
 
 SeaweedFS предоставляет S3 API и локальный filer UI для просмотра объектов. `demouser / demosecret123456` — учебные ключи только для loopback-стенда; они не предназначены для production.
+
+Для воспроизводимости альтернативный Nessie REST catalog в этом стенде использует локальные demo S3 credentials из Flink catalog session и выключенный remote signer. Это стендовая настройка SeaweedFS + выбранных версий Iceberg/Nessie; сравнение credentials vending и request signing, версия REST endpoint-ов и точный разбор 404 описаны в [Deep Dive о протоколе catalog commit](../../lessons/lesson-05/docs/deep-dives/catalog-commit-protocols.md).
 
 ## Запуск
 
@@ -51,17 +53,16 @@ docker compose -f labs/flink-iceberg/compose.yaml exec flink-sql-client `
 В отдельном PowerShell:
 
 ```powershell
-docker compose -f labs/flink-iceberg/compose.yaml exec kafka `
-  /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 `
-  --create --if-not-exists --topic orders --partitions 1 --replication-factor 1
+./labs/flink-iceberg/scripts/create-topic.ps1
 ```
 
 В SQL Client выполни команды из `sql/04-kafka-source.sql`, затем `sql/05-stream-to-iceberg.sql`. После появления job в Flink UI отправь данные:
 
 ```powershell
-Get-Content labs/flink-iceberg/data/orders.jsonl | docker compose -f labs/flink-iceberg/compose.yaml exec -T kafka `
-  /opt/kafka/bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic orders
+./labs/flink-iceberg/scripts/publish-orders.ps1
 ```
+
+Скрипт делает паузу перед событием `o-late-001`, чтобы source idle timeout успел продвинуть watermark и позднее событие стало наблюдаемым. Для чистого повтора останови прежний job, затем выполни `./labs/flink-iceberg/scripts/create-topic.ps1 -Recreate` и снова запусти pipeline.
 
 В Iceberg sink запустится checkpoint-driven commit. Проверь checkpoints в Flink UI, Iceberg snapshots в SQL, объекты через SeaweedFS filer UI/API и Kafka offsets. Затем останови job в Flink UI, перезапусти TaskManager и разберись, какие гарантии дают checkpoint + sink commit, а какие ограничения остаются у локального одноброкерного стенда.
 
@@ -69,7 +70,7 @@ Get-Content labs/flink-iceberg/data/orders.jsonl | docker compose -f labs/flink-
 
 ```powershell
 '{"order_id":"watermark-advance","region":"north","amount":0.00,"event_time":"2025-10-14T10:03:10.000"}' | docker compose -f labs/flink-iceberg/compose.yaml exec -T kafka `
-  /opt/kafka/bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic orders
+  /opt/kafka/bin/kafka-console-producer.sh --bootstrap-server kafka:29092 --topic orders
 ```
 
 Эта запись также начинает окно `10:03`, которое останется открытым, пока watermark снова не продвинется. Это полезный пример различия между «producer закончил отправку» и «event-time window получил watermark за своим end time».

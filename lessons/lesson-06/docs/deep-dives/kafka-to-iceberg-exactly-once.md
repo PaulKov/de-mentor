@@ -70,6 +70,7 @@ Spark Structured Streaming строит recovery вокруг query checkpoint �
 SET 'execution.checkpointing.interval' = '15 s';
 SET 'execution.checkpointing.mode' = 'EXACTLY_ONCE';
 
+USE CATALOG lakekeeper;
 CREATE DATABASE IF NOT EXISTS lesson06;
 
 CREATE TABLE lakekeeper.lesson06.region_minute_metrics (
@@ -86,7 +87,7 @@ CREATE TABLE lakekeeper.lesson06.region_minute_metrics (
 
 INSERT INTO lakekeeper.lesson06.region_minute_metrics
 SELECT window_start, window_end, region, COUNT(*), SUM(amount)
-FROM TABLE(TUMBLE(TABLE orders_source,
+FROM TABLE(TUMBLE(TABLE default_catalog.default_database.orders_source,
   DESCRIPTOR(event_time), INTERVAL '1' MINUTE))
 GROUP BY window_start, window_end, region;
 ```
@@ -152,6 +153,20 @@ CREATE CATALOG lakekeeper WITH (
   'io-impl' = 'org.apache.iceberg.aws.s3.S3FileIO'
 )
 """)
+t_env.execute_sql("USE CATALOG default_catalog")
+# The Kafka source table has the exact schema/properties from 04-kafka-source.sql.
+t_env.execute_sql("""
+CREATE TABLE IF NOT EXISTS default_catalog.default_database.orders_source (
+  order_id STRING, region STRING, amount DECIMAL(12, 2), event_time TIMESTAMP(3),
+  WATERMARK FOR event_time AS event_time - INTERVAL '5' SECOND
+) WITH (
+  'connector' = 'kafka', 'topic' = 'orders',
+  'properties.bootstrap.servers' = 'kafka:29092',
+  'properties.group.id' = 'lesson06-pyflink',
+  'scan.startup.mode' = 'earliest-offset', 'format' = 'json',
+  'json.timestamp-format.standard' = 'ISO-8601'
+)
+""")
 t_env.execute_sql("USE CATALOG lakekeeper")
 t_env.execute_sql("CREATE DATABASE IF NOT EXISTS lesson06")
 t_env.execute_sql("""
@@ -164,23 +179,11 @@ CREATE TABLE IF NOT EXISTS lesson06.region_minute_metrics (
   'write.format.default' = 'parquet', 'write.distribution-mode' = 'hash'
 )
 """)
-# The Kafka source table has the exact schema/properties from 04-kafka-source.sql.
-t_env.execute_sql("""
-CREATE TABLE IF NOT EXISTS orders_source (
-  order_id STRING, region STRING, amount DECIMAL(12, 2), event_time TIMESTAMP(3),
-  WATERMARK FOR event_time AS event_time - INTERVAL '5' SECOND
-) WITH (
-  'connector' = 'kafka', 'topic' = 'orders',
-  'properties.bootstrap.servers' = 'kafka:29092',
-  'properties.group.id' = 'lesson06-pyflink',
-  'scan.startup.mode' = 'earliest-offset', 'format' = 'json',
-  'json.timestamp-format.standard' = 'ISO-8601'
-)
-""")
 result = t_env.execute_sql("""
 INSERT INTO lesson06.region_minute_metrics
 SELECT window_start, window_end, region, COUNT(*), SUM(amount)
-FROM TABLE(TUMBLE(TABLE orders_source, DESCRIPTOR(event_time), INTERVAL '1' MINUTE))
+FROM TABLE(TUMBLE(TABLE default_catalog.default_database.orders_source,
+  DESCRIPTOR(event_time), INTERVAL '1' MINUTE))
 GROUP BY window_start, window_end, region
 """)
 result.wait()  # blocks until job result/termination in this submission style
