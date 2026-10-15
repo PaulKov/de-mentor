@@ -1,582 +1,49 @@
-# DE Mentor
-
-<div align="center">
-
-**Self-service Ğ¿Ğ»Ğ°Ñ‚Ñ„Ğ¾Ñ€Ğ¼Ğ° Ğ´Ğ»Ñ Ğ¿Ñ€Ğ°ĞºÑ‚Ğ¸Ñ‡ĞµÑĞºĞ¾Ğ³Ğ¾ Ğ¼ĞµĞ½Ñ‚Ğ¾Ñ€Ğ¸Ğ½Ğ³Ğ° Ğ´Ğ°Ñ‚Ğ° Ğ¸Ğ½Ğ¶ĞµĞ½ĞµÑ€Ğ¾Ğ²**
-
-Ğ›Ğ¾ĞºĞ°Ğ»ÑŒĞ½Ñ‹Ğµ ÑÑ‚ĞµĞ½Ğ´Ñ‹, Ñ‚ĞµĞ¾Ñ€Ğ¸Ñ, Ğ¿Ñ€Ğ°ĞºÑ‚Ğ¸Ñ‡ĞµÑĞºĞ¸Ğµ Ğ·Ğ°Ğ´Ğ°Ğ½Ğ¸Ñ, Ğ´Ğ¸Ğ°Ğ³Ğ½Ğ¾ÑÑ‚Ğ¸ĞºĞ°, Ğ°Ğ²Ñ‚Ğ¾Ğ¿Ñ€Ğ¾Ğ²ĞµÑ€ĞºĞ¸ Ğ¸ ÑƒÑ‡ĞµĞ±Ğ½Ñ‹Ğµ Ğ°Ñ€Ñ‚ĞµÑ„Ğ°ĞºÑ‚Ñ‹ Ğ² Ğ¾Ğ´Ğ½Ğ¾Ğ¼ Ñ€ĞµĞ¿Ğ¾Ğ·Ğ¸Ñ‚Ğ¾Ñ€Ğ¸Ğ¸.
-
-![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-3776AB)
-![Docker Desktop](https://img.shields.io/badge/Docker-Desktop-2496ED)
-![Greenplum](https://img.shields.io/badge/Module-Greenplum-2E7D32)
-![Apache Spark](https://img.shields.io/badge/Module-Apache%20Spark-E25A1C)
-![Tests](https://img.shields.io/badge/tests-163%20passing-0A7F3F)
-
-</div>
-
-## ĞĞ³Ğ»Ğ°Ğ²Ğ»ĞµĞ½Ğ¸Ğµ
-
-- [Ğ§Ñ‚Ğ¾ ÑÑ‚Ğ¾](#Ñ‡Ñ‚Ğ¾-ÑÑ‚Ğ¾)
-- [Ğ”Ğ»Ñ ĞºĞ¾Ğ³Ğ¾](#Ğ´Ğ»Ñ-ĞºĞ¾Ğ³Ğ¾)
-- [Ğ§Ñ‚Ğ¾ ÑƒĞ¶Ğµ Ğ³Ğ¾Ñ‚Ğ¾Ğ²Ğ¾](#Ñ‡Ñ‚Ğ¾-ÑƒĞ¶Ğµ-Ğ³Ğ¾Ñ‚Ğ¾Ğ²Ğ¾)
-- [Ğ£Ñ€Ğ¾ĞºĞ¸ (Ğ½Ğ°Ğ²Ğ¸Ğ³Ğ°Ñ†Ğ¸Ñ)](#ÑƒÑ€Ğ¾ĞºĞ¸-Ğ½Ğ°Ğ²Ğ¸Ğ³Ğ°Ñ†Ğ¸Ñ)
-- [Ğ‘Ñ‹ÑÑ‚Ñ€Ñ‹Ğ¹ ÑÑ‚Ğ°Ñ€Ñ‚](#Ğ±Ñ‹ÑÑ‚Ñ€Ñ‹Ğ¹-ÑÑ‚Ğ°Ñ€Ñ‚)
-- [ĞšĞ°Ğº Ğ¿Ñ€Ğ¾Ğ¹Ñ‚Ğ¸ Ğ¿ĞµÑ€Ğ²Ñ‹Ğ¹ ÑƒÑ€Ğ¾Ğº](#ĞºĞ°Ğº-Ğ¿Ñ€Ğ¾Ğ¹Ñ‚Ğ¸-Ğ¿ĞµÑ€Ğ²Ñ‹Ğ¹-ÑƒÑ€Ğ¾Ğº)
-- [Ğ˜Ğ½Ñ‚ĞµÑ€Ñ„ĞµĞ¹ÑÑ‹ ÑƒÑ‡ĞµĞ½Ğ¸ĞºĞ° Ğ¸ Ğ¼ĞµĞ½Ñ‚Ğ¾Ñ€Ğ°](#Ğ¸Ğ½Ñ‚ĞµÑ€Ñ„ĞµĞ¹ÑÑ‹-ÑƒÑ‡ĞµĞ½Ğ¸ĞºĞ°-Ğ¸-Ğ¼ĞµĞ½Ñ‚Ğ¾Ñ€Ğ°)
-- [ĞŸÑ€Ğ°ĞºÑ‚Ğ¸ĞºĞ° Ğ¸ Ğ°Ğ²Ñ‚Ğ¾Ğ¼Ğ°Ñ‚Ğ¸Ğ·Ğ°Ñ†Ğ¸Ñ](#Ğ¿Ñ€Ğ°ĞºÑ‚Ğ¸ĞºĞ°-Ğ¸-Ğ°Ğ²Ñ‚Ğ¾Ğ¼Ğ°Ñ‚Ğ¸Ğ·Ğ°Ñ†Ğ¸Ñ)
-- [ĞœĞ°Ñ‚ĞµÑ€Ğ¸Ğ°Ğ»Ñ‹ ÑƒÑ€Ğ¾ĞºĞ°](#Ğ¼Ğ°Ñ‚ĞµÑ€Ğ¸Ğ°Ğ»Ñ‹-ÑƒÑ€Ğ¾ĞºĞ°)
-- [Ğ¡Ñ‚Ñ€ÑƒĞºÑ‚ÑƒÑ€Ğ° Ğ¿Ñ€Ğ¾ĞµĞºÑ‚Ğ°](#ÑÑ‚Ñ€ÑƒĞºÑ‚ÑƒÑ€Ğ°-Ğ¿Ñ€Ğ¾ĞµĞºÑ‚Ğ°)
-- [ĞšĞ°Ñ‡ĞµÑÑ‚Ğ²Ğ¾ Ğ¸ Ğ¿Ñ€Ğ¾Ğ²ĞµÑ€ĞºĞ¸](#ĞºĞ°Ñ‡ĞµÑÑ‚Ğ²Ğ¾-Ğ¸-Ğ¿Ñ€Ğ¾Ğ²ĞµÑ€ĞºĞ¸)
-- [Roadmap](#roadmap)
-- [Ğ§ĞµÑÑ‚Ğ½Ñ‹Ğ¹ ÑÑ‚Ğ°Ñ‚ÑƒÑ](#Ñ‡ĞµÑÑ‚Ğ½Ñ‹Ğ¹-ÑÑ‚Ğ°Ñ‚ÑƒÑ)
-
-## Ğ£Ñ€Ğ¾ĞºĞ¸ (Ğ½Ğ°Ğ²Ğ¸Ğ³Ğ°Ñ†Ğ¸Ñ)
-
-Ğ’ÑÑ‘ Ğ¿Ğ¾ ÑƒÑ€Ğ¾ĞºĞ°Ğ¼ â€” Ğ² [`lessons/`](lessons/README.md):
-
-| Ğ£Ñ€Ğ¾Ğº | Docs | Homework | Artifacts | Submissions |
-| --- | --- | --- | --- | --- |
-| [01](lessons/lesson-01/) | [docs](lessons/lesson-01/docs/) | [homework](lessons/lesson-01/homework/) | [artifacts](lessons/lesson-01/artifacts/) | [submissions](lessons/lesson-01/submissions/) |
-| [02](lessons/lesson-02/) | [docs](lessons/lesson-02/docs/) | [homework](lessons/lesson-02/homework/) | [artifacts](lessons/lesson-02/artifacts/) | [submissions](lessons/lesson-02/submissions/) |
-| [03](lessons/lesson-03/) | [docs](lessons/lesson-03/docs/) | [homework](lessons/lesson-03/homework/) | [artifacts](lessons/lesson-03/artifacts/) | [submissions](lessons/lesson-03/submissions/) |
-| [04](lessons/lesson-04/) | [docs](lessons/lesson-04/docs/) | [homework](lessons/lesson-04/homework/) | [artifacts](lessons/lesson-04/artifacts/) | [submissions](lessons/lesson-04/submissions/) |
-| [04b](lessons/lesson-04b-distributed-storage/) | [docs](lessons/lesson-04b-distributed-storage/docs/) | [homework](lessons/lesson-04b-distributed-storage/homework/) | [artifacts](lessons/lesson-04b-distributed-storage/artifacts/) | [submissions](lessons/lesson-04b-distributed-storage/submissions/) |
-| [05](lessons/lesson-05/) | [docs](lessons/lesson-05/docs/) | [homework](lessons/lesson-05/homework/) | [artifacts](lessons/lesson-05/artifacts/) | [submissions](lessons/lesson-05/submissions/) |
-| [06](lessons/lesson-06/) | [docs](lessons/lesson-06/docs/) | [homework](lessons/lesson-06/homework/) | [artifacts](lessons/lesson-06/artifacts/) | [submissions](lessons/lesson-06/submissions/) |
-
-## Ğ§Ñ‚Ğ¾ ÑÑ‚Ğ¾
-
-`DE Mentor` Ğ¿Ğ¾Ğ¼Ğ¾Ğ³Ğ°ĞµÑ‚ Ğ¿Ñ€Ğ¾Ğ²ĞµÑÑ‚Ğ¸ ÑĞ¸Ğ»ÑŒĞ½Ñ‹Ğ¹ Ğ¿Ñ€Ğ°ĞºÑ‚Ğ¸Ñ‡ĞµÑĞºĞ¸Ğ¹ ÑƒÑ€Ğ¾Ğº Ğ¿Ğ¾ data engineering Ğ±ĞµĞ· Ñ€ÑƒÑ‡Ğ½Ğ¾Ğ¹ Ğ¿Ğ¾Ğ´Ğ³Ğ¾Ñ‚Ğ¾Ğ²ĞºĞ¸ ÑÑ‚ĞµĞ½Ğ´Ğ° Ğ¸ Ñ€Ğ°Ğ·Ñ€Ğ¾Ğ·Ğ½ĞµĞ½Ğ½Ñ‹Ñ… Ğ¼Ğ°Ñ‚ĞµÑ€Ğ¸Ğ°Ğ»Ğ¾Ğ².
-
-ĞŸĞµÑ€Ğ²Ñ‹Ğµ Ñ‚Ñ€Ğ¸ ÑƒÑ€Ğ¾ĞºĞ° Ğ¿Ğ¾ÑĞ²ÑÑ‰ĞµĞ½Ñ‹ **Greenplum**: MPP-Ğ°Ñ€Ñ…Ğ¸Ñ‚ĞµĞºÑ‚ÑƒÑ€Ğµ, distribution, partitions, statistics Ğ¸ query tuning. Ğ£Ñ€Ğ¾Ğº 04 Ğ¾Ñ‚ĞºÑ€Ñ‹Ğ²Ğ°ĞµÑ‚ Ğ¼Ğ¾Ğ´ÑƒĞ»ÑŒ **Apache Spark**: Ğ¸ÑÑ‚Ğ¾Ñ€Ğ¸Ñ Big Data, PySpark DataFrame API, driver/executors, partitions, lazy execution, shuffle Ğ¸ Spark UI. Ğ’Ğ²Ğ¾Ğ´Ğ½Ñ‹Ğ¹ ÑƒÑ€Ğ¾Ğº **04b** Ñ€Ğ°Ğ·Ğ±Ğ¸Ñ€Ğ°ĞµÑ‚ Ñ€Ğ°ÑĞ¿Ñ€ĞµĞ´ĞµĞ»Ñ‘Ğ½Ğ½Ñ‹Ğµ filesystem/object storage Ğ¼Ğ¾Ğ´ĞµĞ»Ğ¸, Ğ¸ÑÑ‚Ğ¾Ñ€Ğ¸Ñ, internals HDFS/Ceph/SeaweedFS, Ğ¾Ğ±Ğ»Ğ°Ñ‡Ğ½Ñ‹Ğµ Ğ²Ğ°Ñ€Ğ¸Ğ°Ğ½Ñ‚Ñ‹ Ğ¸ deployment. Ğ£Ñ€Ğ¾ĞºĞ¸ 05â€“06 Ğ´Ğ¾Ğ±Ğ°Ğ²Ğ»ÑÑÑ‚ **Apache Iceberg Ğ½Ğ° S3, Lakekeeper/Nessie Ğ¸ Ğ¿Ğ¾Ñ‚Ğ¾ĞºĞ¾Ğ²Ñ‹Ğ¹ pipeline Kafka â†’ Flink â†’ Iceberg** Ñ Ğ¾Ñ‚Ğ´ĞµĞ»ÑŒĞ½Ñ‹Ğ¼ Docker Desktop ÑÑ‚ĞµĞ½Ğ´Ğ¾Ğ¼ Ğ¸ deep dives Ğ¿Ğ¾ internals.
-
-Ğ˜Ğ´ĞµÑ Ğ¿Ñ€Ğ¾ÑÑ‚Ğ°Ñ: ÑƒÑ‡ĞµĞ½Ğ¸Ğº Ğ½Ğµ Ğ¿Ñ€Ğ¾ÑÑ‚Ğ¾ ÑĞ»ÑƒÑˆĞ°ĞµÑ‚ Ñ‚ĞµĞ¾Ñ€Ğ¸Ñ, Ğ° Ğ·Ğ°Ğ¿ÑƒÑĞºĞ°ĞµÑ‚ Ğ»Ğ¾ĞºĞ°Ğ»ÑŒĞ½Ñ‹Ğ¹ ÑÑ‚ĞµĞ½Ğ´, Ğ»Ğ¾Ğ¼Ğ°ĞµÑ‚ Ğ¸ Ñ‡Ğ¸Ğ½Ğ¸Ñ‚ Ğ´Ğ°Ğ½Ğ½Ñ‹Ğµ, Ñ‡Ğ¸Ñ‚Ğ°ĞµÑ‚ Ğ¿Ğ»Ğ°Ğ½Ñ‹, ÑĞ´Ğ°Ñ‘Ñ‚ evidence, Ğ¿Ğ¾Ğ»ÑƒÑ‡Ğ°ĞµÑ‚ review Ğ¸ Ğ¿Ğ¾Ğ½Ğ¸Ğ¼Ğ°ĞµÑ‚, Ğ¿Ğ¾Ñ‡ĞµĞ¼Ñƒ MPP-ÑĞ¸ÑÑ‚ĞµĞ¼Ñ‹ Ñ‚Ñ€ĞµĞ±ÑƒÑÑ‚ Ğ´Ñ€ÑƒĞ³Ğ¾Ğ³Ğ¾ Ğ¼Ñ‹ÑˆĞ»ĞµĞ½Ğ¸Ñ.
-
-## Ğ”Ğ»Ñ ĞºĞ¾Ğ³Ğ¾
-
-| Ğ Ğ¾Ğ»ÑŒ | Ğ§Ñ‚Ğ¾ Ğ¿Ğ¾Ğ»ÑƒÑ‡Ğ°ĞµÑ‚ |
-|---|---|
-| ĞœĞµĞ½Ñ‚Ğ¾Ñ€ / Ğ´Ğ°Ñ‚Ğ° Ğ°Ñ€Ñ…Ğ¸Ñ‚ĞµĞºÑ‚Ğ¾Ñ€ | Ğ“Ğ¾Ñ‚Ğ¾Ğ²Ñ‹Ğ¹ ÑÑ†ĞµĞ½Ğ°Ñ€Ğ¸Ğ¹ ÑƒÑ€Ğ¾ĞºĞ°, Ğ¿Ñ€ĞµĞ·ĞµĞ½Ñ‚Ğ°Ñ†Ğ¸Ñ, ÑÑ‚ĞµĞ½Ğ´, Ğ·Ğ°Ğ´Ğ°Ğ½Ğ¸Ñ, rubric, Ğ°Ğ²Ñ‚Ğ¾Ğ¿Ñ€Ğ¾Ğ²ĞµÑ€ĞºĞ¸, control room Ğ¸ review-Ğ¸Ğ½ÑÑ‚Ñ€ÑƒĞ¼ĞµĞ½Ñ‚Ñ‹. |
-| ĞĞ°Ñ‡Ğ¸Ğ½Ğ°ÑÑ‰Ğ¸Ğ¹ Ğ´Ğ°Ñ‚Ğ° Ğ¸Ğ½Ğ¶ĞµĞ½ĞµÑ€ | ĞŸĞ¾Ğ½ÑÑ‚Ğ½Ñ‹Ğ¹ CLI, Ğ»Ğ¾ĞºĞ°Ğ»ÑŒĞ½Ñ‹Ğ¹ Greenplum, student portal, Ğ¿Ñ€Ğ°ĞºÑ‚Ğ¸Ñ‡ĞµÑĞºĞ¸Ğµ Ğ·Ğ°Ğ´Ğ°Ñ‡Ğ¸, Ğ¿Ğ¾Ğ´ÑĞºĞ°Ğ·ĞºĞ¸, Ğ²Ğ¸Ğ·ÑƒĞ°Ğ»Ğ¸Ğ·Ğ°Ñ†Ğ¸Ñ Ğ¿Ğ»Ğ°Ğ½Ğ¾Ğ² Ğ¸ Ğ¿Ğ¾Ğ½ÑÑ‚Ğ½Ñ‹Ğ¹ feedback. |
-| ĞšĞ¾Ğ¼Ğ°Ğ½Ğ´Ğ° Ğ´Ğ°Ğ½Ğ½Ñ‹Ñ… | ĞŸĞ¾Ğ²Ñ‚Ğ¾Ñ€ÑĞµĞ¼Ñ‹Ğ¹ onboarding-Ğ¼Ğ¾Ğ´ÑƒĞ»ÑŒ, ĞºĞ¾Ñ‚Ğ¾Ñ€Ñ‹Ğ¹ Ğ¼Ğ¾Ğ¶Ğ½Ğ¾ Ñ€Ğ°ÑÑˆĞ¸Ñ€ÑÑ‚ÑŒ Ğ¿Ğ¾Ğ´ Postgres, ClickHouse, Hadoop, Spark Ğ¸ Ğ´Ñ€ÑƒĞ³Ğ¸Ğµ ÑÑ‚ĞµĞ½Ğ´Ñ‹. |
-
-## Ğ§Ñ‚Ğ¾ ÑƒĞ¶Ğµ Ğ³Ğ¾Ñ‚Ğ¾Ğ²Ğ¾
-
-### Greenplum Academy
-
-- Docker Compose ÑÑ‚ĞµĞ½Ğ´ Greenplum.
-- Ğ•Ğ´Ğ¸Ğ½Ñ‹Ğ¹ CLI `mentor-lab.py` Ğ´Ğ»Ñ macOS Ğ¸ Windows.
-- ĞŸĞ»Ğ°Ğ½ ÑƒÑ€Ğ¾ĞºĞ° Ğ½Ğ° 60 Ğ¼Ğ¸Ğ½ÑƒÑ‚.
-- Ğ ÑƒÑÑĞºĞ°Ñ Ğ¿Ñ€ĞµĞ·ĞµĞ½Ñ‚Ğ°Ñ†Ğ¸Ñ Ğ² ÑĞ¿Ğ¾ĞºĞ¾Ğ¹Ğ½Ğ¾Ğ¹ ÑĞ²ĞµÑ‚Ğ»Ğ¾Ğ¹ Ñ‚ĞµĞ¼Ğµ.
-- ĞšĞ°Ñ‚Ğ°Ğ»Ğ¾Ğ³ Ğ¿Ñ€ĞµĞ·ĞµĞ½Ñ‚Ğ°Ñ†Ğ¸Ğ¹ Ñ Drive-Ñ‚Ğ°ĞºÑĞ¾Ğ½Ğ¾Ğ¼Ğ¸ĞµĞ¹ `lessons/<direction>/<lesson>`.
-- Lesson Release Pipeline: manifest, preflight report Ğ¸ Ğ¿Ñ€Ğ¾Ğ²ĞµÑ€ĞºĞ° Google Slides Ğ¿ĞµÑ€ĞµĞ´ Ğ·Ğ°Ğ½ÑÑ‚Ğ¸ĞµĞ¼.
-- Facilitator guide: ĞºĞ¾Ğ³Ğ´Ğ° Ğ¿Ğ¾ĞºĞ°Ğ·Ñ‹Ğ²Ğ°Ñ‚ÑŒ ĞºĞ°Ğ¶Ğ´Ñ‹Ğ¹ ÑĞ»Ğ°Ğ¹Ğ´ Ğ¸ Ñ‡Ñ‚Ğ¾ Ğ³Ğ¾Ğ²Ğ¾Ñ€Ğ¸Ñ‚ÑŒ.
-- Student workbook, homework, capstone, case study.
-- Deep dives Ğ¿Ğ¾ QD/QE, master/coordinator, Motion, joins, SMP/MPP/EPP.
-- Query tuning lab Ñ Ğ¿Ñ€Ğ°ĞºÑ‚Ğ¸ĞºĞ¾Ğ¹ Ğ¿Ğ¾ `EXPLAIN`, skew, joins, partitions Ğ¸ storage.
-
-### Academy v2
-
-- Student Portal.
-- Mentor Control Room.
-- EXPLAIN Analyzer.
-- EXPLAIN Visualizer Ğ² Mermaid/HTML.
-- Runtime diagnostics pack.
-- Scenario randomizer.
-- Timed challenge mode.
-- One-Button Mentor Mode Ğ´Ğ»Ñ Ğ²ĞµĞ´ĞµĞ½Ğ¸Ñ ÑƒÑ€Ğ¾ĞºĞ° Ğ¿Ğ¾ stage.
-- Evidence Capture: submission-ready markdown pack Ğ´Ğ»Ñ Ğ¿Ñ€Ğ°ĞºÑ‚Ğ¸Ñ‡ĞµÑĞºĞ¸Ñ… ÑÑ†ĞµĞ½Ğ°Ñ€Ğ¸ĞµĞ².
-- Homework Autograder Ğ´Ğ»Ñ Ğ¿Ñ€Ğ¾Ğ²ĞµÑ€ĞºĞ¸ Ñ„Ğ¸Ğ·Ğ¸Ñ‡ĞµÑĞºĞ¾Ğ³Ğ¾ Ğ´Ğ¸Ğ·Ğ°Ğ¹Ğ½Ğ° Ğ¸ evidence.
-- Misconception Bank Ğ´Ğ»Ñ Ğ±Ñ‹ÑÑ‚Ñ€Ñ‹Ñ… mentor interventions.
-- Student Portal v2 Ñ progress, hints, evidence checklist Ğ¸ export-ready submission.
-- Debrief Generator Ğ´Ğ»Ñ Ğ¿ĞµÑ€ÑĞ¾Ğ½Ğ°Ğ»ÑŒĞ½Ğ¾Ğ¹ Ğ¾Ğ±Ñ€Ğ°Ñ‚Ğ½Ğ¾Ğ¹ ÑĞ²ÑĞ·Ğ¸ Ğ¿Ğ¾ÑĞ»Ğµ ÑƒÑ€Ğ¾ĞºĞ°.
-- Adaptive review Ğ¿Ğ¾ evidence-first rubric.
-- Golden solutions Ğ¸ anti-solutions.
-- Lesson telemetry report.
-- Learning Loop report: ĞºĞ°Ñ€Ñ‚Ğ° Ğ½Ğ°Ğ²Ñ‹ĞºĞ¾Ğ², gaps Ğ¿Ğ¾ evidence Ğ¸ Ğ¿Ğ»Ğ°Ğ½ Ğ¿Ğ¾Ğ²Ñ‚Ğ¾Ñ€ĞµĞ½Ğ¸Ñ Ğ½Ğ° 1/3/7 Ğ´Ğ½ĞµĞ¹.
-- Cross-engine Scenario DSL Ğ´Ğ»Ñ Ğ±ÑƒĞ´ÑƒÑ‰Ğ¸Ñ… ÑÑ‚ĞµĞ½Ğ´Ğ¾Ğ².
-
-### Academy Pro v3
-
-- Readiness Doctor Pro Ğ´Ğ»Ñ macOS, Windows Ğ¸ Linux.
-- Live Lesson Orchestrator Ñ Ñ€ĞµĞ¶Ğ¸Ğ¼Ğ°Ğ¼Ğ¸ `simple`, `deep`, `recovery` Ğ¸ `fast-student`.
-- Live Lab Observation: checklist Ğ¸ evidence trail report Ğ¿Ğ¾ Ğ´ĞµĞ¹ÑÑ‚Ğ²Ğ¸ÑĞ¼ ÑƒÑ‡ĞµĞ½Ğ¸ĞºĞ°.
-- Query Plan Coach: Ğ¾Ğ±ÑŠÑÑĞ½ĞµĞ½Ğ¸Ğµ Motion, slices, root cause hypothesis Ğ¸ ÑĞ»ĞµĞ´ÑƒÑÑ‰Ğ¸Ğ¹ SQL.
-- Scenario Pack v2 Ñ production-Ğ¸Ğ½Ñ†Ğ¸Ğ´ĞµĞ½Ñ‚Ğ°Ğ¼Ğ¸ Ğ¿Ñ€Ğ¾ AOCO mutable dimension Ğ¸ coordinator bottleneck.
-- Gold submission calibration: ÑĞ»Ğ°Ğ±Ñ‹Ğ¹, ÑƒĞ²ĞµÑ€ĞµĞ½Ğ½Ñ‹Ğ¹ Ğ¸ senior-level Ğ¾Ñ‚Ğ²ĞµÑ‚Ñ‹ Ğ´Ğ»Ñ ĞºĞ°Ğ»Ğ¸Ğ±Ñ€Ğ¾Ğ²ĞºĞ¸ Ğ¾Ñ†ĞµĞ½ĞºĞ¸.
-- Lesson Replay Pack: debrief, learning loop Ğ¸ Ğ¿Ğ¾Ğ´Ğ³Ğ¾Ñ‚Ğ¾Ğ²ĞºĞ° Ğº Lesson 02 Ğ² Ğ¾Ğ´Ğ½Ğ¾Ğ¼ Ğ°Ñ€Ñ‚ĞµÑ„Ğ°ĞºÑ‚Ğµ.
-
-### Academy Enterprise v4
-
-- Real SQL Autograder: Ğ¿Ñ€Ğ¾Ğ²ĞµÑ€ÑĞµÑ‚ SQL/evidence submission Ğ¿Ğ¾ `DISTRIBUTED BY`, `PARTITION BY`, AOCO, `EXPLAIN ANALYZE`, `gp_segment_id`, `ANALYZE` Ğ¸ validation.
-- Dataset Generator Pro: Ğ´ĞµÑ‚ĞµÑ€Ğ¼Ğ¸Ğ½Ğ¸Ñ€Ğ¾Ğ²Ğ°Ğ½Ğ½Ñ‹Ğµ seed SQL Ñ scale, skew, late-arriving facts Ğ¸ wide rows.
-- Greenplum Live Smoke: Ğ»Ğ¾ĞºĞ°Ğ»ÑŒĞ½Ñ‹Ğ¹/GitHub Actions Ğ¿Ğ»Ğ°Ğ½, ĞºĞ¾Ñ‚Ğ¾Ñ€Ñ‹Ğ¹ Ğ¿Ğ¾Ğ´Ğ½Ğ¸Ğ¼Ğ°ĞµÑ‚ ÑÑ‚ĞµĞ½Ğ´, Ğ²Ñ‹Ğ¿Ğ¾Ğ»Ğ½ÑĞµÑ‚ SQL demos Ğ¸ Ğ¿Ñ€Ğ¾Ğ³Ğ¾Ğ½ÑĞµÑ‚ autograder.
-- Ğ­Ñ‚Ğ°Ğ»Ğ¾Ğ½Ğ½Ñ‹Ğ¹ SQL submission Ğ´Ğ»Ñ Ğ¿Ñ€Ğ¾Ğ²ĞµÑ€ĞºĞ¸ Ğ¶Ğ¸Ğ²Ğ¾Ğ³Ğ¾ ĞºĞ¾Ğ½Ñ‚ÑƒÑ€Ğ°.
-
-### Academy Experience v5
-
-- Stateful session: `mentor-lab.py session greenplum start` ÑĞ¾Ğ·Ğ´Ğ°ĞµÑ‚ `session.json`, timeline, skill graph, mentor cockpit Ğ¸ student handoff.
-- Nuxt portal: [de-mentor-portal](https://github.com/PaulKov/de-mentor-portal) â€” Ğ¾Ñ‚Ğ´ĞµĞ»ÑŒĞ½Ñ‹Ğ¹ frontend-ÑĞµÑ€Ğ²Ğ¸Ñ Ğ·Ğ°Ğ½ÑÑ‚Ğ¸Ñ Ğ½Ğ° Vue 3 + Nuxt 3 + Vite.
-- Lesson Doctor: `mentor-lab.py lesson-doctor greenplum` Ğ¿Ñ€Ğ¾Ğ²ĞµÑ€ÑĞµÑ‚ Ğ¿Ñ€ĞµĞ·ĞµĞ½Ñ‚Ğ°Ñ†Ğ¸Ñ, docs, SQL examples, CI smoke Ğ¸ Nuxt portal Ğ¿ĞµÑ€ĞµĞ´ ÑƒÑ€Ğ¾ĞºĞ¾Ğ¼.
-- Ğ•Ğ´Ğ¸Ğ½Ñ‹Ğ¹ runtime state: Ğ¿Ğ¾Ñ€Ñ‚Ğ°Ğ» Ğ·Ğ°Ğ¿ÑƒÑĞºĞ°ĞµÑ‚ÑÑ Ğ¸Ğ· Ğ¾Ñ‚Ğ´ĞµĞ»ÑŒĞ½Ğ¾Ğ³Ğ¾ repo ĞºĞ¾Ğ¼Ğ°Ğ½Ğ´Ğ¾Ğ¹ `MENTOR_LAB_SESSION=/path/to/session.json npm run dev`.
-- Session report: `mentor-lab.py session greenplum report` ÑĞ¾Ğ±Ğ¸Ñ€Ğ°ĞµÑ‚ ÑĞ¾Ğ±Ñ‹Ñ‚Ğ¸Ñ, skill graph Ğ¸ next actions Ğ¿Ğ¾ÑĞ»Ğµ ÑƒÑ€Ğ¾ĞºĞ°.
-
-### Academy Control Plane
-
-`Academy Control Plane` ÑĞ²ÑĞ·Ñ‹Ğ²Ğ°ĞµÑ‚ core repo Ğ¸ Nuxt portal Ñ‡ĞµÑ€ĞµĞ· Ñ€Ğ°ÑÑˆĞ¸Ñ€ĞµĞ½Ğ½Ñ‹Ğ¹ `session.json`: stage guides, slide anchors, workbook/homework links, portal actions Ğ¸ next lesson metadata. ĞœĞµĞ½Ñ‚Ğ¾Ñ€ Ğ¼Ğ¾Ğ¶ĞµÑ‚ Ğ¿Ğ¾Ğ´Ğ³Ğ¾Ñ‚Ğ¾Ğ²Ğ¸Ñ‚ÑŒ session state, ÑĞºÑĞ¿Ğ¾Ñ€Ñ‚Ğ¸Ñ€Ğ¾Ğ²Ğ°Ñ‚ÑŒ ĞµĞ³Ğ¾ Ğ² portal repo Ğ¸ Ğ¾Ñ‚ĞºÑ€Ñ‹Ñ‚ÑŒ Ğ¸Ğ½Ñ‚ĞµÑ€Ñ„ĞµĞ¹Ñ Ğ±ĞµĞ· Ñ€ÑƒÑ‡Ğ½Ğ¾Ğ³Ğ¾ ĞºĞ¾Ğ¿Ğ¸Ñ€Ğ¾Ğ²Ğ°Ğ½Ğ¸Ñ Ñ„Ğ°Ğ¹Ğ»Ğ¾Ğ².
-
-```bash
-python3 mentor-lab.py session greenplum start --student Ğ˜Ğ²Ğ°Ğ½ --output artifacts/sessions/ivan
-python3 mentor-lab.py portal greenplum start --session artifacts/sessions/ivan --portal-dir ../de-mentor-portal --dry-run
-python3 mentor-lab.py portal greenplum export --session artifacts/sessions/ivan --portal-dir ../de-mentor-portal
-python3 mentor-lab.py portal greenplum open --url http://127.0.0.1:3000 --dry-run
-```
-
-### Academy Self-Service v1
-
-`Academy Self-Service v1` Ğ´Ğ¾Ğ±Ğ°Ğ²Ğ»ÑĞµÑ‚ one-command Ğ¼Ğ°Ñ€ÑˆÑ€ÑƒÑ‚ Ğ´Ğ»Ñ Ğ¼ĞµĞ½Ñ‚Ğ¾Ñ€Ğ° Ğ¸ Ğ¾Ñ‚Ğ´ĞµĞ»ÑŒĞ½Ñ‹Ğ¹ Ğ¸Ğ½Ñ‚ĞµÑ€Ñ„ĞµĞ¹Ñ ĞºĞ¾Ğ¼Ğ°Ğ½Ğ´ Ğ´Ğ»Ñ ÑƒÑ‡ĞµĞ½Ğ¸ĞºĞ°.
-
-```bash
-python3 mentor-lab.py doctor --full
-python3 mentor-lab.py academy greenplum start --student Ğ˜Ğ²Ğ°Ğ½ --dry-run
-python3 mentor-lab.py academy greenplum start --student Ğ˜Ğ²Ğ°Ğ½ --skip-lab
-python3 mentor-lab.py student greenplum bootstrap --platform macos
-python3 mentor-lab.py student greenplum bootstrap --platform windows
-python3 mentor-lab.py student greenplum homework
-```
-
-### Lesson 02: Partitioning, Statistics And Incremental Loads
-
-Ğ’Ñ‚Ğ¾Ñ€Ğ¾Ğ¹ ÑƒÑ€Ğ¾Ğº Ğ²Ñ‹Ğ½ĞµÑĞµĞ½ Ğ² Ğ¾Ñ‚Ğ´ĞµĞ»ÑŒĞ½Ñ‹Ğ¹ ÑƒÑ‡ĞµĞ±Ğ½Ñ‹Ğ¹ route `greenplum-partitioning`, Ğ½Ğ¾ Ğ¸ÑĞ¿Ğ¾Ğ»ÑŒĞ·ÑƒĞµÑ‚ Ñ‚Ğ¾Ñ‚ Ğ¶Ğµ Ñ„Ğ¸Ğ·Ğ¸Ñ‡ĞµÑĞºĞ¸Ğ¹ Docker-ÑÑ‚ĞµĞ½Ğ´ `greenplum`.
-
-```bash
-python3 mentor-lab.py runbook greenplum-partitioning simple
-python3 mentor-lab.py runbook greenplum-partitioning deep
-python3 mentor-lab.py runbook greenplum-partitioning homework
-python3 mentor-lab.py student greenplum-partitioning bootstrap --platform macos
-python3 mentor-lab.py student greenplum-partitioning homework
-python3 mentor-lab.py academy greenplum-partitioning start --student Ğ˜Ğ²Ğ°Ğ½ --dry-run
-python3 mentor-lab.py lesson-release greenplum-partitioning verify
-```
-
-ĞÑĞ½Ğ¾Ğ²Ğ½Ğ¾Ğ¹ SQL-lab:
-
-[lesson02-partitioning-statistics-loads.sql](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum/examples/lesson02-partitioning-statistics-loads.sql)
-
-ĞœĞ°Ñ‚ĞµÑ€Ğ¸Ğ°Ğ»Ñ‹:
-
-- [Ğ˜Ğ½Ğ´ĞµĞºÑ Lesson 02](https://github.com/PaulKov/de-mentor/blob/master/lessons/lesson-02/docs/README.md)
-- [Manifest Ğ²Ñ‹Ğ¿ÑƒÑĞºĞ° Lesson 02](https://github.com/PaulKov/de-mentor/blob/master/lessons/lesson-02/docs/lesson.yaml)
-- [ĞšĞ°Ñ‚Ğ°Ğ»Ğ¾Ğ³ Ğ¿Ñ€ĞµĞ·ĞµĞ½Ñ‚Ğ°Ñ†Ğ¸Ğ¹ Ğ¸ Drive-Ñ‚Ğ°ĞºÑĞ¾Ğ½Ğ¾Ğ¼Ğ¸Ñ](https://github.com/PaulKov/de-mentor/blob/master/decks/README.md)
-- [ĞŸÑ€ĞµĞ·ĞµĞ½Ñ‚Ğ°Ñ†Ğ¸Ñ Lesson 02 Ğ² Google Slides](https://docs.google.com/presentation/d/17Ae88PoniaFU34egsFPwC0PndAOoXMze4qV1pIKQkaI/edit?usp=sharing)
-- [ĞŸÑ€ĞµĞ·ĞµĞ½Ñ‚Ğ°Ñ†Ğ¸Ñ Lesson 02 Ğ² PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/lessons/lesson-02/artifacts/greenplum-partitioning-theory.pptx)
-- [ĞŸĞ»Ğ°Ğ½ Ğ¼ĞµĞ½Ñ‚Ğ¾Ñ€Ğ°](https://github.com/PaulKov/de-mentor/blob/master/lessons/lesson-02/docs/mentor-guide.md)
-- [Workbook ÑƒÑ‡ĞµĞ½Ğ¸ĞºĞ°](https://github.com/PaulKov/de-mentor/blob/master/lessons/lesson-02/docs/student-workbook.md)
-- [Ğ”Ğ¾Ğ¼Ğ°ÑˆĞºĞ°](https://github.com/PaulKov/de-mentor/blob/master/lessons/lesson-02/homework/assignment.md)
-
-ĞšĞ¾Ğ½Ñ‚ÑƒÑ€ Ğ²Ñ‹Ğ¿ÑƒÑĞºĞ°:
-
-```bash
-python3 mentor-lab.py lesson-release greenplum-partitioning verify
-python3 mentor-lab.py lesson-release greenplum-partitioning report --output artifacts/lesson02-release.md
-python3 mentor-lab.py lesson-release greenplum-partitioning publish-slides --dry-run --confirm-account pavelkov007@gmail.com
-```
-
-### Ğ£Ñ€Ğ¾Ğº 03: Ğ”ĞµĞºĞ¾Ğ¼Ğ¿Ğ¾Ğ·Ğ¸Ñ†Ğ¸Ñ Ğ¸ Ñ‚ÑĞ½Ğ¸Ğ½Ğ³ Ñ‚ÑĞ¶Ñ‘Ğ»Ñ‹Ñ… Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑĞ¾Ğ² Ğ² MPP
-
-Ğ¢Ñ€ĞµÑ‚Ğ¸Ğ¹ ÑƒÑ€Ğ¾Ğº â€” route `greenplum-query-tuning` Ğ½Ğ° Ğ¾Ñ‚Ğ´ĞµĞ»ÑŒĞ½Ğ¾Ğ¼ ÑÑ‚ĞµĞ½Ğ´Ğµ **Greenplum 6.25** (`greenplum-625`). Ğ¤Ğ¾ĞºÑƒÑ: ÑÑ‚Ğ°Ğ´Ğ¸Ğ¸ Ğ¾Ğ¿Ñ‚Ğ¸Ğ¼Ğ¸Ğ·Ğ°Ñ‚Ğ¾Ñ€Ğ°, Legacy vs GPORCA, layered `EXPLAIN`, ÑÑ‚Ğ°Ñ‚Ğ¸ÑÑ‚Ğ¸ĞºĞ°, storage, TEMP. WLM â†’ Ğ£Ñ€Ğ¾Ğº 05.
-
-```bash
-python3 mentor-lab.py up greenplum-625
-python3 mentor-lab.py seed greenplum-625 --profile lesson03
-python3 mentor-lab.py check greenplum-625
-python3 mentor-lab.py runbook greenplum-query-tuning simple
-python3 mentor-lab.py student greenplum-query-tuning bootstrap --platform macos
-python3 mentor-lab.py academy greenplum-query-tuning start --student Ğ˜Ğ²Ğ°Ğ½ --dry-run
-```
-
-SQL Ğ´Ğ»Ñ ÑƒÑ€Ğ¾ĞºĞ° / homework:
-
-[homework seed](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/lesson03-homework-seed.sql) Â· [class demo](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/lesson03-class-demo.sql) Â· [legacy vs ORCA](https://github.com/PaulKov/de-mentor/blob/master/labs/greenplum-625/examples/lesson03-optimizer-legacy-vs-orca.sql)
-
-ĞœĞ°Ñ‚ĞµÑ€Ğ¸Ğ°Ğ»Ñ‹:
-
-- [Ğ˜Ğ½Ğ´ĞµĞºÑ Ğ£Ñ€Ğ¾ĞºĞ° 03](https://github.com/PaulKov/de-mentor/blob/master/lessons/lesson-03/docs/README.md)
-- [Manifest Ğ²Ñ‹Ğ¿ÑƒÑĞºĞ°](https://github.com/PaulKov/de-mentor/blob/master/lessons/lesson-03/docs/lesson.yaml)
-- [ĞŸÑ€ĞµĞ·ĞµĞ½Ñ‚Ğ°Ñ†Ğ¸Ñ Ğ² PowerPoint](https://github.com/PaulKov/de-mentor/blob/master/lessons/lesson-03/artifacts/greenplum-query-tuning-theory.pptx)
-- [ĞŸÑ€ĞµĞ·ĞµĞ½Ñ‚Ğ°Ñ†Ğ¸Ñ Ğ² Google Slides](https://docs.google.com/presentation/d/1pBIOaqt9WkubsHqCN_p5kxtAhCLjPs6rxFGH9s-_o3c/edit?usp=sharing)
-- [ĞŸĞ»Ğ°Ğ½ Ğ¼ĞµĞ½Ñ‚Ğ¾Ñ€Ğ°](https://github.com/PaulKov/de-mentor/blob/master/lessons/lesson-03/docs/mentor-guide.md)
-- [Workbook ÑƒÑ‡ĞµĞ½Ğ¸ĞºĞ°](https://github.com/PaulKov/de-mentor/blob/master/lessons/lesson-03/docs/student-workbook.md)
-- [Ğ”Ğ¾Ğ¼Ğ°ÑˆĞºĞ°](https://github.com/PaulKov/de-mentor/blob/master/lessons/lesson-03/homework/assignment.md)
-
-Ğ¡Ğ±Ğ¾Ñ€ĞºĞ° PPTX Ğ¸Ğ· declarative sources:
-
-```bash
-python3 scripts/build_lesson03_pptx.py
-```
-
-### Ğ£Ñ€Ğ¾Ğº 04: Apache Spark Foundations
-
-Ğ§ĞµÑ‚Ğ²Ñ‘Ñ€Ñ‚Ñ‹Ğ¹ ÑƒÑ€Ğ¾Ğº â€” route `spark-foundations` Ğ½Ğ° Dockerized Spark Standalone
-cluster: Ğ¾Ğ´Ğ¸Ğ½ master, Ğ´Ğ²Ğ° workers Ğ¸ PySpark client. Ğ¤Ğ¾ĞºÑƒÑ: Ğ¸ÑÑ‚Ğ¾Ñ€Ğ¸Ñ Big Data Ğ¸
-3V, MapReduce â†’ Spark, ÑĞ²Ğ¾Ğ»ÑÑ†Ğ¸Ñ Spark 0.xâ€“4.2, principal-level comparison
-matrix, execution model, DataFrame ETL, `Exchange`, shuffle Ğ¸ Spark UI. Scala
-Ğ½Ğµ Ğ¸ÑĞ¿Ğ¾Ğ»ÑŒĞ·ÑƒĞµÑ‚ÑÑ.
-
-```bash
-python3 mentor-lab.py up spark
-python3 mentor-lab.py seed spark --profile lesson04
-python3 mentor-lab.py check spark
-python3 mentor-lab.py runbook spark-foundations simple
-python3 mentor-lab.py spark-submit spark \
-  labs/spark/examples/lesson04_core_pipeline.py \
-  -- --hold-seconds 300
-```
-
-ĞœĞ°Ñ‚ĞµÑ€Ğ¸Ğ°Ğ»Ñ‹:
-
-- [Ğ˜Ğ½Ğ´ĞµĞºÑ Ğ£Ñ€Ğ¾ĞºĞ° 04](lessons/lesson-04/docs/README.md)
-- [ĞŸĞ»Ğ°Ğ½ Ğ¼ĞµĞ½Ñ‚Ğ¾Ñ€Ğ°](lessons/lesson-04/docs/mentor-guide.md)
-- [Workbook ÑƒÑ‡ĞµĞ½Ğ¸ĞºĞ°](lessons/lesson-04/docs/student-workbook.md)
-- [Ğ”Ğ¾Ğ¼Ğ°ÑˆĞºĞ°](lessons/lesson-04/homework/assignment.md)
-- [Spark lab](labs/spark/README.md)
-- [ĞŸÑ€ĞµĞ·ĞµĞ½Ñ‚Ğ°Ñ†Ğ¸Ñ PowerPoint](lessons/lesson-04/artifacts/apache-spark-foundations-theory.pptx)
-
-## ĞĞ¾Ğ²Ñ‹Ğµ Ğ¼Ğ¾Ğ´ÑƒĞ»Ğ¸: storage, Iceberg Ğ¸ Flink
-
-- [Lesson 04b: Distributed filesystems and object storage](lessons/lesson-04b-distributed-storage/README.md)
-- [Lesson 04b deep dives: storage internals, product alternatives and deployment](lessons/lesson-04b-distributed-storage/docs/deep-dives/)
-- [Lesson 05: Iceberg on S3, Lakekeeper Ğ¸ Nessie](lessons/lesson-05/README.md)
-- [Lesson 05 deep dives: metadata graph, commits, format alternatives](lessons/lesson-05/docs/deep-dives/)
-- [Lesson 06: Kafka â†’ Flink â†’ Iceberg](lessons/lesson-06/README.md)
-- [Lesson 06 deep dives: runtime/checkpoints, source/event-time, exactly-once](lessons/lesson-06/docs/deep-dives/)
-- [ĞĞ±Ñ‰Ğ¸Ğ¹ Docker ÑÑ‚ĞµĞ½Ğ´ Flink + Kafka + S3/SeaweedFS + Lakekeeper + Nessie](labs/flink-iceberg/README.md)
-
-```bash
-python3 mentor-lab.py lesson-release spark-foundations verify
-```
-
-## Ğ‘Ñ‹ÑÑ‚Ñ€Ñ‹Ğ¹ ÑÑ‚Ğ°Ñ€Ñ‚
-
-### Ğ¢Ñ€ĞµĞ±Ğ¾Ğ²Ğ°Ğ½Ğ¸Ñ
-
-- Python 3.9+
-- Docker Desktop
-- Docker Compose v2
-- macOS Ğ¸Ğ»Ğ¸ Windows Ñ PowerShell
-
-ĞŸÑ€Ğ¾Ğ²ĞµÑ€Ğ¸Ñ‚ÑŒ Ğ¾ĞºÑ€ÑƒĞ¶ĞµĞ½Ğ¸Ğµ:
-
-```bash
-python3 mentor-lab.py doctor
-python3 mentor-lab.py doctor --full
-python3 mentor-lab.py readiness greenplum --platform macos
-```
-
-ĞĞ° Windows:
-
-```powershell
-py mentor-lab.py doctor
-py mentor-lab.py doctor --full
-py mentor-lab.py readiness greenplum --platform windows
-```
-
-### Ğ—Ğ°Ğ¿ÑƒÑÑ‚Ğ¸Ñ‚ÑŒ Greenplum
-
-macOS:
-
-```bash
-python3 mentor-lab.py up greenplum
-python3 mentor-lab.py status greenplum
-python3 mentor-lab.py psql greenplum
-```
-
-Windows:
-
-```powershell
-py mentor-lab.py up greenplum
-py mentor-lab.py status greenplum
-py mentor-lab.py psql greenplum
-```
-
-`psql` Ğ·Ğ°Ğ¿ÑƒÑĞºĞ°ĞµÑ‚ÑÑ Ğ²Ğ½ÑƒÑ‚Ñ€Ğ¸ ĞºĞ¾Ğ½Ñ‚ĞµĞ¹Ğ½ĞµÑ€Ğ°, Ğ¿Ğ¾ÑÑ‚Ğ¾Ğ¼Ñƒ Ğ»Ğ¾ĞºĞ°Ğ»ÑŒĞ½Ğ¾ PostgreSQL client ÑÑ‚Ğ°Ğ²Ğ¸Ñ‚ÑŒ Ğ½Ğµ Ğ½ÑƒĞ¶Ğ½Ğ¾.
-
-### ĞÑÑ‚Ğ°Ğ½Ğ¾Ğ²Ğ¸Ñ‚ÑŒ Ğ¸Ğ»Ğ¸ Ğ¿ĞµÑ€ĞµÑĞ¾Ğ·Ğ´Ğ°Ñ‚ÑŒ ÑÑ‚ĞµĞ½Ğ´
-
-```bash
-python3 mentor-lab.py down greenplum
-```
-
-ĞŸĞ¾Ğ»Ğ½Ğ°Ñ Ğ¿ĞµÑ€ĞµĞ¸Ğ½Ğ¸Ñ†Ğ¸Ğ°Ğ»Ğ¸Ğ·Ğ°Ñ†Ğ¸Ñ Ñ ÑƒĞ´Ğ°Ğ»ĞµĞ½Ğ¸ĞµĞ¼ volume:
-
-```bash
-python3 mentor-lab.py reset greenplum
-python3 mentor-lab.py up greenplum
-```
-
-## ĞšĞ°Ğº Ğ¿Ñ€Ğ¾Ğ¹Ñ‚Ğ¸ Ğ¿ĞµÑ€Ğ²Ñ‹Ğ¹ ÑƒÑ€Ğ¾Ğº
-
-Ğ ĞµĞºĞ¾Ğ¼ĞµĞ½Ğ´ÑƒĞµĞ¼Ñ‹Ğ¹ self-service Ğ¼Ğ°Ñ€ÑˆÑ€ÑƒÑ‚:
-
-```bash
-python3 mentor-lab.py doctor --full
-python3 mentor-lab.py academy greenplum start --student Ğ˜Ğ²Ğ°Ğ½ --dry-run
-python3 mentor-lab.py academy greenplum start --student Ğ˜Ğ²Ğ°Ğ½ --skip-lab
-python3 mentor-lab.py student greenplum bootstrap --platform macos
-python3 mentor-lab.py student greenplum homework
-```
-
-Ğ ÑƒÑ‡Ğ½Ğ¾Ğ¹ Ğ¼Ğ¸Ğ½Ğ¸Ğ¼Ğ°Ğ»ÑŒĞ½Ñ‹Ğ¹ Ğ¼Ğ°Ñ€ÑˆÑ€ÑƒÑ‚:
-
-```bash
-python3 mentor-lab.py session greenplum start --student Ğ˜Ğ²Ğ°Ğ½ --output artifacts/sessions/ivan
-python3 mentor-lab.py portal greenplum export --session artifacts/sessions/ivan --portal-dir ../de-mentor-portal
-python3 mentor-lab.py portal greenplum start --session artifacts/sessions/ivan --portal-dir ../de-mentor-portal --dry-run
-git clone https://github.com/PaulKov/de-mentor-portal.git
-cd de-mentor-portal
-MENTOR_LAB_SESSION=../de-mentor/artifacts/sessions/ivan/session.json npm run dev
-python3 ../de-mentor/mentor-lab.py portal greenplum open --url http://127.0.0.1:3000 --dry-run
-python3 mentor-lab.py portal greenplum
-python3 mentor-lab.py assessment greenplum pre
-python3 mentor-lab.py teach greenplum simple --stage 1
-python3 mentor-lab.py lesson greenplum
-python3 mentor-lab.py check greenplum
-python3 mentor-lab.py grade greenplum
-```
-
-ĞŸÑ€Ğ¾Ğ´Ğ²Ğ¸Ğ½ÑƒÑ‚Ñ‹Ğ¹ Ğ¼Ğ°Ñ€ÑˆÑ€ÑƒÑ‚:
-
-```bash
-python3 mentor-lab.py tuning greenplum list
-python3 mentor-lab.py orchestrate greenplum --route simple --stage 1 --mode recovery
-python3 mentor-lab.py observe greenplum start --output artifacts/greenplum-observe-checklist.md
-python3 mentor-lab.py analyze-plan greenplum --query bad_customer_join
-python3 mentor-lab.py coach-plan greenplum --query bad_customer_join --sample
-python3 mentor-lab.py visualize-plan greenplum --query product_join --sample --format mermaid
-python3 mentor-lab.py diagnostics greenplum list
-python3 mentor-lab.py scenario greenplum start --difficulty medium --seed 42 --dry-run
-python3 mentor-lab.py challenge greenplum start --difficulty hard --minutes 15 --seed 7
-python3 mentor-lab.py dataset greenplum generate --scale small --seed 42 --skew high --late-facts --wide-rows --output artifacts/generated-enterprise.sql
-python3 mentor-lab.py evidence greenplum collect redistribute-join --output submissions/redistribute-join.md
-python3 mentor-lab.py misconception greenplum diagnose --text "partition key ÑÑ‚Ğ¾ Ñ‚Ğ¾ Ğ¶Ğµ ÑĞ°Ğ¼Ğ¾Ğµ Ñ‡Ñ‚Ğ¾ distribution key"
-python3 mentor-lab.py calibration greenplum show senior
-python3 mentor-lab.py lesson-doctor greenplum --output artifacts/greenplum-lesson-doctor.md
-python3 mentor-lab.py ci-smoke greenplum --dry-run
-```
-
-ĞŸĞ¾ÑĞ»Ğµ Ğ²Ñ‹Ğ¿Ğ¾Ğ»Ğ½ĞµĞ½Ğ¸Ñ Ğ·Ğ°Ğ´Ğ°Ğ½Ğ¸Ñ:
-
-```bash
-python3 mentor-lab.py submit greenplum query-tuning
-python3 mentor-lab.py homework greenplum check --submission lessons/lesson-01/submissions/homework.md
-python3 mentor-lab.py autograde-sql greenplum --submission labs/greenplum/examples/student-solution-example.sql --output artifacts/sql-autograde.md
-python3 mentor-lab.py adaptive-review greenplum --submission submissions/query-tuning.md
-python3 mentor-lab.py debrief greenplum --student Ğ˜Ğ²Ğ°Ğ½ --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/greenplum-debrief.md
-python3 mentor-lab.py telemetry greenplum --pre 40 --post 85 --review 70
-python3 mentor-lab.py learning-loop greenplum --pre 40 --post 85 --submission submissions/query-tuning.md --output artifacts/greenplum-learning-loop.md
-python3 mentor-lab.py replay greenplum --student Ğ˜Ğ²Ğ°Ğ½ --submission submissions/query-tuning.md --pre 40 --post 85 --output artifacts/greenplum-replay.md
-python3 mentor-lab.py session greenplum report --session artifacts/sessions/ivan --output artifacts/greenplum-session-report.md
-python3 mentor-lab.py certificate greenplum
-```
-
-## Ğ˜Ğ½Ñ‚ĞµÑ€Ñ„ĞµĞ¹ÑÑ‹ ÑƒÑ‡ĞµĞ½Ğ¸ĞºĞ° Ğ¸ Ğ¼ĞµĞ½Ñ‚Ğ¾Ñ€Ğ°
-
-ĞÑĞ½Ğ¾Ğ²Ğ½Ğ¾Ğ¹ Ğ¸Ğ½Ñ‚ĞµÑ€Ñ„ĞµĞ¹Ñ Ğ·Ğ°Ğ½ÑÑ‚Ğ¸Ñ Ğ² `Academy Experience v5`:
-
-```bash
-python3 mentor-lab.py session greenplum start --student Ğ˜Ğ²Ğ°Ğ½ --output artifacts/sessions/ivan
-git clone https://github.com/PaulKov/de-mentor-portal.git
-cd de-mentor-portal
-MENTOR_LAB_SESSION=../de-mentor/artifacts/sessions/ivan/session.json npm run dev
-python3 mentor-lab.py session greenplum report --session artifacts/sessions/ivan --output artifacts/greenplum-session-report.md
-python3 mentor-lab.py lesson-doctor greenplum --output artifacts/greenplum-lesson-doctor.md
-```
-
-ĞŸĞ¾Ñ€Ñ‚Ğ°Ğ» [de-mentor-portal](https://github.com/PaulKov/de-mentor-portal) Ğ½Ğ°Ğ¿Ğ¸ÑĞ°Ğ½ Ğ½Ğ° Vue 3 + Nuxt 3 + Vite Ğ¸ Ğ¿Ğ¾ĞºĞ°Ğ·Ñ‹Ğ²Ğ°ĞµÑ‚ current stage, timeline, skill graph, copy-command ĞºĞ½Ğ¾Ğ¿ĞºĞ¸, evidence checklist Ğ¸ handoff Ğ¿Ğ¾ÑĞ»Ğµ ÑƒÑ€Ğ¾ĞºĞ°.
-
-Ğ¡Ğ³ĞµĞ½ĞµÑ€Ğ¸Ñ€Ğ¾Ğ²Ğ°Ñ‚ÑŒ Ğ»Ğ¾ĞºĞ°Ğ»ÑŒĞ½Ñ‹Ğ¹ Ğ¿Ğ¾Ñ€Ñ‚Ğ°Ğ» ÑƒÑ‡ĞµĞ½Ğ¸ĞºĞ°:
-
-```bash
-python3 mentor-lab.py portal greenplum --output artifacts/greenplum-student-portal.html
-python3 mentor-lab.py portal greenplum --version v2 --output artifacts/greenplum-student-portal-v2.html
-```
-
-Ğ¡Ğ³ĞµĞ½ĞµÑ€Ğ¸Ñ€Ğ¾Ğ²Ğ°Ñ‚ÑŒ control room Ğ¼ĞµĞ½Ñ‚Ğ¾Ñ€Ğ°:
-
-```bash
-python3 mentor-lab.py control-room greenplum --output artifacts/greenplum-control-room.html
-```
-
-Ğ¡Ğ³ĞµĞ½ĞµÑ€Ğ¸Ñ€Ğ¾Ğ²Ğ°Ñ‚ÑŒ Ğ²Ğ¸Ğ·ÑƒĞ°Ğ»Ğ¸Ğ·Ğ°Ñ†Ğ¸Ñ Ğ¿Ğ»Ğ°Ğ½Ğ°:
-
-```bash
-python3 mentor-lab.py visualize-plan greenplum \
-  --query product_join \
-  --sample \
-  --format html \
-  --output artifacts/product-plan.html
-```
-
-## ĞŸÑ€Ğ°ĞºÑ‚Ğ¸ĞºĞ° Ğ¸ Ğ°Ğ²Ñ‚Ğ¾Ğ¼Ğ°Ñ‚Ğ¸Ğ·Ğ°Ñ†Ğ¸Ñ
-
-### Ğ”Ğ¸Ğ°Ğ³Ğ½Ğ¾ÑÑ‚Ğ¸ĞºĞ° Greenplum
-
-```bash
-python3 mentor-lab.py diagnostics greenplum list
-python3 mentor-lab.py diagnostics greenplum show segment-skew
-python3 mentor-lab.py diagnostics greenplum run segment-skew
-```
-
-### Ğ¡Ñ†ĞµĞ½Ğ°Ñ€Ğ¸Ğ¸ Ğ¸ incidents
-
-```bash
-python3 mentor-lab.py incident list greenplum
-python3 mentor-lab.py incident start greenplum skew-investigation
-python3 mentor-lab.py scenario greenplum list
-python3 mentor-lab.py scenario greenplum start --difficulty medium --seed 42 --dry-run
-```
-
-### Seed-Ğ¿Ñ€Ğ¾Ñ„Ğ¸Ğ»Ğ¸ Ğ´Ğ°Ğ½Ğ½Ñ‹Ñ…
-
-```bash
-python3 mentor-lab.py seed greenplum --profile skewed
-python3 mentor-lab.py seed greenplum --profile balanced
-python3 mentor-lab.py seed greenplum --profile bad-statistics
-python3 mentor-lab.py seed greenplum --profile bad-partitioning
-python3 mentor-lab.py seed greenplum --profile wide-aoco
-python3 mentor-lab.py seed greenplum --profile small-dimension-broadcast
-python3 mentor-lab.py dataset greenplum manifest
-python3 mentor-lab.py dataset greenplum generate --scale small --seed 42 --skew high --late-facts --wide-rows --output artifacts/generated-enterprise.sql
-```
-
-### Enterprise-Ğ¿Ñ€Ğ¾Ğ²ĞµÑ€ĞºĞ¸
-
-```bash
-python3 mentor-lab.py autograde-sql greenplum --submission labs/greenplum/examples/student-solution-example.sql --output artifacts/sql-autograde.md
-python3 mentor-lab.py ci-smoke greenplum --dry-run
-```
-
-### Ğ­Ñ‚Ğ°Ğ»Ğ¾Ğ½Ğ½Ñ‹Ğµ Ñ€ĞµÑˆĞµĞ½Ğ¸Ñ
-
-```bash
-python3 mentor-lab.py solutions greenplum list
-python3 mentor-lab.py solutions greenplum show redistribute-join
-```
-
-### Cross-engine DSL
-
-```bash
-python3 mentor-lab.py dsl greenplum list
-python3 mentor-lab.py dsl greenplum show redistribute-join
-```
-
-## ĞœĞ°Ñ‚ĞµÑ€Ğ¸Ğ°Ğ»Ñ‹ ÑƒÑ€Ğ¾ĞºĞ°
-
-| ĞœĞ°Ñ‚ĞµÑ€Ğ¸Ğ°Ğ» | Ğ¡ÑÑ‹Ğ»ĞºĞ° |
-|---|---|
-| Ğ“Ğ»Ğ°Ğ²Ğ½Ñ‹Ğ¹ Ğ¿Ğ»Ğ°Ğ½ ÑƒÑ€Ğ¾ĞºĞ° | [lessons/lesson-01/docs/README.md](lessons/lesson-01/docs/README.md) |
-| Ğ”Ğ¾Ñ€Ğ¾Ğ¶Ğ½Ğ°Ñ ĞºĞ°Ñ€Ñ‚Ğ° | [roadmap.md](lessons/lesson-01/docs/roadmap.md) |
-| Workbook ÑƒÑ‡ĞµĞ½Ğ¸ĞºĞ° | [student-workbook.md](lessons/lesson-01/docs/student-workbook.md) |
-| Ğ“Ğ°Ğ¹Ğ´ Ğ¼ĞµĞ½Ñ‚Ğ¾Ñ€Ğ° | [mentor-guide.md](lessons/lesson-01/docs/mentor-guide.md) |
-| ĞŸĞ¾Ğ´Ğ³Ğ¾Ñ‚Ğ¾Ğ²ĞºĞ° ÑƒÑ‡ĞµĞ½Ğ¸ĞºĞ° | [student-prep.md](lessons/lesson-01/docs/runbooks/student-prep.md) |
-| Ğ£Ğ¿Ñ€Ğ¾Ñ‰ĞµĞ½Ğ½Ñ‹Ğ¹ runbook | [simple-path.md](lessons/lesson-01/docs/runbooks/simple-path.md) |
-| Ğ Ğ°ÑÑˆĞ¸Ñ€ĞµĞ½Ğ½Ñ‹Ğ¹ runbook | [deep-dive-path.md](lessons/lesson-01/docs/runbooks/deep-dive-path.md) |
-| ĞŸĞ»Ğ°Ğ½ Ğ´Ğ¾Ğ¼Ğ°ÑˆĞºĞ¸ | [homework-plan.md](lessons/lesson-01/homework/plan.md) |
-| Ğ¨Ğ¿Ğ°Ñ€Ğ³Ğ°Ğ»ĞºĞ° | [cheat-sheet.md](lessons/lesson-01/docs/cheat-sheet.md) |
-| ĞšĞ¾Ğ½Ñ‚ÑƒÑ€ Academy | [academy-loop.md](lessons/lesson-01/docs/academy-loop.md) |
-| Academy v2 | [academy-v2.md](lessons/lesson-01/docs/academy-v2.md) |
-| Ğ›Ğ°Ğ±Ğ¾Ñ€Ğ°Ñ‚Ğ¾Ñ€Ğ½Ğ°Ñ Ğ¿Ğ¾ query tuning | [query-tuning-lab.md](lessons/lesson-01/docs/query-tuning-lab.md) |
-| Deep dive Ğ¿Ğ¾ QD/QE/slices/gangs | [qd-qe-gang-slices-explained.md](lessons/lesson-01/docs/deep-dives/qd-qe-gang-slices-explained.md) |
-| ĞœĞ°Ñ‚Ñ€Ğ¸Ñ†Ğ° Ğ¾Ñ†ĞµĞ½ĞºĞ¸ | [rubric.md](lessons/lesson-01/homework/rubric.md) |
-| Ğ¤Ğ¸Ğ½Ğ°Ğ»ÑŒĞ½Ğ°Ñ Ğ·Ğ°Ğ´Ğ°Ñ‡Ğ° | [capstone.md](lessons/lesson-01/docs/capstone.md) |
-| Ğ¡ĞºĞ²Ğ¾Ğ·Ğ½Ğ¾Ğ¹ ĞºĞµĞ¹Ñ | [case-study.md](lessons/lesson-01/docs/case-study.md) |
-| ĞŸÑ€ĞµĞ·ĞµĞ½Ñ‚Ğ°Ñ†Ğ¸Ñ | [greenplum-theory.pptx](lessons/lesson-01/artifacts/greenplum-theory.pptx) |
-| ĞšĞ°Ñ‚Ğ°Ğ»Ğ¾Ğ³ Ğ¿Ñ€ĞµĞ·ĞµĞ½Ñ‚Ğ°Ñ†Ğ¸Ğ¹ | [decks/README.md](decks/README.md) |
-| Ğ˜ÑÑ…Ğ¾Ğ´Ğ½Ğ¸ĞºĞ¸ Ğ¿Ñ€ĞµĞ·ĞµĞ½Ñ‚Ğ°Ñ†Ğ¸Ğ¸ | [decks/greenplum-theory](decks/greenplum-theory/README.md) |
-| Manifest Ğ²Ñ‹Ğ¿ÑƒÑĞºĞ° Lesson 02 | [lesson.yaml](lessons/lesson-02/docs/lesson.yaml) |
-| Ğ¡Ñ‚ĞµĞ½Ğ´ Greenplum | [labs/greenplum](labs/greenplum/README.md) |
-| SQL Ğ´Ğ»Ñ Ğ¿Ğ°ÑĞ¿Ğ¾Ñ€Ñ‚Ğ° ĞºĞ»Ğ°ÑÑ‚ĞµÑ€Ğ° | [cluster-inspection.sql](labs/greenplum/examples/cluster-inspection.sql) |
-| SQL Ğ´Ğ»Ñ Ğ¼Ğ¾Ğ½Ğ¸Ñ‚Ğ¾Ñ€Ğ¸Ğ½Ğ³Ğ° ĞºĞ»Ğ°ÑÑ‚ĞµÑ€Ğ° | [cluster-monitoring.sql](labs/greenplum/examples/cluster-monitoring.sql) |
-| SQL Ğ¿Ğ¾ storage Ğ¸ partitioning | [storage-and-partitioning.sql](labs/greenplum/examples/storage-and-partitioning.sql) |
-| SQL Ğ¿Ğ¾ partitioning strategies | [partitioning-strategies.sql](labs/greenplum/examples/partitioning-strategies.sql) |
-
-## Ğ¡Ñ‚Ñ€ÑƒĞºÑ‚ÑƒÑ€Ğ° Ğ¿Ñ€Ğ¾ĞµĞºÑ‚Ğ°
-
-```text
-.
-â”œâ”€â”€ lessons/                    # â† ĞºĞ°Ğ½Ğ¾Ğ½: Ğ¾Ğ´Ğ¸Ğ½ ÑƒÑ€Ğ¾Ğº = Ğ¾Ğ´Ğ½Ğ° Ğ¿Ğ°Ğ¿ĞºĞ°
-â”‚   â”œâ”€â”€ README.md               # Ğ¾Ğ³Ğ»Ğ°Ğ²Ğ»ĞµĞ½Ğ¸Ğµ Ğ²ÑĞµÑ… ÑƒÑ€Ğ¾ĞºĞ¾Ğ²
-â”‚   â””â”€â”€ lesson-0N/
-â”‚       â”œâ”€â”€ docs/               # Ñ‚ĞµĞ¾Ñ€Ğ¸Ñ, workbook, runbooks
-â”‚       â”œâ”€â”€ homework/           # assignment, plan, rubric, templates
-â”‚       â”œâ”€â”€ artifacts/          # PPTX, screens, case metrics
-â”‚       â””â”€â”€ submissions/        # ÑĞ´Ğ°Ñ‡Ğ° ÑƒÑ‡ĞµĞ½Ğ¸ĞºĞ°
-â”œâ”€â”€ decks/                      # Ğ¸ÑÑ…Ğ¾Ğ´Ğ½Ğ¸ĞºĞ¸ ÑĞ»Ğ°Ğ¹Ğ´Ğ¾Ğ² (build input)
-â”œâ”€â”€ labs/                       # Docker-ÑÑ‚ĞµĞ½Ğ´Ñ‹ (shared)
-â”œâ”€â”€ artifacts/                  # redirect + session/runtime outputs
-â”œâ”€â”€ src/mentor_lab/             # CLI Ğ¸ Ğ´Ğ¾Ğ¼ĞµĞ½Ğ½Ñ‹Ğµ Ğ¼Ğ¾Ğ´ÑƒĞ»Ğ¸
-â”œâ”€â”€ tests/
-â””â”€â”€ mentor-lab.py
-```
-
-## ĞšĞ°Ñ‡ĞµÑÑ‚Ğ²Ğ¾ Ğ¸ Ğ¿Ñ€Ğ¾Ğ²ĞµÑ€ĞºĞ¸
-
-ĞŸĞ¾Ğ»Ğ½Ñ‹Ğ¹ Ñ‚ĞµÑÑ‚Ğ¾Ğ²Ñ‹Ğ¹ Ğ¿Ñ€Ğ¾Ğ³Ğ¾Ğ½:
-
-```bash
-python3 -m pytest tests -q
-```
-
-ĞŸÑ€Ğ¾Ğ²ĞµÑ€ĞºĞ° Python-ĞºĞ¾Ğ¼Ğ¿Ğ¸Ğ»ÑÑ†Ğ¸Ğ¸:
-
-```bash
-python3 -m compileall -q src mentor-lab.py
-```
-
-Quality guard Ğ´Ğ»Ñ Ñ€Ğ°Ğ·Ñ€Ğ°Ğ±Ğ¾Ñ‚ĞºĞ¸:
-
-```bash
-python3 -m pytest tests/test_quality_guards.py -q
-```
-
-ĞšĞ¾Ğ½Ñ‚Ñ€Ğ°ĞºÑ‚ guard:
-
-- Ğ»ÑĞ±Ğ¾Ğ¹ Python-Ğ¼Ğ¾Ğ´ÑƒĞ»ÑŒ Ğ² `src/mentor_lab` Ğ´Ğ¾Ğ»Ğ¶ĞµĞ½ Ğ±Ñ‹Ñ‚ÑŒ Ğ½Ğµ Ğ±Ğ¾Ğ»ÑŒÑˆĞµ `400` SLOC;
-- ÑÑ€ĞµĞ´Ğ½Ğ¸Ğ¹ clustering coefficient Ğ²Ğ½ÑƒÑ‚Ñ€ĞµĞ½Ğ½ĞµĞ³Ğ¾ import-Ğ³Ñ€Ğ°Ñ„Ğ° Ğ´Ğ¾Ğ»Ğ¶ĞµĞ½ Ğ±Ñ‹Ñ‚ÑŒ Ğ½Ğµ Ğ±Ğ¾Ğ»ÑŒÑˆĞµ `0.180`;
-- CLI Ğ¾ÑÑ‚Ğ°ĞµÑ‚ÑÑ Ñ‚Ğ¾Ğ½ĞºĞ¸Ğ¼ Ñ„Ğ°ÑĞ°Ğ´Ğ¾Ğ¼: parser registration, command context Ğ¸ handler-Ğ³Ñ€ÑƒĞ¿Ğ¿Ñ‹ Ğ»ĞµĞ¶Ğ°Ñ‚ Ğ² Ğ¾Ñ‚Ğ´ĞµĞ»ÑŒĞ½Ñ‹Ñ… Ğ¼Ğ¾Ğ´ÑƒĞ»ÑÑ….
-
-ĞŸÑ€Ğ¾Ğ²ĞµÑ€ĞºĞ° Ğ¶Ğ¸Ğ²Ğ¾Ğ³Ğ¾ Greenplum-ÑÑ‚ĞµĞ½Ğ´Ğ°:
-
-```bash
-python3 mentor-lab.py status greenplum
-python3 mentor-lab.py check greenplum
-python3 mentor-lab.py grade greenplum
-```
-
-ĞĞ° Ğ¼Ğ¾Ğ¼ĞµĞ½Ñ‚ Ğ¿ÑƒĞ±Ğ»Ğ¸ĞºĞ°Ñ†Ğ¸Ğ¸:
-
-```text
-131 tests passing
-Greenplum health checks passing
-30-slide Russian theory deck included
-```
-
-## Roadmap
-
-CLI ÑƒĞ¶Ğµ ÑĞ¾Ğ´ĞµÑ€Ğ¶Ğ¸Ñ‚ registry Ğ´Ğ»Ñ Ğ±ÑƒĞ´ÑƒÑ‰Ğ¸Ñ… ÑÑ‚ĞµĞ½Ğ´Ğ¾Ğ²:
-
-- Postgres
-- ClickHouse
-- Hadoop HDFS
-- Spark on YARN
-- Spark on Kubernetes
-
-ĞŸĞ»Ğ°Ğ½ Ñ€Ğ°Ğ·Ğ²Ğ¸Ñ‚Ğ¸Ñ: Ğ´Ğ¾Ğ±Ğ°Ğ²Ğ»ÑÑ‚ÑŒ Ğ½Ğ¾Ğ²Ñ‹Ğµ ÑÑ‚ĞµĞ½Ğ´Ñ‹ Ñ‡ĞµÑ€ĞµĞ· Ñ‚Ğ¾Ñ‚ Ğ¶Ğµ ĞºĞ¾Ğ½Ñ‚Ñ€Ğ°ĞºÑ‚ â€” `labs/<name>/`, Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ğ°Ñ†Ğ¸Ñ, seed-Ğ¿Ñ€Ğ¾Ñ„Ğ¸Ğ»Ğ¸, checks, scenarios Ğ¸ DSL.
-
-## Ğ§ĞµÑÑ‚Ğ½Ñ‹Ğ¹ ÑÑ‚Ğ°Ñ‚ÑƒÑ
-
-Ğ­Ñ‚Ğ¾ Ğ½Ğµ ĞºĞ¾Ğ¼Ğ¼ĞµÑ€Ñ‡ĞµÑĞºĞ°Ñ LMS Ğ¸ Ğ½Ğµ Ğ·Ğ°Ğ¼ĞµĞ½Ğ° Ğ¿Ğ¾Ğ»Ğ½Ğ¾Ñ†ĞµĞ½Ğ½Ğ¾Ğ¹ Ğ¿Ğ»Ğ°Ñ‚Ñ„Ğ¾Ñ€Ğ¼Ñ‹ Ğ¾Ğ±ÑƒÑ‡ĞµĞ½Ğ¸Ñ. Ğ¡ĞµĞ¹Ñ‡Ğ°Ñ ÑÑ‚Ğ¾ Ğ¸Ğ½Ğ¶ĞµĞ½ĞµÑ€Ğ½Ñ‹Ğ¹ self-service toolkit Ğ´Ğ»Ñ Ğ¼ĞµĞ½Ñ‚Ğ¾Ñ€Ğ° Ğ¸ ÑƒÑ‡ĞµĞ½Ğ¸ĞºĞ°: Ğ»Ğ¾ĞºĞ°Ğ»ÑŒĞ½Ğ¾, Ğ¿Ñ€Ğ¾Ğ·Ñ€Ğ°Ñ‡Ğ½Ğ¾, Ğ²Ğ¾ÑĞ¿Ñ€Ğ¾Ğ¸Ğ·Ğ²Ğ¾Ğ´Ğ¸Ğ¼Ğ¾.
-
-Greenplum Academy Ğ¾ÑÑ‚Ğ°Ñ‘Ñ‚ÑÑ Ğ¾ÑĞ½Ğ¾Ğ²Ğ½Ñ‹Ğ¼ Ğ¼Ğ¾Ğ´ÑƒĞ»ĞµĞ¼ Ñ Ğ¸Ğ½Ñ‚ĞµĞ³Ñ€Ğ°Ñ†Ğ¸ĞµĞ¹ Ğ² CLI Ğ¸ assessment flow. Ğ£Ñ€Ğ¾ĞºĞ¸ Spark, Iceberg Ğ¸ Flink Ğ¾Ñ„Ğ¾Ñ€Ğ¼Ğ»ĞµĞ½Ñ‹ ĞºĞ°Ğº ÑƒÑ‡ĞµĞ±Ğ½Ñ‹Ğµ Ğ¼Ğ°Ñ‚ĞµÑ€Ğ¸Ğ°Ğ»Ñ‹ Ğ¸ Ğ»Ğ¾ĞºĞ°Ğ»ÑŒĞ½Ñ‹Ğµ ÑÑ‚ĞµĞ½Ğ´Ñ‹; Ñƒ Flink/Iceberg Compose Ğ¿Ğ¾ĞºĞ° Ğ½ĞµÑ‚ Ğ¸Ğ½Ñ‚ĞµĞ³Ñ€Ğ°Ñ†Ğ¸Ğ¸ Ğ²Ğ¾ Ğ²ÑĞµ ĞºĞ¾Ğ¼Ğ°Ğ½Ğ´Ñ‹ CLI Ğ¸ quality release workflow.
-
-ĞŸÑ€Ğ¾ĞµĞºÑ‚ Ğ¾Ñ‚ĞºÑ€Ñ‹Ñ‚ Ğ´Ğ»Ñ Ñ€Ğ°ÑÑˆĞ¸Ñ€ĞµĞ½Ğ¸Ñ: Ğ½Ğ¾Ğ²Ñ‹Ğµ ÑƒÑ€Ğ¾ĞºĞ¸ Ğ»ÑƒÑ‡ÑˆĞµ Ğ´Ğ¾Ğ±Ğ°Ğ²Ğ»ÑÑ‚ÑŒ Ğ¼Ğ°Ğ»ĞµĞ½ÑŒĞºĞ¸Ğ¼Ğ¸ Ğ¿Ñ€Ğ¾Ğ²ĞµÑ€ÑĞµĞ¼Ñ‹Ğ¼Ğ¸ Ğ¼Ğ¾Ğ´ÑƒĞ»ÑĞ¼Ğ¸, ÑĞ¾Ñ…Ñ€Ğ°Ğ½ÑÑ Ğ³Ğ»Ğ°Ğ²Ğ½Ñ‹Ğ¹ Ğ¿Ñ€Ğ¸Ğ½Ñ†Ğ¸Ğ¿ â€” Ñ‚ĞµĞ¾Ñ€Ğ¸Ñ Ğ´Ğ¾Ğ»Ğ¶Ğ½Ğ° Ğ±Ñ‹ÑÑ‚Ñ€Ğ¾ Ğ¿Ñ€ĞµĞ²Ñ€Ğ°Ñ‰Ğ°Ñ‚ÑŒÑÑ Ğ² Ğ¿Ñ€Ğ°ĞºÑ‚Ğ¸ĞºÑƒ, evidence Ğ¸ Ğ¿Ğ¾Ğ½ÑÑ‚Ğ½Ñ‹Ğ¹ feedback.
+YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éí×N{Õ:-jZ.¶›­–)Ş³R2DRÖVçF÷  £ÆF—bÆ–vãÒ&6VçFW"#à ¢¢¥6VÆb×6W'f–6Rı½-MíÍM½òı­-}]­í=âÍ]İ-íİ=M-İm]İ]í"¢  ­	½í­½Íİ½R-]İM²Â-]íòÂı­-}]­R}MİòÂM=İí-­Â--íıí-]­‚‚=}]İ½R-]M­-²"íMİíÂ]ıí}-í‚à ¢µ—F†öâ2ã’µÒ†‡GG3¢òö–Örç6†–VÆG2æ–òö&FvRõ—F†öâÓ2ã’S$"Ó3ssd"¢´Fö6¶W"FW6·F÷Ò†‡GG3¢òö–Örç6†–VÆG2æ–òö&FvRôFö6¶W"ÔFW6·F÷Ó#C“dTB¢´w&VVçÇVÕÒ†‡GG3¢òö–Örç6†–VÆG2æ–òö&FvRôÖöGVÆRÔw&VVçÇVÒÓ$StC3"¢´6†R7&µÒ†‡GG3¢òö–Örç6†–VÆG2æ–òö&FvRôÖöGVÆRÔ6†RS#7&²ÔS#T2¢µFW7G5Ò†‡GG3¢òö–Örç6†–VÆG2æ–òö&FvR÷FW7G2Óc2S#76–ærÓtc4b £ÂöF—cà ¢22	í=½-½]İP ¢Ò½
+}-âİ-åÒ‚=}-âİİ-â¢Ò½	M½ò­í=åÒ‚=M½òİ­í=â¢Ò½
+}-â=mR=í-í-åÒ‚=}-âİ=mRİ=í-í-â¢Ò½
+=í­‚İ-=mò•Ò‚==í­‚İİ-=mò¢Ò½	½-½’-%Ò‚=½-½’İ-"¢Ò½	­¢ıí-‚ı]-½’=í¥Ò‚=­¢İıí-‚İı]-½’İ=í¢¢Ò½	İ-]M]²=}]İ­‚Í]İ-íÒ‚=İ-]M]²İ=}]İ­İ‚İÍ]İ-í¢Ò½	ı­-­‚--íÍ-}mõÒ‚=ı­-­İ‚İ--íÍ-}mò¢Ò½	Í-]½²=í­Ò‚=Í-]½²İ=í­¢Ò½
+-=­-=ıí]­-Ò‚=-=­-=İıí]­-¢Ò½	­}]--â‚ıí-]­…Ò‚=­}]--âİ‚İıí-]­‚¢Òµ&öFÖÒ‚7&öFÖ¢Ò½
+}]-İ½’--=Ò‚=}]-İ½’İ--= ¢22
+=í­‚İ-=mò ­	-ıâ=í­Â(	B"¶ÆW76öç2öÒ†ÆW76öç2õ$TDÔRæÖB“  §Â
+=í¢ÂFö72Â†öÖWv÷&²Â'F–f7G2Â7V&Ö—76–öç2À§ÂÒÒÒÂÒÒÒÂÒÒÒÂÒÒÒÂÒÒÒÀ§Â³Ò†ÆW76öç2öÆW76öâÓò’Â¶Fö75Ò†ÆW76öç2öÆW76öâÓöFö72ò’Â¶†öÖWv÷&µÒ†ÆW76öç2öÆW76öâÓö†öÖWv÷&²ò’Â¶'F–f7G5Ò†ÆW76öç2öÆW76öâÓö'F–f7G2ò’Â·7V&Ö—76–öç5Ò†ÆW76öç2öÆW76öâÓ÷7V&Ö—76–öç2ò’À§Â³%Ò†ÆW76öç2öÆW76öâÓ"ò’Â¶Fö75Ò†ÆW76öç2öÆW76öâÓ"öFö72ò’Â¶†öÖWv÷&µÒ†ÆW76öç2öÆW76öâÓ"ö†öÖWv÷&²ò’Â¶'F–f7G5Ò†ÆW76öç2öÆW76öâÓ"ö'F–f7G2ò’Â·7V&Ö—76–öç5Ò†ÆW76öç2öÆW76öâÓ"÷7V&Ö—76–öç2ò’À§Â³5Ò†ÆW76öç2öÆW76öâÓ2ò’Â¶Fö75Ò†ÆW76öç2öÆW76öâÓ2öFö72ò’Â¶†öÖWv÷&µÒ†ÆW76öç2öÆW76öâÓ2ö†öÖWv÷&²ò’Â¶'F–f7G5Ò†ÆW76öç2öÆW76öâÓ2ö'F–f7G2ò’Â·7V&Ö—76–öç5Ò†ÆW76öç2öÆW76öâÓ2÷7V&Ö—76–öç2ò’À§Â³EÒ†ÆW76öç2öÆW76öâÓBò’Â¶Fö75Ò†ÆW76öç2öÆW76öâÓBöFö72ò’Â¶†öÖWv÷&µÒ†ÆW76öç2öÆW76öâÓBö†öÖWv÷&²ò’Â¶'F–f7G5Ò†ÆW76öç2öÆW76öâÓBö'F–f7G2ò’Â·7V&Ö—76–öç5Ò†ÆW76öç2öÆW76öâÓB÷7V&Ö—76–öç2ò’À§Â³F%Ò†ÆW76öç2öÆW76öâÓF"ÖF—7G&–'WFVB×7F÷&vRò’Â¶Fö75Ò†ÆW76öç2öÆW76öâÓF"ÖF—7G&–'WFVB×7F÷&vRöFö72ò’Â¶†öÖWv÷&µÒ†ÆW76öç2öÆW76öâÓF"ÖF—7G&–'WFVB×7F÷&vRö†öÖWv÷&²ò’Â¶'F–f7G5Ò†ÆW76öç2öÆW76öâÓF"ÖF—7G&–'WFVB×7F÷&vRö'F–f7G2ò’Â·7V&Ö—76–öç5Ò†ÆW76öç2öÆW76öâÓF"ÖF—7G&–'WFVB×7F÷&vR÷7V&Ö—76–öç2ò’À§Â³UÒ†ÆW76öç2öÆW76öâÓRò’Â¶Fö75Ò†ÆW76öç2öÆW76öâÓRöFö72ò’Â¶†öÖWv÷&µÒ†ÆW76öç2öÆW76öâÓRö†öÖWv÷&²ò’Â¶'F–f7G5Ò†ÆW76öç2öÆW76öâÓRö'F–f7G2ò’Â·7V&Ö—76–öç5Ò†ÆW76öç2öÆW76öâÓR÷7V&Ö—76–öç2ò’À§Â³eÒ†ÆW76öç2öÆW76öâÓbò’Â¶Fö75Ò†ÆW76öç2öÆW76öâÓböFö72ò’Â¶†öÖWv÷&µÒ†ÆW76öç2öÆW76öâÓbö†öÖWv÷&²ò’Â¶'F–f7G5Ò†ÆW76öç2öÆW76öâÓbö'F–f7G2ò’Â·7V&Ö—76–öç5Ò†ÆW76öç2öÆW76öâÓb÷7V&Ö—76–öç2ò’À ¢22
+}-âİ-à ¦DRÖVçF÷&ıíÍí=]"ıí-]-‚½Íİ½’ı­-}]­’=í¢ıâFFVæv–æVW&–ær]r=}İí’ıíM=í-í-­‚-]İM‚}í}İ]İİ½RÍ-]½í"à ­	ı]-½R-‚=í­ıí-ı]İ²¢¤w&VVçÇVÒ¢£¢Õİ]-]­-=RÂF—7G&–'WF–öâÂ'F—F–öç2Â7FF—7F–72‚VW'’GVæ–ærâ
+=í¢Bí-­½-]"ÍíM=½Â¢¤6†R7&²¢£¢-íò&–rFFÂ•7&²FFg&ÖR’ÂG&—fW"öW†V7WF÷'2Â'F—F–öç2ÂÆ§’W†V7WF–öâÂ6‡VffÆR‚7&²T’â	--íMİ½’=í¢¢£F"¢¢}]"ı]M]½İİ½Rf–ÆW7—7FVÒöö&¦V7B7F÷&vRÍíM]½‚Â-íâÂ–çFW&æÇ2„De2ô6W‚õ6VvVVDe2Âí½}İ½R-İ-²‚FWÆ÷–ÖVçBâ
+=í­‚^(	3bMí-½ıí"¢¤6†R–6V&W&rİ32Â†—fRÖWF7F÷&RôÆ¶V¶VWW"ôæW76–R‚ıí-í­í-½’—VÆ–æR¶f¶(i"fÆ–æ²(i"–6V&W&r¢¢í-M]½Íİ½ÂFö6¶W"FW6·F÷-]İMíÂ‚FVWF—fW2ıâ–çFW&æÇ2à ­	M]òıí-ó¢=}]İ¢İRıí-â½=]"-]íâÂ}ı=­]"½í­½Íİ½’-]İBÂ½íÍ]"‚}İ"Mİİ½RÂ}-]"ı½İ²ÂM"Wf–FVæ6RÂıí½=}]"&Wf–Wr‚ıíİÍ]"Âıí}]Í2Õİ-]Í²-]=í"M==í=âÍ½½]İòà ¢22	M½ò­í=à §Â
+í½ÂÂ
+}-âıí½=}]"À§ÂÒÒ×ÂÒÒ×À§Â	Í]İ-íòM-]-]­-íÂ	=í-í-½’m]İ’=í­Âı]}]İ-mâÂ-]İBÂ}MİòÂ'V'&–2Â--íıí-]­‚Â6öçG&öÂ&ööÒ‚&Wf–Wrİİ-=Í]İ-²âÀ§Â	İ}İí’M-İm]İ]Â	ıíİı-İ½’4Ä’Â½í­½Íİ½’w&VVçÇVÒÂ7GVFVçB÷'FÂÂı­-}]­R}M}‚ÂıíM­}­‚Â-}=½}mâı½İí"‚ıíİı-İ½’fVVF&6²âÀ§Â	­íÍİMMİİ½RÂ	ıí--íı]Í½’öæ&ö&F–ærİÍíM=½ÂÂ­í-í½’Íímİâı-ÂıíB÷7Fw&W2Â6Æ–6´†÷W6RÂ†Fö÷Â7&²‚M==R-]İM²âÀ ¢22
+}-â=mR=í-í-à ¢222w&VVçÇVÒ6FV× ¢ÒFö6¶W"6ö×÷6R-]İBw&VVçÇVÒà¢Ò	]Mİ½’4Ä’ÖVçF÷"ÖÆ"ç–M½òÖ4õ2‚v–æF÷w2à¢Ò	ı½Ò=í­İcÍİ="à¢Ò
+=­òı]}]İ-mò"ıí­íİí’-]-½í’-]ÍRà¢Ò	­-½í2ı]}]İ-m’G&—fRİ-­íİíÍ]’ÆW76öç2óÆF—&V7F–öãâóÆÆW76öãæà¢ÒÆW76öâ&VÆV6R—VÆ–æS¢Öæ–fW7BÂ&VfÆ–v‡B&W÷'B‚ıí-]­vöövÆR6Æ–FW2ı]]B}İı-]Âà¢Òf6–Æ—FF÷"wV–FS¢­í=Mıí­}½--Â­mM½’½B‚}-â=í-í-Âà¢Ò7GVFVçBv÷&¶&öö²Â†öÖWv÷&²Â67FöæRÂ66R7GVG’à¢ÒFVWF—fW2ıâBõRÂÖ7FW"ö6ö÷&F–æF÷"ÂÖ÷F–öâÂ¦ö–ç2Â4ÕôÕôUà¢ÒVW'’GVæ–ærÆ"ı­-­í’ıâU…Ä”æÂ6¶WrÂ¦ö–ç2Â'F—F–öç2‚7F÷&vRà ¢2226FV×’c  ¢Ò7GVFVçB÷'FÂà¢ÒÖVçF÷"6öçG&öÂ&ööÒà¢ÒU…Ä”âæÇ—¦W"à¢ÒU…Ä”âf—7VÆ—¦W""ÖW&Ö–Bô…DÔÂà¢Ò'VçF–ÖRF–væ÷7F–726²à¢Ò66Væ&–ò&æFöÖ—¦W"à¢ÒF–ÖVB6†ÆÆVævRÖöFRà¢ÒöæRÔ'WGFöâÖVçF÷"ÖöFRM½ò-]M]İò=í­ıâ7FvRà¢ÒWf–FVæ6R6GW&S¢7V&Ö—76–öâ×&VG’Ö&¶F÷vâ6²M½òı­-}]­Rm]İ]"à¢Ò†öÖWv÷&²WFöw&FW"M½òıí-]­‚M}}]­í=âM}İ‚Wf–FVæ6Rà¢ÒÖ—66öæ6WF–öâ&æ²M½ò½-½RÖVçF÷"–çFW'fVçF–öç2à¢Ò7GVFVçB÷'FÂc"&öw&W72Â†–çG2ÂWf–FVæ6R6†V6¶Æ—7B‚W‡÷'B×&VG’7V&Ö—76–öâà¢ÒFV'&–VbvVæW&F÷"M½òı]íİ½Íİí’í-İí’-ı}‚ıí½R=í­à¢ÒFF—fR&Wf–WrıâWf–FVæ6RÖf—'7B'V'&–2à¢ÒvöÆFVâ6öÇWF–öç2‚çF’×6öÇWF–öç2à¢ÒÆW76öâFVÆVÖWG'’&W÷'Bà¢ÒÆV&æ–ærÆö÷&W÷'C¢­-İ-½­í"Âv2ıâWf–FVæ6R‚ı½Òıí--í]İòİó2órMİ]’à¢Ò7&÷72ÖVæv–æR66Væ&–òE4ÂM½ò=M=R-]İMí"à ¢2226FV×’&òc0 ¢Ò&VF–æW72Fö7F÷"&òM½òÖ4õ2Âv–æF÷w2‚Æ–çW‚à¢ÒÆ—fRÆW76öâ÷&6†W7G&F÷"]mÍÍ‚6–×ÆVÂFVWÂ&V6÷fW'–‚f7B×7GVFVçFà¢ÒÆ—fRÆ"ö'6W'fF–öã¢6†V6¶Æ—7B‚Wf–FVæ6RG&–Â&W÷'BıâM]--ıÂ=}]İ­à¢ÒVW'’Æâ6ö6ƒ¢í­ıİ]İRÖ÷F–öâÂ6Æ–6W2Â&ö÷B6W6R‡—÷F†W6—2‚½]M=í’5Âà¢Ò66Væ&–ò6²c"&öGV7F–öâİİmM]İ-Í‚ıâô4ò×WF&ÆRF–ÖVç6–öâ‚6ö÷&F–æF÷"&÷GFÆVæV6²à¢ÒvöÆB7V&Ö—76–öâ6Æ–'&F–öã¢½½’Â=-]]İİ½’‚6Væ–÷"ÖÆWfVÂí--]-²M½ò­½í-­‚ím]İ­‚à¢ÒÆW76öâ&WÆ’6³¢FV'&–VbÂÆV&æ–ærÆö÷‚ıíM=í-í-­¢ÆW76öâ""íMİíÂ-]M­-Rà ¢2226FV×’VçFW'&—6Rc@ ¢Ò&VÂ5ÂWFöw&FW#¢ıí-]ı]"5ÂöWf–FVæ6R7V&Ö—76–öâıâD•5E$”%UDTB%–Â%D•D”ôâ%–Âô4òÂU…Ä”âäÅ•¤VÂw÷6VvÖVçEö–FÂäÅ•¤V‚fÆ–FF–öâà¢ÒFF6WBvVæW&F÷"&ó¢M]-]Íİí-İİ½R6VVB5Â66ÆRÂ6¶WrÂÆFRÖ'&—f–ærf7G2‚v–FR&÷w2à¢Òw&VVçÇVÒÆ—fR6Öö¶S¢½í­½Íİ½’ôv—D‡V"7F–öç2ı½ÒÂ­í-í½’ıíMİÍ]"-]İBÂ-½ıí½İı]"5ÂFVÖ÷2‚ıí=íİı]"WFöw&FW"à¢Ò
+İ-½íİİ½’5Â7V&Ö—76–öâM½òıí-]­‚m-í=â­íİ-=à ¢2226FV×’W‡W&–Væ6RcP ¢Ò7FFVgVÂ6W76–öã¢ÖVçF÷"ÖÆ"ç’6W76–öâw&VVçÇVÒ7F'Fí}M]"6W76–öâæ§6öæÂF–ÖVÆ–æRÂ6¶–ÆÂw&‚ÂÖVçF÷"6ö6·—B‚7GVFVçB†æFöfbà¢ÒçW‡B÷'FÃ¢¶FRÖÖVçF÷"×÷'FÅÒ†‡GG3¢òöv—F‡V"æ6öÒõVÄ¶÷böFRÖÖVçF÷"×÷'FÂ’(	Bí-M]½Íİ½’g&öçFVæBİ]-}İı-òİgVR2²çW‡B2²f—FRà¢ÒÆW76öâFö7F÷#¢ÖVçF÷"ÖÆ"ç’ÆW76öâÖFö7F÷"w&VVçÇVÖıí-]ı]"ı]}]İ-mâÂFö72Â5ÂW†×ÆW2Â4’6Öö¶R‚çW‡B÷'FÂı]]B=í­íÂà¢Ò	]Mİ½’'VçF–ÖR7FFS¢ıí-²}ı=­]-òrí-M]½Íİí=â&Wò­íÍİMí’ÔTåDõ%ôÄ%õ4U54”ôãÒ÷F‚÷Fò÷6W76–öâæ§6öâçÒ'VâFWfà¢Ò6W76–öâ&W÷'C¢ÖVçF÷"ÖÆ"ç’6W76–öâw&VVçÇVÒ&W÷'Fí]"í½-òÂ6¶–ÆÂw&‚‚æW‡B7F–öç2ıí½R=í­à ¢2226FV×’6öçG&öÂÆæP ¦6FV×’6öçG&öÂÆæV-ı}½-]"6÷&R&Wò‚çW‡B÷'FÂ}]]r]İİ½’6W76–öâæ§6öæ¢7FvRwV–FW2Â6Æ–FRæ6†÷'2Âv÷&¶&öö²ö†öÖWv÷&²Æ–æ·2Â÷'FÂ7F–öç2‚æW‡BÆW76öâÖWFFFâ	Í]İ-íÍím]"ıíM=í-í--Â6W76–öâ7FFRÂİ­ıí-í--Â]=â"÷'FÂ&Wò‚í-­½-Âİ-]M]]r=}İí=â­íıí-İòM½í"à ¦&6€§—F†öã2ÖVçF÷"ÖÆ"ç’6W76–öâw&VVçÇVÒ7F'BÒ×7GVFVçB	-ÒÒÖ÷WGWB'F–f7G2÷6W76–öç2ö—fà§—F†öã2ÖVçF÷"ÖÆ"ç’÷'FÂw&VVçÇVÒ7F'BÒ×6W76–öâ'F–f7G2÷6W76–öç2ö—fâÒ×÷'FÂÖF—"ââöFRÖÖVçF÷"×÷'FÂÒÖG'’×'Và§—F†öã2ÖVçF÷"ÖÆ"ç’÷'FÂw&VVçÇVÒW‡÷'BÒ×6W76–öâ'F–f7G2÷6W76–öç2ö—fâÒ×÷'FÂÖF—"ââöFRÖÖVçF÷"×÷'FÀ§—F†öã2ÖVçF÷"ÖÆ"ç’÷'FÂw&VVçÇVÒ÷VâÒ×W&Â‡GG¢òó#rããã£3ÒÖG'’×'Và¦  ¢2226FV×’6VÆbÕ6W'f–6Rc ¦6FV×’6VÆbÕ6W'f–6RcMí-½ı]"öæRÖ6öÖÖæBÍ="M½òÍ]İ-í‚í-M]½Íİ½’İ-]M]­íÍİBM½ò=}]İ­à ¦&6€§—F†öã2ÖVçF÷"ÖÆ"ç’Fö7F÷"ÒÖgVÆÀ§—F†öã2ÖVçF÷"ÖÆ"ç’6FV×’w&VVçÇVÒ7F'BÒ×7GVFVçB	-ÒÒÖG'’×'Và§—F†öã2ÖVçF÷"ÖÆ"ç’6FV×’w&VVçÇVÒ7F'BÒ×7GVFVçB	-ÒÒ×6¶—ÖÆ §—F†öã2ÖVçF÷"ÖÆ"ç’7GVFVçBw&VVçÇVÒ&ö÷G7G&Ò×ÆFf÷&ÒÖ6÷0§—F†öã2ÖVçF÷"ÖÆ"ç’7GVFVçBw&VVçÇVÒ&ö÷G7G&Ò×ÆFf÷&Òv–æF÷w0§—F†öã2ÖVçF÷"ÖÆ"ç’7GVFVçBw&VVçÇVÒ†öÖWv÷&°¦  ¢222ÆW76öâ#¢'F—F–öæ–ærÂ7FF—7F–72æB–æ7&VÖVçFÂÆöG0 ­	--íí’=í¢-½İ]]Ò"í-M]½Íİ½’=}]İ½’&÷WFRw&VVçÇVÒ×'F—F–öæ–ævÂİâıí½Í}=]"-í"mRM}}]­’Fö6¶W"İ-]İBw&VVçÇVÖà ¦&6€§—F†öã2ÖVçF÷"ÖÆ"ç’'Væ&öö²w&VVçÇVÒ×'F—F–öæ–ær6–×ÆP§—F†öã2ÖVçF÷"ÖÆ"ç’'Væ&öö²w&VVçÇVÒ×'F—F–öæ–ærFVW §—F†öã2ÖVçF÷"ÖÆ"ç’'Væ&öö²w&VVçÇVÒ×'F—F–öæ–ær†öÖWv÷&°§—F†öã2ÖVçF÷"ÖÆ"ç’7GVFVçBw&VVçÇVÒ×'F—F–öæ–ær&ö÷G7G&Ò×ÆFf÷&ÒÖ6÷0§—F†öã2ÖVçF÷"ÖÆ"ç’7GVFVçBw&VVçÇVÒ×'F—F–öæ–ær†öÖWv÷&°§—F†öã2ÖVçF÷"ÖÆ"ç’6FV×’w&VVçÇVÒ×'F—F–öæ–ær7F'BÒ×7GVFVçB	-ÒÒÖG'’×'Và§—F†öã2ÖVçF÷"ÖÆ"ç’ÆW76öâ×&VÆV6Rw&VVçÇVÒ×'F—F–öæ–ærfW&–g¦  ­	íİí-İí’5ÂÖÆ#  ¥¶ÆW76öã"×'F—F–öæ–ær×7FF—7F–72ÖÆöG2ç7ÅÒ†‡GG3¢òöv—F‡V"æ6öÒõVÄ¶÷böFRÖÖVçF÷"ö&Æö"öÖ7FW"öÆ'2öw&VVçÇVÒöW†×ÆW2öÆW76öã"×'F—F–öæ–ær×7FF—7F–72ÖÆöG2ç7Â ­	Í-]½³  ¢Ò½	İM]­ÆW76öâ%Ò†‡GG3¢òöv—F‡V"æ6öÒõVÄ¶÷böFRÖÖVçF÷"ö&Æö"öÖ7FW"öÆW76öç2öÆW76öâÓ"öFö72õ$TDÔRæÖB¢Ò´Öæ–fW7B-½ı=­ÆW76öâ%Ò†‡GG3¢òöv—F‡V"æ6öÒõVÄ¶÷bı¹ï[h‘éì¶»§q«^wÜ‹[X‹œHÜ[Ü™Y[œ[Bœ]ÛŒÈY[Ü‹[X‹œH\ÜÙ\ÜÛY[Ü™Y[œ[H™Bœ]ÛŒÈY[Ü‹[X‹œHXXÚÜ™Y[œ[HÚ[\HK\İYÙHBœ]ÛŒÈY[Ü‹[X‹œH\ÜÛÛˆÜ™Y[œ[Bœ]ÛŒÈY[Ü‹[X‹œHÚXÚÈÜ™Y[œ[Bœ]ÛŒÈY[Ü‹[X‹œHÜ˜YHÜ™Y[œ[B˜‚´'ô`4/´-4,´.4/t`ô`´bô.H4/4,4`4b4`4`ô`‚‚˜˜\Úœ]ÛŒÈY[Ü‹[X‹œH[š[™ÈÜ™Y[œ[H\İœ]ÛŒÈY[Ü‹[X‹œHÜ˜Ú\İ˜]HÜ™Y[œ[HK\›İ]HÚ[\HK\İYÙHHK[[ÙH™XÛİ™\Bœ]ÛŒÈY[Ü‹[X‹œHØœÙ\™HÜ™Y[œ[Hİ\K[İ]]\Y˜XİËÙÜ™Y[œ[K[ØœÙ\™KXÚXÚÛ\İ›Yœ]ÛŒÈY[Ü‹[X‹œH[˜[^™K\[ˆÜ™Y[œ[HK\]Y\H˜YØİ\İÛY\—Ú›Ú[‚œ]ÛŒÈY[Ü‹[X‹œHÛØXÚ\[ˆÜ™Y[œ[HK\]Y\H˜YØİ\İÛY\—Ú›Ú[ˆK\Ø[\Bœ]ÛŒÈY[Ü‹[X‹œHš\İX[^™K\[ˆÜ™Y[œ[HK\]Y\H›ÙXİÚ›Ú[ˆK\Ø[\HKY›Ü›X]Y\›XZYœ]ÛŒÈY[Ü‹[X‹œHXYÛ›ÜİXÜÈÜ™Y[œ[H\İœ]ÛŒÈY[Ü‹[X‹œHØÙ[˜\š[ÈÜ™Y[œ[Hİ\KYY™šXİ[HYY][HK\ÙYYˆKYK\[‚œ]ÛŒÈY[Ü‹[X‹œHÚ[[™ÙHÜ™Y[œ[Hİ\KYY™šXİ[H\™K[Z[]\ÈMHK\ÙYYÂœ]ÛŒÈY[Ü‹[X‹œH]\Ù]Ü™Y[œ[HÙ[™\˜]HK\ØØ[HÛX[K\ÙYYˆK\ÚÙ]ÈYÚK[]KY˜XİÈK]ÚYK\›İÜÈK[İ]]\Y˜XİËÙÙ[™\˜]YY[\œš\ÙKœÜ[œ]ÛŒÈY[Ü‹[X‹œH]šY[˜ÙHÜ™Y[œ[HÛÛXİ™Y\İšX]KZ›Ú[ˆK[İ]]İX›Z\ÜÚ[ÛœËÜ™Y\İšX]KZ›Ú[‹›Yœ]ÛŒÈY[Ü‹[X‹œHZ\ØÛÛ˜Ù\[ÛˆÜ™Y[œ[HXYÛ›ÜÙHK]^œ\][ÛˆÙ^H4ct`´/ˆ4`´/ˆ4-´-H4`t,4/4/´-H4aô`´/ˆ\İšX][ÛˆÙ^H‚œ]ÛŒÈY[Ü‹[X‹œHØ[Xœ˜][ÛˆÜ™Y[œ[HÚİÈÙ[š[Ü‚œ]ÛŒÈY[Ü‹[X‹œH\ÜÛÛ‹YØİÜˆÜ™Y[œ[HK[İ]]\Y˜XİËÙÜ™Y[œ[K[\ÜÛÛ‹YØİÜ‹›Yœ]ÛŒÈY[Ü‹[X‹œHÚK\Û[ÚÙHÜ™Y[œ[HKYK\[‚˜‚´'ô/´`t.ô-H4,´bô/ô/´.ô/t-t/t.4cÈ4-ô,4-4,4/t.4cÎ‚‚˜˜\Úœ]ÛŒÈY[Ü‹[X‹œHİX›Z]Ü™Y[œ[H]Y\K][š[™Âœ]ÛŒÈY[Ü‹[X‹œHÛY]ÛÜšÈÜ™Y[œ[HÚXÚÈK\İX›Z\ÜÚ[Ûˆ\ÜÛÛœËÛ\ÜÛÛ‹LKÜİX›Z\ÜÚ[ÛœËÚÛY]ÛÜšË›Yœ]ÛŒÈY[Ü‹[X‹œH]]ÙÜ˜YK\Ü[Ü™Y[œ[HK\İX›Z\ÜÚ[ÛˆXœËÙÜ™Y[œ[KÙ^[\\ËÜİY[\ÛÛ][Û‹Y^[\KœÜ[K[İ]]\Y˜XİËÜÜ[X]]ÙÜ˜YK›Yœ]ÛŒÈY[Ü‹[X‹œHY\]™K\™]šY]ÈÜ™Y[œ[HK\İX›Z\ÜÚ[ÛˆİX›Z\ÜÚ[ÛœËÜ]Y\K][š[™Ë›Yœ]ÛŒÈY[Ü‹[X‹œHXœšYYˆÜ™Y[œ[HK\İY[4&4,´,4/HK\İX›Z\ÜÚ[ÛˆİX›Z\ÜÚ[ÛœËÜ]Y\K][š[™Ë›YK\™HK\ÜİHK[İ]]\Y˜XİËÙÜ™Y[œ[KYXœšYY‹›Yœ]ÛŒÈY[Ü‹[X‹œH[[Y]HÜ™Y[œ[HK\™HK\ÜİHK\™]šY]ÈÌœ]ÛŒÈY[Ü‹[X‹œHX\›š[™Ë[ÛÜÜ™Y[œ[HK\™HK\ÜİHK\İX›Z\ÜÚ[ÛˆİX›Z\ÜÚ[ÛœËÜ]Y\K][š[™Ë›YK[İ]]\Y˜XİËÙÜ™Y[œ[K[X\›š[™Ë[ÛÜ›Yœ]ÛŒÈY[Ü‹[X‹œH™\^HÜ™Y[œ[HK\İY[4&4,´,4/HK\İX›Z\ÜÚ[ÛˆİX›Z\ÜÚ[ÛœËÜ]Y\K][š[™Ë›YK\™HK\ÜİHK[İ]]\Y˜XİËÙÜ™Y[œ[K\™\^K›Yœ]ÛŒÈY[Ü‹[X‹œHÙ\ÜÚ[ÛˆÜ™Y[œ[H™\ÜK\Ù\ÜÚ[Ûˆ\Y˜XİËÜÙ\ÜÚ[ÛœËÚ]˜[ˆK[İ]]\Y˜XİËÙÜ™Y[œ[K\Ù\ÜÚ[Û‹\™\Ü›Yœ]ÛŒÈY[Ü‹[X‹œHÙ\YšXØ]HÜ™Y[œ[B˜‚ˆÈÈ4&4/t`´-t`4a4-t.t`tbÈ4`ôaô-t/t.4.´,4.4/4-t/t`´/´`4,‚´'´`t/t/´,´/t/´.H4.4/t`´-t`4a4-t.t`H4-ô,4/tcô`´.4cÈ4,ˆXØY[^H^\šY[˜ÙHX‚‚˜˜\Úœ]ÛŒÈY[Ü‹[X‹œHÙ\ÜÚ[ÛˆÜ™Y[œ[Hİ\K\İY[4&4,´,4/HK[İ]]\Y˜XİËÜÙ\ÜÚ[ÛœËÚ]˜[‚™Ú]ÛÛ™HÎ‹ËÙÚ]X‹˜ÛÛKÔ][Ûİ‹ÙK[Y[Ü‹\Ü[™Ú]˜ÙK[Y[Ü‹\Ü[“QS•Ô—ÓP—ÔÑTÔÒSÓK‹‹ÙK[Y[Ü‹Ø\Y˜XİËÜÙ\ÜÚ[ÛœËÚ]˜[‹ÜÙ\ÜÚ[Û‹šœÛÛˆœH[ˆ]‚œ]ÛŒÈY[Ü‹[X‹œHÙ\ÜÚ[ÛˆÜ™Y[œ[H™\ÜK\Ù\ÜÚ[Ûˆ\Y˜XİËÜÙ\ÜÚ[ÛœËÚ]˜[ˆK[İ]]\Y˜XİËÙÜ™Y[œ[K\Ù\ÜÚ[Û‹\™\Ü›Yœ]ÛŒÈY[Ü‹[X‹œH\ÜÛÛ‹YØİÜˆÜ™Y[œ[HK[İ]]\Y˜XİËÙÜ™Y[œ[K[\ÜÛÛ‹YØİÜ‹›Y˜‚´'ô/´`4`´,4.ÈÙK[Y[Ü‹\Ü[JÎ‹ËÙÚ]X‹˜ÛÛKÔ][Ûİ‹ÙK[Y[Ü‹\Ü[
+H4/t,4/ô.4`t,4/H4/t,YHÈ
+È^È
+Èš]H4.4/ô/´.´,4-ôbô,´,4-t`ˆİ\œ™[İYÙK[Y[[™KÚÚ[Ü˜\ÛÜKXÛÛ[X[™4.´/t/´/ô.´.]šY[˜ÙHÚXÚÛ\İ4.[™Ù™ˆ4/ô/´`t.ô-H4`ô`4/´.´,‚‚´(t,ô-t/t-t`4.4`4/´,´,4`´c4.ô/´.´,4.ôc4/tbô.H4/ô/´`4`´,4.È4`ôaô-t/t.4.´,‚‚˜˜\Úœ]ÛŒÈY[Ü‹[X‹œHÜ[Ü™Y[œ[HK[İ]]\Y˜XİËÙÜ™Y[œ[K\İY[\Ü[š[œ]ÛŒÈY[Ü‹[X‹œHÜ[Ü™Y[œ[HK]™\œÚ[ÛˆŒˆK[İ]]\Y˜XİËÙÜ™Y[œ[K\İY[\Ü[]Œ‹š[˜‚´(t,ô-t/t-t`4.4`4/´,´,4`´cÛÛ›Û›ÛÛH4/4-t/t`´/´`4,‚‚˜˜\Úœ]ÛŒÈY[Ü‹[X‹œHÛÛ›Û\›ÛÛHÜ™Y[œ[HK[İ]]\Y˜XİËÙÜ™Y[œ[KXÛÛ›Û\›ÛÛKš[˜‚´(t,ô-t/t-t`4.4`4/´,´,4`´c4,´.4-ô`ô,4.ô.4-ô,4a´.4cˆ4/ô.ô,4/t,‚‚˜˜\Úœ]ÛŒÈY[Ü‹[X‹œHš\İX[^™K\[ˆÜ™Y[œ[HˆK\]Y\H›ÙXİÚ›Ú[ˆˆK\Ø[\HˆKY›Ü›X][ˆK[İ]]\Y˜XİËÜ›ÙXİ\[‹š[˜‚ˆÈÈ4'ô`4,4.´`´.4.´,4.4,4,´`´/´/4,4`´.4-ô,4a´.4cÂ‚ˆÈÈÈ4%4.4,4,ô/t/´`t`´.4.´,Ü™Y[œ[B‚˜˜\Úœ]ÛŒÈY[Ü‹[X‹œHXYÛ›ÜİXÜÈÜ™Y[œ[H\İœ]ÛŒÈY[Ü‹[X‹œHXYÛ›ÜİXÜÈÜ™Y[œ[HÚİÈÙYÛY[\ÚÙ]Âœ]ÛŒÈY[Ü‹[X‹œHXYÛ›ÜİXÜÈÜ™Y[œ[H[ˆÙYÛY[\ÚÙ]Â˜‚ˆÈÈÈ4(ta´-t/t,4`4.4.4.[˜ÚY[Â‚˜˜\Úœ]ÛŒÈY[Ü‹[X‹œH[˜ÚY[\İÜ™Y[œ[Bœ]ÛŒÈY[Ü‹[X‹œH[˜ÚY[İ\Ü™Y[œ[HÚÙ]ËZ[™\İYØ][Û‚œ]ÛŒÈY[Ü‹[X‹œHØÙ[˜\š[ÈÜ™Y[œ[H\İœ]ÛŒÈY[Ü‹[X‹œHØÙ[˜\š[ÈÜ™Y[œ[Hİ\KYY™šXİ[HYY][HK\ÙYYˆKYK\[‚˜‚ˆÈÈÈÙYYt/ô`4/´a4.4.ô.4-4,4/t/tbôaB‚˜˜\Úœ]ÛŒÈY[Ü‹[X‹œHÙYYÜ™Y[œ[HK\›Ùš[HÚÙ]ÙYœ]ÛŒÈY[Ü‹[X‹œHÙYYÜ™Y[œ[HK\›Ùš[H˜[[˜ÙYœ]ÛŒÈY[Ü‹[X‹œHÙYYÜ™Y[œ[HK\›Ùš[H˜Y\İ]\İXÜÂœ]ÛŒÈY[Ü‹[X‹œHÙYYÜ™Y[œ[HK\›Ùš[H˜Y\\][Ûš[™Âœ]ÛŒÈY[Ü‹[X‹œHÙYYÜ™Y[œ[HK\›Ùš[HÚYKX[ØÛÂœ]ÛŒÈY[Ü‹[X‹œHÙYYÜ™Y[œ[HK\›Ùš[HÛX[Y[Y[œÚ[Û‹Xœ›ØYØ\İœ]ÛŒÈY[Ü‹[X‹œH]\Ù]Ü™Y[œ[HX[šY™\İœ]ÛŒÈY[Ü‹[X‹œH]\Ù]Ü™Y[œ[HÙ[™\˜]HK\ØØ[HÛX[K\ÙYYˆK\ÚÙ]ÈYÚK[]KY˜XİÈK]ÚYK\›İÜÈK[İ]]\Y˜XİËÙÙ[™\˜]YY[\œš\ÙKœÜ[˜‚ˆÈÈÈ[\œš\ÙKt/ô`4/´,´-t`4.´.‚˜˜\Úœ]ÛŒÈY[Ü‹[X‹œH]]ÙÜ˜YK\Ü[Ü™Y[œ[HK\İX›Z\ÜÚ[ÛˆXœËÙÜ™Y[œ[KÙ^[\\ËÜİY[\ÛÛ][Û‹Y^[\KœÜ[K[İ]]\Y˜XİËÜÜ[X]]ÙÜ˜YK›Yœ]ÛŒÈY[Ü‹[X‹œHÚK\Û[ÚÙHÜ™Y[œ[HKYK\[‚˜‚ˆÈÈÈ4+t`´,4.ô/´/t/tbô-H4`4-tb4-t/t.4cÂ‚˜˜\Úœ]ÛŒÈY[Ü‹[X‹œHÛÛ][ÛœÈÜ™Y[œ[H\İœ]ÛŒÈY[Ü‹[X‹œHÛÛ][ÛœÈÜ™Y[œ[HÚİÈ™Y\İšX]KZ›Ú[‚˜‚ˆÈÈÈÜ›ÜÜËY[™Ú[™HÓ‚˜˜\Úœ]ÛŒÈY[Ü‹[X‹œHÛÜ™Y[œ[H\İœ]ÛŒÈY[Ü‹[X‹œHÛÜ™Y[œ[HÚİÈ™Y\İšX]KZ›Ú[‚˜‚ˆÈÈ4'4,4`´-t`4.4,4.ôbÈ4`ô`4/´.´,‚Ÿ4'4,4`´-t`4.4,4.È4(t`tbô.ô.´,ŸKK_KK_Ÿ4$ô.ô,4,´/tbô.H4/ô.ô,4/H4`ô`4/´.´,Û\ÜÛÛœËÛ\ÜÛÛ‹LKÙØÜËÔ‘PQQK›YJ\ÜÛÛœËÛ\ÜÛÛ‹LKÙØÜËÔ‘PQQK›Y
+HŸ4%4/´`4/´-´/t,4cÈ4.´,4`4`´,Ü›ØYX\›YJ\ÜÛÛœËÛ\ÜÛÛ‹LKÙØÜËÜ›ØYX\›Y
+HŸÛÜšØ›ÛÚÈ4`ôaô-t/t.4.´,ÜİY[]ÛÜšØ›ÛÚË›YJ\ÜÛÛœËÛ\ÜÛÛ‹LKÙØÜËÜİY[]ÛÜšØ›ÛÚË›Y
+HŸ4$ô,4.t-4/4-t/t`´/´`4,ÛY[Ü‹YİZYK›YJ\ÜÛÛœËÛ\ÜÛÛ‹LKÙØÜËÛY[Ü‹YİZYK›Y
+HŸ4'ô/´-4,ô/´`´/´,´.´,4`ôaô-t/t.4.´,ÜİY[\™\›YJ\ÜÛÛœËÛ\ÜÛÛ‹LKÙØÜËÜ[˜›ÛÚÜËÜİY[\™\›Y
+HŸ4(ô/ô`4/´bt-t/t/tbô.H[˜›ÛÚÈÜÚ[\K\]›YJ\ÜÛÛœËÛ\ÜÛÛ‹LKÙØÜËÜ[˜›ÛÚÜËÜÚ[\K\]›Y
+HŸ4(4,4`tb4.4`4-t/t/tbô.H[˜›ÛÚÈÙY\Y]™K\]›YJ\ÜÛÛœËÛ\ÜÛÛ‹LKÙØÜËÜ[˜›ÛÚÜËÙY\Y]™K\]›Y
+HŸ4'ô.ô,4/H4-4/´/4,4b4.´.ÚÛY]ÛÜšË\[‹›YJ\ÜÛÛœËÛ\ÜÛÛ‹LKÚÛY]ÛÜšËÜ[‹›Y
+HŸ4*4/ô,4`4,ô,4.ô.´,ØÚX]\ÚY]›YJ\ÜÛÛœËÛ\ÜÛÛ‹LKÙØÜËØÚX]\ÚY]›Y
+HŸ4&´/´/t`´`ô`XØY[^HØXØY[^K[ÛÜ›YJ\ÜÛÛœËÛ\ÜÛÛ‹LKÙØÜËØXØY[^K[ÛÜ›Y
+HŸXØY[^HŒˆØXØY[^K]Œ‹›YJ\ÜÛÛœËÛ\ÜÛÛ‹LKÙØÜËØXØY[^K]Œ‹›Y
+HŸ4&ô,4,t/´`4,4`´/´`4/t,4cÈ4/ô/ˆ]Y\H[š[™ÈÜ]Y\K][š[™Ë[X‹›YJ\ÜÛÛœËÛ\ÜÛÛ‹LKÙØÜËÜ]Y\K][š[™Ë[X‹›Y
+HŸY\]™H4/ô/ˆQÔQKÜÛXÙ\ËÙØ[™ÜÈÜY\YKYØ[™Ë\ÛXÙ\ËY^Z[™Y›YJ\ÜÛÛœËÛ\ÜÛÛ‹LKÙØÜËÙY\Y]™\ËÜY\YKYØ[™Ë\ÛXÙ\ËY^Z[™Y›Y
+HŸ4'4,4`´`4.4a´,4/´a´-t/t.´.ÜXœšXË›YJ\ÜÛÛœËÛ\ÜÛÛ‹LKÚÛY]ÛÜšËÜXœšXË›Y
+HŸ4)4.4/t,4.ôc4/t,4cÈ4-ô,4-4,4aô,ØØ\İÛ™K›YJ\ÜÛÛœËÛ\ÜÛÛ‹LKÙØÜËØØ\İÛ™K›Y
+HŸ4(t.´,´/´-ô/t/´.H4.´-t.t`HØØ\ÙK\İYK›YJ\ÜÛÛœËÛ\ÜÛÛ‹LKÙØÜËØØ\ÙK\İYK›Y
+HŸ4'ô`4-t-ô-t/t`´,4a´.4cÈÙÜ™Y[œ[K][ÜKœJ\ÜÛÛœËÛ\ÜÛÛ‹LKØ\Y˜XİËÙÜ™Y[œ[K][ÜKœ
+HŸ4&´,4`´,4.ô/´,È4/ô`4-t-ô-t/t`´,4a´.4.HÙXÚÜËÔ‘PQQK›YJXÚÜËÔ‘PQQK›Y
+HŸ4&4`tat/´-4/t.4.´.4/ô`4-t-ô-t/t`´,4a´.4.ÙXÚÜËÙÜ™Y[œ[K][ÜWJXÚÜËÙÜ™Y[œ[K][ÜKÔ‘PQQK›Y
+HŸX[šY™\İ4,´bô/ô`ô`t.´,\ÜÛÛˆˆÛ\ÜÛÛ‹X[[J\ÜÛÛœËÛ\ÜÛÛ‹L‹ÙØÜËÛ\ÜÛÛ‹X[[
+HŸ4(t`´-t/t-Ü™Y[œ[HÛXœËÙÜ™Y[œ[WJXœËÙÜ™Y[œ[KÔ‘PQQK›Y
+HŸÔS4-4.ôcÈ4/ô,4`t/ô/´`4`´,4.´.ô,4`t`´-t`4,ØÛ\İ\‹Z[œÜXİ[Û‹œÜ[JXœËÙÜ™Y[œ[KÙ^[\\ËØÛ\İ\‹Z[œÜXİ[Û‹œÜ[
+HŸÔS4-4.ôcÈ4/4/´/t.4`´/´`4.4/t,ô,4.´.ô,4`t`´-t`4,ØÛ\İ\‹[[Ûš]Üš[™ËœÜ[JXœËÙÜ™Y[œ[KÙ^[\\ËØÛ\İ\‹[[Ûš]Üš[™ËœÜ[
+HŸÔS4/ô/ˆİÜ˜YÙH4.\][Ûš[™ÈÜİÜ˜YÙKX[™\\][Ûš[™ËœÜ[JXœËÙÜ™Y[œ[KÙ^[\\ËÜİÜ˜YÙKX[™\\][Ûš[™ËœÜ[
+HŸÔS4/ô/ˆ\][Ûš[™Èİ˜]YÚY\ÈÜ\][Ûš[™Ë\İ˜]YÚY\ËœÜ[JXœËÙÜ™Y[œ[KÙ^[\\ËÜ\][Ûš[™Ë\İ˜]YÚY\ËœÜ[
+H‚ˆÈÈ4(t`´`4`ô.´`´`ô`4,4/ô`4/´-t.´`´,‚˜^‹‚¸¥'8¥ 8¥ \ÜÛÛœËÈÈ8¡¤4.´,4/t/´/Nˆ4/´-4.4/H4`ô`4/´.ˆH4/´-4/t,4/ô,4/ô.´,¸¥ ˆ8¥'8¥ 8¥ ‘PQQK›YÈ4/´,ô.ô,4,´.ô-t/t.4-H4,´`t-taH4`ô`4/´.´/´,‚¸¥ ˆ8¥%8¥ 8¥ \ÜÛÛ‹L‹Â¸¥ ˆ8¥'8¥ 8¥ ØÜËÈÈ4`´-t/´`4.4cËÛÜšØ›ÛÚË[˜›ÛÚÜÂ¸¥ ˆ8¥'8¥ 8¥ ÛY]ÛÜšËÈÈ\ÜÚYÛ›Y[[‹XœšXË[\]\Â¸¥ ˆ8¥'8¥ 8¥ \Y˜XİËÈÈØÜ™Y[œËØ\ÙHY]šXÜÂ¸¥ ˆ8¥%8¥ 8¥ İX›Z\ÜÚ[ÛœËÈÈ4`t-4,4aô,4`ôaô-t/t.4.´,¸¥'8¥ 8¥ XÚÜËÈÈ4.4`tat/´-4/t.4.´.4`t.ô,4.t-4/´,ˆ
+Z[[œ]
+B¸¥'8¥ 8¥ XœËÈÈØÚÙ\‹t`t`´-t/t-4bÈ
+Ú\™Y
+B¸¥'8¥ 8¥ \Y˜XİËÈÈ™Y\™Xİ
+ÈÙ\ÜÚ[Û‹Ü[[YHİ]]Â¸¥'8¥ 8¥ Ü˜ËÛY[Ü—ÛX‹ÈÈÓH4.4-4/´/4-t/t/tbô-H4/4/´-4`ô.ô.¸¥'8¥ 8¥ \İËÂ¸¥%8¥ 8¥ Y[Ü‹[X‹œB˜‚ˆÈÈ4&´,4aô-t`t`´,´/ˆ4.4/ô`4/´,´-t`4.´.‚´'ô/´.ô/tbô.H4`´-t`t`´/´,´bô.H4/ô`4/´,ô/´/N‚‚˜˜\Úœ]ÛŒÈ[H]\İ\İÈ\B˜‚´'ô`4/´,´-t`4.´,]Û‹t.´/´/4/ô.4.ôcôa´.4.‚‚˜˜\Úœ]ÛŒÈ[HÛÛ\[X[\HÜ˜ÈY[Ü‹[X‹œB˜‚”]X[]HİX\™4-4.ôcÈ4`4,4-ô`4,4,t/´`´.´.‚‚˜˜\Úœ]ÛŒÈ[H]\İ\İËİ\İÜ]X[]WÙİX\™ËœH\B˜‚´&´/´/t`´`4,4.´`ˆİX\™‚‚‹H4.ôc´,t/´.H]Û‹t/4/´-4`ô.ôc4,ˆÜ˜ËÛY[Ü—ÛX˜4-4/´.ô-´-t/H4,tbô`´c4/t-H4,t/´.ôc4b4-HÓĞÎÂ‹H4`t`4-t-4/t.4.HÛ\İ\š[™ÈÛÙY™šXÚY[4,´/t`ô`´`4-t/t/t-t,ô/ˆ[\Üt,ô`4,4a4,4-4/´.ô-´-t/H4,tbô`´c4/t-H4,t/´.ôc4b4-HŒNÂ‹HÓH4/´`t`´,4-t`´`tcÈ4`´/´/t.´.4/4a4,4`t,4-4/´/ˆ\œÙ\ˆ™YÚ\İ˜][Û‹ÛÛ[X[™ÛÛ^4.[™\‹t,ô`4`ô/ô/ôbÈ4.ô-t-´,4`ˆ4,ˆ4/´`´-4-t.ôc4/tbôaH4/4/´-4`ô.ôcôaK‚‚´'ô`4/´,´-t`4.´,4-´.4,´/´,ô/ˆÜ™Y[œ[Kt`t`´-t/t-4,‚‚˜˜\Úœ]ÛŒÈY[Ü‹[X‹œHİ]\ÈÜ™Y[œ[Bœ]ÛŒÈY[Ü‹[X‹œHÚXÚÈÜ™Y[œ[Bœ]ÛŒÈY[Ü‹[X‹œHÜ˜YHÜ™Y[œ[B˜‚´'t,4/4/´/4-t/t`ˆ4/ô`ô,t.ô.4.´,4a´.4.‚‚˜^ŒLÌH\İÈ\ÜÚ[™Â‘Ü™Y[œ[HX[ÚXÚÜÈ\ÜÚ[™ÂŒÌ\ÛYH\ÜÚX[ˆ[ÜHXÚÈ[˜ÛYY˜‚ˆÈÈ›ØYX\‚ÓH4`ô-´-H4`t/´-4-t`4-´.4`ˆ™YÚ\İH4-4.ôcÈ4,t`ô-4`ôbt.4aH4`t`´-t/t-4/´,‚‚‹HÜİÜ™\Â‹HÛXÚÒİ\ÙB‹HYÛÜ”Â‹HÜ\šÈÛˆPT“‚‹HÜ\šÈÛˆİX™\›™]\Â‚´'ô.ô,4/H4`4,4-ô,´.4`´.4cÎˆ4-4/´,t,4,´.ôcô`´c4/t/´,´bô-H4`t`´-t/t-4bÈ4aô-t`4-t-È4`´/´`ˆ4-´-H4.´/´/t`´`4,4.´`ˆ8 %XœËÏ˜[YO‹Ø4-4/´.´`ô/4-t/t`´,4a´.4cËÙYYt/ô`4/´a4.4.ô.ÚXÚÜËØÙ[˜\š[ÜÈ4.Ó‚‚ˆÈÈ4)ô-t`t`´/tbô.H4`t`´,4`´`ô`B‚´+t`´/ˆ4/t-H4.´/´/4/4-t`4aô-t`t.´,4cÈTÈ4.4/t-H4-ô,4/4-t/t,4/ô/´.ô/t/´a´-t/t/t/´.H4/ô.ô,4`´a4/´`4/4bÈ4/´,t`ôaô-t/t.4cËˆ4(t-t.taô,4`H4ct`´/ˆ4.4/t-´-t/t-t`4/tbô.HÙ[‹\Ù\šXÙHÛÛÚ]4-4.ôcÈ4/4-t/t`´/´`4,4.4`ôaô-t/t.4.´,ˆ4.ô/´.´,4.ôc4/t/‹4/ô`4/´-ô`4,4aô/t/‹4,´/´`t/ô`4/´.4-ô,´/´-4.4/4/‹‚‚‘Ü™Y[œ[HXØY[^H4/´`t`´,4dt`´`tcÈ4/´`t/t/´,´/tbô/4/4/´-4`ô.ô-t/4`H4.4/t`´-t,ô`4,4a´.4-t.H4,ˆÓH4.\ÜÙ\ÜÛY[›İËˆ4(ô`4/´.´.Ü\šËXÙX™\™È4.›[šÈ4/´a4/´`4/4.ô-t/tbÈ4.´,4.ˆ4`ôaô-t,t/tbô-H4/4,4`´-t`4.4,4.ôbÈ4.4.ô/´.´,4.ôc4/tbô-H4`t`´-t/t-4bÎÈ4`È›[šËÒXÙX™\™ÈÛÛ\ÜÙH4/ô/´.´,4/t-t`ˆ4.4/t`´-t,ô`4,4a´.4.4,´/ˆ4,´`t-H4.´/´/4,4/t-4bÈÓH4.]X[]H™[X\ÙHÛÜšÙ›İË‚‚´'ô`4/´-t.´`ˆ4/´`´.´`4bô`ˆ4-4.ôcÈ4`4,4`tb4.4`4-t/t.4cÎˆ4/t/´,´bô-H4`ô`4/´.´.4.ô`ôaôb4-H4-4/´,t,4,´.ôcô`´c4/4,4.ô-t/tc4.´.4/4.4/ô`4/´,´-t`4cô-t/4bô/4.4/4/´-4`ô.ôcô/4.4`t/´at`4,4/tcôcÈ4,ô.ô,4,´/tbô.H4/ô`4.4/ta´.4/È8 %4`´-t/´`4.4cÈ4-4/´.ô-´/t,4,tbô`t`´`4/ˆ4/ô`4-t,´`4,4bt,4`´c4`tcÈ4,ˆ4/ô`4,4.´`´.4.´`Ë]šY[˜ÙH4.4/ô/´/tcô`´/tbô.H™YY˜XÚË‚

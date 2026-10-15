@@ -1,11 +1,11 @@
-# Lesson 05 — Iceberg on S3: REST catalogs with Lakekeeper and Nessie
+# Lesson 05 — Iceberg on S3: Hive Metastore, Lakekeeper and Nessie
 
-Стенд: **`flink-iceberg`** · Формат: **Iceberg v2** · Storage: **SeaweedFS / S3 API** · Catalogs: **Lakekeeper + Project Nessie**
+Стенд: **`flink-iceberg`** · Формат: **Iceberg v2** · Storage: **SeaweedFS / S3 API** · Catalogs: **Hive Metastore Thrift + Lakekeeper REST + Project Nessie**
 
 | Раздел | Путь | Зачем |
 | --- | --- | --- |
 | Теория и workbook | [docs/](docs/) | metadata, snapshots, object storage и catalog |
-| Internals | [deep-dives/](docs/deep-dives/) | история формата, metadata graph, commit/CAS и сравнение форматов |
+| Internals | [deep-dives/](docs/deep-dives/) | история Hive/HMS, metadata graph, commit protocols, REST и сравнение форматов |
 | Runbooks | [docs/runbooks/](docs/runbooks/) | короткий, глубокий и восстановительный маршруты |
 | Homework | [homework/](homework/) | спроектировать и доказать Iceberg lakehouse |
 | SQL и сервисы | [../../labs/flink-iceberg/](../../labs/flink-iceberg/) | практика на общем S3 bucket и двух каталогах |
@@ -15,7 +15,7 @@
 
 ## Результат урока
 
-Ученик прослеживает путь от `INSERT` до Iceberg snapshot, объясняет разделение каталога и S3, поднимает Lakekeeper REST catalog, сравнивает его с Nessie и аргументированно выбирает каталог для заданного окружения.
+Ученик прослеживает путь от `INSERT` до Iceberg snapshot, объясняет, что Hive Metastore хранит указатель на Iceberg metadata, а не сами snapshots/data, сравнивает HMS Thrift с Lakekeeper REST и Nessie refs и аргументированно выбирает каталог для заданного окружения.
 
 ## Быстрый старт
 
@@ -30,6 +30,7 @@
 - [Workbook ученика](docs/student-workbook.md)
 - [План ментора](docs/mentor-guide.md)
 - [Сравнение каталогов](docs/catalog-decision-matrix.md)
+- [Deep dive: Hive Metastore и эволюция каталогов](docs/deep-dives/hive-metastore-and-catalog-evolution.md)
 - [Deep dive: metadata и snapshot internals](docs/deep-dives/iceberg-metadata-internals.md)
 - [Deep dive: catalog и commit protocols](docs/deep-dives/catalog-commit-protocols.md)
 - [История и альтернативы table formats](docs/deep-dives/table-formats-history-and-alternatives.md)

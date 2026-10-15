@@ -1,6 +1,6 @@
 # Flink + Kafka + Iceberg lab
 
-Изолированный Docker Desktop стенд для Lesson 05 и Lesson 06. Нужны Docker Desktop в режиме Linux containers, Compose v2 и около 5 GB свободной памяти Docker. Java, Maven и Python на хост устанавливать не требуется; Flink SQL и коннекторы собраны в Docker-образ.
+Изолированный Docker Desktop стенд для Lesson 05 и Lesson 06. Нужны Docker Desktop в режиме Linux containers, Compose v2 и около 6 GB свободной памяти Docker. Java, Maven и Python на хост устанавливать не требуется; Flink SQL и коннекторы собраны в Docker-образ.
 
 ## Топология
 
@@ -11,7 +11,10 @@
 | SeaweedFS 4.46 | S3-compatible object storage | S3 API: <http://localhost:19000>; filer UI/API: <http://localhost:18888>; master: <http://localhost:19333> |
 | Lakekeeper 0.13.6 | Iceberg REST catalog, warehouse в SeaweedFS | UI/API: <http://localhost:18181/ui/>; REST: `/catalog` |
 | Nessie 0.109.0 | альтернативный REST catalog с refs/ветками | API: <http://localhost:19120> |
-| PostgreSQL 17 | metadata store Lakekeeper | `localhost:15432` |
+| Hive Metastore 3.1.3 | классический Iceberg `HiveCatalog` через Thrift | Thrift: `localhost:19083` (в Docker: `hive-metastore:9083`) |
+| PostgreSQL 17 × 2 | отдельные metadata stores Lakekeeper и Hive Metastore | Lakekeeper: `localhost:15432`; HMS: `localhost:15433` |
+
+Для Hive warehouse URI применяется `s3a://`: Hadoop S3A нужен Hive Metastore для обработки database location, а Iceberg table data/metadata читает и пишет отдельным `S3FileIO`. Настройки S3A для стенда находятся в [`conf/core-site.xml`](conf/core-site.xml); AWS SDK поколения v1 должен совпадать с Hadoop `hadoop-aws`, тогда как Iceberg S3FileIO использует свой bundled AWS SDK. Это разделение — часть лабораторной, а не production security template.
 
 Порт-план намеренно отличен от базового Flink курса. Все опубликованные порты привязаны к loopback. Kafka и Flink общаются через отдельную Docker-сеть.
 
@@ -28,25 +31,25 @@ docker compose -f labs/flink-iceberg/compose.yaml up -d --build --wait
 docker compose -f labs/flink-iceberg/compose.yaml ps
 ```
 
-Первый запуск скачает несколько образов и Maven JAR-ы, поэтому займёт больше времени. В Compose автоматически создаются bucket SeaweedFS, схема Lakekeeper, bootstrap default project и warehouse `flink-demo`. Nessie хранит refs в RocksDB volume. Образы и учебные пароли закреплены только для локального демо.
+Первый запуск скачает несколько образов и Maven JAR-ы, поэтому займёт больше времени. В Compose автоматически создаются bucket SeaweedFS, схема Lakekeeper, bootstrap default project и warehouse `flink-demo`; одноразовый `hive-metastore-schema` запускает `schematool` для отдельной PostgreSQL HMS и при рестартах проверяет текущую схему. Сам Thrift service стартует в resume mode, не вызывая повторно неповторяемый `initSchema`. Nessie хранит refs в RocksDB volume. Образы и учебные пароли закреплены только для локального демо.
 
 Проверить состояние:
 
 ```powershell
 docker compose -f labs/flink-iceberg/compose.yaml ps
-docker compose -f labs/flink-iceberg/compose.yaml logs lakekeeper nessie flink-jobmanager
+docker compose -f labs/flink-iceberg/compose.yaml logs hive-metastore lakekeeper nessie flink-jobmanager
 ```
 
 ## Урок 05: каталоги и таблицы Iceberg
 
-Запусти интерактивный Flink SQL Client, который подключится к кластеру и зарегистрирует оба каталога:
+Запусти интерактивный Flink SQL Client, который подключится к кластеру и зарегистрирует три Iceberg catalogs:
 
 ```powershell
 docker compose -f labs/flink-iceberg/compose.yaml exec flink-sql-client `
   /opt/flink/bin/sql-client.sh -i /workspace/labs/flink-iceberg/sql/01-catalogs.sql
 ```
 
-Пока SQL Client остаётся открыт, изучи файлы `sql/02-lakekeeper-demo.sql` и `sql/03-nessie-demo.sql` и выполни их команды в этом же prompt. После записи посмотри объекты в SeaweedFS filer UI, snapshots в Iceberg и таблицы в Lakekeeper UI. Для каждого нового SQL Client запускай `01-catalogs.sql` снова: регистрация Flink Catalog относится к SQL-сессии, а сами таблицы и файлы сохраняются в каталоге и S3.
+Пока SQL Client остаётся открыт, выполни `sql/04-hive-catalog-demo.sql`, `sql/02-lakekeeper-demo.sql` и `sql/03-nessie-demo.sql`. Для HMS-сценария сравни `metadata_location` в PostgreSQL с metadata JSON в SeaweedFS; затем изучи Iceberg snapshots/files. Для каждого нового SQL Client запускай `01-catalogs.sql` снова: регистрация Flink Catalog относится к SQL-сессии, а сами таблицы и файлы сохраняются в каталоге и S3.
 
 ## Урок 06: Kafka → Flink → Iceberg
 
@@ -92,6 +95,7 @@ docker compose -f labs/flink-iceberg/compose.yaml down --volumes
 ## Ограничения
 
 - Это не production-конфигурация: нет TLS, аутентификации, отказоустойчивости или отдельного S3 IAM. SeaweedFS credentials и PostgreSQL password — публичные demo-значения.
+- Две PostgreSQL и Hive Metastore в этом Compose нужны для отдельной учебной границы; один локальный HMS и одна локальная DB не моделируют HA production service.
 - Kafka имеет один брокер, один учебный partition и replication factor 1. Checkpoints используют общий локальный Docker volume, не S3. Это удобно для восстановления в лабораторной, но не доказывает production SLA.
 - Nessie здесь развёрнут на persistent RocksDB как single-node catalog. Iceberg REST интеграция Nessie отмечена upstream-документацией как experimental; сравни её с Lakekeeper, а для production проверь совместимость и поддержку конкретного движка.
 - Lakekeeper и Nessie управляют каталогами/metadata, а сами Parquet и Iceberg metadata files хранятся в SeaweedFS. Остановка catalog не удаляет S3 объекты.

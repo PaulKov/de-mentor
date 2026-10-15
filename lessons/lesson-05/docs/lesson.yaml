@@ -1,7 +1,7 @@
 route: iceberg-s3-catalogs
 lesson_code: lesson-05
 physical_lab: flink-iceberg
-title: Apache Iceberg on S3 with Lakekeeper and Nessie
+title: Apache Iceberg on S3 with Hive Metastore, Lakekeeper and Nessie
 docs:
   - lessons/lesson-05/docs/README.md
   - lessons/lesson-05/docs/student-workbook.md
@@ -9,6 +9,7 @@ docs:
   - lessons/lesson-05/docs/catalog-decision-matrix.md
   - lessons/lesson-05/docs/deep-dives/iceberg-metadata-internals.md
   - lessons/lesson-05/docs/deep-dives/catalog-commit-protocols.md
+  - lessons/lesson-05/docs/deep-dives/hive-metastore-and-catalog-evolution.md
   - lessons/lesson-05/docs/deep-dives/table-formats-history-and-alternatives.md
   - lessons/lesson-05/docs/cheat-sheet.md
   - lessons/lesson-05/homework/assignment.md
@@ -22,6 +23,7 @@ sql_examples:
   - labs/flink-iceberg/sql/01-catalogs.sql
   - labs/flink-iceberg/sql/02-lakekeeper-demo.sql
   - labs/flink-iceberg/sql/03-nessie-demo.sql
+  - labs/flink-iceberg/sql/04-hive-catalog-demo.sql
 safe_cli_commands:
   - ./labs/flink-iceberg/scripts/up.ps1
   - ./labs/flink-iceberg/scripts/sql-client.ps1
