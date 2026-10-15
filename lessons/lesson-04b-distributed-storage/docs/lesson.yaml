@@ -1,0 +1,29 @@
+route: distributed-storage-foundations
+lesson_code: lesson-04b
+physical_lab: flink-iceberg
+title: Distributed file systems and object storage — internals and operations
+docs:
+  - lessons/lesson-04b-distributed-storage/docs/README.md
+  - lessons/lesson-04b-distributed-storage/docs/student-workbook.md
+  - lessons/lesson-04b-distributed-storage/docs/mentor-guide.md
+  - lessons/lesson-04b-distributed-storage/docs/decision-matrix.md
+  - lessons/lesson-04b-distributed-storage/docs/deep-dives/distributed-storage-internals.md
+  - lessons/lesson-04b-distributed-storage/docs/deep-dives/README.md
+  - lessons/lesson-04b-distributed-storage/docs/deep-dives/products-and-deployment.md
+  - lessons/lesson-04b-distributed-storage/docs/deep-dives/hdfs-internals.md
+  - lessons/lesson-04b-distributed-storage/docs/deep-dives/ceph-internals.md
+  - lessons/lesson-04b-distributed-storage/docs/deep-dives/seaweedfs-internals.md
+  - lessons/lesson-04b-distributed-storage/homework/assignment.md
+  - lessons/lesson-04b-distributed-storage/homework/rubric.md
+runbooks:
+  - lessons/lesson-04b-distributed-storage/docs/runbooks/student-prep.md
+  - lessons/lesson-04b-distributed-storage/docs/runbooks/simple-path.md
+  - lessons/lesson-04b-distributed-storage/docs/runbooks/deep-dive-path.md
+safe_cli_commands:
+  - ./labs/flink-iceberg/scripts/up.ps1
+  - docker compose -f labs/flink-iceberg/compose.yaml ps
+  - Invoke-RestMethod http://localhost:19333/cluster/status
+student_handoff:
+  - lessons/lesson-04b-distributed-storage/docs/runbooks/student-prep.md
+  - lessons/lesson-04b-distributed-storage/docs/student-workbook.md
+  - lessons/lesson-04b-distributed-storage/homework/assignment.md

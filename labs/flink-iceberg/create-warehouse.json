@@ -1,0 +1,24 @@
+{
+  "warehouse-name": "flink-demo",
+  "project-id": "00000000-0000-0000-0000-000000000000",
+  "storage-profile": {
+    "type": "s3",
+    "bucket": "de-mentor-warehouse",
+    "key-prefix": "lakekeeper",
+    "endpoint": "http://seaweedfs:8333",
+    "region": "us-east-1",
+    "path-style-access": true,
+    "flavor": "s3-compat",
+    "sts-enabled": false,
+    "remote-signing-enabled": true
+  },
+  "storage-credential": {
+    "type": "s3",
+    "credential-type": "access-key",
+    "access-key-id": "demouser",
+    "secret-access-key": "demosecret123456"
+  },
+  "delete-profile": {
+    "type": "hard"
+  }
+}

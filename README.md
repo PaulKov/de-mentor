@@ -40,12 +40,15 @@
 | [02](lessons/lesson-02/) | [docs](lessons/lesson-02/docs/) | [homework](lessons/lesson-02/homework/) | [artifacts](lessons/lesson-02/artifacts/) | [submissions](lessons/lesson-02/submissions/) |
 | [03](lessons/lesson-03/) | [docs](lessons/lesson-03/docs/) | [homework](lessons/lesson-03/homework/) | [artifacts](lessons/lesson-03/artifacts/) | [submissions](lessons/lesson-03/submissions/) |
 | [04](lessons/lesson-04/) | [docs](lessons/lesson-04/docs/) | [homework](lessons/lesson-04/homework/) | [artifacts](lessons/lesson-04/artifacts/) | [submissions](lessons/lesson-04/submissions/) |
+| [04b](lessons/lesson-04b-distributed-storage/) | [docs](lessons/lesson-04b-distributed-storage/docs/) | [homework](lessons/lesson-04b-distributed-storage/homework/) | [artifacts](lessons/lesson-04b-distributed-storage/artifacts/) | [submissions](lessons/lesson-04b-distributed-storage/submissions/) |
+| [05](lessons/lesson-05/) | [docs](lessons/lesson-05/docs/) | [homework](lessons/lesson-05/homework/) | [artifacts](lessons/lesson-05/artifacts/) | [submissions](lessons/lesson-05/submissions/) |
+| [06](lessons/lesson-06/) | [docs](lessons/lesson-06/docs/) | [homework](lessons/lesson-06/homework/) | [artifacts](lessons/lesson-06/artifacts/) | [submissions](lessons/lesson-06/submissions/) |
 
 ## Что это
 
 `DE Mentor` помогает провести сильный практический урок по data engineering без ручной подготовки стенда и разрозненных материалов.
 
-Первые три урока посвящены **Greenplum**: MPP-архитектуре, distribution, partitions, statistics и query tuning. Урок 04 открывает модуль **Apache Spark**: история Big Data, PySpark DataFrame API, driver/executors, partitions, lazy execution, shuffle и Spark UI.
+Первые три урока посвящены **Greenplum**: MPP-архитектуре, distribution, partitions, statistics и query tuning. Урок 04 открывает модуль **Apache Spark**: история Big Data, PySpark DataFrame API, driver/executors, partitions, lazy execution, shuffle и Spark UI. Вводный урок **04b** разбирает распределённые filesystem/object storage модели, историю, internals HDFS/Ceph/SeaweedFS, облачные варианты и deployment. Уроки 05–06 добавляют **Apache Iceberg на S3, Hive Metastore/Lakekeeper/Nessie и потоковый pipeline Kafka → Flink → Iceberg** с отдельным Docker Desktop стендом и deep dives по internals.
 
 Идея простая: ученик не просто слушает теорию, а запускает локальный стенд, ломает и чинит данные, читает планы, сдаёт evidence, получает review и понимает, почему MPP-системы требуют другого мышления.
 
@@ -238,6 +241,16 @@ python3 mentor-lab.py spark-submit spark \
 - [Домашка](lessons/lesson-04/homework/assignment.md)
 - [Spark lab](labs/spark/README.md)
 - [Презентация PowerPoint](lessons/lesson-04/artifacts/apache-spark-foundations-theory.pptx)
+
+## Новые модули: storage, Iceberg и Flink
+
+- [Lesson 04b: Distributed filesystems and object storage](lessons/lesson-04b-distributed-storage/README.md)
+- [Lesson 04b deep dives: storage internals, product alternatives and deployment](lessons/lesson-04b-distributed-storage/docs/deep-dives/)
+- [Lesson 05: Iceberg on S3, Hive Metastore, Lakekeeper и Nessie](lessons/lesson-05/README.md)
+- [Lesson 05 deep dives: Hive Metastore, metadata graph, commits, format alternatives](lessons/lesson-05/docs/deep-dives/)
+- [Lesson 06: Kafka → Flink → Iceberg](lessons/lesson-06/README.md)
+- [Lesson 06 deep dives: runtime/checkpoints, source/event-time, exactly-once](lessons/lesson-06/docs/deep-dives/)
+- [Общий Docker стенд Flink + Kafka + S3/SeaweedFS + Hive Metastore + Lakekeeper + Nessie](labs/flink-iceberg/README.md)
 
 ```bash
 python3 mentor-lab.py lesson-release spark-foundations verify
@@ -564,6 +577,6 @@ CLI уже содержит registry для будущих стендов:
 
 Это не коммерческая LMS и не замена полноценной платформы обучения. Сейчас это инженерный self-service toolkit для ментора и ученика: локально, прозрачно, воспроизводимо.
 
-Готовый production-grade модуль сейчас один: **Greenplum Academy**. Остальные системы уже предусмотрены архитектурно, но ещё не реализованы как полноценные уроки.
+Greenplum Academy остаётся основным модулем с интеграцией в CLI и assessment flow. Уроки Spark, Iceberg и Flink оформлены как учебные материалы и локальные стенды; у Flink/Iceberg Compose пока нет интеграции во все команды CLI и quality release workflow.
 
 Проект открыт для расширения: новые уроки лучше добавлять маленькими проверяемыми модулями, сохраняя главный принцип — теория должна быстро превращаться в практику, evidence и понятный feedback.

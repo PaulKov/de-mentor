@@ -1,0 +1,437 @@
+name: de-mentor-flink-iceberg
+
+x-lakekeeper-env: &lakekeeper-env
+  LAKEKEEPER__PG_ENCRYPTION_KEY: This-is-NOT-Secure!
+  LAKEKEEPER__PG_DATABASE_URL_READ: postgresql://postgres:postgres@postgres:5432/postgres
+  LAKEKEEPER__PG_DATABASE_URL_WRITE: postgresql://postgres:postgres@postgres:5432/postgres
+  LAKEKEEPER__AUTHZ_BACKEND: allowall
+
+x-flink-common: &flink-common
+  image: de-mentor/flink-iceberg:2.2.1-1.12.0
+  build:
+    context: ../..
+    dockerfile: labs/flink-iceberg/Dockerfile
+    args:
+      FLINK_VERSION: ${FLINK_VERSION:-2.2.1}
+      ICEBERG_VERSION: ${ICEBERG_VERSION:-1.12.0}
+  environment:
+    HADOOP_CONF_DIR: /opt/flink/conf
+    FLINK_PROPERTIES: |
+      jobmanager.rpc.address: flink-jobmanager
+      taskmanager.numberOfTaskSlots: 4
+      parallelism.default: 2
+      execution.checkpointing.interval: 15s
+      execution.checkpointing.mode: EXACTLY_ONCE
+      state.checkpoints.dir: file:///opt/flink/checkpoints
+      state.savepoints.dir: file:///opt/flink/savepoints
+  volumes:
+    - ./conf/core-site.xml:/opt/flink/conf/core-site.xml:ro
+    - flink-checkpoints:/opt/flink/checkpoints
+    - flink-savepoints:/opt/flink/savepoints
+  networks:
+    - flink-iceberg
+
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    command: ["postgres", "-c", "shared_buffers=128MB"]
+    ports:
+      - "127.0.0.1:15432:5432"
+    volumes:
+      - lakekeeper-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks:
+      - flink-iceberg
+    restart: unless-stopped
+
+  hive-metastore-postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: hive
+      POSTGRES_PASSWORD: hive
+      POSTGRES_DB: hive_metastore
+    command: ["postgres", "-c", "shared_buffers=128MB"]
+    ports:
+      - "127.0.0.1:15433:5432"
+    volumes:
+      - hive-metastore-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hive -d hive_metastore"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks:
+      - flink-iceberg
+    restart: unless-stopped
+
+  hive-metastore:
+    image: de-mentor/hive-metastore:${HIVE_VERSION:-3.1.3}
+    build:
+      context: ../..
+      dockerfile: labs/flink-iceberg/Dockerfile.hive-metastore
+      args:
+        HIVE_VERSION: ${HIVE_VERSION:-3.1.3}
+        POSTGRESQL_JDBC_VERSION: ${POSTGRESQL_JDBC_VERSION:-42.7.7}
+    environment:
+      HADOOP_CONF_DIR: /opt/hadoop/etc/hadoop
+      HADOOP_CLASSPATH: /opt/hadoop/share/hadoop/tools/lib/*
+      IS_RESUME: "true"
+      SERVICE_NAME: metastore
+      DB_DRIVER: postgres
+      SERVICE_OPTS: >-
+        -Xmx768m
+        -Djavax.jdo.option.ConnectionDriverName=org.postgresql.Driver
+        -Djavax.jdo.option.ConnectionURL=jdbc:postgresql://hive-metastore-postgres:5432/hive_metastore
+        -Djavax.jdo.option.ConnectionUserName=hive
+        -Djavax.jdo.option.ConnectionPassword=hive
+    depends_on:
+      hive-metastore-schema:
+        condition: service_completed_successfully
+    ports:
+      - "127.0.0.1:19083:9083"
+    volumes:
+      - ./conf/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml:ro
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/127.0.0.1/9083'"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+    networks:
+      - flink-iceberg
+    restart: unless-stopped
+
+  hive-metastore-schema:
+    image: de-mentor/hive-metastore:${HIVE_VERSION:-3.1.3}
+    entrypoint: ["/bin/bash", "-lc"]
+    command:
+      - >-
+        if /opt/hive/bin/schematool -dbType postgres -info >/dev/null 2>&1; then
+          echo 'Hive Metastore schema already initialized';
+        else
+          /opt/hive/bin/schematool -dbType postgres -initSchema;
+        fi
+    environment:
+      HADOOP_CONF_DIR: /opt/hadoop/etc/hadoop
+      HADOOP_CLASSPATH: /opt/hadoop/share/hadoop/tools/lib/*
+      HADOOP_CLIENT_OPTS: >-
+        -Xmx768m
+        -Djavax.jdo.option.ConnectionDriverName=org.postgresql.Driver
+        -Djavax.jdo.option.ConnectionURL=jdbc:postgresql://hive-metastore-postgres:5432/hive_metastore
+        -Djavax.jdo.option.ConnectionUserName=hive
+        -Djavax.jdo.option.ConnectionPassword=hive
+    depends_on:
+      hive-metastore-postgres:
+        condition: service_healthy
+    volumes:
+      - ./conf/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml:ro
+    networks:
+      - flink-iceberg
+    restart: "no"
+
+  seaweedfs:
+    image: chrislusf/seaweedfs:4.46
+    command: ["server", "-s3", "-dir=/data", "-master.volumeSizeLimitMB=128", "-s3.port=8333", "-s3.config=/etc/seaweedfs/s3.json"]
+    ports:
+      - "127.0.0.1:19000:8333"
+      - "127.0.0.1:19333:9333"
+      - "127.0.0.1:18888:8888"
+    volumes:
+      - seaweedfs-data:/data
+      - ./seaweedfs/s3.json:/etc/seaweedfs/s3.json:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O- http://127.0.0.1:9333/cluster/status >/dev/null"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks:
+      - flink-iceberg
+    restart: unless-stopped
+
+  seaweedfs-init:
+    image: public.ecr.aws/aws-cli/aws-cli:2.27.49
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - >-
+        if ! aws --endpoint-url http://seaweedfs:8333 s3api head-bucket --bucket de-mentor-warehouse >/dev/null 2>&1; then
+          aws --endpoint-url http://seaweedfs:8333 s3api create-bucket --bucket de-mentor-warehouse;
+        fi
+    environment:
+      AWS_ACCESS_KEY_ID: demouser
+      AWS_SECRET_ACCESS_KEY: demosecret123456
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_EC2_METADATA_DISABLED: "true"
+    depends_on:
+      seaweedfs:
+        condition: service_healthy
+    restart: "no"
+    networks:
+      - flink-iceberg
+
+  lakekeeper-migrate:
+    image: quay.io/lakekeeper/catalog:v0.13.6
+    environment: *lakekeeper-env
+    command: ["migrate"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+    networks:
+      - flink-iceberg
+
+  lakekeeper:
+    image: quay.io/lakekeeper/catalog:v0.13.6
+    environment: *lakekeeper-env
+    command: ["serve"]
+    depends_on:
+      lakekeeper-migrate:
+        condition: service_completed_successfully
+      seaweedfs-init:
+        condition: service_completed_successfully
+    ports:
+      - "127.0.0.1:18181:8181"
+    healthcheck:
+      test: ["CMD", "/home/nonroot/lakekeeper", "healthcheck"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    networks:
+      - flink-iceberg
+    restart: unless-stopped
+
+  lakekeeper-bootstrap:
+    image: curlimages/curl:8.12.1
+    command:
+      - -sS
+      - -o
+      - /dev/null
+      - -w
+      - "Lakekeeper bootstrap HTTP %{http_code}\n"
+      - -X
+      - POST
+      - http://lakekeeper:8181/management/v1/bootstrap
+      - -H
+      - 'Content-Type: application/json'
+      - --data
+      - '{"accept-terms-of-use":true}'
+    depends_on:
+      lakekeeper:
+        condition: service_healthy
+    restart: "no"
+    networks:
+      - flink-iceberg
+
+  lakekeeper-warehouse:
+    image: curlimages/curl:8.12.1
+    command:
+      - -sS
+      - -o
+      - /dev/null
+      - -w
+      - "Lakekeeper warehouse HTTP %{http_code}\n"
+      - -X
+      - POST
+      - http://lakekeeper:8181/management/v1/warehouse
+      - -H
+      - 'Content-Type: application/json'
+      - --data-binary
+      - '@/workspace/labs/flink-iceberg/create-warehouse.json'
+    volumes:
+      - .:/workspace/labs/flink-iceberg:ro
+    depends_on:
+      lakekeeper-bootstrap:
+        condition: service_completed_successfully
+      seaweedfs-init:
+        condition: service_completed_successfully
+    restart: "no"
+    networks:
+      - flink-iceberg
+
+  nessie-data-init:
+    image: busybox:1.37.0
+    user: "0:0"
+    command: ["sh", "-c", "mkdir -p /nessie/data && chown -R 10000:10001 /nessie/data"]
+    volumes:
+      - nessie-data:/nessie/data
+    restart: "no"
+    networks:
+      - flink-iceberg
+
+  nessie:
+    image: ghcr.io/projectnessie/nessie:0.109.0
+    environment:
+      - nessie.version.store.type=ROCKSDB
+      - nessie.version.store.persist.rocks.database-path=/nessie/data
+      - nessie.server.authentication.enabled=false
+      - nessie.server.authorization.enabled=false
+      - nessie.catalog.default-warehouse=warehouse
+      - nessie.catalog.warehouses.warehouse.location=s3://de-mentor-warehouse/nessie
+      - nessie.catalog.service.s3.default-options.region=us-east-1
+      - nessie.catalog.service.s3.default-options.path-style-access=true
+      - nessie.catalog.service.s3.default-options.request-signing-enabled=false
+      - nessie.catalog.service.s3.default-options.access-key=urn:nessie-secret:quarkus:nessie.catalog.secrets.access-key
+      - nessie.catalog.secrets.access-key.name=demouser
+      - nessie.catalog.secrets.access-key.secret=demosecret123456
+      - nessie.catalog.service.s3.default-options.endpoint=http://seaweedfs:8333/
+      - nessie.catalog.service.s3.default-options.external-endpoint=http://seaweedfs:8333/
+      - QUARKUS_HTTP_ACCESS_LOG_ENABLED=true
+      - JAVA_OPTS_APPEND=-Xms128m -Xmx512m
+    ports:
+      - "127.0.0.1:19120:19120"
+    volumes:
+      - nessie-data:/nessie/data
+    depends_on:
+      seaweedfs-init:
+        condition: service_completed_successfully
+      nessie-data-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/localhost/9000 && echo -e \"GET /q/health HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n\" >&3 && cat <&3 | grep -q \"200 OK\"'"]
+      interval: 5s
+      timeout: 4s
+      retries: 20
+      start_period: 30s
+    networks:
+      - flink-iceberg
+    restart: unless-stopped
+
+  kafka:
+    image: apache/kafka:4.2.2
+    hostname: kafka
+    environment:
+      CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: INTERNAL://:29092,HOST://:9092,CONTROLLER://:29093
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,HOST://localhost:19092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,HOST:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:29093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+      KAFKA_HEAP_OPTS: -Xms256M -Xmx512M
+    ports:
+      - "127.0.0.1:19092:9092"
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server localhost:9092 >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+    networks:
+      - flink-iceberg
+    restart: unless-stopped
+
+  flink-jobmanager:
+    <<: *flink-common
+    command: jobmanager
+    environment:
+      FLINK_PROPERTIES: |
+        jobmanager.rpc.address: flink-jobmanager
+        jobmanager.memory.process.size: 768m
+        taskmanager.numberOfTaskSlots: 4
+        parallelism.default: 2
+        execution.checkpointing.interval: 15s
+        execution.checkpointing.mode: EXACTLY_ONCE
+        state.checkpoints.dir: file:///opt/flink/checkpoints
+        state.savepoints.dir: file:///opt/flink/savepoints
+    ports:
+      - "127.0.0.1:18081:8081"
+    depends_on:
+      kafka:
+        condition: service_healthy
+      hive-metastore:
+        condition: service_healthy
+      lakekeeper-warehouse:
+        condition: service_completed_successfully
+      nessie:
+        condition: service_healthy
+      flink-state-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8081/overview >/dev/null"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 15s
+    restart: unless-stopped
+
+  flink-taskmanager:
+    <<: *flink-common
+    command: taskmanager
+    environment:
+      FLINK_PROPERTIES: |
+        jobmanager.rpc.address: flink-jobmanager
+        taskmanager.numberOfTaskSlots: 4
+        taskmanager.memory.process.size: 1536m
+        parallelism.default: 2
+        execution.checkpointing.interval: 15s
+        execution.checkpointing.mode: EXACTLY_ONCE
+        state.checkpoints.dir: file:///opt/flink/checkpoints
+        state.savepoints.dir: file:///opt/flink/savepoints
+    depends_on:
+      flink-jobmanager:
+        condition: service_healthy
+      hive-metastore:
+        condition: service_healthy
+    restart: unless-stopped
+
+  flink-state-init:
+    image: busybox:1.37.0
+    user: "0:0"
+    command: ["sh", "-c", "chown -R 9999:9999 /checkpoints /savepoints"]
+    volumes:
+      - flink-checkpoints:/checkpoints
+      - flink-savepoints:/savepoints
+    restart: "no"
+
+  flink-sql-client:
+    <<: *flink-common
+    command: ["sleep", "infinity"]
+    environment:
+      FLINK_PROPERTIES: |
+        jobmanager.rpc.address: flink-jobmanager
+        rest.address: flink-jobmanager
+        rest.port: 8081
+        taskmanager.numberOfTaskSlots: 4
+        parallelism.default: 2
+        state.checkpoints.dir: file:///opt/flink/checkpoints
+        state.savepoints.dir: file:///opt/flink/savepoints
+    volumes:
+      - ../..:/workspace:ro
+      - ./conf/core-site.xml:/opt/flink/conf/core-site.xml:ro
+      - flink-checkpoints:/opt/flink/checkpoints
+      - flink-savepoints:/opt/flink/savepoints
+    depends_on:
+      flink-jobmanager:
+        condition: service_healthy
+      flink-taskmanager:
+        condition: service_started
+    restart: unless-stopped
+
+networks:
+  flink-iceberg:
+    name: de-mentor-flink-iceberg
+
+volumes:
+  lakekeeper-postgres:
+  hive-metastore-postgres:
+  seaweedfs-data:
+  nessie-data:
+  kafka-data:
+  flink-checkpoints:
+  flink-savepoints:

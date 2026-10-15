@@ -19,6 +19,9 @@
 | [lesson-02](lesson-02/) | Partitioning, stats, incremental loads | `greenplum` | [README](lesson-02/README.md) · [homework](lesson-02/homework/) · [deck](lesson-02/artifacts/) |
 | [lesson-03](lesson-03/) | Query tuning / OLAP decomposition | `greenplum-625` | [README](lesson-03/README.md) · [homework](lesson-03/homework/) · [deck](lesson-03/artifacts/) |
 | [lesson-04](lesson-04/) | Apache Spark foundations / PySpark | `spark` | [README](lesson-04/README.md) · [homework](lesson-04/homework/) · [deck](lesson-04/artifacts/) |
+| [lesson-04b](lesson-04b-distributed-storage/) | Distributed filesystems and object storage: internals, SeaweedFS, deployment | `flink-iceberg` | [README](lesson-04b-distributed-storage/README.md) · [deep dives](lesson-04b-distributed-storage/docs/deep-dives/) · [homework](lesson-04b-distributed-storage/homework/) |
+| [lesson-05](lesson-05/) | Apache Iceberg on S3: Hive Metastore + Lakekeeper + Nessie | `flink-iceberg` | [README](lesson-05/README.md) · [deep dives](lesson-05/docs/deep-dives/) · [homework](lesson-05/homework/) |
+| [lesson-06](lesson-06/) | Kafka → Flink → Iceberg, state and exactly-once | `flink-iceberg` | [README](lesson-06/README.md) · [deep dives](lesson-06/docs/deep-dives/) · [homework](lesson-06/homework/) |
 
 ## Как пользоваться
 
