@@ -45,28 +45,7 @@ Flink создаёт `CREATE CATALOG` с `catalog-type=rest` и URI. Клиен�
 
 До выбора продукта заполни [decision matrix](catalog-decision-matrix.md). Сравни protocol, security model, branching, engine compatibility, operational ownership и восстановление.
 
-## 5. Lab A — Lakekeeper + SeaweedFS
-
-1. Запусти Compose и сохрани вывод `docker compose ps`.
-2. Открой [Lakekeeper UI](http://localhost:18181/ui/) и [SeaweedFS filer UI](http://localhost:18888). S3 credentials `demouser / demosecret123456` действуют только в local demo.
-3. Запусти `./labs/flink-iceberg/scripts/sql-client.ps1`.
-4. В этой SQL-сессии выполни [`02-lakekeeper-demo.sql`](../../../labs/flink-iceberg/sql/02-lakekeeper-demo.sql). Запиши `category × rows_count × revenue`.
-5. Выполни metadata queries `$snapshots` и `$files` из файла.
-6. Найди SeaweedFS prefix `de-mentor-warehouse/lakekeeper/`; сопоставь metadata/data files с snapshot.
-7. Останови только Lakekeeper: `docker compose -f labs/flink-iceberg/compose.yaml stop lakekeeper`. S3 objects остаются. Затем выполни `start lakekeeper`.
-
-Запиши metadata location, snapshot id, file count и разницу поведения при catalog outage и object-store outage.
-
-## 6. Lab B — тот же Iceberg REST API, Nessie
-
-1. В той же SQL-сессии выполни [`03-nessie-demo.sql`](../../../labs/flink-iceberg/sql/03-nessie-demo.sql).
-2. Сравни результат с Lakekeeper. Nessie пишет в отдельный prefix `nessie/`.
-3. Проверь `/api/v2/config` и `/api/v2/trees` на <http://localhost:19120>. Создай короткоживущую ветку `lesson05-review` от `main` через Nessie API или CLI.
-4. Подключи Iceberg REST к branch URI и сформулируй, что branch версионирует и что не копирует.
-
-Nessie хранит refs в persistent RocksDB volume, но здесь это single-node demo. Upstream помечает Iceberg REST integration Nessie как experimental; здесь мы изучаем протокол, а не рекомендуем production deployment.
-
-## 7. Lab C — Hive Metastore Thrift + Iceberg на S3
+## 5. Lab A — Hive Metastore Thrift + Iceberg на S3
 
 1. Убедись, что `hive-metastore` и отдельный `hive-metastore-postgres` healthy. Thrift endpoint внутри Compose: `thrift://hive-metastore:9083`; с хоста он опубликован как `localhost:19083`.
 2. Открой новый Flink SQL Client и выполни [`01-catalogs.sql`](../../../labs/flink-iceberg/sql/01-catalogs.sql), затем введи `SHOW CATALOGS;`. Убедись, что зарегистрирован `hive_metastore`.
@@ -79,10 +58,31 @@ Nessie хранит refs в persistent RocksDB volume, но здесь это si
      psql -U hive -d hive_metastore -c 'SELECT t."TBL_NAME", p."PARAM_KEY", p."PARAM_VALUE" FROM "TABLE_PARAMS" p JOIN "TBLS" t USING ("TBL_ID") WHERE t."TBL_NAME" = $$hms_catalog_comparison$$ AND p."PARAM_KEY" IN ($$metadata_location$$, $$previous_metadata_location$$, $$table_type$$) ORDER BY p."PARAM_KEY";'
    ```
 
-6. Сопоставь `metadata_location` с metadata JSON object в S3. Затем выключи только `hive-metastore`: файлы сохранятся, но имя таблицы через этот каталог временно не разрешается.
+6. Сопоставь `metadata_location` с metadata JSON object в S3. Останови только `hive-metastore` командой `docker compose -f labs/flink-iceberg/compose.yaml stop hive-metastore`. Файлы сохранятся, а разрешение имени таблицы из новой SQL-сессии временно перестанет работать. Перед следующей практикой верни сервис командой `docker compose -f labs/flink-iceberg/compose.yaml start hive-metastore`.
 7. Сравни HMS с Lakekeeper: оба связывают namespace/table с Iceberg metadata, но HMS здесь использует Thrift и свою PostgreSQL; Lakekeeper предоставляет Iceberg REST и собственную warehouse/storage control plane.
 
 **Контрольный вопрос:** какая информация должна пережить отказ HMS, чтобы таблицу можно было зарегистрировать заново, и почему нельзя выбирать «последний JSON по имени файла» простым `LIST` в S3?
+
+## 6. Lab B — Lakekeeper + SeaweedFS
+
+1. Запусти Compose и сохрани вывод `docker compose ps`.
+2. Открой [Lakekeeper UI](http://localhost:18181/ui/) и [SeaweedFS filer UI](http://localhost:18888). S3 credentials `demouser / demosecret123456` действуют только в local demo.
+3. Запусти `./labs/flink-iceberg/scripts/sql-client.ps1`.
+4. В этой SQL-сессии выполни [`02-lakekeeper-demo.sql`](../../../labs/flink-iceberg/sql/02-lakekeeper-demo.sql). Запиши `category × rows_count × revenue`.
+5. Выполни metadata queries `$snapshots` и `$files` из файла.
+6. Найди SeaweedFS prefix `de-mentor-warehouse/lakekeeper/`; сопоставь metadata/data files с snapshot.
+7. Останови только Lakekeeper: `docker compose -f labs/flink-iceberg/compose.yaml stop lakekeeper`. S3 objects остаются. Затем выполни `start lakekeeper`.
+
+Запиши metadata location, snapshot id, file count и разницу поведения при catalog outage и object-store outage.
+
+## 7. Lab C — тот же Iceberg REST API, Nessie
+
+1. В той же SQL-сессии выполни [`03-nessie-demo.sql`](../../../labs/flink-iceberg/sql/03-nessie-demo.sql).
+2. Сравни результат с Lakekeeper. Nessie пишет в отдельный prefix `nessie/`.
+3. Проверь `/api/v2/config` и `/api/v2/trees` на <http://localhost:19120>. Создай короткоживущую ветку `lesson05-review` от `main` через Nessie API или CLI.
+4. Подключи Iceberg REST к branch URI и сформулируй, что branch версионирует и что не копирует.
+
+Nessie хранит refs в persistent RocksDB volume, но здесь это single-node demo. Upstream помечает Iceberg REST integration Nessie как experimental; здесь мы изучаем протокол, а не рекомендуем production deployment.
 
 ## 8. Lab D — Gravitino Iceberg REST и JDBC
 
