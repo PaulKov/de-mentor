@@ -46,4 +46,4 @@ python3 mentor-lab.py spark-submit spark \
 - [homework/rubric.md](homework/rubric.md)
 - [artifacts/apache-spark-foundations-theory.pptx](artifacts/apache-spark-foundations-theory.pptx)
 
-← [Все уроки](../README.md)
+← [Все уроки](../README.md) · Далее → [Lesson 04b: Distributed storage](../lesson-04b-distributed-storage/)

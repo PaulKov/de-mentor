@@ -1,0 +1,14 @@
+{
+  "identities": [
+    {
+      "name": "de-mentor-lab",
+      "credentials": [
+        {
+          "accessKey": "demouser",
+          "secretKey": "demosecret123456"
+        }
+      ],
+      "actions": ["Admin", "Read", "List", "Tagging", "Write"]
+    }
+  ]
+}

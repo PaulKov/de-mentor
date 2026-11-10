@@ -1,0 +1,7 @@
+{"order_id":"o-001","region":"north","amount":12.50,"event_time":"2025-10-14T10:00:01.000"}
+{"order_id":"o-002","region":"north","amount":19.00,"event_time":"2025-10-14T10:00:20.000"}
+{"order_id":"o-003","region":"south","amount":8.75,"event_time":"2025-10-14T10:00:42.000"}
+{"order_id":"o-004","region":"north","amount":5.00,"event_time":"2025-10-14T10:01:10.000"}
+{"order_id":"o-005","region":"south","amount":42.00,"event_time":"2025-10-14T10:02:00.000"}
+{"order_id":"o-006","region":"north","amount":3.25,"event_time":"2025-10-14T10:02:20.000"}
+{"order_id":"o-late-001","region":"north","amount":99.00,"event_time":"2025-10-14T10:00:10.000"}
