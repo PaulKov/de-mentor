@@ -44,7 +44,7 @@
 
 ## 4. Lab A — проверить S3 endpoint
 
-Требования: Docker Desktop с уже поднятым `flink-iceberg` stack. AWS CLI контейнер использует demo credentials из Compose environment; копировать secrets в shell history не нужно.
+Требования: Docker Compose с уже запущенным `flink-iceberg` stack. AWS CLI контейнер использует demo credentials из Compose environment; копировать secrets в shell history не нужно.
 
 ```powershell
 $Compose = "./labs/flink-iceberg/compose.yaml"

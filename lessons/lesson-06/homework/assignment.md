@@ -15,7 +15,9 @@ Marketplace публикует `orders` в Kafka. Flink группирует с�
 5. Определи exactly-once contract для source state, table commit и business primary key.
 6. Рассчитай retention и maintenance envelope для Kafka, checkpoints, Iceberg snapshots и orphan files.
 7. Составь observability/alert design по Kafka lag, event-time lag, watermarks, checkpoints, sink commits, catalog conflicts, file sizes и compaction.
-8. Сравни Lakekeeper и Nessie (из Lesson 05) для разных требований, отдельно назови catalog vs format semantics.
+8. Сравни Lakekeeper, Nessie и Gravitino для разных требований. Отдельно объясни, что меняется при смене каталога, а что определяется форматом таблицы.
+
+Для итоговой защиты пройди [проект уровня Principal Engineer](principal-capstone.md).
 
 ## Требуемые deliverables
 

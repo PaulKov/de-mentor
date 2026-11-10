@@ -2,7 +2,7 @@
 
 ## Требования
 
-- Docker Desktop в режиме Linux containers и Docker Compose v2;
+- Docker с Linux containers и Docker Compose v2;
 - 5 GB свободной памяти Docker для всего Flink/Iceberg стенда;
 - Git clone репозитория и PowerShell в Windows;
 - базовое понимание HTTP, files/directories и распределённого процесса.
@@ -38,6 +38,6 @@ docker compose -f labs/flink-iceberg/compose.yaml ps seaweedfs seaweedfs-init
 Invoke-RestMethod http://localhost:19333/cluster/status
 ```
 
-Если host endpoint не отвечает, проверь Docker Desktop, service health и занятость портов `19000`, `19333`, `18888`. Не открывай этот учебный Compose в LAN и не используй demo credentials в другом окружении.
+Если host endpoint не отвечает, проверь Docker, service health и занятость портов `19000`, `19333`, `18888`. Не открывай этот учебный Compose в LAN и не используй demo credentials в другом окружении.
 
 Читайте [lab README](../../../../labs/flink-iceberg/README.md) про адреса, сервисы, данные и удаление.

@@ -6,7 +6,7 @@
 4. Выполни DDL из `04-kafka-source.sql`, затем `05-stream-to-iceberg.sql`. Если нужен preview, используй `04a-preview-kafka-source.sql` в отдельной сессии и останови его.
 5. Отправь sample через `./labs/flink-iceberg/scripts/publish-orders.ps1`.
 6. В Flink UI дождись checkpoint completed и запиши Job ID/checkpoint ID.
-7. В новом SQL Client выполни `01-catalogs.sql` и `06-query-iceberg.sql`.
+7. Открой новую сессию через `sql-client.ps1`: она уже выполняет `01-catalogs.sql`. Затем выполни `06-query-iceberg.sql`.
 8. Сравни records, event time, aggregated windows и Iceberg snapshot summary.
 9. Ответь, почему успешный checkpoint ещё не доказывает, что table commit завершился.
 10. Сохрани [evidence](../../homework/templates/evidence.md), останови стенд без `--volumes`.

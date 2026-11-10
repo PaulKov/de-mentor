@@ -14,8 +14,9 @@
 6. Объясняет, что HMS хранит для Iceberg table registration и pointer, а snapshots/manifests/data лежат в S3.
 7. Связывает происхождение HMS с Hadoop/Hive и объясняет, почему возникли REST, cloud-managed и versioned catalogs.
 8. Наблюдает, что объекты остаются в S3 после остановки catalog service.
-9. Выбирает каталог по protocol, governance, branching, облаку и эксплуатации.
-10. Отличает учебный стенд от production: identity, TLS, HA, database, credentials, backup и table maintenance.
+9. Различает standalone Gravitino Iceberg REST, JDBC backend и федерацию каталогов в metalake.
+10. Доказывает выбор каталога по совместимости движков, модели доступа, консистентности и восстановлению.
+11. Обосновывает production SLO и проводит review на материале [сквозного проекта Principal Engineer](../../lesson-06/homework/principal-capstone.md).
 
 ## План на 3 ч 30 мин
 
@@ -28,9 +29,11 @@
 | 75–105 мин | Lab A: Hive Metastore Thrift | `metadata_location` в HMS Postgres сопоставлен с JSON в S3 |
 | 105–140 мин | Lab B: Lakekeeper | aggregate, `$snapshots`, `$files`, SeaweedFS objects |
 | 140–160 мин | Lab C: Nessie | третий catalog, refs и S3 prefix |
-| 160–180 мин | Сравнение alternatives | decision matrix и сценарий выбора |
+| 160–180 мин | Сравнение каталогов | decision matrix и сценарий выбора |
 | 180–200 мин | Production design review | backup/recovery и PoC evidence |
 | 200–210 мин | Debrief + homework | исправленная схема и evidence plan |
+
+Дополнительно 20–30 минут на [Lab D с Gravitino](runbooks/gravitino-lab.md).
 
 ## Схема
 
@@ -38,7 +41,7 @@
 flowchart LR
   E[Engine: Flink / Spark / Trino] -->|Thrift| H[Hive Metastore]
   H -->|catalog rows / commit coordination| DB[(HMS Postgres)]
-  E -->|Iceberg REST| L[Lakekeeper / Nessie / Glue]
+  E -->|Iceberg REST| L[Lakekeeper / Nessie / Gravitino / Glue REST]
   H -.->|current metadata pointer| M[Iceberg metadata]
   L -.->|current metadata pointer| M
   E -->|S3 GET/PUT| O[Object store: SeaweedFS / S3]
@@ -53,13 +56,14 @@ flowchart LR
 - [Iceberg metadata internals](deep-dives/iceberg-metadata-internals.md) — от задачи Hive-style layout до field IDs, manifests, sequence numbers, deletes и snapshot commit.
 - [Catalog и commit protocols](deep-dives/catalog-commit-protocols.md) — REST lifecycle, optimistic CAS, Lakekeeper/Postgres/S3 и Nessie references, conflict/failure matrix.
 - [Hive Metastore и эволюция каталогов](deep-dives/hive-metastore-and-catalog-evolution.md) — история HMS, Thrift internals, `metadata_location`, причины REST/cloud/versioned каталогов и production PoC.
+- [Gravitino internals](deep-dives/gravitino-internals.md) — metalake и providers, standalone и auxiliary REST, JDBC commit и границы доступа.
 - [История и альтернативы](deep-dives/table-formats-history-and-alternatives.md) — Iceberg vs Delta Lake/Hudi/Paimon, COW/MOR и выбор по workload.
 
 Каждый deep dive содержит фрагменты кода/SQL, links на спецификацию и upstream реализацию, а также вопросы для senior-level защиты. Воркбук задаёт лабораторный маршрут; deep dives объясняют почему конкретные шаги работают.
 
 ## До занятия
 
-- Docker Desktop в режиме Linux containers, около 6 GB свободной памяти Docker.
+- Docker с Linux containers, Docker Compose v2, около 6 GB памяти для стенда.
 - Поднять стенд по [student prep](runbooks/student-prep.md).
 - Открыть Flink UI, Lakekeeper UI, SeaweedFS filer UI и Nessie API.
 - Проверить SQL-сессию и `SHOW CATALOGS;`: должны быть `hive_metastore`, `lakekeeper` и `nessie`.

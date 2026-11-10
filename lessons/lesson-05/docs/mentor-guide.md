@@ -36,7 +36,7 @@
 
 ### 160–180: альтернативы
 
-Используй [decision matrix](catalog-decision-matrix.md). Обсуди managed vs self-hosted, protocol maturity, authorization, backup, multi-tenant boundaries и engine compatibility.
+Используй [decision matrix](catalog-decision-matrix.md). Дай два сценария. В первом движкам нужен Iceberg REST для одного warehouse. Во втором нужно объединить HMS, Iceberg и JDBC в общем реестре. Попроси студента выбрать между Lakekeeper, Gravitino, Nessie и другими вариантами и назвать эксперимент, который опровергнет его выбор.
 
 ### 180–200: design review
 
@@ -45,6 +45,10 @@
 ### 200–210: debrief
 
 Вернись к исходной схеме, попроси исправить её и назвать три production guardrails.
+
+### Дополнительная практика с Gravitino
+
+В [Lab D](runbooks/gravitino-lab.md) попроси студента сопоставить JDBC pointer, metadata JSON и snapshot ID, затем объяснить, в каком режиме понадобятся metalake и политики основного сервера. Для итоговой защиты используй [проект Principal Engineer](../../lesson-06/homework/principal-capstone.md).
 
 ## Частые misconceptions
 

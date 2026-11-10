@@ -10,3 +10,4 @@
 8. Спроектировать snapshot expiration, compaction, orphan cleanup и rollback window.
 9. Заполнить [decision matrix](../catalog-decision-matrix.md).
 10. Провести design review: auth, IAM, metadata backup, HA, SLO, version compatibility и engine matrix.
+11. Выполнить [Lab D с Gravitino](gravitino-lab.md), сравнить JDBC pointer и HMS table parameter. На защите разобрать вариант, где часть клиентов продолжает писать напрямую в HMS.

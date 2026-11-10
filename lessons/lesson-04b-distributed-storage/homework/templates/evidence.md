@@ -3,7 +3,7 @@
 ## Environment
 
 - Date/time (UTC):
-- OS / Docker Desktop version:
+- Docker Engine / Compose version:
 - Repository revision:
 - Compose services and image versions:
 - Host endpoint / network used:

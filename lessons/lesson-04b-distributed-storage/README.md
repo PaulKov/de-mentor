@@ -49,5 +49,6 @@ Invoke-RestMethod http://localhost:19333/cluster/status
 - [Deep dive: HDFS internals](docs/deep-dives/hdfs-internals.md) · [Ceph internals](docs/deep-dives/ceph-internals.md) · [SeaweedFS internals](docs/deep-dives/seaweedfs-internals.md)
 - [Быстрый маршрут](docs/runbooks/simple-path.md) · [глубокий маршрут](docs/runbooks/deep-dive-path.md)
 - [Домашнее задание](homework/assignment.md) · [оценивание](homework/rubric.md)
+- [Итоговый проект Principal Engineer](../lesson-06/homework/principal-capstone.md) связывает гарантии storage с каталогом, Flink и миграцией.
 
 ← [Lesson 04: Spark](../lesson-04/) · Далее → [Lesson 05: Iceberg](../lesson-05/)

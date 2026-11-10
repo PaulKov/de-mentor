@@ -10,7 +10,8 @@
 | Runbooks | [docs/runbooks/](docs/runbooks/) | quickstart, deep route, recovery drill |
 | Java/PyFlink code | deep dives + [`../../labs/flink-iceberg/sql/`](../../labs/flink-iceberg/sql/) | API recipes и исполняемый SQL job |
 | Homework | [homework/](homework/) | проектирование, fault injection и operational review |
-| Общий Docker стенд | [lab README](../../labs/flink-iceberg/README.md) | Flink, Kafka, S3/SeaweedFS, Lakekeeper и Nessie |
+| Principal Engineer | [Итоговый проект](homework/principal-capstone.md) | миграция mock источника, пограничные случаи, capacity, SLO и rollback |
+| Общий Docker стенд | [lab README](../../labs/flink-iceberg/README.md) | Flink, Kafka, SeaweedFS и четыре варианта каталога |
 
 ## Результат урока
 

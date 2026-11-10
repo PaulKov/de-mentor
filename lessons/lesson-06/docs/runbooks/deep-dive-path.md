@@ -9,4 +9,5 @@
 7. Сравнить DataStream Java, Table/SQL и PyFlink; отметить Java connector JAR boundary и Python UDF process boundary.
 8. Рассчитать checkpoint interval, max recovery time, Kafka retention, Iceberg snapshot retention и orphan cleanup grace period для SLA кейса.
 9. Пройти fault matrix: Kafka source unavailable, TaskManager killed, Lakekeeper unavailable before commit, SeaweedFS unavailable mid-write.
+10. Защитить [итоговый проект уровня Principal Engineer](../../homework/principal-capstone.md) с синтетическим пакетным источником и Redpanda.
 10. Подготовить design review, используя [homework assignment](../../homework/assignment.md).

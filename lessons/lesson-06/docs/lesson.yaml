@@ -11,6 +11,7 @@ docs:
   - lessons/lesson-06/docs/deep-dives/kafka-to-iceberg-exactly-once.md
   - lessons/lesson-06/homework/assignment.md
   - lessons/lesson-06/homework/rubric.md
+  - lessons/lesson-06/homework/principal-capstone.md
 runbooks:
   - lessons/lesson-06/docs/runbooks/student-prep.md
   - lessons/lesson-06/docs/runbooks/simple-path.md

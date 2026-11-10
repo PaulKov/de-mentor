@@ -23,14 +23,15 @@
 
 ## Catalog comparison
 
-| Criterion | Lakekeeper | Nessie | Alternative |
-| --- | --- | --- | --- |
-| REST / engine compatibility | | | |
-| Authentication / authorization | | | |
-| Branching / isolation | | | |
-| Storage integration | | | |
-| Backup / restore | | | |
-| Operational cost / risk | | | |
+| Criterion | Hive Metastore | Lakekeeper | Nessie | Gravitino |
+| --- | --- | --- | --- | --- |
+| API / engine compatibility | | | | |
+| Backend / commit coordination | | | | |
+| Authentication / authorization | | | | |
+| Branching / federation / isolation | | | | |
+| Storage integration | | | | |
+| Backup / restore | | | | |
+| Operational cost / risk | | | | |
 
 ## ADR and recovery
 

@@ -2,7 +2,7 @@
 
 ## Environment
 
-- OS / Docker Desktop:
+- Docker Engine / Compose:
 - Commit / lesson branch:
 - Flink / Kafka connector / Iceberg versions:
 - Docker Compose service status:

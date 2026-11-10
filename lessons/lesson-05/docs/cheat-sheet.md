@@ -10,7 +10,7 @@ catalog entry -> current metadata JSON -> snapshot -> manifest list -> manifests
 
 ## Flink SQL catalog: Hive Metastore
 
-Full setup lives in [`01-catalogs.sql`](../../labs/flink-iceberg/sql/01-catalogs.sql); demo is [`04-hive-catalog-demo.sql`](../../labs/flink-iceberg/sql/04-hive-catalog-demo.sql).
+Full setup lives in [`01-catalogs.sql`](../../../labs/flink-iceberg/sql/01-catalogs.sql); demo is [`04-hive-catalog-demo.sql`](../../../labs/flink-iceberg/sql/04-hive-catalog-demo.sql).
 
 ```sql
 CREATE CATALOG hive_metastore WITH (
@@ -28,7 +28,7 @@ HMS PostgreSQL stores the logical table registration and pointer such as `metada
 
 ## Flink SQL catalog: Lakekeeper
 
-Полная версия в [`01-catalogs.sql`](../../labs/flink-iceberg/sql/01-catalogs.sql).
+Полная версия в [`01-catalogs.sql`](../../../labs/flink-iceberg/sql/01-catalogs.sql).
 
 ```sql
 CREATE CATALOG lakekeeper WITH (

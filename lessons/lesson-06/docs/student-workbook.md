@@ -1,10 +1,10 @@
 # Workbook ученика — Kafka, Flink state и Iceberg commits
 
-Предпосылки: Lesson 05 / SQL, JSON, Kafka topic/partition и базовый Flink. Не требуется устанавливать Java, Maven или Python на Windows host: Compose использует контейнеры. Открой [стенд](../../labs/flink-iceberg/README.md) и три deep dive по мере прохождения.
+Предпосылки: Lesson 05 / SQL, JSON, Kafka topic/partition и базовый Flink. Не требуется устанавливать Java, Maven или Python на машине с Docker: Compose использует контейнеры. Открой [стенд](../../../labs/flink-iceberg/README.md) и три deep dive по мере прохождения.
 
 ## 1. Подготовка и mental model
 
-Запусти Docker Desktop, убедись в режиме Linux containers и выдели Docker около 5 GB RAM. Из корня `de-mentor`:
+Для учебного стенда нужны Docker с Linux containers, Docker Compose v2 и около 6 GB RAM. Из корня `de-mentor`:
 
 ```powershell
 ./labs/flink-iceberg/scripts/up.ps1
@@ -31,7 +31,7 @@ docker compose -f labs/flink-iceberg/compose.yaml ps
 ./labs/flink-iceberg/scripts/sql-client.ps1
 ```
 
-В SQL Client уже зарегистрируются Lakekeeper и Nessie. Выполни по очереди:
+В SQL Client уже зарегистрированы Lakekeeper, Nessie и Hive Metastore. Выполни по очереди:
 
 ```sql
 -- команды из файлов
@@ -47,7 +47,7 @@ docker compose -f labs/flink-iceberg/compose.yaml ps
 ./labs/flink-iceberg/scripts/publish-orders.ps1
 ```
 
-Job начинает читать Kafka source. Подожди event-time watermark и минимум один completed checkpoint после поступления данных. Затем в новом SQL Client выполни `01-catalogs.sql`, затем `06-query-iceberg.sql`.
+Job читает Kafka source. Дождись продвижения watermark и completed checkpoint после поступления данных. Открой новую сессию через `sql-client.ps1`, затем выполни `06-query-iceberg.sql`. Проверь, что появился Iceberg snapshot. Завершение checkpoint и видимость snapshot — отдельные наблюдения.
 
 Запиши в evidence:
 
@@ -60,7 +60,7 @@ Job начинает читать Kafka source. Подожди event-time waterm
 
 ## 3. Lab B — поздние и out-of-order записи
 
-В `data/orders.jsonl` последняя запись намеренно имеет event time раньше ранее отправленного события. Выполни лабораторию заново с чистым topic (`orders-late` и отдельный source DDL либо новый `group.id`). Не изменяй production-like table незаметно: зафиксируй порядок событий, watermark strategy и вывод окон.
+В `data/orders.jsonl` последняя запись намеренно имеет event time раньше ранее отправленного события. Для чистого прогона создай отдельный topic `orders-late` и отдельную целевую таблицу, подставь эти имена в source, producer и SQL запросы. Новый `group.id` не исключает прежние записи из чтения при `earliest-offset`. Зафиксируй порядок событий, watermark и вывод окон.
 
 Ответь:
 
@@ -71,19 +71,7 @@ Job начинает читать Kafka source. Подожди event-time waterm
 
 ## 4. Lab C — наблюдение checkpoint и recovery
 
-Запусти pipeline и дождись completed checkpoint. Зафиксируй checkpoint ID/offsets. Останови **только** TaskManager из другого PowerShell:
-
-```powershell
-docker compose -f labs/flink-iceberg/compose.yaml stop flink-taskmanager
-```
-
-Наблюдай job failure/restart. Потом:
-
-```powershell
-docker compose -f labs/flink-iceberg/compose.yaml start flink-taskmanager
-```
-
-Сравни restored checkpoint, Kafka source offsets, итоговую Iceberg таблицу и количество snapshots. Не запускай новое submission поверх того же sink без анализа job identity и topic offsets.
+Выполни [recovery drill](runbooks/recovery-drill.md) с двумя порциями событий. Сохрани Job ID, фактически восстановленный checkpoint, offsets и Iceberg snapshot. Сравни итоговые ключи и агрегаты с контрольным прогоном без сбоя.
 
 ## 5. Lab D — bottleneck и checkpoint internals
 

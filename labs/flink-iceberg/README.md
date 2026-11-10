@@ -1,6 +1,6 @@
 # Flink + Kafka + Iceberg lab
 
-Изолированный Docker Desktop стенд для Lesson 05 и Lesson 06. Нужны Docker Desktop в режиме Linux containers, Compose v2 и около 6 GB свободной памяти Docker. Java, Maven и Python на хост устанавливать не требуется; Flink SQL и коннекторы собраны в Docker-образ.
+Учебный стенд для Lesson 05 и Lesson 06. Нужны Docker с Linux containers, Docker Compose v2 и около 6 GB памяти. Flink SQL и коннекторы входят в Docker-образ.
 
 ## Топология
 
@@ -13,6 +13,7 @@
 | Nessie 0.109.0 | альтернативный REST catalog с refs/ветками | API: <http://localhost:19120> |
 | Hive Metastore 3.1.3 | классический Iceberg `HiveCatalog` через Thrift | Thrift: `localhost:19083` (в Docker: `hive-metastore:9083`) |
 | PostgreSQL 17 × 2 | отдельные metadata stores Lakekeeper и Hive Metastore | Lakekeeper: `localhost:15432`; HMS: `localhost:15433` |
+| Gravitino Iceberg REST 1.3.1 + PostgreSQL 17, профиль `gravitino` | Iceberg REST над JDBC catalog, отдельная БД и префикс `gravitino/` в SeaweedFS | REST: <http://localhost:19001/iceberg/v1/config>; БД доступна внутри Compose |
 
 Для Hive warehouse URI применяется `s3a://`: Hadoop S3A нужен Hive Metastore для обработки database location, а Iceberg table data/metadata читает и пишет отдельным `S3FileIO`. Настройки S3A для стенда находятся в [`conf/core-site.xml`](conf/core-site.xml); AWS SDK поколения v1 должен совпадать с Hadoop `hadoop-aws`, тогда как Iceberg S3FileIO использует свой bundled AWS SDK. Это разделение — часть лабораторной, а не production security template.
 
@@ -50,6 +51,16 @@ docker compose -f labs/flink-iceberg/compose.yaml exec flink-sql-client `
 ```
 
 Пока SQL Client остаётся открыт, выполни `sql/04-hive-catalog-demo.sql`, `sql/02-lakekeeper-demo.sql` и `sql/03-nessie-demo.sql`. Для HMS-сценария сравни `metadata_location` в PostgreSQL с metadata JSON в SeaweedFS; затем изучи Iceberg snapshots/files. Для каждого нового SQL Client запускай `01-catalogs.sql` снова: регистрация Flink Catalog относится к SQL-сессии, а сами таблицы и файлы сохраняются в каталоге и S3.
+
+Дополнительная [лабораторная Gravitino](../../lessons/lesson-05/docs/runbooks/gravitino-lab.md) использует отдельный Compose профиль. Запусти его из корня репозитория:
+
+```powershell
+docker compose -f labs/flink-iceberg/compose.yaml --profile gravitino up -d --build --wait
+docker compose -f labs/flink-iceberg/compose.yaml --profile gravitino exec -T flink-sql-client `
+  /opt/flink/bin/sql-client.sh -f /workspace/labs/flink-iceberg/sql/07-gravitino-catalog-demo.sql
+```
+
+Профиль поднимает standalone Iceberg REST service. Flink регистрирует его через штатный Iceberg REST client. Metalake, федерация и политики auxiliary режима разбираются в [Deep Dive Gravitino](../../lessons/lesson-05/docs/deep-dives/gravitino-internals.md).
 
 ## Урок 06: Kafka → Flink → Iceberg
 
@@ -91,6 +102,8 @@ docker compose -f labs/flink-iceberg/compose.yaml down
 ```powershell
 docker compose -f labs/flink-iceberg/compose.yaml down --volumes
 ```
+
+При включённом Gravitino используй `--profile gravitino` также с `stop`, `start` и `down`, чтобы команда охватывала сервисы профиля.
 
 ## Ограничения
 
