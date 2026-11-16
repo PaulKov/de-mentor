@@ -7,9 +7,11 @@
 | [rubric.md](rubric.md) | Hard gates + 100 баллов |
 | [templates/](templates/) | `evidence.md`, `reconcile.sql` |
 
-Стенд: `greenplum-625`. Сдача: [`../submissions/`](../submissions/).
+Стенд: `greenplum-625`. Graded view: `lesson03.v_homework_brand_region`.  
+Сдача: [`../submissions/`](../submissions/).
 
 ```bash
+python3 mentor-lab.py seed greenplum-625 --profile lesson03 --scale small
 python3 mentor-lab.py student greenplum-query-tuning homework
 python3 mentor-lab.py homework greenplum-625 check \
   --submission lessons/lesson-03/submissions

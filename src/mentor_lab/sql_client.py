@@ -5,7 +5,7 @@ from __future__ import annotations
 import shlex
 import subprocess
 from pathlib import Path
-from typing import Optional, Sequence
+from typing import Mapping, Optional, Sequence
 
 from mentor_lab.domain import LabDefinition
 
@@ -67,18 +67,39 @@ class GreenplumSqlClient:
     def text(self, sql: str) -> str:
         return self._execute(self._resolve(sql), [])
 
-    def build_file_command(self, container_path: str) -> Sequence[str]:
+    def build_file_command(
+        self,
+        container_path: str,
+        *,
+        variables: Optional[Mapping[str, str]] = None,
+    ) -> Sequence[str]:
+        """Build docker compose + psql -f command; optional -v name=value pairs."""
+
+        var_flags = []
+        for key, value in (variables or {}).items():
+            if not str(key).replace("_", "").isalnum():
+                raise ValueError(f"Unsafe psql variable name: {key!r}")
+            var_flags.append(f"-v {shlex.quote(str(key))}={shlex.quote(str(value))}")
+        var_suffix = (" " + " ".join(var_flags)) if var_flags else ""
         shell = (
             f"{self._lab.env_script} && "
             f"psql -U {shlex.quote(self._lab.default_user)} "
             f"-d {shlex.quote(self._lab.default_database)} "
-            f"-v ON_ERROR_STOP=1 -f {shlex.quote(container_path)}"
+            f"-v ON_ERROR_STOP=1{var_suffix} -f {shlex.quote(container_path)}"
         )
         return self._compose_exec_prefix() + ["bash", "-lc", shell]
 
-    def run_file(self, container_path: str) -> int:
+    def run_file(
+        self,
+        container_path: str,
+        *,
+        variables: Optional[Mapping[str, str]] = None,
+    ) -> int:
         self.ensure_database()
-        completed = subprocess.run(self.build_file_command(container_path), check=False)
+        completed = subprocess.run(
+            self.build_file_command(container_path, variables=variables),
+            check=False,
+        )
         return completed.returncode
 
     def format_command(self, command: Sequence[str]) -> str:

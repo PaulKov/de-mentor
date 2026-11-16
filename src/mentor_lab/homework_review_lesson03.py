@@ -29,6 +29,9 @@ CLASS_DEMO_TEMP_NAMES = (
     "tmp_lesson03_sales_shaped",
 )
 
+GRADED_VIEW = "v_homework_brand_region"
+CLASS_VIEW = "v_heavy_olap_monolith"
+
 
 @dataclass(frozen=True)
 class Lesson03GateResult:
@@ -67,7 +70,12 @@ class Lesson03HomeworkReview:
             [
                 "",
                 "## Next",
-                "- Human review still applies for diagnosis quality, e2e numbers, and production decision.",
+                "- Fix FAIL gates, then re-run:",
+                "  python3 mentor-lab.py homework greenplum-625 check "
+                "--submission lessons/lesson-03/submissions",
+                "- Graded baseline: lesson03.v_homework_brand_region "
+                "(not class-demo v_heavy_olap_monolith).",
+                "- Human review still applies for diagnosis quality and e2e numbers.",
                 "- See lessons/lesson-03/homework/rubric.md (hard gates + scored 100).",
             ]
         )
@@ -88,7 +96,8 @@ class Lesson03HomeworkReviewer:
                     "submission_layout",
                     False,
                     "expected a directory with rewrite.sql, reconcile.sql, evidence.md "
-                    f"(got file {path.name})",
+                    f"(got file {path.name}). Put files under "
+                    "lessons/lesson-03/submissions/",
                 )
             )
             return Lesson03HomeworkReview(
@@ -112,7 +121,10 @@ class Lesson03HomeworkReviewer:
             Lesson03GateResult(
                 "submission_layout",
                 not missing,
-                "ok" if not missing else f"missing: {', '.join(missing)}",
+                "ok" if not missing else (
+                    f"missing: {', '.join(missing)}. "
+                    "Copy templates from lessons/lesson-03/homework/templates/"
+                ),
             )
         )
         if missing:
@@ -127,6 +139,7 @@ class Lesson03HomeworkReviewer:
         rewrite_l = rewrite.lower()
         reconcile_l = reconcile.lower()
         evidence_l = evidence.lower()
+        pack_l = f"{rewrite_l}\n{reconcile_l}\n{evidence_l}"
 
         has_optimizer = bool(re.search(r"set\s+optimizer\s*=\s*(on|off)", rewrite_l))
         gates.append(
@@ -135,12 +148,30 @@ class Lesson03HomeworkReviewer:
                 has_optimizer,
                 "found SET optimizer = on|off in rewrite.sql"
                 if has_optimizer
-                else "rewrite.sql must contain SET optimizer = on|off for the rewrite proof",
+                else (
+                    "rewrite.sql must contain SET optimizer = on|off "
+                    "(same GUC for baseline ↔ candidate)"
+                ),
+            )
+        )
+
+        graded_ok = GRADED_VIEW in pack_l
+        class_only = CLASS_VIEW in pack_l and GRADED_VIEW not in pack_l
+        gates.append(
+            Lesson03GateResult(
+                "graded_homework_view",
+                graded_ok and not class_only,
+                "pack references v_homework_brand_region"
+                if graded_ok and not class_only
+                else (
+                    "baseline/reconcile must target lesson03.v_homework_brand_region; "
+                    "v_heavy_olap_monolith is class-demo only"
+                ),
             )
         )
 
         missing_headings = [h for h in EVIDENCE_HEADINGS if h not in evidence]
-        # Allow slight heading variants for D/E
+        # Allow slight heading variants for D/E (A/B subsection titles)
         if "## D. Stage design" in missing_headings and re.search(
             r"^## D\.", evidence, re.MULTILINE
         ):
@@ -159,6 +190,31 @@ class Lesson03HomeworkReviewer:
             )
         )
 
+        ab_ok = (
+            (
+                "candidate a" in evidence_l
+                or "кандидат a" in evidence_l
+                or "### candidate a" in evidence_l
+            )
+            and (
+                "candidate b" in evidence_l
+                or "кандидат b" in evidence_l
+                or "### candidate b" in evidence_l
+            )
+        )
+        gates.append(
+            Lesson03GateResult(
+                "ab_candidates_explored",
+                ab_ok,
+                "evidence documents Candidate A and Candidate B"
+                if ab_ok
+                else (
+                    "evidence.md must explore ≥2 candidates "
+                    "(sections Candidate A / Candidate B)"
+                ),
+            )
+        )
+
         e2e_ok = (
             "total pipeline" in evidence_l
             or "pipeline time" in evidence_l
@@ -174,7 +230,10 @@ class Lesson03HomeworkReviewer:
                 e2e_ok,
                 "evidence mentions pipeline cost + production decision"
                 if e2e_ok
-                else "evidence.md must include end-to-end pipeline metrics and merge/do-not-merge decision",
+                else (
+                    "evidence.md must include end-to-end pipeline metrics "
+                    "and merge/do-not-merge/needs larger-scale decision"
+                ),
             )
         )
 
@@ -185,7 +244,10 @@ class Lesson03HomeworkReviewer:
                 except_count >= 2,
                 f"found {except_count} EXCEPT ALL (need ≥2 for both directions)"
                 if except_count >= 2
-                else "reconcile.sql must contain EXCEPT ALL in both directions",
+                else (
+                    "reconcile.sql must contain EXCEPT ALL in both directions "
+                    "(see templates/reconcile.sql)"
+                ),
             )
         )
 
@@ -239,28 +301,39 @@ class Lesson03HomeworkReviewer:
                     explored,
                     "no TEMP in rewrite — evidence documents TEMP boundary reject"
                     if explored
-                    else "no CREATE TEMP: evidence must argue why materialization was rejected",
+                    else (
+                        "no CREATE TEMP: evidence must argue why materialization "
+                        "was rejected (TEMP boundary)"
+                    ),
                 )
             )
 
         demo_hits = [name for name in CLASS_DEMO_TEMP_NAMES if name in rewrite_l]
         if demo_hits and creates_temp:
-            # Soft fail: reject if rewrite is essentially only class-demo names
             only_demo = all(
                 name in rewrite_l for name in CLASS_DEMO_TEMP_NAMES
-            ) and not re.search(r"create\s+temp\s+table\s+tmp_(?!lesson03_sales_)", rewrite_l)
+            ) and not re.search(
+                r"create\s+temp\s+table\s+tmp_(?!lesson03_sales_)", rewrite_l
+            )
             gates.append(
                 Lesson03GateResult(
                     "no_class_demo_copy",
                     not only_demo,
-                    "rewrite uses class-demo TEMP names as the only stages — design your own"
+                    (
+                        "rewrite uses class-demo TEMP names as the only stages — "
+                        "design your own for v_homework_brand_region"
+                    )
                     if only_demo
-                    else f"class-demo names present ({', '.join(demo_hits)}); ensure own architecture + e2e",
+                    else (
+                        f"class-demo names present ({', '.join(demo_hits)}); "
+                        "ensure own architecture + e2e on graded view"
+                    ),
                 )
             )
             if not only_demo:
                 notes.append(
-                    "rewrite mentions class-demo TEMP names; human review should verify originality."
+                    "rewrite mentions class-demo TEMP names; "
+                    "human review should verify originality."
                 )
         else:
             gates.append(

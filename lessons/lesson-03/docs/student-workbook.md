@@ -143,10 +143,12 @@ Self-check:
 
 ## Упражнение 5: TEMP Boundary При Фиксированном Optimizer
 
-Сравни план монолита с **своим** TEMP (или с аргументированным отказом от TEMP) при **том же** `SET optimizer`.  
-Class-demo (`tmp_lesson03_sales_*`) — только для разбора на уроке, не как сдача.
+Сравни план **class-demo** monolith (`v_heavy_olap_monolith`) с **учебным** TEMP при том же `SET optimizer`.  
+Имена `tmp_lesson03_sales_*` / class-demo SQL — **только урок**, не сдавать как homework.
 
-Дополнительно (если создаёшь TEMP):
+**Homework отдельно:** baseline = `lesson03.v_homework_brand_region` (другой grain), ≥2 кандидатов A/B — см. [assignment](https://github.com/PaulKov/de-mentor/blob/master/lessons/lesson-03/homework/assignment.md).
+
+Дополнительно (если создаёшь TEMP для упражнения):
 
 ```sql
 DROP TABLE IF EXISTS tmp_wb_fs;
@@ -178,10 +180,12 @@ Self-check:
 
 ## Evidence Checklist К Домашке (Senior core)
 
-- [ ] работа в БД `mentor`, seed = `lesson03-homework-seed.sql`
+- [ ] работа в БД `mentor`, seed = `lesson03-homework-seed.sql` (`--scale small|principal`)
+- [ ] baseline = `lesson03.v_homework_brand_region` (**не** `v_heavy_olap_monolith`)
 - [ ] before/after при фиксированном optimizer
-- [ ] `pg_stats` causality (секция C)
-- [ ] 0–3 стадии; TEMP boundary explored (создать или отвергнуть)
-- [ ] e2e metrics table + production decision
-- [ ] two-way `EXCEPT ALL` = 0/0 **и** residual risks
-- [ ] Principal extension (matrix / FS / policy / WLM) — опционально
+- [ ] `pg_stats` causality (секция C); учтён skew / correlation smell
+- [ ] A/B: ≥2 explored candidates; winner в `rewrite.sql`
+- [ ] 0–3 стадии у winner; TEMP boundary explored (создать или отвергнуть)
+- [ ] e2e metrics table (monolith + A + B) + production decision
+- [ ] two-way `EXCEPT ALL` vs graded view = 0/0 **и** residual risks
+- [ ] Principal extension (principal scale / matrix / FS / policy / WLM) — опционально
