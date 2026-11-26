@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Order xmlns="urn:lab:orders" version="1">
+  <Id>o-101</Id>
+  <Customer id="c-1"/>
+  <Lines><Line sku="B01" qty="2"/><Line sku="B02" qty="1"/></Lines>
+</Order>

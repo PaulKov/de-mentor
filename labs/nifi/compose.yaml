@@ -1,0 +1,126 @@
+name: de-mentor-nifi
+
+services:
+  nifi:
+    build:
+      context: .
+      dockerfile: Dockerfile.nifi
+    environment:
+      SINGLE_USER_CREDENTIALS_USERNAME: student
+      SINGLE_USER_CREDENTIALS_PASSWORD: Practice-Only-2026
+      NIFI_SENSITIVE_PROPS_KEY: practice-only-nifi-key-2026
+      NIFI_JVM_HEAP_INIT: 512m
+      NIFI_JVM_HEAP_MAX: 1280m
+      NIFI_WEB_HTTPS_HOST: 0.0.0.0
+      NIFI_WEB_PROXY_HOST: localhost:28443,127.0.0.1:28443
+    ports: ["127.0.0.1:28443:8443"]
+    volumes:
+      - nifi-conf:/opt/nifi/nifi-current/conf
+      - nifi-flowfiles:/opt/nifi/nifi-current/flowfile_repository
+      - nifi-content:/opt/nifi/nifi-current/content_repository
+      - nifi-provenance:/opt/nifi/nifi-current/provenance_repository
+      - nifi-database:/opt/nifi/nifi-current/database_repository
+      - nifi-state:/opt/nifi/nifi-current/state
+      - ./fixtures:/lab/fixtures:ro
+      - nifi-output:/lab/output
+    healthcheck:
+      test: ["CMD", "curl", "-kfsS", "-o", "/dev/null", "https://localhost:8443/nifi/"]
+      interval: 5s
+      timeout: 4s
+      start_period: 35s
+      retries: 30
+    restart: unless-stopped
+
+  kafka:
+    image: apache/kafka:4.2.2
+    environment:
+      CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: INTERNAL://:29092,HOST://:9092,CONTROLLER://:29093
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,HOST://localhost:39092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,HOST:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:29093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+      KAFKA_HEAP_OPTS: -Xms128M -Xmx384M
+    ports: ["127.0.0.1:39092:9092"]
+    volumes: [kafka-data:/var/lib/kafka/data]
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server kafka:29092 >/dev/null 2>&1"]
+      interval: 5s
+      timeout: 5s
+      retries: 24
+      start_period: 15s
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: integration
+      POSTGRES_USER: student
+      POSTGRES_PASSWORD: practice-only-db
+    ports: ["127.0.0.1:35432:5432"]
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "student", "-d", "integration", "-h", "127.0.0.1"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  mock-api:
+    image: python:3.12-slim
+    command: ["python", "-u", "/lab/mock_api.py"]
+    ports: ["127.0.0.1:28090:8080"]
+    volumes:
+      - ./mock_api.py:/lab/mock_api.py:ro
+      - ./fixtures:/lab/fixtures:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "from urllib.request import urlopen; urlopen('http://127.0.0.1:8080/health', timeout=2).close()"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  ftp:
+    build:
+      context: .
+      dockerfile: Dockerfile.ftp
+    volumes: [./fixtures:/lab/fixtures:ro]
+    healthcheck:
+      test: ["CMD", "python", "-c", "from ftplib import FTP; f=FTP(); f.connect('127.0.0.1',2121,2); f.login('student','practice-only-files'); assert 'orders.json' in f.nlst(); f.quit()"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  smb:
+    build:
+      context: .
+      dockerfile: Dockerfile.smb
+    volumes: [./fixtures:/lab/fixtures:ro]
+    healthcheck:
+      test: ["CMD", "smbclient", "//127.0.0.1/incoming", "-U", "student%practice-only-files", "-c", "ls"]
+      interval: 5s
+      timeout: 4s
+      retries: 12
+    restart: unless-stopped
+
+volumes:
+  nifi-conf:
+  nifi-flowfiles:
+  nifi-content:
+  nifi-provenance:
+  nifi-database:
+  nifi-state:
+  nifi-output:
+  kafka-data:
+  postgres-data:

@@ -1,0 +1,18 @@
+[
+  {
+    "operation": "shift",
+    "spec": {
+      "*": {
+        "order": {
+          "id": "[&2].event_id",
+          "customer": {"id": "[&3].customer_id"},
+          "lines": {"*":{"sku":"[&4].items[&1].sku","qty":"[&4].items[&1].quantity"}}
+        }
+      }
+    }
+  },
+  {
+    "operation": "default",
+    "spec": {"*": {"items": []}}
+  }
+]

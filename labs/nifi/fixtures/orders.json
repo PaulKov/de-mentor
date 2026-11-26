@@ -1,0 +1,4 @@
+[
+  {"order":{"id":"o-101","customer":{"id":"c-1"},"lines":[{"sku":"B01","qty":2},{"sku":"B02","qty":1}]}},
+  {"order":{"id":"o-102","customer":null,"lines":[]}}
+]

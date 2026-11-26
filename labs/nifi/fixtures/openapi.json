@@ -1,0 +1,23 @@
+{
+  "openapi": "3.1.0",
+  "info": {"title": "Synthetic Orders API", "version": "1.0.0"},
+  "servers": [{"url": "http://mock-api:8080"}, {"url": "http://localhost:28090"}],
+  "paths": {
+    "/orders": {
+      "get": {
+        "operationId": "listOrders",
+        "parameters": [
+          {"in": "query", "name": "case", "schema": {"type": "string", "enum": ["default", "429", "503", "400", "timeout", "malformed", "empty"]}},
+          {"in": "query", "name": "run", "description": "Retry cases fail once per run identifier.", "schema": {"type": "string"}}
+        ],
+        "responses": {
+          "200": {"description": "Synthetic orders. The malformed exercise sends invalid JSON.", "content": {"application/json": {"schema": {"type": "array", "items": {"type": "object"}}}}},
+          "204": {"description": "No content"},
+          "400": {"description": "Invalid query"},
+          "429": {"description": "Throttled", "headers": {"Retry-After": {"schema": {"type": "integer"}}}},
+          "503": {"description": "Transient upstream failure"}
+        }
+      }
+    }
+  }
+}

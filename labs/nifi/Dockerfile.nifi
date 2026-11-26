@@ -1,0 +1,5 @@
+FROM apache/nifi:2.12.0
+USER root
+RUN mkdir -p /opt/nifi/jdbc /lab/output && chown nifi:nifi /lab/output
+ADD --chmod=0644 https://repo.maven.apache.org/maven2/org/postgresql/postgresql/42.7.11/postgresql-42.7.11.jar /opt/nifi/jdbc/postgresql.jar
+USER nifi

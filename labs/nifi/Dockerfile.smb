@@ -1,0 +1,6 @@
+FROM alpine:3.22
+RUN apk add --no-cache samba samba-client \
+    && adduser -D -H -s /sbin/nologin student \
+    && printf 'practice-only-files\npractice-only-files\n' | smbpasswd -s -a student
+COPY smb.conf /etc/samba/smb.conf
+CMD ["smbd", "--foreground", "--no-process-group", "--debug-stdout"]

@@ -249,6 +249,7 @@ python3 mentor-lab.py spark-submit spark \
 - [Lesson 05: Iceberg on S3, Hive Metastore, Lakekeeper, Nessie и Gravitino](lessons/lesson-05/README.md)
 - [Lesson 05 deep dives: Hive Metastore, metadata graph, commits, format alternatives](lessons/lesson-05/docs/deep-dives/)
 - [Lesson 06: Kafka → Flink → Iceberg](lessons/lesson-06/README.md)
+- [Lesson 07: Apache NiFi с нуля, видео, презентация и практики](lessons/lesson-07-nifi/README.md)
 - [Lesson 06 deep dives: runtime/checkpoints, source/event-time, exactly-once](lessons/lesson-06/docs/deep-dives/)
 - [Итоговый проект Principal Engineer: Redpanda → Flink → Iceberg](lessons/lesson-06/homework/principal-capstone.md)
 - [Общий Docker Compose стенд](labs/flink-iceberg/README.md)

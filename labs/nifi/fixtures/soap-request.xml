@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:o="urn:lab:orders">
+  <soap:Body><o:GetOrder><o:Id>o-101</o:Id></o:GetOrder></soap:Body>
+</soap:Envelope>
