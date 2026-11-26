@@ -40,7 +40,7 @@ for (const [index, filename] of (await fs.readdir(sourceDir)).filter(name => /^\
         title,
         points: lines.filter(line => line.startsWith('- ')).map(line => line.slice(2)),
         code: section.match(/```[^\n]*\n([\s\S]*?)```/)?.[1].trimEnd(),
-        narration: lines.filter(line => line.startsWith('> ')).map(line => line.slice(2)).join(' '),
+        narrationLines: lines.filter(line => line.startsWith('> ')).map(line => line.slice(2)),
       };
     }),
   });
@@ -95,7 +95,7 @@ await fs.writeFile(path.join(build, 'cover.png'), new Uint8Array(await coverImag
 for (const [moduleIndex, episode] of episodes.entries()) {
   const number = String(moduleIndex + 1).padStart(2, '0');
   for (const [sceneIndex, scene] of episode.scenes.entries()) {
-    if (!scene.points.length || !scene.narration) throw new Error(`Empty content: ${episode.slug}/${scene.title}`);
+    if (!scene.points.length || !scene.narrationLines.length) throw new Error(`Empty content: ${episode.slug}/${scene.title}`);
     const slide = presentation.slides.add();
     slide.background.fill = paper;
     const topic = sceneIndex === 0 ? episode.title.replace(/^Deep Dive · /, '') : scene.title;
@@ -120,7 +120,7 @@ for (const [moduleIndex, episode] of episodes.entries()) {
       label(slide, scene.code, 72, 218, 646, 306, 21,
         { color: '#E6EDF3', fill: dark, font: 'Consolas', insets: { left: 20, right: 18, top: 22, bottom: 10 } });
     }
-    slide.speakerNotes.text = `${scene.narration}\n\n${episode.source}`;
+    slide.speakerNotes.text = `${scene.narrationLines.join(' ')}\n\n${episode.source}`;
     scene.image = `${episode.slug}-${sceneIndex + 1}.png`;
     const frame = await presentation.export({ slide, format: 'png', scale: 1 });
     await fs.writeFile(path.join(build, scene.image), new Uint8Array(await frame.arrayBuffer()));

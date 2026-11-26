@@ -1,143 +1,196 @@
-"""Generate Russian narration, H.264 lessons and subtitles from rendered scenes."""
-
+"""Build narrated slide videos and captions on one sample-accurate timeline."""
 import argparse
 import asyncio
+import hashlib
 import json
-from pathlib import Path
 import re
 import subprocess
+import tempfile
+import shutil
+import wave
+from pathlib import Path
 
 import edge_tts
 import imageio_ffmpeg
+import numpy as np
 
-FFMPEG = imageio_ffmpeg.get_ffmpeg_exe()
+
+MEDIA = Path(__file__).resolve().parent
 VOICE = "ru-RU-DmitryNeural"
+RATE = "-4%"
+HZ = 24000
+FPS = 10
+FRAME = HZ // FPS
+FFMPEG = imageio_ffmpeg.get_ffmpeg_exe()
+LEXICON = json.loads((MEDIA / "pronunciation.json").read_text(encoding="utf-8"))
+TERMS = re.compile(r"(?<!\w)(?:" + "|".join(map(re.escape, sorted(LEXICON, key=len, reverse=True))) + r")(?!\w)")
 
 
-def ffmpeg(*arguments):
-    completed = subprocess.run(
-        [FFMPEG, "-hide_banner", "-loglevel", "error", "-y", *map(str, arguments)],
-        capture_output=True, text=True,
-    )
-    if completed.returncode:
-        raise RuntimeError(completed.stderr.strip())
+def spoken(text):
+    return TERMS.sub(lambda match: LEXICON[match[0]], text)
 
 
-def duration(file):
-    output = subprocess.run([FFMPEG, "-hide_banner", "-i", str(file)], capture_output=True, text=True)
-    match = re.search(r"Duration: (\d+):(\d+):(\d+\.\d+)", output.stderr)
-    if not match:
-        raise ValueError(f"Cannot read media duration: {file}")
-    hours, minutes, seconds = map(float, match.groups())
-    return hours * 3600 + minutes * 60 + seconds
+def ffmpeg(*args):
+    result = subprocess.run([FFMPEG, "-v", "error", "-y", *map(str, args)], capture_output=True)
+    if result.returncode:
+        raise RuntimeError(result.stderr.decode(errors="replace"))
+    return result.stdout
 
 
-async def speak(text, audio, timing, semaphore):
-    if audio.exists() and timing.exists():
-        return
-    async with semaphore:
-        for retry in range(4):
-            words = []
+def caption_lines(text):
+    if len(text) <= 43:
+        return text
+    words = text.split()
+    candidates = []
+    for cut in range(1, len(words)):
+        left, right = " ".join(words[:cut]), " ".join(words[cut:])
+        if max(len(left), len(right)) <= 46:
+            # Prefer a clause boundary and keep prepositions with their objects.
+            penalty = 13 if words[cut - 1].lower() in {"в", "с", "и", "у", "на", "к", "по", "из", "от", "для"} else 0
+            score = abs(len(left) - len(right)) + penalty - 10 * left.endswith((",", ".", "?", "—"))
+            candidates.append((score, left + "\n" + right))
+    if not candidates:
+        raise ValueError(f"Shorten the narration line: {text}")
+    return min(candidates)[1]
+
+
+async def synthesize(text, cache, semaphore):
+    phrase = spoken(text)
+    key = hashlib.sha256(f"{VOICE}/{RATE}/{phrase}".encode()).hexdigest()
+    output = cache / f"{key}.mp3"
+    if output.exists():
+        return output
+    with tempfile.NamedTemporaryFile(dir=cache, suffix=".part", delete=False) as stream:
+        temp = Path(stream.name)
+    try:
+        for attempt in range(6):
             try:
-                talk = edge_tts.Communicate(text, VOICE, rate="-9%", boundary="WordBoundary")
-                with audio.open("wb") as writer:
-                    async for message in talk.stream():
-                        if message["type"] == "audio":
-                            writer.write(message["data"])
-                        elif message["type"] == "WordBoundary":
-                            words.append([message["offset"], message["duration"], message["text"]])
-                if audio.stat().st_size < 3000 or not words:
-                    raise ValueError("Narration is empty")
-                timing.write_text(json.dumps(words, ensure_ascii=False), encoding="utf-8")
-                return
-            except Exception:
-                if retry == 3:
-                    raise
-                await asyncio.sleep(2 ** retry)
+                async with semaphore:
+                    if output.exists():
+                        return output
+                    await edge_tts.Communicate(phrase, VOICE, rate=RATE).save(str(temp))
+                if temp.stat().st_size < 700:
+                    raise ValueError(f"Empty voice response: {text}")
+                temp.replace(output)
+                return output
+            except Exception as exc:
+                if attempt == 5:
+                    raise RuntimeError(f"Could not synthesize: {text}") from exc
+                await asyncio.sleep(min(60, 3 ** (attempt + 1)))
+    finally:
+        temp.unlink(missing_ok=True)
 
 
-def captions(words, offset, end):
-    batch = []
-    for start, length, word in words:
-        if batch and (len(batch) >= 11 or len(" ".join(item[2] for item in batch)) + len(word) > 72):
-            yield caption(batch, offset, end)
-            batch = []
-        batch.append((start, length, word))
-    if batch:
-        yield caption(batch, offset, end)
+def speech_samples(path):
+    raw = ffmpeg("-i", path, "-ac", 1, "-ar", HZ, "-f", "s16le", "-")
+    pcm = np.frombuffer(raw, dtype="<i2")
+    window = HZ // 100
+    samples = pcm[:len(pcm) // window * window].astype(np.float64).reshape(-1, window)
+    rms = np.sqrt((samples ** 2).mean(axis=1))
+    active = np.flatnonzero(rms > 32768 * 10 ** (-54 / 20))
+    if not active.size:
+        raise ValueError(f"No speech in {path}")
+    # Leave the edges of quiet consonants intact. Only trim the outer silence.
+    start = max(0, (active[0] - 6) * window)
+    end = min(len(pcm), (active[-1] + 8) * window)
+    # The voice can insert a second of silence between clauses in the same cue.
+    # Remove only the middle of long silent spans, leaving both speech edges intact.
+    parts = []
+    cursor = start
+    for index in np.flatnonzero(np.diff(active) >= 92):
+        parts.append(pcm[cursor:(active[index] + 28) * window])
+        cursor = (active[index + 1] - 28) * window
+    parts.append(pcm[cursor:end])
+    speech = np.concatenate(parts)
+    tail = end - (active[-1] + 1) * window
+    return speech, active[0] * window - start, len(speech) - tail
 
 
-def caption(batch, offset, end):
-    start = offset + batch[0][0] / 10_000_000
-    last, length, _ = batch[-1]
-    stop = min(end, offset + (last + length) / 10_000_000 + 0.15)
-    text = " ".join(word for _, _, word in batch)
-    return start, max(stop, start + 0.10), text
-
-
-def srt_time(value):
-    ms = round(value * 1000)
-    hours, ms = divmod(ms, 3_600_000)
-    minutes, ms = divmod(ms, 60_000)
+def timestamp(sample):
+    ms = round(sample * 1000 / HZ)
+    hours, ms = divmod(ms, 3600000)
+    minutes, ms = divmod(ms, 60000)
     seconds, ms = divmod(ms, 1000)
     return f"{hours:02}:{minutes:02}:{seconds:02},{ms:03}"
 
 
-def encode_episode(episode, build, destination):
+def encode(episode, files, build, destination):
     slug = episode["slug"]
-    clips = []
-    subtitles = []
-    running = 0.0
-    for index, scene in enumerate(episode["scenes"], 1):
-        base = f"{slug}-{index}"
-        audio = build / f"{base}.mp3"
-        clip = build / f"{base}.mp4"
-        if not clip.exists() or clip.stat().st_mtime < max(
-            (build / scene["image"]).stat().st_mtime, audio.stat().st_mtime
-        ):
-            ffmpeg("-loop", "1", "-framerate", "5", "-i", build / scene["image"], "-i", audio,
-                   "-shortest", "-c:v", "libx264", "-preset", "veryfast", "-tune", "stillimage",
-                   "-crf", "25", "-pix_fmt", "yuv420p", "-threads", "2", "-c:a", "aac",
-                   "-ac", "1", "-b:a", "64k", clip)
-        playtime = duration(clip)
-        words = json.loads((build / f"{base}.timing.json").read_text(encoding="utf-8"))
-        subtitles.extend(captions(words, running, running + playtime))
-        clips.append(f"file '{clip.name}'")
-        running += playtime
-    concat = build / f"{slug}.concat"
-    concat.write_text("\n".join(clips) + "\n", encoding="utf-8")
-    srt = destination / f"{slug}.srt"
-    entries = []
-    for index, (start, stop, text) in enumerate(subtitles, 1):
-        if index < len(subtitles):
-            stop = min(stop, subtitles[index][0] - 0.01)
-        entries.append(f"{index}\n{srt_time(start)} --> {srt_time(max(stop, start + 0.03))}\n{text}\n")
-    srt.write_text("\n".join(entries), encoding="utf-8")
-    result = destination / f"{slug}.mp4"
-    ffmpeg("-f", "concat", "-safe", "0", "-i", concat, "-i", srt,
-           "-map", "0:v", "-map", "0:a", "-map", "1:s", "-c:v", "copy", "-c:a", "copy",
-           "-c:s", "mov_text", "-metadata:s:s:0", "language=rus", "-movflags", "+faststart", result)
-    print(f"{slug}: {duration(result):.2f}s, {result.stat().st_size:,} bytes", flush=True)
+    pcm_path = build / f"{slug}.wav"
+    captions, clips = [], []
+    cursor = 0
+    with wave.open(str(pcm_path), "wb") as track:
+        track.setparams((1, 2, HZ, 0, "NONE", "not compressed"))
+
+        def silence(count):
+            nonlocal cursor
+            track.writeframesraw(bytes(count * 2))
+            cursor += count
+
+        for index, scene in enumerate(episode["scenes"]):
+            scene_start = cursor
+            silence(round(HZ * (0.24 if scene.get("code") else 0.16)))
+            lines = scene["narrationLines"]
+            for number, text in enumerate(lines):
+                pcm, first, last = speech_samples(files[text])
+                captions.append((cursor + first, cursor + last, caption_lines(text)))
+                track.writeframesraw(pcm.tobytes())
+                cursor += len(pcm)
+                if number < len(lines) - 1:
+                    pause = 0.53 if text.endswith("?") else 0.32 if len(text) < 47 else 0.41
+                    silence(round(HZ * pause))
+            tail = 0.52 if index == len(episode["scenes"]) - 1 else 0.66
+            silence(round(HZ * tail))
+            silence((-cursor) % FRAME)
+            clip = build / f"{slug}-{index + 1}.silent.mp4"
+            ffmpeg("-loop", 1, "-framerate", FPS, "-i", build / scene["image"],
+                   "-frames:v", (cursor - scene_start) // FRAME, "-an", "-c:v", "libx264",
+                   "-preset", "veryfast", "-tune", "stillimage", "-crf", 23,
+                   "-threads", 2, "-pix_fmt", "yuv420p", clip)
+            clips.append(f"file '{clip.name}'")
+    playlist = build / f"{slug}.concat"
+    playlist.write_text("\n".join(clips) + "\n", encoding="ascii")
+    srt = build / f"{slug}.srt"
+    srt.write_text("\n\n".join(f"{i}\n{timestamp(start)} --> {timestamp(end)}\n{label}"
+                               for i, (start, end, label) in enumerate(captions, 1)) + "\n", encoding="utf-8")
+    result = build / f"{slug}.final.mp4"
+    ffmpeg("-f", "concat", "-safe", 0, "-i", playlist, "-i", pcm_path, "-i", srt,
+           "-map", "0:v", "-map", "1:a", "-map", "2:s", "-c:v", "copy", "-c:a", "aac",
+           "-b:a", "80k", "-c:s", "mov_text", "-metadata:s:s:0", "language=rus",
+           "-metadata:s:a:0", "language=rus", "-movflags", "+faststart", result)
+    shutil.copyfile(result, destination / f"{slug}.mp4")
+    shutil.copyfile(srt, destination / f"{slug}.srt")
+    print(f"{slug}: {cursor / HZ:.2f}s, {len(captions)} cues", flush=True)
 
 
 async def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("build", type=Path)
     parser.add_argument("destination", type=Path)
+    parser.add_argument("--episode", action="append", help="Build only this episode slug (repeatable)")
     args = parser.parse_args()
-    args.destination.mkdir(parents=True, exist_ok=True)
     episodes = json.loads((args.build / "episodes.json").read_text(encoding="utf-8"))
-    semaphore = asyncio.Semaphore(5)
-
-    async def make_episode(episode):
-        await asyncio.gather(*[
-            speak(scene["narration"], args.build / f"{episode['slug']}-{index}.mp3",
-                  args.build / f"{episode['slug']}-{index}.timing.json", semaphore)
-            for index, scene in enumerate(episode["scenes"], 1)
-        ])
-        await asyncio.to_thread(encode_episode, episode, args.build, args.destination)
-
-    await asyncio.gather(*(make_episode(episode) for episode in episodes))
+    if args.episode:
+        unknown = set(args.episode) - {ep["slug"] for ep in episodes}
+        if unknown:
+            parser.error("Unknown episode: " + ", ".join(sorted(unknown)))
+        episodes = [ep for ep in episodes if ep["slug"] in args.episode]
+    cache = args.build / "voice-cache"
+    cache.mkdir(exist_ok=True)
+    args.destination.mkdir(parents=True, exist_ok=True)
+    lines = list(dict.fromkeys(text for ep in episodes for scene in ep["scenes"] for text in scene["narrationLines"]))
+    for text in lines:
+        caption_lines(text)
+    semaphore = asyncio.Semaphore(3)
+    paths = await asyncio.gather(*(synthesize(text, cache, semaphore) for text in lines),
+                                 return_exceptions=True)
+    failures = [str(error) for error in paths if isinstance(error, BaseException)]
+    if failures:
+        raise RuntimeError("\n".join(failures))
+    files = dict(zip(lines, paths))
+    # Limit CPU, RAM and concurrent ffmpeg processes on a teaching laptop.
+    for episode in episodes:
+        await asyncio.to_thread(encode, episode, files, args.build, args.destination)
 
 
 if __name__ == "__main__":
