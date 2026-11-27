@@ -1,0 +1,30 @@
+services:
+  nifi-window:
+    image: apache/nifi:2.12.0
+    environment:
+      SINGLE_USER_CREDENTIALS_USERNAME: student
+      SINGLE_USER_CREDENTIALS_PASSWORD: Practice-Only-2026
+      NIFI_SENSITIVE_PROPS_KEY: practice-only-window-2026
+      NIFI_JVM_HEAP_INIT: 256m
+      NIFI_JVM_HEAP_MAX: 512m
+      NIFI_WEB_HTTPS_HOST: 0.0.0.0
+      NIFI_WEB_PROXY_HOST: localhost:28445,127.0.0.1:28445
+    ports: ["127.0.0.1:28445:8443"]
+    volumes:
+      - window-conf:/opt/nifi/nifi-current/conf
+      - window-queue:/opt/nifi/nifi-current/flowfile_repository
+      - window-content:/opt/nifi/nifi-current/content_repository
+      - window-state:/opt/nifi/nifi-current/state
+    healthcheck:
+      test: ["CMD", "curl", "-kfsS", "-o", "/dev/null", "https://localhost:8443/nifi/"]
+      interval: 5s
+      timeout: 5s
+      retries: 40
+      start_period: 30s
+    restart: "no"
+
+volumes:
+  window-conf:
+  window-queue:
+  window-content:
+  window-state:

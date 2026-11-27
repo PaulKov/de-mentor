@@ -1,0 +1,75 @@
+{
+  "topic": "window.in.586fba7f-a35",
+  "group": "window-586fba7f-a35",
+  "event_id": "586fba7f-a35e-45c1-ad3c-f7061592e57f",
+  "ui": "https://127.0.0.1:28445/nifi/#/process-groups/1bd35ef6-01a2-1000-36b8-8ebe90ef474a",
+  "connection": "1bd36000-01a2-1000-e8ac-feb7f9f74c55",
+  "exit_code": 137,
+  "stack_before_kill": [
+    "at org.apache.nifi.kafka.service.consumer.Kafka3ConsumerService.commit(Kafka3ConsumerService.java:157)",
+    "at org.apache.nifi.kafka.processors.ConsumeKafka.commitOffsets(ConsumeKafka.java:634)",
+    "at org.apache.nifi.kafka.processors.ConsumeKafka.lambda$onTrigger$2(ConsumeKafka.java:564)",
+    "at org.apache.nifi.controller.repository.StandardProcessSession.commitAsync(StandardProcessSession.java:573)"
+  ],
+  "stages": [
+    {
+      "stage": "before_commitSync",
+      "current": 0,
+      "end": 1,
+      "lag": 1,
+      "queue": [
+        {
+          "uuid": "8e521b3f-f503-4aee-918d-7732fc7ca08b",
+          "topic": "window.in.586fba7f-a35",
+          "partition": 0,
+          "offset": 0,
+          "event_id": "586fba7f-a35e-45c1-ad3c-f7061592e57f"
+        }
+      ]
+    },
+    {
+      "stage": "nifi_down",
+      "current": 0,
+      "end": 1,
+      "lag": 1,
+      "queue": null
+    },
+    {
+      "stage": "recovered_source_stopped",
+      "current": 0,
+      "end": 1,
+      "lag": 1,
+      "queue": [
+        {
+          "uuid": "8e521b3f-f503-4aee-918d-7732fc7ca08b",
+          "topic": "window.in.586fba7f-a35",
+          "partition": 0,
+          "offset": 0,
+          "event_id": "586fba7f-a35e-45c1-ad3c-f7061592e57f"
+        }
+      ]
+    },
+    {
+      "stage": "after_kafka_reread",
+      "current": 1,
+      "end": 1,
+      "lag": 0,
+      "queue": [
+        {
+          "uuid": "8e521b3f-f503-4aee-918d-7732fc7ca08b",
+          "topic": "window.in.586fba7f-a35",
+          "partition": 0,
+          "offset": 0,
+          "event_id": "586fba7f-a35e-45c1-ad3c-f7061592e57f"
+        },
+        {
+          "uuid": "9ec48e03-c676-4b7f-952c-be03ff61c128",
+          "topic": "window.in.586fba7f-a35",
+          "partition": 0,
+          "offset": 0,
+          "event_id": "586fba7f-a35e-45c1-ad3c-f7061592e57f"
+        }
+      ]
+    }
+  ]
+}

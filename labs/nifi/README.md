@@ -46,6 +46,8 @@ docker compose exec -T nifi ls -l /lab/output/transformed
 
 [Практика 09б. Kafka → NiFi → Kafka](kafka-replay/README.md) проверяет, что прочитает потребитель с `read_committed` после падения NiFi между выходной публикацией и фиксацией входной позиции.
 
+[Практика 09в. Очередь NiFi и commitSync](commit-window/README.md) останавливает поток в точке вызова Kafka и позволяет увидеть в очереди восстановленный и заново созданный FlowFile.
+
 ```sh
 docker compose stop
 docker compose up -d --wait
