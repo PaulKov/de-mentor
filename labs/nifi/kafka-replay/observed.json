@@ -1,0 +1,128 @@
+{
+  "input_topic": "replay.in.abbf061b-b09",
+  "output_topic": "replay.out.abbf061b-b09",
+  "group": "replay-group-abbf061b-b09",
+  "ui": "https://127.0.0.1:28444/nifi/#/process-groups/1bc3af0c-01a2-1000-87df-3fd67aa30bab",
+  "input": [
+    {
+      "offset": 0,
+      "value": {
+        "event_id": "abbf061b-b09d-42b5-9d47-6672673f7ce6",
+        "points": 100
+      }
+    }
+  ],
+  "nifi_exit_code": 137,
+  "stages": [
+    {
+      "stage": "before_crash",
+      "current_offset": 0,
+      "log_end_offset": 1,
+      "lag": 1,
+      "output": [
+        {
+          "offset": 0,
+          "value": {
+            "event_id": "abbf061b-b09d-42b5-9d47-6672673f7ce6",
+            "points": 100
+          },
+          "headers": {
+            "kafka.partition": "0",
+            "kafka.offset": "0",
+            "kafka.topic": "replay.in.abbf061b-b09",
+            "uuid": "e4bc081c-7fe8-4f4b-81e3-355ef70e903b"
+          }
+        }
+      ]
+    },
+    {
+      "stage": "nifi_down",
+      "current_offset": 0,
+      "log_end_offset": 1,
+      "lag": 1,
+      "output": [
+        {
+          "offset": 0,
+          "value": {
+            "event_id": "abbf061b-b09d-42b5-9d47-6672673f7ce6",
+            "points": 100
+          },
+          "headers": {
+            "kafka.partition": "0",
+            "kafka.offset": "0",
+            "kafka.topic": "replay.in.abbf061b-b09",
+            "uuid": "e4bc081c-7fe8-4f4b-81e3-355ef70e903b"
+          }
+        }
+      ]
+    },
+    {
+      "stage": "after_recovery",
+      "current_offset": 0,
+      "log_end_offset": 1,
+      "lag": 1,
+      "output": [
+        {
+          "offset": 0,
+          "value": {
+            "event_id": "abbf061b-b09d-42b5-9d47-6672673f7ce6",
+            "points": 100
+          },
+          "headers": {
+            "kafka.partition": "0",
+            "kafka.offset": "0",
+            "kafka.topic": "replay.in.abbf061b-b09",
+            "uuid": "e4bc081c-7fe8-4f4b-81e3-355ef70e903b"
+          }
+        },
+        {
+          "offset": 2,
+          "value": {
+            "event_id": "abbf061b-b09d-42b5-9d47-6672673f7ce6",
+            "points": 100
+          },
+          "headers": {
+            "kafka.partition": "0",
+            "kafka.offset": "0",
+            "kafka.topic": "replay.in.abbf061b-b09",
+            "uuid": "7f927701-07ce-49b1-ba3f-294d2a3e1eef"
+          }
+        }
+      ]
+    },
+    {
+      "stage": "after_stop",
+      "current_offset": 1,
+      "log_end_offset": 1,
+      "lag": 0,
+      "output": [
+        {
+          "offset": 0,
+          "value": {
+            "event_id": "abbf061b-b09d-42b5-9d47-6672673f7ce6",
+            "points": 100
+          },
+          "headers": {
+            "kafka.partition": "0",
+            "kafka.offset": "0",
+            "kafka.topic": "replay.in.abbf061b-b09",
+            "uuid": "e4bc081c-7fe8-4f4b-81e3-355ef70e903b"
+          }
+        },
+        {
+          "offset": 2,
+          "value": {
+            "event_id": "abbf061b-b09d-42b5-9d47-6672673f7ce6",
+            "points": 100
+          },
+          "headers": {
+            "kafka.partition": "0",
+            "kafka.offset": "0",
+            "kafka.topic": "replay.in.abbf061b-b09",
+            "uuid": "7f927701-07ce-49b1-ba3f-294d2a3e1eef"
+          }
+        }
+      ]
+    }
+  ]
+}
