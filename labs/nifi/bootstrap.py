@@ -11,7 +11,6 @@ from urllib.request import Request, urlopen
 from uuid import uuid4
 
 WEB_URL = "https://localhost:28443"
-API = WEB_URL + "/nifi-api"
 GROUP_NAME = "Lab 01 · Kafka and PostgreSQL"
 FORMATS_NAME = "Lab 02 · XML and Groovy"
 TOPIC = "nifi.orders.v1"
@@ -19,9 +18,10 @@ FIXTURES = Path(__file__).with_name("fixtures")
 
 
 class NiFi:
-    def __init__(self):
+    def __init__(self, web_url=WEB_URL):
         # The Compose listener is bound to loopback and uses a lab certificate.
         self.context = ssl._create_unverified_context()
+        self.api = web_url + "/nifi-api"
         self.client_id = str(uuid4())
         self.token = None
         self.token = self.request(
@@ -38,7 +38,7 @@ class NiFi:
         elif body is not None:
             headers["Content-Type"] = "application/json"
             body = json.dumps(body).encode()
-        request = Request(API + path, data=body, method=method, headers=headers)
+        request = Request(self.api + path, data=body, method=method, headers=headers)
         try:
             with urlopen(request, context=self.context, timeout=25) as response:
                 data = response.read().decode()

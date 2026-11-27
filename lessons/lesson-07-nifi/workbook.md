@@ -91,3 +91,7 @@ docker compose exec -T postgres psql -U student -d integration -c "SELECT event_
 | JDBC | `ExecuteSQLRecord` с DBCP и Record Writer | Прочитай `source_orders`. Выборка по `(updated_at,id)` должна сохранять обе записи с одинаковым timestamp |
 
 Для REST сохрани status, `Retry-After`, число попыток и класс ошибки. Для FTP/SMB сравни имя, хеш, размер и состояние листинга. Для JDBC проверь пустой диапазон, совпадающий timestamp и имитацию позднего commit.
+
+## 09. Начисление баллов при повторной доставке
+
+Пройди [опыт с аварией после коммита PostgreSQL](../../labs/nifi/points/README.md). По отчёту найди две попытки с одинаковым UUID FlowFile, затем две попытки с одинаковым Kafka offset и разными UUID. Объясни, какую запись в БД проверяет обработчик перед начислением и почему перемотка Kafka не откатывает баланс.

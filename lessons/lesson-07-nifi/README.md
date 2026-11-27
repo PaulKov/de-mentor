@@ -21,7 +21,7 @@
 | № | Тема и результат | Материалы |
 | --- | --- | --- |
 | 08 | **Runtime и репозитории.** ProcessSession, content claims, backpressure, state, provenance, кластер | [Видео](artifacts/video/08-internals.mp4) · [Текст](media/08-internals.md) · [Разбор](deep-dive.md#08-runtime-и-репозитории) |
-| 09 | **Гарантии доставки.** Kafka offsets, внешние транзакции, idempotency, fencing и replay | [Видео](artifacts/video/09-delivery.mp4) · [Текст](media/09-delivery.md) · [Разбор](deep-dive.md#09-гарантии-доставки) |
+| 09 | **Гарантии доставки.** Kafka offsets, внешние транзакции, idempotency, fencing и replay | [Видео](artifacts/video/09-delivery.mp4) · [Текст](media/09-delivery.md) · [Разбор](deep-dive.md#09-гарантии-доставки) · [Практика с аварией NiFi](../../labs/nifi/points/README.md) |
 | 10 | **Эксплуатация.** Наблюдаемость, версионирование, инциденты и итоговый проект | [Видео](artifacts/video/10-operations.mp4) · [Текст](media/10-operations.md) · [Разбор](deep-dive.md#10-эксплуатация) |
 
 Десять видео занимают около 30 минут. В них есть русская синтезированная озвучка и переключаемые субтитры. В коротком [аудиофрагменте](artifacts/narration-preview.mp3) можно услышать объяснения FlowFile, JSON Lines, индексов JOLT, SOAPAction и read_committed. Отдельные [файлы SRT](artifacts/video/) лежат рядом с MP4. Если GitHub показывает ссылку на бинарный файл, скачай MP4 через **Raw** или **Download**.

@@ -42,6 +42,8 @@ docker compose exec -T nifi ls -l /lab/output/transformed
 
 ### Пауза и восстановление
 
+[Практика 09. Одно начисление при повторной доставке](points/README.md) запускает отдельный NiFi, завершает его после коммита PostgreSQL и проверяет по смещениям Kafka, UUID FlowFile и балансу три вида повтора.
+
 ```sh
 docker compose stop
 docker compose up -d --wait

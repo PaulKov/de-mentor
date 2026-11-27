@@ -1,0 +1,171 @@
+{
+  "event": {
+    "event_id": "3100a928-c827-4701-b3ba-7f17a478bcae",
+    "account_id": "student-3100a928-c82",
+    "points": 100,
+    "pause_after_commit": true
+  },
+  "topic": "nifi.points.3100a928-c82",
+  "group": "points-db-3100a928-c82",
+  "ui": "https://127.0.0.1:28444/nifi/#/process-groups/1bb7bb2f-01a2-1000-3acb-38fe872fe80e",
+  "nifi_exit_code": 137,
+  "stages": [
+    {
+      "balance": 100,
+      "control_balance": 100,
+      "inbox_rows": 1,
+      "attempts": [
+        {
+          "decision": "applied",
+          "offset": 0,
+          "flowfile": "985f4c9e-fae8-4c02-9d03-8f0fc0a0b044",
+          "partition": 0,
+          "topic": "nifi.points.3100a928-c82"
+        }
+      ],
+      "stage": "before_crash",
+      "current_offset": 1,
+      "log_end_offset": 1,
+      "lag": 0
+    },
+    {
+      "balance": 100,
+      "control_balance": 100,
+      "inbox_rows": 1,
+      "attempts": [
+        {
+          "decision": "applied",
+          "offset": 0,
+          "flowfile": "985f4c9e-fae8-4c02-9d03-8f0fc0a0b044",
+          "partition": 0,
+          "topic": "nifi.points.3100a928-c82"
+        }
+      ],
+      "stage": "nifi_down",
+      "current_offset": 1,
+      "log_end_offset": 1,
+      "lag": 0
+    },
+    {
+      "balance": 100,
+      "control_balance": 200,
+      "inbox_rows": 1,
+      "attempts": [
+        {
+          "decision": "applied",
+          "offset": 0,
+          "flowfile": "985f4c9e-fae8-4c02-9d03-8f0fc0a0b044",
+          "partition": 0,
+          "topic": "nifi.points.3100a928-c82"
+        },
+        {
+          "decision": "duplicate",
+          "offset": 0,
+          "flowfile": "985f4c9e-fae8-4c02-9d03-8f0fc0a0b044",
+          "partition": 0,
+          "topic": "nifi.points.3100a928-c82"
+        }
+      ],
+      "stage": "queue_recovery",
+      "current_offset": 1,
+      "log_end_offset": 1,
+      "lag": 0
+    },
+    {
+      "balance": 100,
+      "control_balance": 200,
+      "inbox_rows": 1,
+      "attempts": [
+        {
+          "decision": "applied",
+          "offset": 0,
+          "flowfile": "985f4c9e-fae8-4c02-9d03-8f0fc0a0b044",
+          "partition": 0,
+          "topic": "nifi.points.3100a928-c82"
+        },
+        {
+          "decision": "duplicate",
+          "offset": 0,
+          "flowfile": "985f4c9e-fae8-4c02-9d03-8f0fc0a0b044",
+          "partition": 0,
+          "topic": "nifi.points.3100a928-c82"
+        }
+      ],
+      "stage": "group_rewound",
+      "current_offset": 0,
+      "log_end_offset": 1,
+      "lag": 1
+    },
+    {
+      "balance": 100,
+      "control_balance": 300,
+      "inbox_rows": 1,
+      "attempts": [
+        {
+          "decision": "applied",
+          "offset": 0,
+          "flowfile": "985f4c9e-fae8-4c02-9d03-8f0fc0a0b044",
+          "partition": 0,
+          "topic": "nifi.points.3100a928-c82"
+        },
+        {
+          "decision": "duplicate",
+          "offset": 0,
+          "flowfile": "985f4c9e-fae8-4c02-9d03-8f0fc0a0b044",
+          "partition": 0,
+          "topic": "nifi.points.3100a928-c82"
+        },
+        {
+          "decision": "duplicate",
+          "offset": 0,
+          "flowfile": "a0bea468-ac3e-4758-a902-732399556ba2",
+          "partition": 0,
+          "topic": "nifi.points.3100a928-c82"
+        }
+      ],
+      "stage": "broker_replay",
+      "current_offset": 1,
+      "log_end_offset": 1,
+      "lag": 0
+    },
+    {
+      "balance": 100,
+      "control_balance": 400,
+      "inbox_rows": 1,
+      "attempts": [
+        {
+          "decision": "applied",
+          "offset": 0,
+          "flowfile": "985f4c9e-fae8-4c02-9d03-8f0fc0a0b044",
+          "partition": 0,
+          "topic": "nifi.points.3100a928-c82"
+        },
+        {
+          "decision": "duplicate",
+          "offset": 0,
+          "flowfile": "985f4c9e-fae8-4c02-9d03-8f0fc0a0b044",
+          "partition": 0,
+          "topic": "nifi.points.3100a928-c82"
+        },
+        {
+          "decision": "duplicate",
+          "offset": 0,
+          "flowfile": "a0bea468-ac3e-4758-a902-732399556ba2",
+          "partition": 0,
+          "topic": "nifi.points.3100a928-c82"
+        },
+        {
+          "decision": "duplicate",
+          "offset": 1,
+          "flowfile": "790244d6-becb-4d72-b3c6-7d5d11f25761",
+          "partition": 0,
+          "topic": "nifi.points.3100a928-c82"
+        }
+      ],
+      "stage": "business_republish",
+      "current_offset": 2,
+      "log_end_offset": 2,
+      "lag": 0
+    }
+  ]
+}

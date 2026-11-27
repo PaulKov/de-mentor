@@ -1,0 +1,35 @@
+# Run with compose.yaml. Only nifi-points is killed by the points experiment.
+services:
+  nifi-points:
+    image: de-mentor-nifi-nifi
+    build:
+      context: .
+      dockerfile: Dockerfile.nifi
+    environment:
+      SINGLE_USER_CREDENTIALS_USERNAME: student
+      SINGLE_USER_CREDENTIALS_PASSWORD: Practice-Only-2026
+      NIFI_SENSITIVE_PROPS_KEY: practice-only-nifi-key-2026
+      NIFI_JVM_HEAP_INIT: 384m
+      NIFI_JVM_HEAP_MAX: 768m
+      NIFI_WEB_HTTPS_HOST: 0.0.0.0
+      NIFI_WEB_PROXY_HOST: localhost:28444,127.0.0.1:28444
+    ports: ["127.0.0.1:28444:8443"]
+    volumes:
+      - points-conf:/opt/nifi/nifi-current/conf
+      - points-flowfiles:/opt/nifi/nifi-current/flowfile_repository
+      - points-content:/opt/nifi/nifi-current/content_repository
+      - points-state:/opt/nifi/nifi-current/state
+      - ./points:/lab/points:ro
+    healthcheck:
+      test: ["CMD", "curl", "-kfsS", "-o", "/dev/null", "https://localhost:8443/nifi/"]
+      interval: 5s
+      timeout: 4s
+      retries: 36
+      start_period: 30s
+    restart: "no"
+
+volumes:
+  points-conf:
+  points-flowfiles:
+  points-content:
+  points-state:
